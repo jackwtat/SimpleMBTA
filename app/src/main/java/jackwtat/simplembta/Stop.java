@@ -11,7 +11,7 @@ public class Stop {
     private String name;
     private float latitude;
     private float longitude;
-    private ArrayList<Trip> trips;
+    private ArrayList<Prediction> predictions;
 
     public Stop(String id, String name, float latitude, float longitude) {
         this.id = id;
@@ -20,9 +20,7 @@ public class Stop {
         this.longitude = longitude;
     }
 
-    public boolean hasId(String id) {
-        return id.equals(this.id);
-    }
+    public String getId() {return id;}
 
     public String getName() {
         return name;
@@ -36,12 +34,11 @@ public class Stop {
         return longitude;
     }
 
-    public ArrayList<Trip> getTrips(){
-        return trips;
+    public ArrayList<Prediction> getPredictions(){
+        return predictions;
     }
 
-    public void addTrip(Trip trip){
-        trips.add(trip);
-    }
+    public void refreshPredictions(){
 
+    }
 }
