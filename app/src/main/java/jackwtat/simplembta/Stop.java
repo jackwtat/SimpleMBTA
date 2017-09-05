@@ -1,6 +1,9 @@
 package jackwtat.simplembta;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import jackwtat.simplembta.Utils.QueryUtil;
 
 /**
  * Created by jackw on 8/26/2017.
@@ -11,7 +14,7 @@ public class Stop {
     private String name;
     private float latitude;
     private float longitude;
-    private ArrayList<Prediction> predictions;
+    private List<Prediction> predictions;
 
     public Stop(String id, String name, float latitude, float longitude) {
         this.id = id;
@@ -34,11 +37,11 @@ public class Stop {
         return longitude;
     }
 
-    public ArrayList<Prediction> getPredictions(){
+    public List<Prediction> getPredictions(){
         return predictions;
     }
 
     public void refreshPredictions(){
-
+        predictions = QueryUtil.fetchPredictionsByStop(id);
     }
 }

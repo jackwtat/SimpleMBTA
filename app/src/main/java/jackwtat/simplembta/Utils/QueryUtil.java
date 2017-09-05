@@ -33,11 +33,8 @@ public class QueryUtil {
     //URL for querying the MBTA realTime API
     private static final String MBTA_URL = "http://realtime.mbta.com/developer/api/v2/";
 
-    //API argument
-    private static final String API_ARG = "?api_key=";
-
     //API key
-    private static final String API_KEY = "0UkGTkcDrEmX_eT8sqeNoA";
+    private static final String API_KEY = "?api_key=0UkGTkcDrEmX_eT8sqeNoA";
 
     //Format specification
     private static final String RESPONSE_FORMAT = "&format=json";
@@ -47,8 +44,8 @@ public class QueryUtil {
 
     public static List<Prediction> fetchPredictionsByStop(String stopId) {
 
-        String requestUrl = MBTA_URL + "predictionsbystop" + API_ARG + API_KEY + RESPONSE_FORMAT +
-                "&stop" + stopId;
+        String requestUrl = MBTA_URL + "predictionsbystop" + API_KEY + RESPONSE_FORMAT +
+                "&stop=" + stopId;
 
         URL url = createUrl(requestUrl);
 
@@ -176,14 +173,18 @@ public class QueryUtil {
 
                             // Create new Prediction object and populate with data
                             Prediction prediction = new Prediction(currentTrip.getString("trip_id"));
-                            // TODO: Populate prediction with data
+                            prediction.setRouteType(currentMode.getInt("route_type"));
+                            prediction.setRouteId(currentRoute.getString("route_id"));
+                            prediction.setRouteName(currentRoute.getString("route_name"));
+                            prediction.setDirection(currentDirection.getInt("direction_id"));
+                            prediction.setDestination(currentTrip.getString("trip_headsign"));
+                            prediction.setPredictedArrivalTime(currentTrip.getLong("pre_away"));
 
+                            predictions.add(prediction);
                         }
                     }
                 }
             }
-
-
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
