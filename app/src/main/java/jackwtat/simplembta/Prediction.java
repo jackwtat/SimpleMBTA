@@ -8,11 +8,9 @@ import static android.R.attr.mode;
 
 public class Prediction {
     private String tripId;
-    private int routeType;
     private String routeId;
-    private String routeName;
-    private int direction;
     private String destination;
+    private int direction;
     private long predictedArrivalTime;
     private long queryTime;
 
@@ -24,14 +22,6 @@ public class Prediction {
         return tripId;
     }
 
-    public int getRouteType() {
-        return routeType;
-    }
-
-    public void setRouteType(int routeType) {
-        this.routeType = routeType;
-    }
-
     public String getRouteId() {
         return routeId;
     }
@@ -40,12 +30,12 @@ public class Prediction {
         this.routeId = routeId;
     }
 
-    public String getRouteName() {
-        return routeName;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setRouteName(String routeName) {
-        this.routeName = routeName;
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
     public int getDirection() {
@@ -54,14 +44,6 @@ public class Prediction {
 
     public void setDirection(int direction) {
         this.direction = direction;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
     }
 
     public long getPredictedArrivalTime() {

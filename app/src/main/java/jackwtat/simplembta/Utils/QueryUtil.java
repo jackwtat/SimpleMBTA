@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jackwtat.simplembta.Prediction;
+import jackwtat.simplembta.Route;
 import jackwtat.simplembta.Stop;
 
 import static android.R.attr.mode;
@@ -40,6 +41,24 @@ public class QueryUtil {
     private static final String RESPONSE_FORMAT = "&format=json";
 
     private QueryUtil() {
+    }
+
+    public static List<Route> fetchRoutesByStop(String stopId) {
+        String requestUrl = MBTA_URL + "routesbystop" + API_KEY + RESPONSE_FORMAT +
+                "&stop=" + stopId;
+
+        URL url = createUrl(requestUrl);
+
+        Log.i(TAG, requestUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(TAG, "Problem making the HTTP request.", e);
+        }
+
+        return extractRoutesFromJson(jsonResponse);
     }
 
     public static List<Prediction> fetchPredictionsByStop(String stopId) {
@@ -136,6 +155,47 @@ public class QueryUtil {
         return output.toString();
     }
 
+    private static List<Route> extractRoutesFromJson(String jsonResponse) {
+        List<Route> routeList = new ArrayList<>();
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return routeList;
+        }
+
+        try {
+            // Create a JSON Object from the JSON response string
+            JSONObject baseJsonResponse = new JSONObject(jsonResponse);
+
+            // Loop through each mode of transportation at this stop
+            JSONArray modes = baseJsonResponse.getJSONArray("mode");
+            for(int i = 0; i < modes.length(); i++){
+                JSONObject currentMode = modes.getJSONObject(i);
+
+                // Loop through all routes of the current mode at this stop
+                JSONArray routes = currentMode.getJSONArray("route");
+                for(int j = 0; j <routes.length(); j++){
+                    JSONObject currentRoute = routes.getJSONObject(j);
+
+                    // Create new Route object and populate with data
+                    Route route = new Route(currentRoute.getString("route_id"),
+                                            currentRoute.getString("route_name"),
+                                            currentMode.getInt("route_type"));
+
+                    routeList.add(route);
+                }
+            }
+        } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
+            Log.e(TAG, "No data found");
+        }
+
+        // Return the list of routes
+        return routeList;
+    }
+
     private static List<Prediction> extractPredictionsFromJson(String jsonResponse) {
         List<Prediction> predictions = new ArrayList<>();
 
@@ -173,9 +233,7 @@ public class QueryUtil {
 
                             // Create new Prediction object and populate with data
                             Prediction prediction = new Prediction(currentTrip.getString("trip_id"));
-                            prediction.setRouteType(currentMode.getInt("route_type"));
                             prediction.setRouteId(currentRoute.getString("route_id"));
-                            prediction.setRouteName(currentRoute.getString("route_name"));
                             prediction.setDirection(currentDirection.getInt("direction_id"));
                             prediction.setDestination(currentTrip.getString("trip_headsign"));
                             prediction.setPredictedArrivalTime(currentTrip.getLong("pre_away"));

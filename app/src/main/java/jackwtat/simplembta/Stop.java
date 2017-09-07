@@ -14,6 +14,7 @@ public class Stop {
     private String name;
     private float latitude;
     private float longitude;
+    private List<Route> routes;
     private List<Prediction> predictions;
 
     public Stop(String id, String name, float latitude, float longitude) {
@@ -23,7 +24,9 @@ public class Stop {
         this.longitude = longitude;
     }
 
-    public String getId() {return id;}
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -37,11 +40,18 @@ public class Stop {
         return longitude;
     }
 
-    public List<Prediction> getPredictions(){
+    public List<Route> getRoutes() {
+        if (routes == null) {
+            routes = QueryUtil.fetchRoutesByStop(id);
+        }
+        return routes;
+    }
+
+    public List<Prediction> getPredictions() {
         return predictions;
     }
 
-    public void refreshPredictions(){
+    public void refreshPredictions() {
         predictions = QueryUtil.fetchPredictionsByStop(id);
     }
 }

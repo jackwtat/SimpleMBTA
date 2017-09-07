@@ -1,8 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/stop_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Main St @ Cross St" />
+
+    <LinearLayout
+        android:id="@+id/route_sub_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp">
+
+        <TextView
+            android:id="@+id/route_name_text"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="106" />
+
+        <TextView
+            android:id="@+id/destination_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textSize="16sp"
+            tools:text="Lebanon Loop" />
+
+        <TextView
+            android:id="@+id/prediction_times_text"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="200, 400 mins" />
+    </LinearLayout>
 
 
-
-</RelativeLayout>
+</LinearLayout>
