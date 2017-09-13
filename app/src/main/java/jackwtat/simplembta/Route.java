@@ -5,6 +5,9 @@ package jackwtat.simplembta;
  */
 
 public class Route {
+    public static final int OUTBOUND = 0;
+    public static final int INBOUND = 1;
+
     private String id;
     private String name;
     private int mode;

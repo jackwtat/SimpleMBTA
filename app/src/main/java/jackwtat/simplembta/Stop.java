@@ -40,16 +40,13 @@ public class Stop {
         return longitude;
     }
 
-    public List<Route> getRoutes() {
-        if (routes == null) {
-            routes = QueryUtil.fetchRoutesByStop(id);
-        }
-        return routes;
-    }
+    public List<Route> getRoutes() { return routes; }
 
     public List<Prediction> getPredictions() {
         return predictions;
     }
+
+    public void refreshRoutes() { routes = QueryUtil.fetchRoutesByStop(id); }
 
     public void refreshPredictions() {
         predictions = QueryUtil.fetchPredictionsByStop(id);

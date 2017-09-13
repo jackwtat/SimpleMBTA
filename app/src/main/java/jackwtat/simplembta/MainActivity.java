@@ -1,6 +1,8 @@
 package jackwtat.simplembta;
 
+import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import jackwtat.simplembta.Adapters.PredictionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,17 +41,31 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mPredictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
+        //mPredictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mPredictionsPagerAdapter);
+        //mViewPager = (ViewPager) findViewById(R.id.container);
+        //mViewPager.setAdapter(mPredictionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        //tabLayout.setupWithViewPager(mViewPager);
 
     }
 
+    @Override
+    protected void onStart() {
+        // Get permissions
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_ACCESS_FINE_LOCATION);
+        }
+
+        // Create stop database
+        // TODO: Create stop database
+
+        super.onStart();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
