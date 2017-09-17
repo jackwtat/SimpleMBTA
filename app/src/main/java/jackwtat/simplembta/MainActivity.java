@@ -25,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private PredictionsPagerAdapter mPredictionsPagerAdapter;
+    private PredictionsPagerAdapter predictionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        //mPredictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
+        predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        //mViewPager = (ViewPager) findViewById(R.id.container);
-        //mViewPager.setAdapter(mPredictionsPagerAdapter);
+        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(predictionsPagerAdapter);
 
-        //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        //tabLayout.setupWithViewPager(mViewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 

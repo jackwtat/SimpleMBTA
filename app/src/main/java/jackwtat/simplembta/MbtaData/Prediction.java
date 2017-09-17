@@ -1,4 +1,4 @@
-package jackwtat.simplembta;
+package jackwtat.simplembta.MbtaData;
 
 import static android.R.attr.mode;
 

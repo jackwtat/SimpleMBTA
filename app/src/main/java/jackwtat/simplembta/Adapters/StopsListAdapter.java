@@ -1,8 +1,6 @@
 package jackwtat.simplembta.Adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,26 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.Prediction;
+import jackwtat.simplembta.MbtaData.Prediction;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.Route;
-import jackwtat.simplembta.Stop;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static android.os.Build.VERSION_CODES.M;
+import jackwtat.simplembta.MbtaData.Route;
+import jackwtat.simplembta.MbtaData.Stop;
 
 /**
  * Created by jackw on 9/7/2017.
  */
 
-public class StopPredictionsAdapter extends ArrayAdapter<Stop> {
+public class StopsListAdapter extends ArrayAdapter<Stop> {
 
-    public StopPredictionsAdapter(Activity context, ArrayList<Stop> stops) {
+    public StopsListAdapter(Activity context, ArrayList<Stop> stops) {
         super(context, 0, stops);
     }
 
@@ -121,7 +114,6 @@ public class StopPredictionsAdapter extends ArrayAdapter<Stop> {
             Prediction firstOutbound=nextPredictions[i][Route.OUTBOUND][0];
             Prediction secondOutbound=nextPredictions[i][Route.OUTBOUND][1];
 
-            // Check if route has no predictions
             if (firstInbound == null && firstOutbound == null){
                 routeName += "\n" + routes.get(i).getName();
                 destination += "\n" + "No Predictions";
@@ -159,6 +151,6 @@ public class StopPredictionsAdapter extends ArrayAdapter<Stop> {
         destinationTextView.setText(destination);
         predictionTimesTextView.setText(predictionTimes);
 
-        return super.getView(position, convertView, parent);
+        return listItemView;
     }
 }

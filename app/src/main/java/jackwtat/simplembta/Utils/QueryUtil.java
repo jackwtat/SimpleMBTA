@@ -18,11 +18,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.Prediction;
-import jackwtat.simplembta.Route;
-import jackwtat.simplembta.Stop;
-
-import static android.R.attr.mode;
+import jackwtat.simplembta.MbtaData.Prediction;
+import jackwtat.simplembta.MbtaData.Route;
 
 /**
  * Created by jackw on 9/1/2017.

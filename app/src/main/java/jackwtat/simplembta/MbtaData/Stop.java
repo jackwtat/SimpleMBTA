@@ -1,9 +1,6 @@
-package jackwtat.simplembta;
+package jackwtat.simplembta.MbtaData;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import jackwtat.simplembta.Utils.QueryUtil;
 
 /**
  * Created by jackw on 8/26/2017.
@@ -46,9 +43,15 @@ public class Stop {
         return predictions;
     }
 
-    public void refreshRoutes() { routes = QueryUtil.fetchRoutesByStop(id); }
+    public void clearPredictions(){
+        predictions.clear();
+    }
 
-    public void refreshPredictions() {
-        predictions = QueryUtil.fetchPredictionsByStop(id);
+    public void addPrediction(Prediction prediction){
+        predictions.add(prediction);
+    }
+
+    public void addPredictions(List<Prediction> predictions){
+        predictions.addAll(predictions);
     }
 }

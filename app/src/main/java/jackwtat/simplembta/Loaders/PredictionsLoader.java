@@ -1,20 +1,21 @@
-package jackwtat.simplembta;
+package jackwtat.simplembta.Loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
 import java.util.List;
 
+import jackwtat.simplembta.MbtaData.Prediction;
 import jackwtat.simplembta.Utils.QueryUtil;
 
 /**
  * Created by jackw on 9/6/2017.
  */
 
-public class PredictionsByStopLoader extends AsyncTaskLoader<List<Prediction>> {
+public class PredictionsLoader extends AsyncTaskLoader<List<Prediction>> {
     private String stopId;
 
-    public PredictionsByStopLoader(Context context, String stopId) {
+    public PredictionsLoader(Context context, String stopId) {
         super(context);
         this.stopId = stopId;
     }

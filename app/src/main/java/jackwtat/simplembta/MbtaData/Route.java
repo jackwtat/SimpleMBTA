@@ -1,4 +1,4 @@
-package jackwtat.simplembta;
+package jackwtat.simplembta.MbtaData;
 
 /**
  * Created by jackw on 9/7/2017.
