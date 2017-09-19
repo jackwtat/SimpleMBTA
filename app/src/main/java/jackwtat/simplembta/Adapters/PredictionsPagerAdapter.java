@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import jackwtat.simplembta.Fragments.PredictionsFragment;
+import jackwtat.simplembta.Fragments.TestListFragment;
 
 /**
  * Created by jackw on 8/21/2017.
@@ -18,8 +18,7 @@ public class PredictionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        //TODO: Get Fragments
-        return null;
+        return new TestListFragment();
     }
 
     @Override

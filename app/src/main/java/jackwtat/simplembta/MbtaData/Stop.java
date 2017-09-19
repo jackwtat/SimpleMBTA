@@ -14,6 +14,11 @@ public class Stop {
     private List<Route> routes;
     private List<Prediction> predictions;
 
+    public Stop(String id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
     public Stop(String id, String name, float latitude, float longitude) {
         this.id = id;
         this.name = name;
