@@ -231,11 +231,14 @@ public class QueryUtil {
                             // Create new Prediction object and populate with data
                             Prediction prediction = new Prediction(currentTrip.getString("trip_id"));
                             prediction.setRouteId(currentRoute.getString("route_id"));
+                            prediction.setRouteName(currentRoute.getString("route_name"));
                             prediction.setDirection(currentDirection.getInt("direction_id"));
                             prediction.setDestination(currentTrip.getString("trip_headsign"));
                             prediction.setPredictedArrivalTime(currentTrip.getLong("pre_away"));
 
                             predictions.add(prediction);
+
+                            System.out.println(prediction.getRouteName() + " " + prediction.getDestination());
                         }
                     }
                 }

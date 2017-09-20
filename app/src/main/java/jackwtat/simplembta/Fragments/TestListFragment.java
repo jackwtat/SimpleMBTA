@@ -16,6 +16,6 @@ public class TestListFragment extends PredictionsListFragment {
     protected List<Stop> getStops() {
         ArrayList<Stop> stops = new ArrayList<>();
         stops.add(new Stop("64", "Dudley Station"));
-        return null;
+        return stops;
     }
 }

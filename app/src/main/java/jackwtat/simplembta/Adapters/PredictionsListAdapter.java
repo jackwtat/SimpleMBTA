@@ -27,6 +27,7 @@ import jackwtat.simplembta.MbtaData.Stop;
  */
 
 public class PredictionsListAdapter extends ArrayAdapter<Stop> {
+    private final static String LOG_TAG = "PredictionsListAdapter";
 
     public PredictionsListAdapter(Activity context, ArrayList<Stop> stops) {
         super(context, 0, stops);
@@ -41,24 +42,14 @@ public class PredictionsListAdapter extends ArrayAdapter<Stop> {
                     R.layout.predictions_list_item, parent, false);
         }
 
-        //Initialize the root layout
-        LinearLayout rootLayout = (LinearLayout) listItemView.findViewById(R.id.root_layout);
+        // Get the stop
+        Stop stop = getItem(position);
 
         // Initalize the TextView for the stop name
         TextView stopNameTextView = (TextView) listItemView.findViewById(R.id.stop_name_text);
 
-        // Initialize TextViews for predictions
-        //TextView routeNameTextView = (TextView) listItemView.findViewById(R.id.route_name_text);
-        //TextView destinationTextView = (TextView) listItemView.findViewById(R.id.destination_text);
-        //TextView predictionTimesTextView = (TextView) listItemView.findViewById(R.id.prediction_times_text);
-
-        // Initialize Strings for storing TextView values prior to setting
-        String routeName = "";
-        String destination = "";
-        String predictionTimes = "";
-
-        // Get the stop
-        Stop stop = getItem(position);
+        // Set the value for the stop name TextView
+        stopNameTextView.setText(stop.getName());
 
         // Get lists of routes and predictions
         List<Route> routes = stop.getRoutes();
@@ -79,6 +70,7 @@ public class PredictionsListAdapter extends ArrayAdapter<Stop> {
             int dir = prediction.getDirection();
 
             // Find the corresponding position of route in list
+            // and populate into next predictions array
             for (int j = 0; j < routes.size(); j++) {
                 if (prediction.getRouteId() == routes.get(j).getId()) {
                     // Correct position of route & direction found
@@ -112,11 +104,20 @@ public class PredictionsListAdapter extends ArrayAdapter<Stop> {
             }
         }
 
+        listItemView = testPopulater(listItemView, nextPredictions);
+
+        return listItemView;
+    }
+
+    private View populateInnerPredictionsList(View listItemView, Prediction[][][] nextPredictions){
+        //Initialize the root layout
+        LinearLayout rootLayout = (LinearLayout) listItemView.findViewById(R.id.root_layout);
+
         // Create views for each route
         // Group by route
         // Inbound first
         // Outbound second
-        for (int i = 0; i < routes.size(); i++) {
+        for (int i = 0; i < nextPredictions.length; i++) {
 
 
             Prediction firstInbound = nextPredictions[i][Route.INBOUND][0];
@@ -146,42 +147,34 @@ public class PredictionsListAdapter extends ArrayAdapter<Stop> {
 
 
                 rootLayout.addView(new TextView(getContext()));
-
-                routeName += "\n" + routes.get(i).getName();
-                destination += "\n" + "No Predictions";
-                predictionTimes += "\n";
             } else {
                 if (firstInbound != null) {
-                    routeName += "\n" + routes.get(i).getName();
-                    destination += "\n" + firstInbound.getDestination();
-                    predictionTimes += "\n" + firstInbound.getPredictedArrivalTime();
-
                     if (secondInbound != null) {
-                        predictionTimes += ", " + secondInbound.getPredictedArrivalTime();
                     }
-
-                    predictionTimes += " mins";
                 }
-
                 if (firstOutbound != null) {
-                    routeName += "\n" + routes.get(i).getName();
-                    destination += "\n" + firstOutbound.getDestination();
-                    predictionTimes += "\n" + firstOutbound.getPredictedArrivalTime();
 
                     if (secondOutbound != null) {
-                        predictionTimes += ", " + secondOutbound.getPredictedArrivalTime();
                     }
-
-                    predictionTimes += " mins";
                 }
             }
         }
+        return listItemView;
+    }
 
-        // Finally, set the values for all the TextViews
-        //stopNameTextView.setText(stop.getName());
-        //routeNameTextView.setText(routeName);
-        //destinationTextView.setText(destination);
-        //predictionTimesTextView.setText(predictionTimes);
+    private View testPopulater(View listItemView, Prediction[][][] nextPredictions){
+        for(int i = 0; i <nextPredictions.length; i++){
+            for(int j = 0; j < nextPredictions[i].length; j++){
+                for(int k = 0; k < nextPredictions[i][j].length; k++){
+                    Prediction prediction = nextPredictions[i][j][k];
+                    if (prediction != null){
+                        System.out.println(prediction.getRouteName() + " - " +
+                                            prediction.getDestination() + " - " +
+                                            prediction.getPredictedArrivalTime());
+                    }
+                }
+            }
+        }
 
         return listItemView;
     }
