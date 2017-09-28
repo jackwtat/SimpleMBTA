@@ -1,10 +1,12 @@
 package jackwtat.simplembta.MbtaData;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by jackw on 9/7/2017.
  */
 
-public class Route {
+public class Route implements Comparable{
     public static final int OUTBOUND = 0;
     public static final int INBOUND = 1;
 
@@ -28,5 +30,15 @@ public class Route {
 
     public int getMode() {
         return mode;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        // TODO: Implement compareTo
+        return 0;
+    }
+
+    public String shortName(){
+        return "";
     }
 }

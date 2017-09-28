@@ -46,8 +46,6 @@ public class QueryUtil {
 
         URL url = createUrl(requestUrl);
 
-        Log.i(TAG, requestUrl);
-
         String jsonResponse = null;
         try {
             jsonResponse = makeHttpRequest(url);
@@ -64,8 +62,6 @@ public class QueryUtil {
                 "&stop=" + stopId;
 
         URL url = createUrl(requestUrl);
-
-        Log.i(TAG, requestUrl);
 
         String jsonResponse = null;
         try {
@@ -237,8 +233,6 @@ public class QueryUtil {
                             prediction.setPredictedArrivalTime(currentTrip.getLong("pre_away"));
 
                             predictions.add(prediction);
-
-                            System.out.println(prediction.getRouteName() + " " + prediction.getDestination());
                         }
                     }
                 }

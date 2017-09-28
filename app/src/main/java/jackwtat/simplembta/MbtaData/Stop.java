@@ -1,22 +1,27 @@
 package jackwtat.simplembta.MbtaData;
 
+import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jackw on 8/26/2017.
  */
 
-public class Stop {
+public class Stop implements Comparable{
     private String id;
     private String name;
-    private float latitude;
-    private float longitude;
-    private List<Route> routes;
-    private List<Prediction> predictions;
+    private double latitude;
+    private double longitude;
+    private List<Route> routes = new ArrayList<>();
+    private List<Prediction> predictions = new ArrayList<>();
 
     public Stop(String id, String name){
         this.id = id;
         this.name = name;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public Stop(String id, String name, float latitude, float longitude) {
@@ -34,11 +39,11 @@ public class Stop {
         return name;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -52,11 +57,19 @@ public class Stop {
         predictions.clear();
     }
 
+    public void addRoute(Route route) { routes.add(route); }
+
+    public void addRoutes(List<Route> routes) { this.routes.addAll(routes); }
+
     public void addPrediction(Prediction prediction){
         predictions.add(prediction);
     }
 
-    public void addPredictions(List<Prediction> predictions){
-        predictions.addAll(predictions);
+    public void addPredictions(List<Prediction> predictions){ this.predictions.addAll(predictions); }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        // TODO: Implement compareTo
+        return 0;
     }
 }

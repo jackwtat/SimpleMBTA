@@ -1,12 +1,15 @@
 package jackwtat.simplembta.MbtaData;
 
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+
 import static android.R.attr.mode;
 
 /**
  * Created by jackw on 8/26/2017.
  */
 
-public class Prediction {
+public class Prediction implements Comparable{
     private String tripId;
     private String routeId;
     private String routeName;
@@ -27,9 +30,7 @@ public class Prediction {
         return routeId;
     }
 
-    public void setRouteId(String routeId) {
-        this.routeId = routeId;
-    }
+    public void setRouteId(String routeId) { this.routeId = routeId; }
 
     public String getRouteName() { return routeName; }
 
@@ -65,5 +66,11 @@ public class Prediction {
 
     public void setQueryTime(long queryTime) {
         this.queryTime = queryTime;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        // TODO: Implement compareTo
+        return 0;
     }
 }

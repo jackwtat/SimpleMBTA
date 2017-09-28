@@ -16,8 +16,7 @@
         android:paddingRight="8dp"
         android:paddingTop="4dp"
         android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="Main St @ Cross St" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/route_sub_item"
@@ -29,33 +28,30 @@
         android:paddingRight="8dp"
         android:paddingTop="4dp">
 
-        <TextView
-            android:id="@+id/route_name_text"
+        <LinearLayout
+            android:id="@+id/route_names"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="106" />
+            android:orientation="vertical" />
 
-        <TextView
-            android:id="@+id/destination_text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/destinations"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:orientation="vertical"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textSize="16sp"
-            tools:text="Lebanon Loop" />
+            android:paddingRight="8dp" />
 
-        <TextView
-            android:id="@+id/prediction_times_text"
+        <LinearLayout
+            android:id="@+id/predictions"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="200, 400 mins" />
+            android:gravity="end"
+            android:orientation="vertical" />
+
+
     </LinearLayout>
 
 

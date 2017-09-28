@@ -11,7 +11,7 @@ import jackwtat.simplembta.Fragments.TestListFragment;
  */
 
 public class PredictionsPagerAdapter extends FragmentPagerAdapter {
-    final private int PAGE_COUNT = 3;
+    final private int PAGE_COUNT = 1;
     final private String[] TAB_TITLES = {"Nearby", "Map", "Saved"};
 
     public PredictionsPagerAdapter(FragmentManager fm){super(fm);}
