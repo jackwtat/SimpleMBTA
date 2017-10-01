@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft = "16dp"
+    android:paddingRight = "16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/stop_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/route_sub_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp">
+
+        <LinearLayout
+            android:id="@+id/route_names"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/destinations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
+        <LinearLayout
+            android:id="@+id/predictions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="vertical" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

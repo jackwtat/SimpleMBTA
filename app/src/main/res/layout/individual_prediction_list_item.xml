@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="12dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="12dp">
+
+    <RelativeLayout
+        android:layout_width="56dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/route_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Boat" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp">
+
+        <TextView
+            android:id="@+id/first_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="1dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="100 min" />
+
+        <TextView
+            android:id="@+id/second_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/first_time_text_view"
+            android:layout_marginTop="1dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="200 min" />
+
+        <TextView
+            android:id="@+id/destination_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/first_time_text_view"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingRight="12dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Wellington" />
+
+
+        <TextView
+            android:id="@+id/stop_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/destination_text_view"
+            android:layout_toLeftOf="@id/second_time_text_view"
+            android:paddingRight="12dp"
+            android:textSize="16sp"
+            tools:text="Main St at Wigglesworth St" />
+    </RelativeLayout>
+</LinearLayout>
