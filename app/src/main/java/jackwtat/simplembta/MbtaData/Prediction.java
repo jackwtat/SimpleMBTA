@@ -1,9 +1,6 @@
 package jackwtat.simplembta.MbtaData;
 
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-
-import static android.R.attr.mode;
 
 /**
  * Created by jackw on 8/26/2017.
@@ -14,8 +11,10 @@ public class Prediction implements Comparable{
     private String routeId;
     private String routeName;
     private String destination;
+    private String stopId;
+    private String stopName;
     private int direction;
-    private long predictedArrivalTime;
+    private long arrivalTime;
     private long queryTime;
 
     public Prediction(String tripId) {
@@ -36,6 +35,14 @@ public class Prediction implements Comparable{
 
     public void setRouteName(String routeName) { this.routeName = routeName; }
 
+    public String getStopId() { return stopId; }
+
+    public void setStopId(String stopId) { this.stopId = stopId; }
+
+    public String getStopName() { return stopName; }
+
+    public void setStopName(String stopName) { this.stopName = stopName; }
+
     public String getDestination() {
         return destination;
     }
@@ -52,12 +59,12 @@ public class Prediction implements Comparable{
         this.direction = direction;
     }
 
-    public long getPredictedArrivalTime() {
-        return predictedArrivalTime;
+    public long getArrivalTime() {
+        return arrivalTime;
     }
 
-    public void setPredictedArrivalTime(long predictedArrivalTime) {
-        this.predictedArrivalTime = predictedArrivalTime;
+    public void setArrivalTime(long arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 
     public long getQueryTime() {

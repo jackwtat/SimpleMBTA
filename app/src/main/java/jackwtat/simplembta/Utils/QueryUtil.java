@@ -202,10 +202,10 @@ public class QueryUtil {
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
             // Create a JSONObject from the JSON response string
-            JSONObject baseJsonResponse = new JSONObject(jsonResponse);
+            JSONObject stop = new JSONObject(jsonResponse);
 
             // Loop through each mode of transportation at this stop
-            JSONArray modes = baseJsonResponse.getJSONArray("mode");
+            JSONArray modes = stop.getJSONArray("mode");
             for (int i = 0; i < modes.length(); i++) {
                 JSONObject currentMode = modes.getJSONObject(i);
 
@@ -228,10 +228,13 @@ public class QueryUtil {
                             Prediction prediction = new Prediction(currentTrip.getString("trip_id"));
                             prediction.setRouteId(currentRoute.getString("route_id"));
                             prediction.setRouteName(currentRoute.getString("route_name"));
+                            prediction.setStopId(stop.getString("stop_id"));
+                            prediction.setStopName(stop.getString("stop_name"));
                             prediction.setDirection(currentDirection.getInt("direction_id"));
                             prediction.setDestination(currentTrip.getString("trip_headsign"));
-                            prediction.setPredictedArrivalTime(currentTrip.getLong("pre_away"));
+                            prediction.setArrivalTime(currentTrip.getLong("pre_away"));
 
+                            // Add prediction to the predictions list
                             predictions.add(prediction);
                         }
                     }

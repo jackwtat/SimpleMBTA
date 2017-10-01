@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 public class Route implements Comparable{
     public static final int OUTBOUND = 0;
     public static final int INBOUND = 1;
+    public static final int[] DIRECTIONS = {INBOUND, OUTBOUND};
 
     private String id;
     private String name;
