@@ -51,7 +51,7 @@ public class Stop implements Comparable {
         return routes;
     }
 
-    public List<Prediction> predictionsByDirection() {
+    public List<Prediction> getSortedPredictions() {
         return predictions;
     }
 
@@ -80,7 +80,7 @@ public class Stop implements Comparable {
     //        x = route
     //        y = direction, i.e. inbound/outbound
     //        z = next predictions
-    public Prediction[][][] predictionsByDirection(int perDirectionLimit) {
+    public Prediction[][][] getSortedPredictions(int perDirectionLimit) {
         Prediction[][][] predArray = new Prediction[routes.size()][Route.DIRECTIONS.length][perDirectionLimit];
 
         // Populate the array of predictions

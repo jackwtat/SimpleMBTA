@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jackwtat.simplembta.Adapters.GroupedPredictionsListAdapter;
+import jackwtat.simplembta.Adapters.IndividualPredictionsListAdapter;
+import jackwtat.simplembta.MbtaData.Prediction;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.MbtaData.Stop;
 
@@ -24,14 +26,14 @@ public abstract class PredictionsListFragment extends Fragment {
     private final static String LOG_TAG = "PredListsFragment";
 
     private View rootView;
-    private ArrayAdapter<Stop> predictionsListAdapter;
+    private ArrayAdapter<Prediction[]> predictionsListAdapter;
 
     protected abstract List<Stop> getStops();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        predictionsListAdapter = new GroupedPredictionsListAdapter(getActivity(), new ArrayList<Stop>());
+        predictionsListAdapter = new IndividualPredictionsListAdapter(getActivity(), new ArrayList<Prediction[]>());
     }
 
     @Nullable
@@ -43,14 +45,36 @@ public abstract class PredictionsListFragment extends Fragment {
         return rootView;
     }
 
-    protected void populateList(List<Stop> data){
+    protected void populateList(List<Stop> stops) {
         predictionsListAdapter.clear();
-        for(int i = 0; i < data.size(); i++){
-            predictionsListAdapter.add(data.get(i));
+
+        ArrayList<String> trips = new ArrayList<>();
+
+        for (int i = 0; i < stops.size(); i++) {
+            Prediction[][][] predArray = stops.get(i).getSortedPredictions(2);
+
+            for (int j = 0; j < predArray.length; j++) {
+                for (int k = 0; k < predArray[j].length; k++) {
+                    if (predArray[j][k][0] != null) {
+                        if (!trips.contains(predArray[j][k][0].getTripId())) {
+                            predictionsListAdapter.add(predArray[j][k]);
+                            trips.add(predArray[j][k][0].getTripId());
+                            if (predArray[j][k][1] != null) {
+                                trips.add(predArray[j][k][1].getTripId());
+                            }
+                        } else if (predArray[j][k][1] != null) {
+                            if (!trips.contains(predArray[j][k][1].getTripId())) {
+                                predictionsListAdapter.add(predArray[j][k]);
+                                trips.add(predArray[j][k][0].getTripId());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    protected void clearList(){
+    protected void clearList() {
         predictionsListAdapter.clear();
     }
 }

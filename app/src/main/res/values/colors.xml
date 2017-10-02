@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Colors -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#F44336</color>
+
+    <!-- Font Colors -->
+    <color name="PrimaryText">#606060</color>
+    <color name="HighlightedText">#ffffff</color>
+    <color name="TabText">#b0bec5</color>
+    <color name="TabSelectedText">#ffffff</color>
+
+    <!-- Line Colors -->
+    <color name="RedLine">#E12D27</color>
+    <color name="OrangeLine">#E87200</color>
+    <color name="BlueLine">#2F5DA6</color>
+    <color name="GreenLine">#427B1D</color>
+    <color name="SilverLine">#555555</color>
+    <color name="LocalBus">#FFFF7C</color>
+    <color name="CommuterRail">#8B118F</color>
+    <color name="Boat">#5DA9E8</color>
+
+
+    <!-- Alert Colors -->
+    <color name="ApproachingAlert">#d50000</color>
+
 </resources>

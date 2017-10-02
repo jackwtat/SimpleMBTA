@@ -15,15 +15,19 @@ public class Prediction implements Comparable{
     private String stopName;
     private int direction;
     private long arrivalTime;
-    private long queryTime;
 
     public Prediction(String tripId) {
         this.tripId = tripId;
+        routeId = "";
+        routeName = "";
+        destination = "";
+        stopId = "";
+        stopName = "";
+        direction = Route.UNKNOWN;
+        arrivalTime = -1;
     }
 
-    public String getTripId() {
-        return tripId;
-    }
+    public String getTripId() { return tripId; }
 
     public String getRouteId() {
         return routeId;
@@ -65,14 +69,6 @@ public class Prediction implements Comparable{
 
     public void setArrivalTime(long arrivalTime) {
         this.arrivalTime = arrivalTime;
-    }
-
-    public long getQueryTime() {
-        return queryTime;
-    }
-
-    public void setQueryTime(long queryTime) {
-        this.queryTime = queryTime;
     }
 
     @Override

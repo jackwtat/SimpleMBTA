@@ -162,18 +162,18 @@ public class QueryUtil {
 
             // Loop through each mode of transportation at this stop
             JSONArray modes = baseJsonResponse.getJSONArray("mode");
-            for(int i = 0; i < modes.length(); i++){
+            for (int i = 0; i < modes.length(); i++) {
                 JSONObject currentMode = modes.getJSONObject(i);
 
                 // Loop through all routes of the current mode at this stop
                 JSONArray routes = currentMode.getJSONArray("route");
-                for(int j = 0; j <routes.length(); j++){
+                for (int j = 0; j < routes.length(); j++) {
                     JSONObject currentRoute = routes.getJSONObject(j);
 
                     // Create new Route object and populate with data
                     Route route = new Route(currentRoute.getString("route_id"),
-                                            currentRoute.getString("route_name"),
-                                            currentMode.getInt("route_type"));
+                            currentRoute.getString("route_name"),
+                            currentMode.getInt("route_type"));
 
                     routeList.add(route);
                 }
@@ -227,7 +227,7 @@ public class QueryUtil {
                             // Create new Prediction object and populate with data
                             Prediction prediction = new Prediction(currentTrip.getString("trip_id"));
                             prediction.setRouteId(currentRoute.getString("route_id"));
-                            prediction.setRouteName(currentRoute.getString("route_name"));
+                            prediction.setRouteName(Route.getShortName(currentRoute.getString("route_id")));
                             prediction.setStopId(stop.getString("stop_id"));
                             prediction.setStopName(stop.getString("stop_name"));
                             prediction.setDirection(currentDirection.getInt("direction_id"));

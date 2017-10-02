@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jackwtat.simplembta.MbtaData.Prediction;
 import jackwtat.simplembta.MbtaData.Route;
@@ -48,7 +47,7 @@ public class GroupedPredictionsListAdapter extends ArrayAdapter<Stop> {
         Stop stop = getItem(position);
 
         // Get predictions
-        Prediction nextPredictions[][][] = stop.predictionsByDirection(PREDICTION_LIMIT);
+        Prediction nextPredictions[][][] = stop.getSortedPredictions(PREDICTION_LIMIT);
 
         // Initalize the TextView for the stop name and set value
         TextView stopNameTextView = (TextView) listItemView.findViewById(R.id.stop_name_text);
@@ -94,7 +93,7 @@ public class GroupedPredictionsListAdapter extends ArrayAdapter<Stop> {
                         }
                     }
 
-                    predictedTimes += " mins";
+                    predictedTimes += " min";
 
                     routesLayout.addView(newPredictionTextView(routeName, true));
                     destinationLayout.addView(newPredictionTextView(destination, false));
