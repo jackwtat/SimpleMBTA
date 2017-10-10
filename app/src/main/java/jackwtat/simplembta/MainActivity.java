@@ -3,6 +3,7 @@ package jackwtat.simplembta;
 import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -13,9 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import jackwtat.simplembta.Adapters.PredictionsPagerAdapter;
+import jackwtat.simplembta.Fragments.UpdatableFragment;
 
 public class MainActivity extends AppCompatActivity {
-    private int REQUEST_ACCESS_FINE_LOCATION = 1;
+    private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager = (ViewPager) findViewById(R.id.fragment_container);
         viewPager.setAdapter(predictionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -54,17 +56,39 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        super.onStart();
+
         // Get permissions
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_ACCESS_FINE_LOCATION);
+
         }
+    }
 
-        // Create stop database
-        // TODO: Create stop database
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    getCurrentFragment().update();
+                } else {
 
-        super.onStart();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override
@@ -76,16 +100,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_settings:
+                return true;
+
+            case R.id.action_refresh:
+                getCurrentFragment().update();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private UpdatableFragment getCurrentFragment() {
+        UpdatableFragment currentFragment = (UpdatableFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+        return currentFragment;
     }
 }

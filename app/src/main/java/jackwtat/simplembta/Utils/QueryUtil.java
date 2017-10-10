@@ -20,6 +20,7 @@ import java.util.List;
 
 import jackwtat.simplembta.MbtaData.Prediction;
 import jackwtat.simplembta.MbtaData.Route;
+import jackwtat.simplembta.MbtaData.Stop;
 
 /**
  * Created by jackw on 9/1/2017.
@@ -71,6 +72,24 @@ public class QueryUtil {
         }
 
         return extractPredictionsFromJson(jsonResponse);
+    }
+
+    public static List<Stop> fetchStopsByLocation(double latitude, double longitude) {
+        String requestUrl = MBTA_URL + "stopsbylocation" + API_KEY + RESPONSE_FORMAT +
+                "&lat=" + latitude + "&lon=" + longitude;
+
+        URL url = createUrl(requestUrl);
+
+        Log.i(TAG, requestUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(TAG, "Problem making the HTTP request.", e);
+        }
+
+        return extractStopsFromJson(jsonResponse);
     }
 
     /**
@@ -249,5 +268,39 @@ public class QueryUtil {
 
         // Return the list of predictions
         return predictions;
+    }
+
+    private static List<Stop> extractStopsFromJson(String stopsJson) {
+        List<Stop> stops = new ArrayList<>();
+
+        if (TextUtils.isEmpty(stopsJson)) {
+            return stops;
+        }
+
+        try {
+            JSONObject baseJsonResponse = new JSONObject(stopsJson);
+
+            JSONArray stopArray = baseJsonResponse.getJSONArray("stop");
+
+            for (int i = 0; i < stopArray.length(); i++) {
+                JSONObject currentStop = stopArray.getJSONObject(i);
+
+                String id = currentStop.getString("stop_id");
+                String name = currentStop.getString("stop_name");
+                Double latitude = currentStop.getDouble("stop_lat");
+                Double longitude = currentStop.getDouble("stop_lon");
+                Double distance = currentStop.getDouble("distance");
+                String parentStation = currentStop.getString("parent_station");
+                String parentStationName = currentStop.getString("parent_station_name");
+
+                Stop stop = new Stop(id, name, latitude, longitude);
+                stops.add(stop);
+            }
+
+        } catch (JSONException e) {
+            Log.e("QueryUtils", "Problem parsing the prediction JSON results", e);
+        }
+
+        return stops;
     }
 }

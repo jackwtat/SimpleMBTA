@@ -1,10 +1,18 @@
 package jackwtat.simplembta.Fragments;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -12,83 +20,199 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jackwtat.simplembta.MbtaData.Stop;
+import jackwtat.simplembta.R;
 import jackwtat.simplembta.Utils.QueryUtil;
 
 /**
  * Created by jackw on 9/30/2017.
  */
 
-public class NearbyListFragment extends PredictionsListFragment implements ConnectionCallbacks, OnConnectionFailedListener{
+public class NearbyListFragment extends PredictionsListFragment {
     private final String TAG = "NearbyListFragment";
 
-    private int REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean firstQueryDone = false;
 
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
-    private double mLatitude;
-    private double mLongitude;
+    private LocationServicesClient locationServicesClient;
+    private double currentLatitude;
+    private double currentLongitude;
+
+    PredictionAsyncTask predictionAsyncTask;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        locationServicesClient = new LocationServicesClient();
     }
 
     @Override
-    protected List<Stop> getStops() {
-        return null;
+    public void onStart() {
+        super.onStart();
+        if (!firstQueryDone) {
+            update();
+        }
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void update() {
+        // Clear predictions list
+        // Show progress bar
+        clearList();
+        showProgressBar(true);
+        showStatusMessage(false);
 
+        // If no network connectivity found, show error message
+        // Or if no location gotten, show error message
+        if (!checkNetworkConnection()) {
+            showProgressBar(false);
+            setStatusMessage(getResources().getString(R.string.no_network_connectivity));
+            showStatusMessage(true);
+            updateTime();
+        } else {
+            // Refresh current location
+            locationServicesClient.refreshLocation();
+        }
     }
 
-    private class PredictionAsyncTask extends AsyncTask<Stop, Void, List<Stop>>{
+    private boolean checkNetworkConnection() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
+    }
+
+    private void locationFound(boolean found) {
+        if (!found) {
+            showProgressBar(false);
+            setStatusMessage(getResources().getString(R.string.no_location));
+            showStatusMessage(true);
+            updateTime();
+        } else {
+            // We have both internet and location
+            // Get predictions from MBTA API
+            predictionAsyncTask = new PredictionAsyncTask();
+            double[] coordinates = {currentLatitude, currentLongitude};
+            predictionAsyncTask.execute(coordinates);
+        }
+    }
+
+    /*
+     * Wrapper around the GoogleApiClient and LocationServices API
+     * Allows for easy access to the device's current location and GPS coordinates
+     */
+    private class LocationServicesClient implements ConnectionCallbacks, OnConnectionFailedListener {
+        private GoogleApiClient googleApiClient;
+
+        private LocationServicesClient() {
+            googleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+            Log.i(TAG, "Location connection successful");
+            getLocation();
+            locationFound(true);
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+            Log.i(TAG, "Location connection suspended");
+        }
+
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            Log.e(TAG, "Location connection failed");
+        }
+
+        private void disconnectClient() {
+            if (googleApiClient.isConnected()) {
+                googleApiClient.disconnect();
+            }
+        }
+
+        private void refreshLocation() {
+            if (!googleApiClient.isConnected()) {
+                googleApiClient.connect();
+            } else {
+                Log.i(TAG, "Google API client already connected");
+                getLocation();
+            }
+        }
+
+        private void getLocation() {
+            Log.i(TAG, "getLocation() called");
+            boolean locationFound = false;
+
+            if (ActivityCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                showProgressBar(false);
+                updateTime();
+                setStatusMessage(getResources().getString(R.string.no_location));
+            } else {
+                try {
+                    Log.i(TAG, "Location found");
+                    Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    currentLatitude = location.getLatitude();
+                    currentLongitude = location.getLongitude();
+                } catch (Exception ex) {
+                    Log.e(TAG, "Location services error");
+                }
+            }
+            disconnectClient();
+        }
+    }
+
+    /*
+     * AsyncTask that asynchronously queries the MBTA API and displays the results upon success
+     */
+    private class PredictionAsyncTask extends AsyncTask<double[], Void, List<Stop>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected List<Stop> doInBackground(Stop... params) {
-            if (params.length < 1 || params[0] == null){
-                return null;
-            }
+        protected List<Stop> doInBackground(double[]... coordinates) {
 
-            ArrayList<Stop> results = new ArrayList<>();
+            List<Stop> stops = QueryUtil.fetchStopsByLocation(coordinates[0][0], coordinates[0][1]);
 
-            for (Stop stop : params){
+            for (Stop stop : stops) {
                 String id = stop.getId();
 
                 stop.addRoutes(QueryUtil.fetchRoutesByStop(id));
                 stop.addPredictions(QueryUtil.fetchPredictionsByStop(id));
-
-                results.add(stop);
             }
-            return null;
+            return stops;
         }
 
         @Override
         protected void onPostExecute(List<Stop> stops) {
+            firstQueryDone = true;
+            showProgressBar(false);
             populateList(stops);
+            updateTime();
+            setDebugTextView("lat:" + currentLatitude + "lon:" + currentLongitude);
         }
     }
 }
