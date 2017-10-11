@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationServices;
 
 import java.util.List;
+import java.util.Date;
 
 import jackwtat.simplembta.MbtaData.Stop;
 import jackwtat.simplembta.R;
@@ -33,7 +33,8 @@ import jackwtat.simplembta.Utils.QueryUtil;
 public class NearbyListFragment extends PredictionsListFragment {
     private final String TAG = "NearbyListFragment";
 
-    private boolean firstQueryDone = false;
+    private boolean hasPredictions = false;
+    private Date lastUpdated = new Date();
 
     private LocationServicesClient locationServicesClient;
     private double currentLatitude;
@@ -49,9 +50,13 @@ public class NearbyListFragment extends PredictionsListFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!firstQueryDone) {
+    public void onResume() {
+        Date currentTime = new Date();
+
+        super.onResume();
+        if (!hasPredictions) {
+            update();
+        } else if ((currentTime.getTime() - lastUpdated.getTime()) / 1000 > 60) {
             update();
         }
     }
@@ -80,7 +85,9 @@ public class NearbyListFragment extends PredictionsListFragment {
             showProgressBar(false);
             setStatusMessage(getResources().getString(R.string.no_network_connectivity));
             showStatusMessage(true);
-            updateTime();
+            lastUpdated = new Date();
+            updateTime(lastUpdated);
+            hasPredictions = false;
         } else {
             // Refresh current location
             locationServicesClient.refreshLocation();
@@ -103,7 +110,9 @@ public class NearbyListFragment extends PredictionsListFragment {
             showProgressBar(false);
             setStatusMessage(getResources().getString(R.string.no_location));
             showStatusMessage(true);
-            updateTime();
+            lastUpdated = new Date();
+            updateTime(lastUpdated);
+            hasPredictions = false;
         } else {
             // We have both internet and location
             // Get predictions from MBTA API
@@ -167,8 +176,10 @@ public class NearbyListFragment extends PredictionsListFragment {
             if (ActivityCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 showProgressBar(false);
-                updateTime();
+                lastUpdated = new Date();
+                updateTime(lastUpdated);
                 setStatusMessage(getResources().getString(R.string.no_location));
+                hasPredictions = false;
             } else {
                 try {
                     Log.i(TAG, "Location found");
@@ -201,18 +212,18 @@ public class NearbyListFragment extends PredictionsListFragment {
                 String id = stop.getId();
 
                 stop.addRoutes(QueryUtil.fetchRoutesByStop(id));
-                stop.addPredictions(QueryUtil.fetchPredictionsByStop(id));
+                stop.addTrips(QueryUtil.fetchPredictionsByStop(id));
             }
             return stops;
         }
 
         @Override
         protected void onPostExecute(List<Stop> stops) {
-            firstQueryDone = true;
             showProgressBar(false);
             populateList(stops);
-            updateTime();
-            setDebugTextView("lat:" + currentLatitude + "lon:" + currentLongitude);
+            lastUpdated = new Date();
+            updateTime(lastUpdated);
+            hasPredictions = true;
         }
     }
 }

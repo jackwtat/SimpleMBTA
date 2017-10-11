@@ -15,7 +15,7 @@ public class Stop implements Comparable {
     private double latitude;
     private double longitude;
     private List<Route> routes = new ArrayList<>();
-    private List<Prediction> predictions = new ArrayList<>();
+    private List<Trip> trips = new ArrayList<>();
 
     public Stop(String id, String name) {
         this.id = id;
@@ -51,12 +51,12 @@ public class Stop implements Comparable {
         return routes;
     }
 
-    public List<Prediction> getSortedPredictions() {
-        return predictions;
+    public List<Trip> getSortedTrips() {
+        return trips;
     }
 
     public void clearPredictions() {
-        predictions.clear();
+        trips.clear();
     }
 
     public void addRoute(Route route) {
@@ -67,64 +67,64 @@ public class Stop implements Comparable {
         this.routes.addAll(routes);
     }
 
-    public void addPrediction(Prediction prediction) {
-        predictions.add(prediction);
+    public void addPrediction(Trip trip) {
+        trips.add(trip);
     }
 
-    public void addPredictions(List<Prediction> predictions) {
-        this.predictions.addAll(predictions);
+    public void addTrips(List<Trip> trips) {
+        this.trips.addAll(trips);
     }
 
-    //    Create an array for each route's next predictions in each direction
-    //    Returns Prediction[x][y][z]
+    //    Create an array for each route's next trips in each direction
+    //    Returns Trip[x][y][z]
     //        x = route
     //        y = direction, i.e. inbound/outbound
-    //        z = next predictions
-    public Prediction[][][] getSortedPredictions(int perDirectionLimit) {
-        Prediction[][][] predArray = new Prediction[routes.size()][Route.DIRECTIONS.length][perDirectionLimit];
+    //        z = next trips
+    public Trip[][][] getSortedTrips(int perDirectionLimit) {
+        Trip[][][] tripArray = new Trip[routes.size()][Route.DIRECTIONS.length][perDirectionLimit];
 
-        // Populate the array of predictions
-        // Loop through all predictions at this stop
-        for (int i = 0; i < predictions.size(); i++) {
-            Prediction prediction = predictions.get(i);
+        // Populate the array of trips
+        // Loop through all trips at this stop
+        for (int i = 0; i < trips.size(); i++) {
+            Trip trip = trips.get(i);
 
-            // Get direction of the prediction
-            int k = prediction.getDirection();
+            // Get direction of the trip
+            int k = trip.getDirection();
 
             // Find the corresponding position of route in list
-            // and populate into predictions array
+            // and populate into trips array
             for (int j = 0; j < routes.size(); j++) {
-                if (prediction.getRouteId().equals(routes.get(j).getId())) {
+                if (trip.getRouteId().equals(routes.get(j).getId())) {
                     /*
                         Correct position of route & direction found
-                        Order of insertion of prediction:
+                        Order of insertion of trip:
                           1. If current slot is empty
-                                Insert new prediction into current slot
-                          2. If prediction arrival time is less than slot's arrival time
-                                Shift next predictions up by one
-                                Insert new prediction into current slot
+                                Insert new trip into current slot
+                          2. If trip arrival time is less than slot's arrival time
+                                Shift next trips up by one
+                                Insert new trip into current slot
                     */
-                    for (int m = 0; m < predArray[j][k].length; m++) {
-                        if (predArray[j][k][m] == null) {
-                            predArray[j][k][m] = prediction;
-                            m = predArray[j][k].length;
-                        } else if (prediction.getArrivalTime() < predArray[j][k][m].getArrivalTime()) {
-                            // Shift all predictions right
-                            for (int n = predArray[j][k].length - 1; n > m; n--) {
-                                predArray[j][k][n] = predArray[j][k][n - 1];
+                    for (int m = 0; m < tripArray[j][k].length; m++) {
+                        if (tripArray[j][k][m] == null) {
+                            tripArray[j][k][m] = trip;
+                            m = tripArray[j][k].length;
+                        } else if (trip.getArrivalTime() < tripArray[j][k][m].getArrivalTime()) {
+                            // Shift all trips right
+                            for (int n = tripArray[j][k].length - 1; n > m; n--) {
+                                tripArray[j][k][n] = tripArray[j][k][n - 1];
                             }
-                            predArray[j][k][m] = prediction;
-                            m = predArray[j][k].length;
+                            tripArray[j][k][m] = trip;
+                            m = tripArray[j][k].length;
                         }
                     }
 
-                    // Terminate j-loop to move to next prediction
+                    // Terminate j-loop to move to next trip
                     j = routes.size();
                 }
             }
         }
 
-        return predArray;
+        return tripArray;
     }
 
     @Override

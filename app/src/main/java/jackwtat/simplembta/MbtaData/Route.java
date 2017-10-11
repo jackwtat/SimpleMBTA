@@ -1,6 +1,9 @@
 package jackwtat.simplembta.MbtaData;
 
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+
+import jackwtat.simplembta.R;
 
 /**
  * Created by jackw on 9/7/2017.
@@ -40,41 +43,41 @@ public class Route implements Comparable {
         return 0;
     }
 
-    public static String getShortName(String id) {
-        if (id.substring(0, 1).equals("G")) {
-            return "GL-" + id.substring(6, 7);
-        } else if (id.equals("Mattapan")) {
+    public static String getShortName(String routeId) {
+        if (routeId.length() >= 5 && routeId.substring(0, 5).equals("Green")) {
+            return "GL-" + routeId.substring(6, 7);
+        } else if (routeId.equals("Mattapan")) {
             return "RL-M";
-        } else if (id.equals("Blue")) {
+        } else if (routeId.equals("Blue")) {
             return "BL";
-        } else if (id.equals("Orange")) {
+        } else if (routeId.equals("Orange")) {
             return "OL";
-        } else if (id.equals("Red")) {
+        } else if (routeId.equals("Red")) {
             return "RL";
-        } else if (id.substring(0, 1).equals("C")) {
+        } else if (routeId.length() >= 2 && routeId.substring(0, 2).equals("CR")) {
             return "CR";
-        } else if (id.equals("701")) {
+        } else if (routeId.equals("701")) {
             return "CT1";
-        } else if (id.equals("747")) {
+        } else if (routeId.equals("747")) {
             return "CT2";
-        } else if (id.equals("708")) {
+        } else if (routeId.equals("708")) {
             return "CT3";
-        } else if (id.equals("741")) {
+        } else if (routeId.equals("741")) {
             return "SL1";
-        } else if (id.equals("742")) {
+        } else if (routeId.equals("742")) {
             return "SL2";
-        } else if (id.equals("751")) {
+        } else if (routeId.equals("751")) {
             return "SL4";
-        } else if (id.equals("749")) {
+        } else if (routeId.equals("749")) {
             return "SL5";
-        } else if (id.equals("746")) {
+        } else if (routeId.equals("746")) {
             return "SL-W";
-        } else if (id.equals("Boat-F4")) {
-            return "F4";
-        } else if (id.equals("Boat-F1")) {
-            return "F1";
+        } else if (routeId.length() >= 4 && routeId.substring(0, 4).equals("Boat")) {
+            return "Boat";
         } else {
-            return id;
+            return routeId;
         }
     }
+
+
 }

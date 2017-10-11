@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import jackwtat.simplembta.MbtaData.Prediction;
+import jackwtat.simplembta.MbtaData.Trip;
 import jackwtat.simplembta.MbtaData.Route;
 import jackwtat.simplembta.MbtaData.Stop;
 import jackwtat.simplembta.R;
@@ -47,7 +47,7 @@ public class GroupedPredictionsListAdapter extends ArrayAdapter<Stop> {
         Stop stop = getItem(position);
 
         // Get predictions
-        Prediction nextPredictions[][][] = stop.getSortedPredictions(PREDICTION_LIMIT);
+        Trip nextTrips[][][] = stop.getSortedTrips(PREDICTION_LIMIT);
 
         // Initalize the TextView for the stop name and set value
         TextView stopNameTextView = (TextView) listItemView.findViewById(R.id.stop_name_text);
@@ -55,12 +55,12 @@ public class GroupedPredictionsListAdapter extends ArrayAdapter<Stop> {
 
 
         // Populate the listItemView with predictions
-        listItemView = populateInnerPredictionsList(listItemView, nextPredictions);
+        listItemView = populateTripsList(listItemView, nextTrips);
 
         return listItemView;
     }
 
-    private View populateInnerPredictionsList(View listItemView, Prediction[][][] nextPredictions) {
+    private View populateTripsList(View listItemView, Trip[][][] nextTrips) {
         // Initialize layouts
         LinearLayout routesLayout = (LinearLayout) listItemView.findViewById(R.id.route_names);
         LinearLayout destinationLayout = (LinearLayout) listItemView.findViewById(R.id.destinations);
@@ -75,21 +75,21 @@ public class GroupedPredictionsListAdapter extends ArrayAdapter<Stop> {
         // Group by route
         // Inbound first
         // Outbound second
-        for (int i = 0; i < nextPredictions.length; i++) {
+        for (int i = 0; i < nextTrips.length; i++) {
             for (int j : Route.DIRECTIONS) {
-                Prediction firstPrediction = nextPredictions[i][j][0];
+                Trip firstTrip = nextTrips[i][j][0];
 
-                if (firstPrediction == null) {
+                if (firstTrip == null) {
                     // No predictions to display for this route
                     // Do nothing
                 } else {
-                    String routeName = firstPrediction.getRouteName();
-                    String destination = firstPrediction.getDestination();
-                    String predictedTimes = String.valueOf(firstPrediction.getArrivalTime() / 60);
+                    String routeName = firstTrip.getRouteName();
+                    String destination = firstTrip.getDestination();
+                    String predictedTimes = String.valueOf(firstTrip.getArrivalTime() / 60);
 
-                    for (int k = 1; k < nextPredictions[i][j].length; k++) {
-                        if (nextPredictions[i][j][k] != null) {
-                            predictedTimes += ", " + String.valueOf(nextPredictions[i][j][k].getArrivalTime() / 60);
+                    for (int k = 1; k < nextTrips[i][j].length; k++) {
+                        if (nextTrips[i][j][k] != null) {
+                            predictedTimes += ", " + String.valueOf(nextTrips[i][j][k].getArrivalTime() / 60);
                         }
                     }
 

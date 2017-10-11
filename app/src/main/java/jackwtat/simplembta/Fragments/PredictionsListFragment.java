@@ -1,8 +1,8 @@
 package jackwtat.simplembta.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.Adapters.IndividualPredictionsListAdapter;
-import jackwtat.simplembta.MbtaData.Prediction;
+import jackwtat.simplembta.MbtaData.Trip;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.MbtaData.Stop;
 
@@ -29,17 +29,18 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
     private final static String LOG_TAG = "PredListsFragment";
 
     private View rootView;
+    private PredictionsListView predictionsListView;
     private TextView updateTimeTextView;
     private TextView statusTextView;
     private TextView debugTextView;
     private ProgressBar progressBar;
 
-    private ArrayAdapter<Prediction[]> predictionsListAdapter;
+    private ArrayAdapter<Trip[]> predictionsListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        predictionsListAdapter = new IndividualPredictionsListAdapter(getActivity(), new ArrayList<Prediction[]>());
+        predictionsListAdapter = new IndividualPredictionsListAdapter(getActivity(), new ArrayList<Trip[]>());
     }
 
     @Nullable
@@ -48,7 +49,7 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
         rootView = inflater.inflate(R.layout.fragment_predictions_list, container, false);
 
 
-        ListView predictionsListView = (ListView) rootView.findViewById(R.id.predictions_list_view);
+        predictionsListView = (PredictionsListView) rootView.findViewById(R.id.predictions_list_view);
         updateTimeTextView = (TextView) rootView.findViewById(R.id.updated_time_text_view);
         statusTextView = (TextView) rootView.findViewById(R.id.status_text_view);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
@@ -59,10 +60,10 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
         return rootView;
     }
 
-    protected void updateTime(){
+    protected void updateTime(Date updatedTime){
         TextView updatedTextView = (TextView) rootView.findViewById(R.id.updated_time_text_view);
         SimpleDateFormat ft = new SimpleDateFormat("h:mm a");
-        String text = "Updated " + ft.format(new Date());
+        String text = "Updated " + ft.format(updatedTime);
         updatedTextView.setText(text);
     }
 
@@ -100,21 +101,21 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
         ArrayList<String> trips = new ArrayList<>();
 
         for (int i = 0; i < stops.size(); i++) {
-            Prediction[][][] predArray = stops.get(i).getSortedPredictions(2);
+            Trip[][][] predArray = stops.get(i).getSortedTrips(2);
 
             for (int j = 0; j < predArray.length; j++) {
                 for (int k = 0; k < predArray[j].length; k++) {
                     if (predArray[j][k][0] != null) {
-                        if (!trips.contains(predArray[j][k][0].getTripId())) {
+                        if (!trips.contains(predArray[j][k][0].getId())) {
                             predictionsListAdapter.add(predArray[j][k]);
-                            trips.add(predArray[j][k][0].getTripId());
+                            trips.add(predArray[j][k][0].getId());
                             if (predArray[j][k][1] != null) {
-                                trips.add(predArray[j][k][1].getTripId());
+                                trips.add(predArray[j][k][1].getId());
                             }
                         } else if (predArray[j][k][1] != null) {
-                            if (!trips.contains(predArray[j][k][1].getTripId())) {
+                            if (!trips.contains(predArray[j][k][1].getId())) {
                                 predictionsListAdapter.add(predArray[j][k]);
-                                trips.add(predArray[j][k][0].getTripId());
+                                trips.add(predArray[j][k][0].getId());
                             }
                         }
                     }
@@ -125,5 +126,17 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
 
     protected void clearList() {
         predictionsListAdapter.clear();
+    }
+
+    public class PredictionsListView extends ListView {
+        public PredictionsListView(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+            super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+            update();
+        }
     }
 }

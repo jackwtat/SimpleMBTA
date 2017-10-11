@@ -6,20 +6,22 @@ import android.support.annotation.NonNull;
  * Created by jackw on 8/26/2017.
  */
 
-public class Prediction implements Comparable{
-    private String tripId;
+public class Trip implements Comparable{
+    private String id;
     private String routeId;
     private String routeName;
+    private int mode;
     private String destination;
     private String stopId;
     private String stopName;
     private int direction;
     private long arrivalTime;
 
-    public Prediction(String tripId) {
-        this.tripId = tripId;
+    public Trip(String id) {
+        this.id = id;
         routeId = "";
         routeName = "";
+        mode = -1;
         destination = "";
         stopId = "";
         stopName = "";
@@ -27,7 +29,7 @@ public class Prediction implements Comparable{
         arrivalTime = -1;
     }
 
-    public String getTripId() { return tripId; }
+    public String getId() { return id; }
 
     public String getRouteId() {
         return routeId;
@@ -38,6 +40,10 @@ public class Prediction implements Comparable{
     public String getRouteName() { return routeName; }
 
     public void setRouteName(String routeName) { this.routeName = routeName; }
+
+    public int getMode(){ return mode; }
+
+    public void setMode(int mode){ this.mode = mode; }
 
     public String getStopId() { return stopId; }
 

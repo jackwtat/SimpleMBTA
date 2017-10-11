@@ -2,7 +2,6 @@ package jackwtat.simplembta.Loaders;
 
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class StopPredictionsLoader extends AsyncTaskLoader<List<Stop>> {
             String stopId = stops.get(i).getId();
 
             stops.get(i).addRoutes(QueryUtil.fetchRoutesByStop(stopId));
-            stops.get(i).addPredictions(QueryUtil.fetchPredictionsByStop(stopId));
+            stops.get(i).addTrips(QueryUtil.fetchPredictionsByStop(stopId));
         }
 
         return stops;

@@ -18,7 +18,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.MbtaData.Prediction;
+import jackwtat.simplembta.MbtaData.Trip;
 import jackwtat.simplembta.MbtaData.Route;
 import jackwtat.simplembta.MbtaData.Stop;
 
@@ -57,7 +57,7 @@ public class QueryUtil {
         return extractRoutesFromJson(jsonResponse);
     }
 
-    public static List<Prediction> fetchPredictionsByStop(String stopId) {
+    public static List<Trip> fetchPredictionsByStop(String stopId) {
 
         String requestUrl = MBTA_URL + "predictionsbystop" + API_KEY + RESPONSE_FORMAT +
                 "&stop=" + stopId;
@@ -208,8 +208,8 @@ public class QueryUtil {
         return routeList;
     }
 
-    private static List<Prediction> extractPredictionsFromJson(String jsonResponse) {
-        List<Prediction> predictions = new ArrayList<>();
+    private static List<Trip> extractPredictionsFromJson(String jsonResponse) {
+        List<Trip> predictions = new ArrayList<>();
 
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(jsonResponse)) {
@@ -243,18 +243,19 @@ public class QueryUtil {
                         for (int m = 0; m < trips.length(); m++) {
                             JSONObject currentTrip = trips.getJSONObject(m);
 
-                            // Create new Prediction object and populate with data
-                            Prediction prediction = new Prediction(currentTrip.getString("trip_id"));
-                            prediction.setRouteId(currentRoute.getString("route_id"));
-                            prediction.setRouteName(Route.getShortName(currentRoute.getString("route_id")));
-                            prediction.setStopId(stop.getString("stop_id"));
-                            prediction.setStopName(stop.getString("stop_name"));
-                            prediction.setDirection(currentDirection.getInt("direction_id"));
-                            prediction.setDestination(currentTrip.getString("trip_headsign"));
-                            prediction.setArrivalTime(currentTrip.getLong("pre_away"));
+                            // Create new Trip object and populate with data
+                            Trip trip = new Trip(currentTrip.getString("trip_id"));
+                            trip.setRouteId(currentRoute.getString("route_id"));
+                            trip.setRouteName(Route.getShortName(currentRoute.getString("route_id")));
+                            trip.setMode(currentMode.getInt("route_type"));
+                            trip.setStopId(stop.getString("stop_id"));
+                            trip.setStopName(stop.getString("stop_name"));
+                            trip.setDirection(currentDirection.getInt("direction_id"));
+                            trip.setDestination(currentTrip.getString("trip_headsign"));
+                            trip.setArrivalTime(currentTrip.getLong("pre_away"));
 
-                            // Add prediction to the predictions list
-                            predictions.add(prediction);
+                            // Add trip to the predictions list
+                            predictions.add(trip);
                         }
                     }
                 }
