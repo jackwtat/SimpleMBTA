@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
  * Created by jackw on 8/26/2017.
  */
 
-public class Trip implements Comparable{
+public class Trip {
     private String id;
     private String routeId;
     private String routeName;
@@ -29,29 +29,49 @@ public class Trip implements Comparable{
         arrivalTime = -1;
     }
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
     public String getRouteId() {
         return routeId;
     }
 
-    public void setRouteId(String routeId) { this.routeId = routeId; }
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
+    }
 
-    public String getRouteName() { return routeName; }
+    public String getRouteName() {
+        return routeName;
+    }
 
-    public void setRouteName(String routeName) { this.routeName = routeName; }
+    public void setRouteName(String routeName) {
+        this.routeName = routeName;
+    }
 
-    public int getMode(){ return mode; }
+    public int getMode() {
+        return mode;
+    }
 
-    public void setMode(int mode){ this.mode = mode; }
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
 
-    public String getStopId() { return stopId; }
+    public String getStopId() {
+        return stopId;
+    }
 
-    public void setStopId(String stopId) { this.stopId = stopId; }
+    public void setStopId(String stopId) {
+        this.stopId = stopId;
+    }
 
-    public String getStopName() { return stopName; }
+    public String getStopName() {
+        return stopName;
+    }
 
-    public void setStopName(String stopName) { this.stopName = stopName; }
+    public void setStopName(String stopName) {
+        this.stopName = stopName;
+    }
 
     public String getDestination() {
         return destination;
@@ -77,9 +97,4 @@ public class Trip implements Comparable{
         this.arrivalTime = arrivalTime;
     }
 
-    @Override
-    public int compareTo(@NonNull Object o) {
-        // TODO: Implement compareTo
-        return 0;
-    }
 }

@@ -125,7 +125,7 @@ public class IndividualPredictionsListAdapter extends ArrayAdapter<Trip[]> {
     }
 
     private int getTextColorId(View view, int mode) {
-        if (mode != Mode.BUS && mode != Mode.UNKNOWN) {
+        if (mode != Mode.BUS) {
             return ContextCompat.getColor(view.getContext(), R.color.HighlightedText);
         } else {
             return ContextCompat.getColor(view.getContext(), R.color.PrimaryText);

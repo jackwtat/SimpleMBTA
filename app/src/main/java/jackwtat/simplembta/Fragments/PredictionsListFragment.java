@@ -3,6 +3,7 @@ package jackwtat.simplembta.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
     private final static String LOG_TAG = "PredListsFragment";
 
     private View rootView;
-    private PredictionsListView predictionsListView;
+    private ListView predictionsListView;
     private TextView updateTimeTextView;
     private TextView statusTextView;
     private TextView debugTextView;
@@ -49,7 +50,7 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
         rootView = inflater.inflate(R.layout.fragment_predictions_list, container, false);
 
 
-        predictionsListView = (PredictionsListView) rootView.findViewById(R.id.predictions_list_view);
+        predictionsListView = (ListView) rootView.findViewById(R.id.predictions_list_view);
         updateTimeTextView = (TextView) rootView.findViewById(R.id.updated_time_text_view);
         statusTextView = (TextView) rootView.findViewById(R.id.status_text_view);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
@@ -128,15 +129,4 @@ public abstract class PredictionsListFragment extends UpdatableFragment {
         predictionsListAdapter.clear();
     }
 
-    public class PredictionsListView extends ListView {
-        public PredictionsListView(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-            super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-            update();
-        }
-    }
 }

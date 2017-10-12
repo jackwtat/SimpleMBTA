@@ -211,8 +211,7 @@ public class NearbyListFragment extends PredictionsListFragment {
             for (Stop stop : stops) {
                 String id = stop.getId();
 
-                stop.addRoutes(QueryUtil.fetchRoutesByStop(id));
-                stop.addTrips(QueryUtil.fetchPredictionsByStop(id));
+                stop.setTrips(QueryUtil.fetchPredictionsByStop(id));
             }
             return stops;
         }

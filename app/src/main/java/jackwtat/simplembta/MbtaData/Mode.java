@@ -12,5 +12,4 @@ public class Mode {
     public static final int COMMUTER_RAIL = 2;
     public static final int BUS = 3;
     public static final int BOAT = 4;
-    public static final int UNKNOWN = -1;
 }

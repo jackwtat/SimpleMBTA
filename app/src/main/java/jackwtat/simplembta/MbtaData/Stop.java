@@ -1,21 +1,22 @@
 package jackwtat.simplembta.MbtaData;
 
-import android.support.annotation.NonNull;
+import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by jackw on 8/26/2017.
  */
 
-public class Stop implements Comparable {
+public class Stop {
+    private static final String TAG = "Stop";
+
     private String id;
     private String name;
     private double latitude;
     private double longitude;
-    private List<Route> routes = new ArrayList<>();
-    private List<Trip> trips = new ArrayList<>();
+    private TripsArrayList trips = new TripsArrayList();
 
     public Stop(String id, String name) {
         this.id = id;
@@ -47,33 +48,7 @@ public class Stop implements Comparable {
         return longitude;
     }
 
-    public List<Route> getRoutes() {
-        return routes;
-    }
-
-    public List<Trip> getSortedTrips() {
-        return trips;
-    }
-
-    public void clearPredictions() {
-        trips.clear();
-    }
-
-    public void addRoute(Route route) {
-        routes.add(route);
-    }
-
-    public void addRoutes(List<Route> routes) {
-        this.routes.addAll(routes);
-    }
-
-    public void addPrediction(Trip trip) {
-        trips.add(trip);
-    }
-
-    public void addTrips(List<Trip> trips) {
-        this.trips.addAll(trips);
-    }
+    public void setTrips(TripsArrayList trips) { this.trips = trips; }
 
     //    Create an array for each route's next trips in each direction
     //    Returns Trip[x][y][z]
@@ -81,7 +56,7 @@ public class Stop implements Comparable {
     //        y = direction, i.e. inbound/outbound
     //        z = next trips
     public Trip[][][] getSortedTrips(int perDirectionLimit) {
-        Trip[][][] tripArray = new Trip[routes.size()][Route.DIRECTIONS.length][perDirectionLimit];
+        Trip[][][] tripArray = new Trip[trips.routes.size()][Route.DIRECTIONS.length][perDirectionLimit];
 
         // Populate the array of trips
         // Loop through all trips at this stop
@@ -93,8 +68,8 @@ public class Stop implements Comparable {
 
             // Find the corresponding position of route in list
             // and populate into trips array
-            for (int j = 0; j < routes.size(); j++) {
-                if (trip.getRouteId().equals(routes.get(j).getId())) {
+            for (int j = 0; j < trips.routes.size(); j++) {
+                if (trip.getRouteId().equals(trips.routes.get(j))) {
                     /*
                         Correct position of route & direction found
                         Order of insertion of trip:
@@ -119,17 +94,11 @@ public class Stop implements Comparable {
                     }
 
                     // Terminate j-loop to move to next trip
-                    j = routes.size();
+                    break;
                 }
             }
         }
 
         return tripArray;
-    }
-
-    @Override
-    public int compareTo(@NonNull Object o) {
-        // TODO: Implement compareTo
-        return 0;
     }
 }

@@ -5,11 +5,13 @@ import android.support.v4.content.ContextCompat;
 
 import jackwtat.simplembta.R;
 
+import static android.os.Build.ID;
+
 /**
  * Created by jackw on 9/7/2017.
  */
 
-public class Route implements Comparable {
+public class Route {
     public static final int OUTBOUND = 0;
     public static final int INBOUND = 1;
     public static final int UNKNOWN = -1;
@@ -35,12 +37,6 @@ public class Route implements Comparable {
 
     public int getMode() {
         return mode;
-    }
-
-    @Override
-    public int compareTo(@NonNull Object o) {
-        // TODO: Implement compareTo
-        return 0;
     }
 
     public static String getShortName(String routeId) {
@@ -78,6 +74,4 @@ public class Route implements Comparable {
             return routeId;
         }
     }
-
-
 }
