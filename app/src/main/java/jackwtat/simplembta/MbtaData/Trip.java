@@ -25,7 +25,7 @@ public class Trip {
         destination = "";
         stopId = "";
         stopName = "";
-        direction = Route.UNKNOWN;
+        direction = Route.Direction.UNKNOWN;
         arrivalTime = -1;
     }
 

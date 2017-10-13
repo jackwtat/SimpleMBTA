@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import jackwtat.simplembta.MbtaData.Mode;
+import jackwtat.simplembta.MbtaData.Route;
 import jackwtat.simplembta.MbtaData.Trip;
 import jackwtat.simplembta.R;
 
@@ -125,7 +125,7 @@ public class IndividualPredictionsListAdapter extends ArrayAdapter<Trip[]> {
     }
 
     private int getTextColorId(View view, int mode) {
-        if (mode != Mode.BUS) {
+        if (mode != Route.Mode.BUS && mode != Route.Mode.UNKNOWN) {
             return ContextCompat.getColor(view.getContext(), R.color.HighlightedText);
         } else {
             return ContextCompat.getColor(view.getContext(), R.color.PrimaryText);

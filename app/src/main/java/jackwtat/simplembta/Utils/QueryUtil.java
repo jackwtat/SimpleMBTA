@@ -18,7 +18,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.MbtaData.TripsArrayList;
 import jackwtat.simplembta.MbtaData.Trip;
 import jackwtat.simplembta.MbtaData.Route;
 import jackwtat.simplembta.MbtaData.Stop;
@@ -42,7 +41,7 @@ public class QueryUtil {
     private QueryUtil() {
     }
 
-    public static TripsArrayList fetchPredictionsByStop(String stopId) {
+    public static ArrayList<Trip> fetchPredictionsByStop(String stopId) {
         String requestUrl = MBTA_URL + "predictionsbystop" + API_KEY + RESPONSE_FORMAT +
                 "&stop=" + stopId;
 
@@ -151,8 +150,8 @@ public class QueryUtil {
         return output.toString();
     }
 
-    private static TripsArrayList extractPredictionsFromJson(String jsonResponse) {
-        TripsArrayList predictions = new TripsArrayList();
+    private static ArrayList<Trip> extractPredictionsFromJson(String jsonResponse) {
+        ArrayList<Trip> predictions = new ArrayList<>();
 
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(jsonResponse)) {
@@ -189,7 +188,7 @@ public class QueryUtil {
                             // Create new Trip object and populate with data
                             Trip trip = new Trip(currentTrip.getString("trip_id"));
                             trip.setRouteId(currentRoute.getString("route_id"));
-                            trip.setRouteName(Route.getShortName(currentRoute.getString("route_id")));
+                            trip.setRouteName(Route.getRouteName(currentRoute.getString("route_id")));
                             trip.setMode(currentMode.getInt("route_type"));
                             trip.setStopId(stop.getString("stop_id"));
                             trip.setStopName(stop.getString("stop_name"));
@@ -198,7 +197,7 @@ public class QueryUtil {
                             trip.setArrivalTime(currentTrip.getLong("pre_away"));
 
                             // Add trip to the predictions list
-                            predictions.addTrip(trip);
+                            predictions.add(trip);
                         }
                     }
                 }

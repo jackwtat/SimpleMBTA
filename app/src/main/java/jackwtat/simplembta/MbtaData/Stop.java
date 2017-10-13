@@ -1,9 +1,6 @@
 package jackwtat.simplembta.MbtaData;
 
-import android.util.Log;
-
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by jackw on 8/26/2017.
@@ -16,7 +13,8 @@ public class Stop {
     private String name;
     private double latitude;
     private double longitude;
-    private TripsArrayList trips = new TripsArrayList();
+    private ArrayList<Route> routeList = new ArrayList<>();
+    private ArrayList<Trip> tripList = new ArrayList<>();
 
     public Stop(String id, String name) {
         this.id = id;
@@ -48,35 +46,70 @@ public class Stop {
         return longitude;
     }
 
-    public void setTrips(TripsArrayList trips) { this.trips = trips; }
+    public void addTrip(Trip trip) {
+        tripList.add(trip);
+        if (routeList.size() == 0) {
+            routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
+        } else {
+            for (int i = 0; i < routeList.size(); i++) {
+                if (trip.getRouteId().equals(routeList.get(i).getId())) {
+                    break;
+                } else if (i == routeList.size() - 1) {
+                    routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
+                    break;
+                }
+            }
+        }
+    }
 
-    //    Create an array for each route's next trips in each direction
+    public void addTrips(ArrayList<Trip> tripList) {
+        for(int i = 0; i < tripList.size(); i++){
+            Trip trip = tripList.get(i);
+
+            this.tripList.add(trip);
+
+            if (routeList.size() == 0) {
+                routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
+            } else {
+                for (int j = 0; j < routeList.size(); j++) {
+                    if (trip.getRouteId().equals(routeList.get(j).getId())) {
+                        break;
+                    } else if (j == routeList.size() - 1) {
+                        routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    //    Create an array for each route's next tripList in each direction
     //    Returns Trip[x][y][z]
     //        x = route
     //        y = direction, i.e. inbound/outbound
-    //        z = next trips
+    //        z = next tripList
     public Trip[][][] getSortedTrips(int perDirectionLimit) {
-        Trip[][][] tripArray = new Trip[trips.routes.size()][Route.DIRECTIONS.length][perDirectionLimit];
+        Trip[][][] tripArray = new Trip[routeList.size()][Route.Direction.COUNT][perDirectionLimit];
 
-        // Populate the array of trips
-        // Loop through all trips at this stop
-        for (int i = 0; i < trips.size(); i++) {
-            Trip trip = trips.get(i);
+        // Populate the array of tripList
+        // Loop through all tripList at this stop
+        for (int i = 0; i < tripList.size(); i++) {
+            Trip trip = tripList.get(i);
 
             // Get direction of the trip
             int k = trip.getDirection();
 
             // Find the corresponding position of route in list
-            // and populate into trips array
-            for (int j = 0; j < trips.routes.size(); j++) {
-                if (trip.getRouteId().equals(trips.routes.get(j))) {
+            // and populate into tripList array
+            for (int j = 0; j < routeList.size(); j++) {
+                if (trip.getRouteId().equals(routeList.get(j).getId())) {
                     /*
                         Correct position of route & direction found
                         Order of insertion of trip:
                           1. If current slot is empty
                                 Insert new trip into current slot
                           2. If trip arrival time is less than slot's arrival time
-                                Shift next trips up by one
+                                Shift next tripList up by one
                                 Insert new trip into current slot
                     */
                     for (int m = 0; m < tripArray[j][k].length; m++) {
@@ -84,7 +117,7 @@ public class Stop {
                             tripArray[j][k][m] = trip;
                             m = tripArray[j][k].length;
                         } else if (trip.getArrivalTime() < tripArray[j][k][m].getArrivalTime()) {
-                            // Shift all trips right
+                            // Shift all tripList right
                             for (int n = tripArray[j][k].length - 1; n > m; n--) {
                                 tripArray[j][k][n] = tripArray[j][k][n - 1];
                             }
