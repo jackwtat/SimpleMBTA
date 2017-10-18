@@ -4,7 +4,8 @@
     <string name="action_refresh">Refresh</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <!-- Error Messages -->
-    <string name="no_network_connectivity">No Internet Connection</string>
+    <!-- Status Messages -->
     <string name="no_location">Unable To Get Current Location</string>
+    <string name="no_network_connectivity">No Internet Connection</string>
+    <string name="no_predictions">No Predictions To Show</string>
 </resources>

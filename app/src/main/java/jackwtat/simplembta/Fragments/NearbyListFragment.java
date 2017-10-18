@@ -17,6 +17,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.List;
@@ -32,16 +34,17 @@ import jackwtat.simplembta.Utils.QueryUtil;
 
 public class NearbyListFragment extends PredictionsListFragment {
     private final String TAG = "NearbyListFragment";
+    private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
-    private boolean hasPredictions = false;
-    private Date lastUpdated = new Date();
+    // Time between location updates, in seconds
+    private final long LOCATION_UPDATE_INTERVAL = 15;
+
+    // Time since last refresh before predictions can automatically refresh onResume, in seconds
+    private final long ON_RESUME_REFRESH_INTERVAL = 60;
 
     private LocationServicesClient locationServicesClient;
-    private double currentLatitude;
-    private double currentLongitude;
-
-    PredictionAsyncTask predictionAsyncTask;
-
+    private Location lastLocation;
+    private PredictionAsyncTask predictionAsyncTask;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,44 +53,54 @@ public class NearbyListFragment extends PredictionsListFragment {
     }
 
     @Override
-    public void onResume() {
-        Date currentTime = new Date();
+    public void onStart() {
+        super.onStart();
 
-        super.onResume();
-        if (!hasPredictions) {
-            update();
-        } else if ((currentTime.getTime() - lastUpdated.getTime()) / 1000 > 60) {
-            update();
+        // Get location access permission from user
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_ACCESS_FINE_LOCATION);
+
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+
+        // Get current time
+        // If sufficient time has lapsed since last refresh,
+        // then automatically refreshed predictions
+        Date currentTime = new Date();
+        if (lastUpdated == null ||
+                ((currentTime.getTime() - lastUpdated.getTime()) > 1000 * ON_RESUME_REFRESH_INTERVAL)) {
+            refreshPredictions();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        // Disconnect the LocationServicesClient
+        locationServicesClient.disconnectClient();
+
+        // Cancel the AsyncTask if it is running
+        if (predictionAsyncTask.cancel(true)){
+            displayStatusMessage(getResources().getString(R.string.no_predictions));
+        }
     }
 
     @Override
-    public void update() {
+    public void refreshPredictions() {
         // Clear predictions list
-        // Show progress bar
-        clearList();
-        showProgressBar(true);
-        showStatusMessage(false);
+        clearList(true);
 
-        // If no network connectivity found, show error message
-        // Or if no location gotten, show error message
         if (!checkNetworkConnection()) {
-            showProgressBar(false);
-            setStatusMessage(getResources().getString(R.string.no_network_connectivity));
-            showStatusMessage(true);
-            lastUpdated = new Date();
-            updateTime(lastUpdated);
-            hasPredictions = false;
+            // If no network connectivity found, show error message
+            displayStatusMessage(getResources().getString(R.string.no_network_connectivity));
         } else {
             // Refresh current location
             locationServicesClient.refreshLocation();
@@ -99,26 +112,21 @@ public class NearbyListFragment extends PredictionsListFragment {
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
         return isConnected;
     }
 
-    private void locationFound(boolean found) {
+    private void onLocationFound(boolean found) {
         if (!found) {
-            showProgressBar(false);
-            setStatusMessage(getResources().getString(R.string.no_location));
-            showStatusMessage(true);
-            lastUpdated = new Date();
-            updateTime(lastUpdated);
-            hasPredictions = false;
+            displayStatusMessage(getResources().getString(R.string.no_location));
         } else {
             // We have both internet and location
             // Get predictions from MBTA API
             predictionAsyncTask = new PredictionAsyncTask();
-            double[] coordinates = {currentLatitude, currentLongitude};
-            predictionAsyncTask.execute(coordinates);
+            predictionAsyncTask.execute(lastLocation);
         }
     }
 
@@ -126,8 +134,10 @@ public class NearbyListFragment extends PredictionsListFragment {
      * Wrapper around the GoogleApiClient and LocationServices API
      * Allows for easy access to the device's current location and GPS coordinates
      */
-    private class LocationServicesClient implements ConnectionCallbacks, OnConnectionFailedListener {
+    private class LocationServicesClient implements LocationListener, ConnectionCallbacks,
+            OnConnectionFailedListener {
         private GoogleApiClient googleApiClient;
+        private LocationRequest locationRequest;
 
         private LocationServicesClient() {
             googleApiClient = new GoogleApiClient.Builder(getContext())
@@ -135,13 +145,16 @@ public class NearbyListFragment extends PredictionsListFragment {
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
+
+            locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(1000 * LOCATION_UPDATE_INTERVAL);
         }
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
             Log.i(TAG, "Location connection successful");
             getLocation();
-            locationFound(true);
         }
 
         @Override
@@ -152,6 +165,11 @@ public class NearbyListFragment extends PredictionsListFragment {
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             Log.e(TAG, "Location connection failed");
+            onLocationFound(false);
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
         }
 
         private void disconnectClient() {
@@ -170,59 +188,46 @@ public class NearbyListFragment extends PredictionsListFragment {
         }
 
         private void getLocation() {
-            Log.i(TAG, "getLocation() called");
-            boolean locationFound = false;
-
             if (ActivityCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                showProgressBar(false);
-                lastUpdated = new Date();
-                updateTime(lastUpdated);
-                setStatusMessage(getResources().getString(R.string.no_location));
-                hasPredictions = false;
+                Log.e(TAG, "Location permission missing");
+                onLocationFound(false);
             } else {
                 try {
-                    Log.i(TAG, "Location found");
-                    Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-                    currentLatitude = location.getLatitude();
-                    currentLongitude = location.getLongitude();
+                    LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
+                            locationRequest, this);
+                    lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    onLocationFound(true);
                 } catch (Exception ex) {
                     Log.e(TAG, "Location services error");
+                    onLocationFound(false);
                 }
             }
-            disconnectClient();
         }
     }
 
-    /*
-     * AsyncTask that asynchronously queries the MBTA API and displays the results upon success
-     */
-    private class PredictionAsyncTask extends AsyncTask<double[], Void, List<Stop>> {
+    // AsyncTask that asynchronously queries the MBTA API and displays the results upon success
+    private class PredictionAsyncTask extends AsyncTask<Location, Void, List<Stop>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected List<Stop> doInBackground(double[]... coordinates) {
-
-            List<Stop> stops = QueryUtil.fetchStopsByLocation(coordinates[0][0], coordinates[0][1]);
+        protected List<Stop> doInBackground(Location... locations) {
+            List<Stop> stops = QueryUtil.fetchStopsByLocation(locations[0].getLatitude(),
+                    locations[0].getLongitude());
 
             for (Stop stop : stops) {
-                String id = stop.getId();
-
-                stop.addTrips(QueryUtil.fetchPredictionsByStop(id));
+                stop.addTrips(QueryUtil.fetchPredictionsByStop(stop.getId()));
             }
+
             return stops;
         }
 
         @Override
         protected void onPostExecute(List<Stop> stops) {
-            showProgressBar(false);
             populateList(stops);
-            lastUpdated = new Date();
-            updateTime(lastUpdated);
-            hasPredictions = true;
         }
     }
 }

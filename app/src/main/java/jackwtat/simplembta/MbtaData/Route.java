@@ -2,6 +2,8 @@ package jackwtat.simplembta.MbtaData;
 
 import android.support.annotation.NonNull;
 
+import static java.lang.Double.parseDouble;
+
 /**
  * Created by jackw on 9/7/2017.
  */
@@ -27,9 +29,9 @@ public class Route implements Comparable<Route> {
         public static final int COUNT = 2;
     }
 
-    public static String getRouteName(String routeId) {
-        if (isSpecialBusRoute(routeId)) {
-            return getSpecialBusRouteName(routeId);
+    public static String getName(String routeId, String routeName) {
+        if (isSpecialRoute(routeId)) {
+            return getSpecialName(routeId);
         } else if (routeId.length() >= 5 && routeId.substring(0, 5).equals("Green")) {
             return "GL-" + routeId.substring(6, 7);
         } else if (routeId.equals("Mattapan")) {
@@ -45,27 +47,37 @@ public class Route implements Comparable<Route> {
         } else if (routeId.length() >= 4 && routeId.substring(0, 4).equals("Boat")) {
             return "Boat";
         } else {
-            return routeId;
+            return routeName;
         }
     }
 
     private static final String[][] SPECIAL_ROUTES = {
-            {"741", "742", "751", "749", "746", "701", "747", "708"},
-            {"SL1", "SL2", "SL4", "SL5", "SL-W", "CT1", "CT2", "CT3"}};
+            {"741", "742", "751", "749", "746", "701", "747", "708", "34E", "57A", "70A"},
+            {"0.11", "0.12", "0.14", "0.15", "0.19", "0.21", "0.22", "0.23", "34.1", "57.1", "70.1"},
+            {"SL1", "SL2", "SL4", "SL5", "SLW", "CT1", "CT2", "CT3", "34E", "57A", "70A"}};
 
-    private static boolean isSpecialBusRoute(String routeId) {
-        for (int i = 0; i < SPECIAL_ROUTES.length; i++) {
-            if (routeId.equals(SPECIAL_ROUTES[i][0])) {
+    private static boolean isSpecialRoute(String routeId) {
+        for (int i = 0; i < SPECIAL_ROUTES[0].length; i++) {
+            if (routeId.equals(SPECIAL_ROUTES[0][i])) {
                 return true;
             }
         }
         return false;
     }
 
-    private static String getSpecialBusRouteName(String routeId) {
-        for (int i = 0; i < SPECIAL_ROUTES.length; i++) {
-            if (routeId.equals(SPECIAL_ROUTES[i][0])) {
-                return SPECIAL_ROUTES[i][1];
+    private static String getSpecialId(String routeId) {
+        for (int i = 0; i < SPECIAL_ROUTES[0].length; i++) {
+            if (routeId.equals(SPECIAL_ROUTES[0][i])) {
+                return SPECIAL_ROUTES[1][i];
+            }
+        }
+        return routeId;
+    }
+
+    private static String getSpecialName(String routeId) {
+        for (int i = 0; i < SPECIAL_ROUTES[0].length; i++) {
+            if (routeId.equals(SPECIAL_ROUTES[0][i])) {
+                return SPECIAL_ROUTES[2][i];
             }
         }
         return "";
@@ -91,53 +103,33 @@ public class Route implements Comparable<Route> {
 
     @Override
     public int compareTo(@NonNull Route anotherRoute) {
-        /*
         String anotherId = anotherRoute.getId();
         int anotherMode = anotherRoute.getMode();
-        if (this.id == anotherId){
-            // Both are the same route
-            return 0;
-        } if (this.mode < anotherMode) {
-            // This route is 
-            return -1;
-        } else if (this.mode > anotherMode) {
-            return 1;
+        if (this.mode != anotherMode) {
+            /* Compare transportation modes
+                Mode hierarchy:
+                1. Light Rail (Green Line, Mattapan High Speed Line)
+                2. Heavy Rail (Blue, Orange, Red Lines)
+                3. Commuter Rail
+                4. Bus
+                    4a. Silver Line Bus
+                    4b. Crosstown Bus
+                    4c. Local/Express Bus
+                5. Boat/Ferry
+             */
+            return Integer.compare(this.mode, anotherMode);
+        } else if (this.mode != Route.Mode.BUS && anotherMode != Mode.BUS) {
             // We've established that both routes are of the same mode
-        } else if (this.mode != Route.Mode.BUS && anotherMode != Mode.BUS){
-            // If Both routes are not buses
+            // If both mode are not buses
             // Then compare the IDs alphabetically
             return this.getId().compareTo(anotherRoute.getId());
         } else {
             // Both routes are buses
-            // Special bus routes are before non-special bus routes
-            if(isSpecialBusRoute(this.id) && !isSpecialBusRoute(anotherRoute.getId())){
-                return -1;
-            } else if (!isSpecialBusRoute(this.id) && isSpecialBusRoute(anotherRoute.getId())){
-                return 1;
-            } else if (isSpecialBusRoute(this.id) && isSpecialBusRoute(anotherRoute.getId())){
-                // Both routes are special bus routes
-                // Compare the corresponding special route rankings
-                int thisSpecialBusRank = getSpecialBusRouteSortingRank(this.id);
-                int anotherSpecialBusRank = getSpecialBusRouteSortingRank(anotherId);
-                if () {
-                    
-                }
-            } else {
-                // Both routes are non-special bus routes
-                // Convert IDs to integers and compare
-                
-            }
-        }
-        */
-        return 0;
-    }
+            // Compare special bus route IDs
+            double thisBusId= parseDouble(getSpecialId(this.id));
+            double anotherBusId= parseDouble(getSpecialId(anotherId));
 
-    private static int getSortingRank(String routeId){
-        for (int i = 0; i < SPECIAL_ROUTES.length; i++){
-            if (routeId.equals(SPECIAL_ROUTES[i][0])){
-                return i;
-            }
+            return Double.compare(thisBusId, anotherBusId);
         }
-        return -1;
     }
 }

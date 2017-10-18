@@ -20,8 +20,8 @@ import jackwtat.simplembta.R;
  * Created by jackw on 10/1/2017.
  */
 
-public class IndividualPredictionsListAdapter extends ArrayAdapter<Trip[]> {
-    public IndividualPredictionsListAdapter(Activity context, ArrayList<Trip[]> trips) {
+public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
+    public PredictionsListAdapter(Activity context, ArrayList<Trip[]> trips) {
         super(context, 0, trips);
     }
 
@@ -33,7 +33,7 @@ public class IndividualPredictionsListAdapter extends ArrayAdapter<Trip[]> {
         // Inflate the listItemView
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.individual_prediction_list_item, parent, false);
+                    R.layout.prediction_list_item, parent, false);
         }
 
         // Initialize list item view elements
@@ -90,7 +90,8 @@ public class IndividualPredictionsListAdapter extends ArrayAdapter<Trip[]> {
             routeTextView.setBackgroundColor(getBackgroundColorId(listItemView, firstTrip.getRouteId()));
 
             // Set the font color of the route name
-            routeTextView.setTextColor(getTextColorId(listItemView, firstTrip.getMode()));
+            routeTextView.setTextColor(getTextColorId(listItemView, firstTrip.getMode(),
+                    firstTrip.getRouteId()));
 
         } else {
             routeTextView.setText("---");
@@ -124,8 +125,10 @@ public class IndividualPredictionsListAdapter extends ArrayAdapter<Trip[]> {
         }
     }
 
-    private int getTextColorId(View view, int mode) {
-        if (mode != Route.Mode.BUS && mode != Route.Mode.UNKNOWN) {
+    private int getTextColorId(View view, int mode, String routeId) {
+        if ((mode != Route.Mode.BUS && mode != Route.Mode.UNKNOWN) ||
+                (routeId.equals("741") || routeId.equals("742") || routeId.equals("746") ||
+                        routeId.equals("749") || routeId.equals("751"))) {
             return ContextCompat.getColor(view.getContext(), R.color.HighlightedText);
         } else {
             return ContextCompat.getColor(view.getContext(), R.color.PrimaryText);

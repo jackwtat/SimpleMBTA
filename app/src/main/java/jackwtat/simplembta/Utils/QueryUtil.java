@@ -63,8 +63,6 @@ public class QueryUtil {
 
         URL url = createUrl(requestUrl);
 
-        Log.i(TAG, requestUrl);
-
         String jsonResponse = null;
         try {
             jsonResponse = makeHttpRequest(url);
@@ -188,7 +186,8 @@ public class QueryUtil {
                             // Create new Trip object and populate with data
                             Trip trip = new Trip(currentTrip.getString("trip_id"));
                             trip.setRouteId(currentRoute.getString("route_id"));
-                            trip.setRouteName(Route.getRouteName(currentRoute.getString("route_id")));
+                            trip.setRouteName(Route.getName(currentRoute.getString("route_id"),
+                                    currentRoute.getString("route_name")));
                             trip.setMode(currentMode.getInt("route_type"));
                             trip.setStopId(stop.getString("stop_id"));
                             trip.setStopName(stop.getString("stop_name"));
@@ -203,10 +202,6 @@ public class QueryUtil {
                 }
             }
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
-            Log.e(TAG, "No data found");
         }
 
         // Return the list of predictions
@@ -214,7 +209,11 @@ public class QueryUtil {
     }
 
     private static List<Stop> extractStopsFromJson(String stopsJson) {
+        // ArrayList of stops that we will return
         List<Stop> stops = new ArrayList<>();
+
+        // ArrayList of stop IDs to catch and ignore duplicate stops
+        ArrayList<String> stopIds = new ArrayList<>();
 
         if (TextUtils.isEmpty(stopsJson)) {
             return stops;
@@ -233,11 +232,19 @@ public class QueryUtil {
                 Double latitude = currentStop.getDouble("stop_lat");
                 Double longitude = currentStop.getDouble("stop_lon");
                 Double distance = currentStop.getDouble("distance");
-                String parentStation = currentStop.getString("parent_station");
+                String parentStationId = currentStop.getString("parent_station");
                 String parentStationName = currentStop.getString("parent_station_name");
 
-                Stop stop = new Stop(id, name, latitude, longitude);
-                stops.add(stop);
+                Stop stop;
+                if (!parentStationId.equals("")) {
+                    stop = new Stop(parentStationId, parentStationName, latitude, longitude, distance);
+                } else {
+                    stop = new Stop(id, name, latitude, longitude, distance);
+                }
+                if (!stopIds.contains(stop.getId())) {
+                    stopIds.add(stop.getId());
+                    stops.add(stop);
+                }
             }
 
         } catch (JSONException e) {

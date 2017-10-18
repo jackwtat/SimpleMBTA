@@ -1,18 +1,22 @@
 package jackwtat.simplembta.MbtaData;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by jackw on 8/26/2017.
  */
 
-public class Stop {
+public class Stop implements Comparable<Stop>{
     private static final String TAG = "Stop";
 
     private String id;
     private String name;
     private double latitude;
     private double longitude;
+    private double distance;
     private ArrayList<Route> routeList = new ArrayList<>();
     private ArrayList<Trip> tripList = new ArrayList<>();
 
@@ -21,13 +25,15 @@ public class Stop {
         this.name = name;
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.distance = 0.0;
     }
 
-    public Stop(String id, String name, double latitude, double longitude) {
+    public Stop(String id, String name, double latitude, double longitude, double distance) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.distance = distance;
     }
 
     public String getId() {
@@ -45,6 +51,8 @@ public class Stop {
     public double getLongitude() {
         return longitude;
     }
+
+    public double getDistance() { return distance; }
 
     public void addTrip(Trip trip) {
         tripList.add(trip);
@@ -91,6 +99,9 @@ public class Stop {
     public Trip[][][] getSortedTrips(int perDirectionLimit) {
         Trip[][][] tripArray = new Trip[routeList.size()][Route.Direction.COUNT][perDirectionLimit];
 
+        // Sort the routes
+        Collections.sort(routeList);
+
         // Populate the array of tripList
         // Loop through all tripList at this stop
         for (int i = 0; i < tripList.size(); i++) {
@@ -133,5 +144,16 @@ public class Stop {
         }
 
         return tripArray;
+    }
+
+    @Override
+    public int compareTo(@NonNull Stop anotherStop) {
+        if (this.distance < anotherStop.getDistance()) {
+            return -1;
+        } else if (this.distance > anotherStop.getDistance()){
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
