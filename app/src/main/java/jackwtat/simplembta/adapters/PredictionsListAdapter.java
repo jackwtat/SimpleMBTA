@@ -16,6 +16,8 @@ import jackwtat.simplembta.data.Route;
 import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.R;
 
+import static android.support.v4.content.ContextCompat.getColor;
+
 /**
  * Created by jackw on 10/1/2017.
  */
@@ -43,55 +45,63 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                 listItemView.findViewById(R.id.destination_text_view);
         TextView stopTextView = (TextView)
                 listItemView.findViewById(R.id.stop_text_view);
-        TextView firstPredictionTextView = (TextView)
+        TextView firstPredTextView = (TextView)
                 listItemView.findViewById(R.id.first_time_text_view);
-        TextView secondPredictionTextView = (TextView)
+        TextView secondPredTextView = (TextView)
                 listItemView.findViewById(R.id.second_time_text_view);
 
-        Trip[] tripArray = getItem(position);
+        Trip[] trips = getItem(position);
 
-        if (tripArray[0] != null) {
-            // We can only display first two predictions in this list item view
-            Trip firstTrip;
-            Trip secondTrip;
-
-            // Get the first trip
-            firstTrip = tripArray[0];
-
-            // If there is more than one trip, get the second trip
-            if (tripArray.length > 1) {
-                secondTrip = tripArray[1];
-            } else {
-                secondTrip = null;
-            }
-
+        if (trips.length > 0 && trips[0] != null) {
             // Display the route name
-            routeTextView.setText(firstTrip.getRouteName());
-
-            // Display the destination
-            destinationTextView.setText(firstTrip.getDestination());
-
-            // Display the name of the stop
-            stopTextView.setText(firstTrip.getStopName());
-
-            // Display the predicted arrival time of the first trip
-            String firstTime = firstTrip.getArrivalTime() / 60 + " min";
-            firstPredictionTextView.setText(firstTime);
-
-            // If there is a second trip, display its predicted arrival time also
-            if (secondTrip != null) {
-                String secondTime = secondTrip.getArrivalTime() / 60 + " min";
-                secondPredictionTextView.setText(secondTime);
-            } else {
-                secondPredictionTextView.setText("");
-            }
+            routeTextView.setText(trips[0].getRouteName());
 
             // Set the background color of the route name
-            routeTextView.setBackgroundColor(getBackgroundColorId(listItemView, firstTrip.getRouteId()));
+            routeTextView.setBackgroundColor(getBackgroundColorId(listItemView,
+                    trips[0].getRouteId()));
 
             // Set the font color of the route name
-            routeTextView.setTextColor(getTextColorId(listItemView, firstTrip.getMode(),
-                    firstTrip.getRouteId()));
+            routeTextView.setTextColor(getRouteColor(listItemView, trips[0].getMode(),
+                    trips[0].getRouteId()));
+
+            // Display the destination
+            destinationTextView.setText(trips[0].getDestination());
+
+            // Display the name of the stop
+            stopTextView.setText(trips[0].getStopName());
+
+            // Display the predicted arrival time of the first trip
+            long firstPrediction = trips[0].getArrivalTime() / 60;
+            firstPredTextView.setText(firstPrediction + " min");
+
+            // Set the font and background color of the predicted arrival time
+            // White font and red text if it's 5 minutes or less
+            if (firstPrediction <= 5) {
+                firstPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                        R.color.ApproachingAlert));
+                firstPredTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.HighlightedText));
+            } else {
+                firstPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                        R.color.Transparent));
+                firstPredTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.PrimaryText));
+            }
+
+            // If there is a second third trip, display their predicted arrival times also
+            if (trips.length > 1 && trips[1] != null) {
+                long secondPrediction = trips[1].getArrivalTime() / 60;
+
+                if (trips.length > 2 && trips[2] != null) {
+                    long thirdPrediction = trips[2].getArrivalTime() / 60;
+                    secondPredTextView.setText(secondPrediction + ", " + thirdPrediction + " min");
+                } else {
+                    secondPredTextView.setText(secondPrediction + " min");
+                }
+            } else {
+                secondPredTextView.setText("");
+            }
+
 
         } else {
             // Empty trip object error
@@ -99,8 +109,8 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
             routeTextView.setText("---");
             destinationTextView.setText("Empty Trip Error");
             stopTextView.setText("");
-            firstPredictionTextView.setText("");
-            secondPredictionTextView.setText("");
+            firstPredTextView.setText("");
+            secondPredTextView.setText("");
         }
 
         return listItemView;
@@ -110,49 +120,49 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
     // Should correspond
     private int getBackgroundColorId(View view, String routeId) {
 
-            // Green Line
+        // Green Line
         if (routeId.length() >= 5 && routeId.substring(0, 5).equals("Green")) {
-            return ContextCompat.getColor(view.getContext(), R.color.GreenLine);
+            return getColor(view.getContext(), R.color.GreenLine);
 
             // Red Line and Mattapan-Ashmont High Speed Line
         } else if (routeId.equals("Red") || routeId.equals("Mattapan")) {
-            return ContextCompat.getColor(view.getContext(), R.color.RedLine);
+            return getColor(view.getContext(), R.color.RedLine);
 
             // Blue Line
         } else if (routeId.equals("Blue")) {
-            return ContextCompat.getColor(view.getContext(), R.color.BlueLine);
+            return getColor(view.getContext(), R.color.BlueLine);
 
             // Orange Line
         } else if (routeId.equals("Orange")) {
-            return ContextCompat.getColor(view.getContext(), R.color.OrangeLine);
+            return getColor(view.getContext(), R.color.OrangeLine);
 
             // Commuter Rail
         } else if (routeId.length() >= 2 && routeId.substring(0, 2).equals("CR")) {
-            return ContextCompat.getColor(view.getContext(), R.color.CommuterRail);
+            return getColor(view.getContext(), R.color.CommuterRail);
 
             // Silver Line
         } else if (routeId.equals("741") || routeId.equals("742") || routeId.equals("746") ||
                 routeId.equals("749") || routeId.equals("751")) {
-            return ContextCompat.getColor(view.getContext(), R.color.SilverLine);
+            return getColor(view.getContext(), R.color.SilverLine);
 
             // Boat/Ferry
         } else if (routeId.length() >= 4 && routeId.substring(0, 4).equals("Boat")) {
-            return ContextCompat.getColor(view.getContext(), R.color.Boat);
+            return getColor(view.getContext(), R.color.Boat);
 
             // Bus and all others
         } else {
-            return ContextCompat.getColor(view.getContext(), R.color.Transparent);
+            return getColor(view.getContext(), R.color.Transparent);
         }
     }
 
     // Returns the text color of the route display
-    private int getTextColorId(View view, int mode, String routeId) {
+    private int getRouteColor(View view, int mode, String routeId) {
         if ((mode != Route.Mode.BUS && mode != Route.Mode.UNKNOWN) ||
                 (routeId.equals("741") || routeId.equals("742") || routeId.equals("746") ||
                         routeId.equals("749") || routeId.equals("751"))) {
-            return ContextCompat.getColor(view.getContext(), R.color.HighlightedText);
+            return getColor(view.getContext(), R.color.HighlightedText);
         } else {
-            return ContextCompat.getColor(view.getContext(), R.color.PrimaryText);
+            return getColor(view.getContext(), R.color.PrimaryText);
         }
     }
 }

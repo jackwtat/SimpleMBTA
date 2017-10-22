@@ -20,9 +20,9 @@ public class Stop implements Comparable<Stop>{
     private ArrayList<Route> routeList = new ArrayList<>();
     private ArrayList<Trip> tripList = new ArrayList<>();
 
-    public Stop(String id, String name) {
+    public Stop(String id) {
         this.id = id;
-        this.name = name;
+        this.name = "";
         this.latitude = 0.0;
         this.longitude = 0.0;
         this.distance = 0.0;

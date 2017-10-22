@@ -12,9 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,7 +46,7 @@ public class NearbyListFragment extends PredictionsListFragment {
     private final long ON_RESUME_REFRESH_INTERVAL = 60;
 
     // Maximum distance to stop in miles
-    private final double MAX_DISTANCE = 2;
+    private final double MAX_DISTANCE = .5;
 
     private LocationServicesClient locationServicesClient;
     private Location lastLocation;
@@ -236,8 +233,7 @@ public class NearbyListFragment extends PredictionsListFragment {
 
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
-            //List<Stop> stops = QueryUtil.fetchStopsByLocation(locations[0].getLatitude(),
-            //        locations[0].getLongitude());
+            stops.add(new Stop("place-rugg"));
 
             publishProgress(GETTING_PREDICTIONS);
             for (Stop stop : stops) {

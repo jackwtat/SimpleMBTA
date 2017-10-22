@@ -58,7 +58,6 @@ public class StopDbHelper extends SQLiteOpenHelper {
 
     public void loadDatabase(Context context) {
         if (DatabaseUtils.queryNumEntries(getReadableDatabase(), StopEntry.TABLE_NAME) != STOP_COUNT) {
-            Log.i(LOG_TAG, "Loading database");
             getWritableDatabase().delete(StopEntry.TABLE_NAME, null, null);
             importFromCsv(context, CSV_FILE_NAME);
         }
@@ -97,18 +96,16 @@ public class StopDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Stop> stops = new ArrayList<>();
 
+        final double milesPerLat = 69;
+        final double milesPerLon = 69.172;
+
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
-        double minLat = lat - maxDistance / 69;
-        double maxLat = lat + maxDistance / 69;
-        double minLon = lon - maxDistance / (69.172 * Math.cos(Math.toRadians(lat)));
-        double maxLon = lon + maxDistance / (69.172 * Math.cos(Math.toRadians(lat)));
-
-        Log.i(LOG_TAG, "minLat=" + minLat);
-        Log.i(LOG_TAG, "maxLat=" + maxLat);
-        Log.i(LOG_TAG, "minLon=" + minLon);
-        Log.i(LOG_TAG, "maxLon=" + maxLon);
+        double minLat = lat - maxDistance / milesPerLat;
+        double maxLat = lat + maxDistance / milesPerLat;
+        double minLon = lon - maxDistance / (milesPerLon * Math.cos(Math.toRadians(lat)));
+        double maxLon = lon + maxDistance / (milesPerLon * Math.cos(Math.toRadians(lat)));
 
         String whereClause = StopEntry.COLUMN_STOP_LAT + ">? AND " +
                 StopEntry.COLUMN_STOP_LAT + "<? AND " +
@@ -141,8 +138,10 @@ public class StopDbHelper extends SQLiteOpenHelper {
             String stopName = cursor.getString(stopNameColumnIndex);
             Double stopLat = cursor.getDouble(stopLatColumnIndex);
             Double stopLon = cursor.getDouble(stopLonColumnIndex);
-            Double stopDistance = Math.sqrt(Math.pow(stopLat - lat, 2) + Math.pow(stopLon - lon, 2));
+            Double stopDistance = Math.sqrt(Math.pow((stopLat - lat) * milesPerLat, 2) +
+                    Math.pow((stopLon - lon) * milesPerLon, 2));
 
+            String logMsg = stopName + " | " + stopDistance + " miles | ";
             if (stopDistance <= maxDistance) {
                 stops.add(new Stop(stopId, stopName, stopLat, stopLat, stopDistance));
             }

@@ -57,22 +57,6 @@ public class QueryUtil {
         return extractPredictionsFromJson(jsonResponse);
     }
 
-    public static List<Stop> fetchStopsByLocation(double latitude, double longitude) {
-        String requestUrl = MBTA_URL + "stopsbylocation" + API_KEY + RESPONSE_FORMAT +
-                "&lat=" + latitude + "&lon=" + longitude;
-
-        URL url = createUrl(requestUrl);
-
-        String jsonResponse = null;
-        try {
-            jsonResponse = makeHttpRequest(url);
-        } catch (IOException e) {
-            Log.e(TAG, "Problem making the HTTP request.", e);
-        }
-
-        return extractStopsFromJson(jsonResponse);
-    }
-
     /**
      * Returns new URL object from the given string URL.
      */
@@ -206,51 +190,5 @@ public class QueryUtil {
 
         // Return the list of predictions
         return predictions;
-    }
-
-    private static List<Stop> extractStopsFromJson(String stopsJson) {
-        // ArrayList of stops that we will return
-        List<Stop> stops = new ArrayList<>();
-
-        // ArrayList of stop IDs to catch and ignore duplicate stops
-        ArrayList<String> stopIds = new ArrayList<>();
-
-        if (TextUtils.isEmpty(stopsJson)) {
-            return stops;
-        }
-
-        try {
-            JSONObject baseJsonResponse = new JSONObject(stopsJson);
-
-            JSONArray stopArray = baseJsonResponse.getJSONArray("stop");
-
-            for (int i = 0; i < stopArray.length(); i++) {
-                JSONObject currentStop = stopArray.getJSONObject(i);
-
-                String id = currentStop.getString("stop_id");
-                String name = currentStop.getString("stop_name");
-                Double latitude = currentStop.getDouble("stop_lat");
-                Double longitude = currentStop.getDouble("stop_lon");
-                Double distance = currentStop.getDouble("distance");
-                String parentStationId = currentStop.getString("parent_station");
-                String parentStationName = currentStop.getString("parent_station_name");
-
-                Stop stop;
-                if (!parentStationId.equals("")) {
-                    stop = new Stop(parentStationId, parentStationName, latitude, longitude, distance);
-                } else {
-                    stop = new Stop(id, name, latitude, longitude, distance);
-                }
-                if (!stopIds.contains(stop.getId())) {
-                    stopIds.add(stop.getId());
-                    stops.add(stop);
-                }
-            }
-
-        } catch (JSONException e) {
-            Log.e("QueryUtils", "Problem parsing the prediction JSON results", e);
-        }
-
-        return stops;
     }
 }

@@ -21,10 +21,8 @@
     <color name="CommuterRail">#8B118F</color>
     <color name="Boat">#5DA9E8</color>
 
-    <!-- Alert Colors -->
-    <color name="ApproachingAlert">#d50000</color>
-
     <!-- Other Colors -->
+    <color name="ApproachingAlert">#D32F2F</color>
     <color name="Transparent">#00FFFFFF</color>
 
 </resources>
