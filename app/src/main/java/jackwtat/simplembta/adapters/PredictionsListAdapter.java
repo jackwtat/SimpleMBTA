@@ -1,4 +1,4 @@
-package jackwtat.simplembta.Adapters;
+package jackwtat.simplembta.adapters;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import jackwtat.simplembta.MbtaData.Route;
-import jackwtat.simplembta.MbtaData.Trip;
+import jackwtat.simplembta.data.Route;
+import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.R;
 
 /**
@@ -36,7 +36,7 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                     R.layout.prediction_list_item, parent, false);
         }
 
-        // Initialize list item view elements
+        // Initialize list item elements
         TextView routeTextView = (TextView)
                 listItemView.findViewById(R.id.route_text_view);
         TextView destinationTextView = (TextView)
@@ -74,11 +74,11 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
             // Display the name of the stop
             stopTextView.setText(firstTrip.getStopName());
 
-            // Display the prediction time of the first trip
+            // Display the predicted arrival time of the first trip
             String firstTime = firstTrip.getArrivalTime() / 60 + " min";
             firstPredictionTextView.setText(firstTime);
 
-            // If there is a second trip, display its prediction time also
+            // If there is a second trip, display its predicted arrival time also
             if (secondTrip != null) {
                 String secondTime = secondTrip.getArrivalTime() / 60 + " min";
                 secondPredictionTextView.setText(secondTime);
@@ -94,6 +94,8 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                     firstTrip.getRouteId()));
 
         } else {
+            // Empty trip object error
+            // Should not normally happen
             routeTextView.setText("---");
             destinationTextView.setText("Empty Trip Error");
             stopTextView.setText("");
@@ -104,27 +106,46 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
         return listItemView;
     }
 
+    // Returns the background color of the respective route
+    // Should correspond
     private int getBackgroundColorId(View view, String routeId) {
+
+            // Green Line
         if (routeId.length() >= 5 && routeId.substring(0, 5).equals("Green")) {
             return ContextCompat.getColor(view.getContext(), R.color.GreenLine);
+
+            // Red Line and Mattapan-Ashmont High Speed Line
         } else if (routeId.equals("Red") || routeId.equals("Mattapan")) {
             return ContextCompat.getColor(view.getContext(), R.color.RedLine);
+
+            // Blue Line
         } else if (routeId.equals("Blue")) {
             return ContextCompat.getColor(view.getContext(), R.color.BlueLine);
+
+            // Orange Line
         } else if (routeId.equals("Orange")) {
             return ContextCompat.getColor(view.getContext(), R.color.OrangeLine);
+
+            // Commuter Rail
         } else if (routeId.length() >= 2 && routeId.substring(0, 2).equals("CR")) {
             return ContextCompat.getColor(view.getContext(), R.color.CommuterRail);
+
+            // Silver Line
         } else if (routeId.equals("741") || routeId.equals("742") || routeId.equals("746") ||
                 routeId.equals("749") || routeId.equals("751")) {
             return ContextCompat.getColor(view.getContext(), R.color.SilverLine);
+
+            // Boat/Ferry
         } else if (routeId.length() >= 4 && routeId.substring(0, 4).equals("Boat")) {
             return ContextCompat.getColor(view.getContext(), R.color.Boat);
+
+            // Bus and all others
         } else {
             return ContextCompat.getColor(view.getContext(), R.color.Transparent);
         }
     }
 
+    // Returns the text color of the route display
     private int getTextColorId(View view, int mode, String routeId) {
         if ((mode != Route.Mode.BUS && mode != Route.Mode.UNKNOWN) ||
                 (routeId.equals("741") || routeId.equals("742") || routeId.equals("746") ||

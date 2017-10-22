@@ -1,4 +1,4 @@
-package jackwtat.simplembta.Fragments;
+package jackwtat.simplembta.fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -12,6 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,16 +27,19 @@ import com.google.android.gms.location.LocationServices;
 import java.util.List;
 import java.util.Date;
 
-import jackwtat.simplembta.MbtaData.Stop;
+import jackwtat.simplembta.data.Stop;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.Utils.QueryUtil;
+import jackwtat.simplembta.QueryUtil;
+import jackwtat.simplembta.data.StopDbHelper;
 
 /**
  * Created by jackw on 9/30/2017.
  */
 
 public class NearbyListFragment extends PredictionsListFragment {
-    private final String TAG = "NearbyListFragment";
+    private final String LOG_TAG = "NearbyListFragment";
+
+    // Fine Location Permission
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     // Time between location updates, in seconds
@@ -42,14 +48,19 @@ public class NearbyListFragment extends PredictionsListFragment {
     // Time since last refresh before predictions can automatically refresh onResume, in seconds
     private final long ON_RESUME_REFRESH_INTERVAL = 60;
 
+    // Maximum distance to stop in miles
+    private final double MAX_DISTANCE = 2;
+
     private LocationServicesClient locationServicesClient;
     private Location lastLocation;
     private PredictionAsyncTask predictionAsyncTask;
+    private StopDbHelper stopDbHelper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationServicesClient = new LocationServicesClient();
+        stopDbHelper = new StopDbHelper(getContext());
     }
 
     @Override
@@ -88,19 +99,19 @@ public class NearbyListFragment extends PredictionsListFragment {
         locationServicesClient.disconnectClient();
 
         // Cancel the AsyncTask if it is running
-        if (predictionAsyncTask.cancel(true)){
-            displayStatusMessage(getResources().getString(R.string.no_predictions));
+        if (predictionAsyncTask != null && predictionAsyncTask.cancel(true)) {
+            displayTimedStatus(getResources().getString(R.string.no_predictions), false);
         }
     }
 
     @Override
     public void refreshPredictions() {
         // Clear predictions list
-        clearList(true);
+        clearList();
 
         if (!checkNetworkConnection()) {
             // If no network connectivity found, show error message
-            displayStatusMessage(getResources().getString(R.string.no_network_connectivity));
+            displayTimedStatus(getResources().getString(R.string.no_network_connectivity), false);
         } else {
             // Refresh current location
             locationServicesClient.refreshLocation();
@@ -121,7 +132,7 @@ public class NearbyListFragment extends PredictionsListFragment {
 
     private void onLocationFound(boolean found) {
         if (!found) {
-            displayStatusMessage(getResources().getString(R.string.no_location));
+            displayTimedStatus(getResources().getString(R.string.no_location), false);
         } else {
             // We have both internet and location
             // Get predictions from MBTA API
@@ -153,18 +164,18 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
-            Log.i(TAG, "Location connection successful");
+            Log.i(LOG_TAG, "Location connection successful");
             getLocation();
         }
 
         @Override
         public void onConnectionSuspended(int i) {
-            Log.i(TAG, "Location connection suspended");
+            Log.i(LOG_TAG, "Location connection suspended");
         }
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-            Log.e(TAG, "Location connection failed");
+            Log.e(LOG_TAG, "Location connection failed");
             onLocationFound(false);
         }
 
@@ -182,7 +193,7 @@ public class NearbyListFragment extends PredictionsListFragment {
             if (!googleApiClient.isConnected()) {
                 googleApiClient.connect();
             } else {
-                Log.i(TAG, "Google API client already connected");
+                Log.i(LOG_TAG, "Google API client already connected");
                 getLocation();
             }
         }
@@ -190,7 +201,7 @@ public class NearbyListFragment extends PredictionsListFragment {
         private void getLocation() {
             if (ActivityCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.e(TAG, "Location permission missing");
+                Log.e(LOG_TAG, "Location permission missing");
                 onLocationFound(false);
             } else {
                 try {
@@ -199,7 +210,7 @@ public class NearbyListFragment extends PredictionsListFragment {
                     lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     onLocationFound(true);
                 } catch (Exception ex) {
-                    Log.e(TAG, "Location services error");
+                    Log.e(LOG_TAG, "Location services error");
                     onLocationFound(false);
                 }
             }
@@ -207,7 +218,12 @@ public class NearbyListFragment extends PredictionsListFragment {
     }
 
     // AsyncTask that asynchronously queries the MBTA API and displays the results upon success
-    private class PredictionAsyncTask extends AsyncTask<Location, Void, List<Stop>> {
+    private class PredictionAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
+        // AsyncTask statuses
+        private final int LOADING_DATABASE = 1;
+        private final int GETTING_NEARBY_STOPS = 2;
+        private final int GETTING_PREDICTIONS = 3;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -215,14 +231,36 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
-            List<Stop> stops = QueryUtil.fetchStopsByLocation(locations[0].getLatitude(),
-                    locations[0].getLongitude());
+            publishProgress(LOADING_DATABASE);
+            stopDbHelper.loadDatabase(getContext());
 
+            publishProgress(GETTING_NEARBY_STOPS);
+            List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
+            //List<Stop> stops = QueryUtil.fetchStopsByLocation(locations[0].getLatitude(),
+            //        locations[0].getLongitude());
+
+            publishProgress(GETTING_PREDICTIONS);
             for (Stop stop : stops) {
                 stop.addTrips(QueryUtil.fetchPredictionsByStop(stop.getId()));
             }
 
             return stops;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            int status = progress[0];
+
+            switch (status) {
+                case LOADING_DATABASE:
+                    displayStatusMessage(getResources().getString(R.string.loading_first_time), true);
+                    break;
+                case GETTING_NEARBY_STOPS:
+                    displayStatusMessage(getResources().getString(R.string.getting_nearby_stops), true);
+                    break;
+                case GETTING_PREDICTIONS:
+                    displayStatusMessage(getResources().getString(R.string.getting_predictions), true);
+                    break;
+            }
         }
 
         @Override

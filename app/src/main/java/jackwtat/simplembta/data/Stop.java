@@ -1,4 +1,4 @@
-package jackwtat.simplembta.MbtaData;
+package jackwtat.simplembta.data;
 
 import android.support.annotation.NonNull;
 
@@ -96,7 +96,7 @@ public class Stop implements Comparable<Stop>{
     //        x = route
     //        y = direction, i.e. inbound/outbound
     //        z = next tripList
-    public Trip[][][] getSortedTrips(int perDirectionLimit) {
+    public Trip[][][] getSortedTripArray(int perDirectionLimit) {
         Trip[][][] tripArray = new Trip[routeList.size()][Route.Direction.COUNT][perDirectionLimit];
 
         // Sort the routes
@@ -146,14 +146,9 @@ public class Stop implements Comparable<Stop>{
         return tripArray;
     }
 
+    // Returns -1 if this stop is closer, 1 if this stop is farther, 0 if same distance
     @Override
     public int compareTo(@NonNull Stop anotherStop) {
-        if (this.distance < anotherStop.getDistance()) {
-            return -1;
-        } else if (this.distance > anotherStop.getDistance()){
-            return 1;
-        } else {
-            return 0;
-        }
+        return Double.compare(this.distance, anotherStop.distance);
     }
 }

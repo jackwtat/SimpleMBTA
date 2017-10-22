@@ -1,6 +1,4 @@
-package jackwtat.simplembta.MbtaData;
-
-import android.support.annotation.NonNull;
+package jackwtat.simplembta.data;
 
 /**
  * Created by jackw on 8/26/2017.

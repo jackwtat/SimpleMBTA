@@ -49,7 +49,6 @@
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:visibility="invisible"
         tools:text="Unable to connect to network\nUnable to retrieve current location" />
 
 </RelativeLayout>

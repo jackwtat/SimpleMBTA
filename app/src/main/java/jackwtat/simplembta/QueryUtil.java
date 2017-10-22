@@ -1,4 +1,4 @@
-package jackwtat.simplembta.Utils;
+package jackwtat.simplembta;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,9 +18,9 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.MbtaData.Trip;
-import jackwtat.simplembta.MbtaData.Route;
-import jackwtat.simplembta.MbtaData.Stop;
+import jackwtat.simplembta.data.Trip;
+import jackwtat.simplembta.data.Route;
+import jackwtat.simplembta.data.Stop;
 
 /**
  * Created by jackw on 9/1/2017.

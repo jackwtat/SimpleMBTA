@@ -1,8 +1,6 @@
 package jackwtat.simplembta;
 
-import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -12,8 +10,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import jackwtat.simplembta.Adapters.PredictionsPagerAdapter;
-import jackwtat.simplembta.Fragments.PredictionsListFragment;
+import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
+import jackwtat.simplembta.data.StopDbHelper;
+import jackwtat.simplembta.fragments.PredictionsListFragment;
 
 public class MainActivity extends AppCompatActivity {
     /**

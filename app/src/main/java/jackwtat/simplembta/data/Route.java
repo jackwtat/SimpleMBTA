@@ -1,4 +1,4 @@
-package jackwtat.simplembta.MbtaData;
+package jackwtat.simplembta.data;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,7 @@ public class Route implements Comparable<Route> {
     private String name;
     private int mode;
 
-    public class Mode {
+    public static final class Mode {
         public static final int SUBWAY_LIGHT = 0;
         public static final int SUBWAY_HEAVY = 1;
         public static final int COMMUTER_RAIL = 2;
@@ -22,12 +22,17 @@ public class Route implements Comparable<Route> {
         public static final int UNKNOWN = 99;
     }
 
-    public class Direction {
+    public static final class Direction {
         public static final int OUTBOUND = 0;
         public static final int INBOUND = 1;
         public static final int UNKNOWN = -1;
         public static final int COUNT = 2;
     }
+
+    private static final String[][] SPECIAL_ROUTES = {
+            {"741", "742", "751", "749", "746", "701", "747", "708", "34E", "57A", "70A"},
+            {"0.11", "0.12", "0.14", "0.15", "0.19", "0.21", "0.22", "0.23", "34.1", "57.1", "70.1"},
+            {"SL1", "SL2", "SL4", "SL5", "SLW", "CT1", "CT2", "CT3", "34E", "57A", "70A"}};
 
     public static String getName(String routeId, String routeName) {
         if (isSpecialRoute(routeId)) {
@@ -50,11 +55,6 @@ public class Route implements Comparable<Route> {
             return routeName;
         }
     }
-
-    private static final String[][] SPECIAL_ROUTES = {
-            {"741", "742", "751", "749", "746", "701", "747", "708", "34E", "57A", "70A"},
-            {"0.11", "0.12", "0.14", "0.15", "0.19", "0.21", "0.22", "0.23", "34.1", "57.1", "70.1"},
-            {"SL1", "SL2", "SL4", "SL5", "SLW", "CT1", "CT2", "CT3", "34E", "57A", "70A"}};
 
     private static boolean isSpecialRoute(String routeId) {
         for (int i = 0; i < SPECIAL_ROUTES[0].length; i++) {

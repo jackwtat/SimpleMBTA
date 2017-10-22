@@ -1,10 +1,10 @@
-package jackwtat.simplembta.Adapters;
+package jackwtat.simplembta.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import jackwtat.simplembta.Fragments.NearbyListFragment;
+import jackwtat.simplembta.fragments.NearbyListFragment;
 
 /**
  * Created by jackw on 8/21/2017.
