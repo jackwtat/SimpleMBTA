@@ -46,7 +46,7 @@ public class NearbyListFragment extends PredictionsListFragment {
     private final long LOCATION_UPDATE_INTERVAL = 15;
 
     // Time since last refresh before predictions can automatically refresh onResume, in seconds
-    private final long ON_RESUME_REFRESH_INTERVAL = 60;
+    private final long ON_RESUME_REFRESH_INTERVAL = 120;
 
     // Maximum distance to stop in miles
     private final double MAX_DISTANCE = .5;
@@ -124,10 +124,7 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
-        return isConnected;
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     private void onLocationFound(boolean found) {
@@ -238,7 +235,6 @@ public class NearbyListFragment extends PredictionsListFragment {
 
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
-            stops.add(new Stop("place-rugg"));
 
             publishProgress(GETTING_PREDICTIONS);
             for (Stop stop : stops) {
@@ -252,7 +248,7 @@ public class NearbyListFragment extends PredictionsListFragment {
                         routes.add(trip.getRoute());
                     } else {
                         for(Route route : routes){
-                            if (trip.getRouteId() == route.getId()){
+                            if (trip.getRouteId().equals(route.getId())){
                                 trip.setAlerts(route.getAlerts());
                             }
                         }
