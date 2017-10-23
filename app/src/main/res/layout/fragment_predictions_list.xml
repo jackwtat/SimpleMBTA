@@ -15,7 +15,7 @@
         android:paddingTop="4dp" />
 
     <TextView
-        android:id="@+id/updated_time_text_view"
+        android:id="@+id/update_status_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
@@ -31,7 +31,7 @@
         android:id="@+id/predictions_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/updated_time_text_view">
+        android:layout_below="@id/update_status_text_view">
 
         <ListView
             android:id="@+id/predictions_list_view"

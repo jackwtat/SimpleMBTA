@@ -1,4 +1,4 @@
-package jackwtat.simplembta.data;
+package jackwtat.simplembta;
 
 import android.provider.BaseColumns;
 

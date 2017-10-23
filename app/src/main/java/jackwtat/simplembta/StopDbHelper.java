@@ -1,4 +1,4 @@
-package jackwtat.simplembta.data;
+package jackwtat.simplembta;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,13 +13,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.data.StopContract.StopEntry;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import jackwtat.simplembta.data.Stop;
+import jackwtat.simplembta.StopContract.StopEntry;
 
 /**
  * Created by jackw on 10/17/2017.
@@ -53,7 +51,7 @@ public class StopDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.delete(StopEntry.TABLE_NAME, null, null);
+        db.delete(StopContract.StopEntry.TABLE_NAME, null, null);
     }
 
     public void loadDatabase(Context context) {
@@ -130,25 +128,74 @@ public class StopDbHelper extends SQLiteOpenHelper {
 
         int stopIdColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_ID);
         int stopNameColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_NAME);
+        int stopParentColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_PARENT_STATION);
         int stopLatColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_LAT);
         int stopLonColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_LON);
 
         while (cursor.moveToNext()) {
+            // Get stop data
             String stopId = cursor.getString(stopIdColumnIndex);
             String stopName = cursor.getString(stopNameColumnIndex);
+            String stopParentId = cursor.getString(stopParentColumnIndex);
             Double stopLat = cursor.getDouble(stopLatColumnIndex);
             Double stopLon = cursor.getDouble(stopLonColumnIndex);
+
+            // Calculate distance between stop and device locations using the pythagorean theorem
             Double stopDistance = Math.sqrt(Math.pow((stopLat - lat) * milesPerLat, 2) +
                     Math.pow((stopLon - lon) * milesPerLon, 2));
 
-            String logMsg = stopName + " | " + stopDistance + " miles | ";
+            // Create new instance of Stop
+            Stop newStop = new Stop(stopId, stopName, stopLat, stopLon, stopDistance);
+
+            // If distance is less than max distance and list does not already contain stop
             if (stopDistance <= maxDistance) {
-                stops.add(new Stop(stopId, stopName, stopLat, stopLat, stopDistance));
+                if (stopParentId.equals("")) {
+                    stops.add(newStop);
+
+                } else {
+                    Stop parentStop = getStopById(stopParentId);
+
+                    if (!stops.contains(parentStop)) {
+                        parentStop.setDistance(stopDistance);
+                        stops.add(parentStop);
+                    }
+                }
             }
         }
 
         cursor.close();
 
         return stops;
+    }
+
+    public Stop getStopById(String id) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        String whereClause = StopEntry.COLUMN_STOP_ID + "=?";
+        String[] whereArgs = {id};
+
+        Cursor cursor = db.query(
+                StopEntry.TABLE_NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        int stopIdColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_ID);
+        int stopNameColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_NAME);
+        int stopLatColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_LAT);
+        int stopLonColumnIndex = cursor.getColumnIndex(StopEntry.COLUMN_STOP_LON);
+
+        cursor.moveToFirst();
+
+        String stopId = cursor.getString(stopIdColumnIndex);
+        String stopName = cursor.getString(stopNameColumnIndex);
+        Double stopLat = cursor.getDouble(stopLatColumnIndex);
+        Double stopLon = cursor.getDouble(stopLonColumnIndex);
+
+        return new Stop(stopId, stopName, stopLat, stopLon);
     }
 }

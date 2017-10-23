@@ -16,18 +16,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
+import jackwtat.simplembta.data.Alert;
 import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.data.Route;
-import jackwtat.simplembta.data.Stop;
 
 /**
  * Created by jackw on 9/1/2017.
  */
 
 public class QueryUtil {
-    private static final String TAG = "Query Util";
+    private static final String LOG_TAG = "Query Util";
 
     //URL for querying the MBTA realTime API
     private static final String MBTA_URL = "http://realtime.mbta.com/developer/api/v2/";
@@ -51,10 +51,26 @@ public class QueryUtil {
         try {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
-            Log.e(TAG, "Problem making the HTTP request.", e);
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
         return extractPredictionsFromJson(jsonResponse);
+    }
+
+    public static ArrayList<Alert> fetchAlertsByRoute(String routeId) {
+        String requestUrl = MBTA_URL + "alertsbyroute" + API_KEY + RESPONSE_FORMAT +
+                "&route=" + routeId;
+
+        URL url = createUrl(requestUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+        }
+
+        return extractAlertsFromJson(jsonResponse);
     }
 
     /**
@@ -65,7 +81,7 @@ public class QueryUtil {
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Problem building the URL ", e);
+            Log.e(LOG_TAG, "Problem building the URL ", e);
         }
         return url;
     }
@@ -96,10 +112,10 @@ public class QueryUtil {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(TAG, "Error response code: " + urlConnection.getResponseCode());
+                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(TAG, "Problem retrieving JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -169,10 +185,9 @@ public class QueryUtil {
 
                             // Create new Trip object and populate with data
                             Trip trip = new Trip(currentTrip.getString("trip_id"));
-                            trip.setRouteId(currentRoute.getString("route_id"));
-                            trip.setRouteName(Route.getName(currentRoute.getString("route_id"),
-                                    currentRoute.getString("route_name")));
-                            trip.setMode(currentMode.getInt("route_type"));
+                            trip.setRoute(new Route(currentRoute.getString("route_id"),
+                                    currentRoute.getString("route_name"),
+                                    currentMode.getInt("route_type")));
                             trip.setStopId(stop.getString("stop_id"));
                             trip.setStopName(stop.getString("stop_name"));
                             trip.setDirection(currentDirection.getInt("direction_id"));
@@ -190,5 +205,63 @@ public class QueryUtil {
 
         // Return the list of predictions
         return predictions;
+    }
+
+    private static ArrayList<Alert> extractAlertsFromJson(String jsonResponse) {
+        ArrayList<Alert> alertList = new ArrayList<>();
+
+        // Current time in seconds
+        long currentTime = (new Date().getTime()) / 1000;
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return alertList;
+        }
+
+        // Try to parse the JSON response string. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        try {
+            // Create a JSONObject from the JSON response string
+            JSONObject rootObject = new JSONObject(jsonResponse);
+
+            // Loop through each alert for this route
+            JSONArray alerts = rootObject.getJSONArray("alerts");
+            for (int i = 0; i < alerts.length(); i++) {
+                JSONObject currentAlert = alerts.getJSONObject(i);
+
+                // Loop through each effect period of this alert
+                JSONArray effectPeriods = currentAlert.getJSONArray("effect_periods");
+                for (int j = 0; j < effectPeriods.length(); j++) {
+                    JSONObject currentPeriod = effectPeriods.getJSONObject(j);
+
+                    // Get the start time of the alert
+                    long start = currentPeriod.getLong("effect_start");
+
+                    // Get the end time of the alert, if it exists
+                    long end;
+                    try {
+                        // There exists an end time
+                        end = currentPeriod.getLong("effect_end");
+                    } catch (Exception e) {
+                        // If there is no end time, then set to -1;
+                        end = -1;
+                    }
+
+                    // If the current time is between the start/end times, then add alert
+                    if (currentTime > start && (currentTime < end || end == -1)) {
+                        String header = currentAlert.getString("header_text");
+                        alertList.add(new Alert(header));
+
+                        break;
+                    }
+                }
+            }
+
+        } catch (JSONException e) {
+        }
+
+        // Return the list of predictions
+        return alertList;
     }
 }

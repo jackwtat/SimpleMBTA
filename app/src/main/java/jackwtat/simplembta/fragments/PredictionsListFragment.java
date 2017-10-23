@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
+import jackwtat.simplembta.data.Alert;
 import jackwtat.simplembta.data.Route;
 import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.R;
@@ -34,8 +37,8 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView predictionsListView;
-    private TextView updatedTextView;
-    private TextView statusTextView;
+    private TextView updateStatusTextView;
+    private TextView errorStatusTextView;
     private TextView debugTextView;
 
     protected Date lastUpdated;
@@ -56,13 +59,37 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.predictions_swipe_refresh_layout);
         predictionsListView = (ListView) rootView.findViewById(R.id.predictions_list_view);
-        updatedTextView = (TextView) rootView.findViewById(R.id.updated_time_text_view);
-        statusTextView = (TextView) rootView.findViewById(R.id.status_text_view);
+        updateStatusTextView = (TextView) rootView.findViewById(R.id.update_status_text_view);
+        errorStatusTextView = (TextView) rootView.findViewById(R.id.status_text_view);
         debugTextView = (TextView) rootView.findViewById(R.id.debug_text_view);
 
         predictionsListView.setAdapter(predictionsListAdapter);
+        predictionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Trip[] trips = (Trip[]) parent.getItemAtPosition(position);
 
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                if (trips[0].hasAlerts()) {
+                    ArrayList<Alert> alerts = trips[0].getAlerts();
+                    String alertMessage = alerts.get(0).getText();
+
+                    for(int i = 1; i < alerts.size(); i++){
+                        alertMessage += "\n\n" + alerts.get(i).getText();
+                    }
+
+                    // Create alert dialog builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(trips[0].getRouteLongName());
+                    builder.setMessage(alertMessage);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
+                R.color.colorAccent));
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -80,29 +107,44 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
         refreshPredictions();
     }
 
-    public void displayUpdateTime(Date updatedTime) {
+    public void displayUpdateTime(Date updatedTime, boolean refreshing) {
         SimpleDateFormat ft = new SimpleDateFormat("h:mm a");
-        String text = "Updated " + ft.format(updatedTime);
-        updatedTextView.setText(text);
-    }
-
-    public void displayTimedStatus(String message, boolean refreshing) {
-        statusTextView.setText(message);
-        displayUpdateTime(new Date());
+        String message = "Updated " + ft.format(updatedTime);
+        updateStatusTextView.setText(message);
         swipeRefreshLayout.setRefreshing(refreshing);
     }
 
-    public void displayStatusMessage(String message, boolean refreshing){
-        statusTextView.setText(message);
+    public void displayUpdateStatus(String message, boolean refreshing) {
+        updateStatusTextView.setText(message);
         swipeRefreshLayout.setRefreshing(refreshing);
     }
 
-    public void clearList() {
+    public void displayTimedErrorStatus(String message, boolean refreshing) {
+        clearList(refreshing);
+        errorStatusTextView.setText(message);
+        displayUpdateTime(new Date(), refreshing);
+        swipeRefreshLayout.setRefreshing(refreshing);
+    }
+
+    public void displayUntimedErrorStatus(String message, boolean refreshing) {
+        clearList(refreshing);
+        errorStatusTextView.setText(message);
+        swipeRefreshLayout.setRefreshing(refreshing);
+    }
+
+    public void clearErrorStatus(boolean refreshing) {
+        errorStatusTextView.setText("");
+        swipeRefreshLayout.setRefreshing(refreshing);
+
+    }
+
+    public void clearList(boolean refreshing) {
         predictionsListAdapter.clear();
-        statusTextView.setText("");
+        errorStatusTextView.setText("");
+        swipeRefreshLayout.setRefreshing(refreshing);
     }
 
-    public void displayDebugMessage(String message){
+    public void displayDebugMessage(String message) {
         debugTextView.setText(message);
     }
 
@@ -113,8 +155,7 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
         // Sort the stops by distance
         Collections.sort(stops);
 
-        // We will keep track of each route-direction pair we process
-        // and ignore duplicates
+        // We will keep track of each route-direction pair we process and ignore duplicates
         ArrayList<String> rd = new ArrayList<>();
 
         // Loop through every stop
@@ -156,12 +197,17 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
             }
         }
 
-        // Update the query time and display to user
-        displayTimedStatus("", false);
-        lastUpdated = new Date();
 
+        // Update the query time
+        lastUpdated = new Date();
+        displayUpdateTime(lastUpdated, false);
+
+        // Hide refreshing icon
+        swipeRefreshLayout.setRefreshing(false);
+
+        // If there are no predictions, show status to user
         if (predictionsListAdapter.getCount() < 1) {
-            displayTimedStatus(getResources().getString(R.string.no_predictions), false);
+            displayTimedErrorStatus(getResources().getString(R.string.no_predictions), false);
         }
     }
 

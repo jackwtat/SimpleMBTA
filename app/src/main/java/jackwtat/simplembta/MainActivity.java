@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
-import jackwtat.simplembta.data.StopDbHelper;
 import jackwtat.simplembta.fragments.PredictionsListFragment;
 
 public class MainActivity extends AppCompatActivity {

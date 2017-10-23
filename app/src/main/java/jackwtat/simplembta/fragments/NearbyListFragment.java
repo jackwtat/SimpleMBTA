@@ -21,13 +21,16 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
+import jackwtat.simplembta.data.Route;
 import jackwtat.simplembta.data.Stop;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.QueryUtil;
-import jackwtat.simplembta.data.StopDbHelper;
+import jackwtat.simplembta.StopDbHelper;
+import jackwtat.simplembta.data.Trip;
 
 /**
  * Created by jackw on 9/30/2017.
@@ -97,18 +100,18 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         // Cancel the AsyncTask if it is running
         if (predictionAsyncTask != null && predictionAsyncTask.cancel(true)) {
-            displayTimedStatus(getResources().getString(R.string.no_predictions), false);
+            displayTimedErrorStatus(getResources().getString(R.string.no_predictions), false);
         }
     }
 
     @Override
     public void refreshPredictions() {
-        // Clear predictions list
-        clearList();
+        // Clear error status message
+        clearErrorStatus(true);
 
         if (!checkNetworkConnection()) {
             // If no network connectivity found, show error message
-            displayTimedStatus(getResources().getString(R.string.no_network_connectivity), false);
+            displayTimedErrorStatus(getResources().getString(R.string.no_network_connectivity), false);
         } else {
             // Refresh current location
             locationServicesClient.refreshLocation();
@@ -129,7 +132,7 @@ public class NearbyListFragment extends PredictionsListFragment {
 
     private void onLocationFound(boolean found) {
         if (!found) {
-            displayTimedStatus(getResources().getString(R.string.no_location), false);
+            displayTimedErrorStatus(getResources().getString(R.string.no_location), false);
         } else {
             // We have both internet and location
             // Get predictions from MBTA API
@@ -231,13 +234,30 @@ public class NearbyListFragment extends PredictionsListFragment {
             publishProgress(LOADING_DATABASE);
             stopDbHelper.loadDatabase(getContext());
 
+            ArrayList<Route> routes = new ArrayList<>();
+
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
             stops.add(new Stop("place-rugg"));
 
             publishProgress(GETTING_PREDICTIONS);
             for (Stop stop : stops) {
+                // Get predictions via MBTA API and add them as instances of Trip
                 stop.addTrips(QueryUtil.fetchPredictionsByStop(stop.getId()));
+
+                // Get service alerts for each trip via the MBTA API
+                for (Trip trip : stop.getTrips()){
+                    if (!routes.contains(trip.getRoute())){
+                        trip.setAlerts(QueryUtil.fetchAlertsByRoute(trip.getRouteId()));
+                        routes.add(trip.getRoute());
+                    } else {
+                        for(Route route : routes){
+                            if (trip.getRouteId() == route.getId()){
+                                trip.setAlerts(route.getAlerts());
+                            }
+                        }
+                    }
+                }
             }
 
             return stops;
@@ -248,13 +268,13 @@ public class NearbyListFragment extends PredictionsListFragment {
 
             switch (status) {
                 case LOADING_DATABASE:
-                    displayStatusMessage(getResources().getString(R.string.loading_first_time), true);
+                    displayUpdateStatus(getResources().getString(R.string.loading_first_time), true);
                     break;
                 case GETTING_NEARBY_STOPS:
-                    displayStatusMessage(getResources().getString(R.string.getting_nearby_stops), true);
+                    displayUpdateStatus(getResources().getString(R.string.getting_nearby_stops), true);
                     break;
                 case GETTING_PREDICTIONS:
-                    displayStatusMessage(getResources().getString(R.string.getting_predictions), true);
+                    displayUpdateStatus(getResources().getString(R.string.getting_predictions), true);
                     break;
             }
         }

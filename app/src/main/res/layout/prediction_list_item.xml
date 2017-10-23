@@ -24,6 +24,19 @@
             android:textSize="20sp"
             android:textStyle="bold"
             tools:text="Boat" />
+
+        <TextView
+            android:id="@+id/alert_indicator_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/route_text_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal"
+            android:text="@string/alert_indicator"
+            android:textColor="@color/ServiceAlert"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout

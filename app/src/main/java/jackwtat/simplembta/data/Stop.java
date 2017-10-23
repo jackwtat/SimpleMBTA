@@ -9,7 +9,7 @@ import java.util.Collections;
  * Created by jackw on 8/26/2017.
  */
 
-public class Stop implements Comparable<Stop>{
+public class Stop implements Comparable<Stop> {
     private static final String TAG = "Stop";
 
     private String id;
@@ -25,6 +25,14 @@ public class Stop implements Comparable<Stop>{
         this.name = "";
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.distance = 0.0;
+    }
+
+    public Stop(String id, String name, double latitude, double longitude) {
+        this.id = id;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.distance = 0.0;
     }
 
@@ -52,41 +60,46 @@ public class Stop implements Comparable<Stop>{
         return longitude;
     }
 
-    public double getDistance() { return distance; }
+    public double getDistance() {
+        return distance;
+    }
+
+    public ArrayList<Route> getRoutes() { return routeList; }
+
+    public ArrayList<Trip> getTrips() { return tripList; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 
     public void addTrip(Trip trip) {
         tripList.add(trip);
-        if (routeList.size() == 0) {
-            routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
-        } else {
-            for (int i = 0; i < routeList.size(); i++) {
-                if (trip.getRouteId().equals(routeList.get(i).getId())) {
-                    break;
-                } else if (i == routeList.size() - 1) {
-                    routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
-                    break;
-                }
-            }
+
+        if (!routeList.contains(trip.getRoute())) {
+            routeList.add(trip.getRoute());
         }
     }
 
     public void addTrips(ArrayList<Trip> tripList) {
-        for(int i = 0; i < tripList.size(); i++){
+        for (int i = 0; i < tripList.size(); i++) {
             Trip trip = tripList.get(i);
 
             this.tripList.add(trip);
 
-            if (routeList.size() == 0) {
-                routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
-            } else {
-                for (int j = 0; j < routeList.size(); j++) {
-                    if (trip.getRouteId().equals(routeList.get(j).getId())) {
-                        break;
-                    } else if (j == routeList.size() - 1) {
-                        routeList.add(new Route(trip.getRouteId(), trip.getRouteName(), trip.getMode()));
-                        break;
-                    }
-                }
+            if (!routeList.contains(trip.getRoute())) {
+                routeList.add(trip.getRoute());
             }
         }
     }
@@ -146,9 +159,18 @@ public class Stop implements Comparable<Stop>{
         return tripArray;
     }
 
-    // Returns -1 if this stop is closer, 1 if this stop is farther, 0 if same distance
     @Override
     public int compareTo(@NonNull Stop anotherStop) {
         return Double.compare(this.distance, anotherStop.distance);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Stop) {
+            Stop anotherStop = (Stop) obj;
+            return this.id.equals(anotherStop.getId());
+        }
+
+        return false;
     }
 }

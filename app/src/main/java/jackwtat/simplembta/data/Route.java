@@ -2,6 +2,9 @@ package jackwtat.simplembta.data;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Double.parseDouble;
 
 /**
@@ -11,7 +14,9 @@ import static java.lang.Double.parseDouble;
 public class Route implements Comparable<Route> {
     private String id;
     private String name;
+    private String longName;
     private int mode;
+    private ArrayList<Alert> alerts;
 
     public class Mode {
         public static final int SUBWAY_LIGHT = 0;
@@ -29,7 +34,7 @@ public class Route implements Comparable<Route> {
         public static final int COUNT = 2;
     }
 
-    public static String getName(String routeId, String routeName) {
+    private String getShortName(String routeId, String routeName) {
         if (isSpecialRoute(routeId)) {
             return getSpecialName(routeId);
         } else if (routeId.length() >= 5 && routeId.substring(0, 5).equals("Green")) {
@@ -85,8 +90,18 @@ public class Route implements Comparable<Route> {
 
     public Route(String id, String name, int mode) {
         this.id = id;
-        this.name = name;
+        this.name = getShortName(id, name);
+        this.longName = name;
         this.mode = mode;
+        alerts = new ArrayList<>();
+    }
+
+    public Route(String id, String name, int mode, ArrayList<Alert> alerts) {
+        this.id = id;
+        this.name = getShortName(id, name);
+        this.longName = name;
+        this.mode = mode;
+        this.alerts = alerts;
     }
 
     public String getId() {
@@ -97,8 +112,18 @@ public class Route implements Comparable<Route> {
         return name;
     }
 
+    public String getLongName() { return longName; }
+
     public int getMode() {
         return mode;
+    }
+
+    public ArrayList<Alert> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(ArrayList<Alert> alerts) {
+        this.alerts = alerts;
     }
 
     @Override
@@ -126,10 +151,20 @@ public class Route implements Comparable<Route> {
         } else {
             // Both routes are buses
             // Compare special bus route IDs
-            double thisBusId= parseDouble(getSpecialId(this.id));
-            double anotherBusId= parseDouble(getSpecialId(anotherId));
+            double thisBusId = parseDouble(getSpecialId(this.id));
+            double anotherBusId = parseDouble(getSpecialId(anotherId));
 
             return Double.compare(thisBusId, anotherBusId);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Route) {
+            Route anotherRoute = (Route) obj;
+            return this.id.equals(anotherRoute.getId());
+        }
+
+        return false;
     }
 }

@@ -43,6 +43,8 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                 listItemView.findViewById(R.id.route_text_view);
         TextView destinationTextView = (TextView)
                 listItemView.findViewById(R.id.destination_text_view);
+        TextView alertTextView = (TextView)
+                listItemView.findViewById(R.id.alert_indicator_text_view);
         TextView stopTextView = (TextView)
                 listItemView.findViewById(R.id.stop_text_view);
         TextView firstPredTextView = (TextView)
@@ -63,6 +65,13 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
             // Set the font color of the route name
             routeTextView.setTextColor(getRouteColor(listItemView, trips[0].getMode(),
                     trips[0].getRouteId()));
+
+            // Display service alert indicator if there are alerts
+            if (trips[0].hasAlerts()){
+                alertTextView.setVisibility(View.VISIBLE);
+            } else {
+                alertTextView.setVisibility(View.INVISIBLE);
+            }
 
             // Display the destination
             destinationTextView.setText(trips[0].getDestination());
@@ -101,8 +110,6 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
             } else {
                 secondPredTextView.setText("");
             }
-
-
         } else {
             // Empty trip object error
             // Should not normally happen
