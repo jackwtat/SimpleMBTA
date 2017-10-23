@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.R;
 
 import static android.support.v4.content.ContextCompat.getColor;
+import static android.view.View.GONE;
 
 /**
  * Created by jackw on 10/1/2017.
@@ -38,23 +40,30 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                     R.layout.prediction_list_item, parent, false);
         }
 
-        // Initialize list item elements
+        // Prediction Layouts
+        RelativeLayout secondaryLayout = (RelativeLayout)
+                listItemView.findViewById(R.id.secondary_layout);
+        RelativeLayout tertiaryLayout = (RelativeLayout)
+                listItemView.findViewById(R.id.tertiary_layout);
+
+        // Route number/name TextView
         TextView routeTextView = (TextView)
                 listItemView.findViewById(R.id.route_text_view);
-        TextView destinationTextView = (TextView)
-                listItemView.findViewById(R.id.destination_text_view);
+
+        // Alert indicator TextView
         TextView alertTextView = (TextView)
                 listItemView.findViewById(R.id.alert_indicator_text_view);
+
+        // Stop name TextView and spacer
         TextView stopTextView = (TextView)
                 listItemView.findViewById(R.id.stop_text_view);
-        TextView firstPredTextView = (TextView)
-                listItemView.findViewById(R.id.first_time_text_view);
-        TextView secondPredTextView = (TextView)
-                listItemView.findViewById(R.id.second_time_text_view);
 
+        // Prediction data
         Trip[] trips = getItem(position);
 
-        if (trips.length > 0 && trips[0] != null) {
+        // Display the prediction data
+        if (trips != null && trips.length > 0 && trips[0] != null) {
+
             // Display the route name
             routeTextView.setText(trips[0].getRouteName());
 
@@ -67,61 +76,125 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                     trips[0].getRouteId()));
 
             // Display service alert indicator if there are alerts
-            if (trips[0].hasAlerts()){
+            if (trips[0].hasAlerts()) {
                 alertTextView.setVisibility(View.VISIBLE);
             } else {
                 alertTextView.setVisibility(View.INVISIBLE);
             }
 
-            // Display the destination
-            destinationTextView.setText(trips[0].getDestination());
-
             // Display the name of the stop
             stopTextView.setText(trips[0].getStopName());
 
-            // Display the predicted arrival time of the first trip
-            long firstPrediction = trips[0].getArrivalTime() / 60;
-            firstPredTextView.setText(firstPrediction + " min");
+            // Display the first predicted trip
+            populatePrimaryPrediction(listItemView, trips[0]);
 
-            // Set the font and background color of the predicted arrival time
-            // White font and red text if it's 5 minutes or less
-            if (firstPrediction <= 5) {
-                firstPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
-                        R.color.ApproachingAlert));
-                firstPredTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        R.color.HighlightedText));
-            } else {
-                firstPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
-                        R.color.Transparent));
-                firstPredTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        R.color.PrimaryText));
-            }
-
-            // If there is a second third trip, display their predicted arrival times also
+            // Display second predicted trip if it exists
             if (trips.length > 1 && trips[1] != null) {
-                long secondPrediction = trips[1].getArrivalTime() / 60;
 
-                if (trips.length > 2 && trips[2] != null) {
-                    long thirdPrediction = trips[2].getArrivalTime() / 60;
-                    secondPredTextView.setText(secondPrediction + ", " + thirdPrediction + " min");
+                // If the first and second trips have the same destination,
+                // then display the second trip in the tertiary layout so its font is smaller
+                if (trips[1].getDestination().equals(trips[0].getDestination())) {
+
+                    // Call method to populate tertiary prediction
+                    populateTertiaryPrediction(listItemView, trips[1]);
+
+                    // Make the tertiary prediction layout visible
+                    tertiaryLayout.setVisibility(View.VISIBLE);
+
+                    // Hide the secondary prediction layout
+                    secondaryLayout.setVisibility(GONE);
+
+
                 } else {
-                    secondPredTextView.setText(secondPrediction + " min");
+                    // If the first and second trips have the same destination,
+                    // then display the second trip in the secondary prediction layout
+                    // so that its font is more prominent
+
+                    // Make the secondary prediction layout visible
+                    secondaryLayout.setVisibility(View.VISIBLE);
+
+                    // Call method to populate the secondary prediction
+                    populateSecondaryPrediction(listItemView, trips[1]);
+
+                    // Hide the tertiary prediction layout
+                    tertiaryLayout.setVisibility(GONE);
                 }
             } else {
-                secondPredTextView.setText("");
+                // If there are no 2nd, 3rd, or 4th trips,
+                // then hide the secondary and tertiary prediction layouts
+                secondaryLayout.setVisibility(GONE);
+                tertiaryLayout.setVisibility(GONE);
             }
         } else {
-            // Empty trip object error
-            // Should not normally happen
-            routeTextView.setText("---");
-            destinationTextView.setText("Empty Trip Error");
-            stopTextView.setText("");
-            firstPredTextView.setText("");
-            secondPredTextView.setText("");
+            secondaryLayout.setVisibility(GONE);
+            tertiaryLayout.setVisibility(GONE);
         }
 
         return listItemView;
     }
+
+    private void populatePrimaryPrediction(View listItemView, Trip trip) {
+        TextView primaryDestTextView = (TextView)
+                listItemView.findViewById(R.id.primary_destination_text_view);
+        TextView primaryPredTextView = (TextView)
+                listItemView.findViewById(R.id.primary_time_text_view);
+
+        primaryDestTextView.setText(trip.getDestination());
+
+        String predictionText = (trip.getArrivalTime() / 60) + " min";
+        primaryPredTextView.setText(predictionText);
+
+        // Set the font and background color of the predicted arrival time
+        // White font and red text if it's 5 minutes or less
+        if (trip.getArrivalTime() / 60 <= 5) {
+            primaryPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                    R.color.ApproachingAlert));
+            primaryPredTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    R.color.HighlightedText));
+        } else {
+            primaryPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                    R.color.Transparent));
+            primaryPredTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    R.color.PrimaryText));
+        }
+
+    }
+
+    private void populateSecondaryPrediction(View listItemView, Trip trip) {
+        TextView secondaryDestTextView = (TextView)
+                listItemView.findViewById(R.id.secondary_destination_text_view);
+        TextView secondaryPredTextView = (TextView)
+                listItemView.findViewById(R.id.secondary_time_text_view);
+
+        secondaryDestTextView.setText(trip.getDestination());
+
+        String predictionText = (trip.getArrivalTime() / 60) + " min";
+        secondaryPredTextView.setText(predictionText);
+
+        if (trip.getArrivalTime() / 60 <= 5) {
+            secondaryPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                    R.color.ApproachingAlert));
+            secondaryPredTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    R.color.HighlightedText));
+        } else {
+            secondaryPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
+                    R.color.Transparent));
+            secondaryPredTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    R.color.PrimaryText));
+        }
+    }
+
+    private void populateTertiaryPrediction(View listItemView, Trip trip) {
+        TextView tertiaryPredTextView = (TextView)
+                listItemView.findViewById(R.id.tertiary_time_text_view);
+
+        String predictionText = Long.toString(trip.getArrivalTime() / 60);
+
+        predictionText += " min";
+
+        tertiaryPredTextView.setText(predictionText);
+    }
+
 
     // Returns the background color of the respective route
     // Should correspond
