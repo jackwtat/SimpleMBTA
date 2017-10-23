@@ -73,7 +73,7 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
                     ArrayList<Alert> alerts = trips[0].getAlerts();
                     String alertMessage = alerts.get(0).getText();
 
-                    for(int i = 1; i < alerts.size(); i++){
+                    for (int i = 1; i < alerts.size(); i++) {
                         alertMessage += "\n\n" + alerts.get(i).getText();
                     }
 
@@ -162,10 +162,10 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
         for (int i = 0; i < stops.size(); i++) {
 
             // Get the next two trips for each direction for each route
-            Trip[][][] predArray = stops.get(i).getSortedTripArray(2);
+            Trip[][][] allPredictions = stops.get(i).getSortedTripArray(2);
 
             // Loop through each route
-            for (int route = 0; route < predArray.length; route++) {
+            for (Trip[][] route : allPredictions) {
 
                 // Get array of directions in order we want displayed
                 //  1. Inbound
@@ -173,10 +173,10 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
                 int[] directions = {Route.Direction.INBOUND, Route.Direction.OUTBOUND};
 
                 //Loop through each direction
-                for (int dir : directions) {
+                for (int direction : directions) {
 
-                    // Get the next trip for current going in current direction
-                    Trip trip = predArray[route][dir][0];
+                    // Get the next trip for current route going in current direction
+                    Trip trip = route[direction][0];
 
                     // Check if there are trips for that route/direction
                     if (trip != null) {
@@ -186,7 +186,7 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
                         if (!rd.contains(trip.getDirection() + "-" + trip.getRouteId())) {
 
                             // Add predictions to the list to display
-                            predictionsListAdapter.add(predArray[route][dir]);
+                            predictionsListAdapter.add(route[direction]);
 
                             // Add route-direction pair so we know these trips are already
                             // displayed in the list
@@ -196,7 +196,6 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
                 }
             }
         }
-
 
         // Update the query time
         lastUpdated = new Date();
