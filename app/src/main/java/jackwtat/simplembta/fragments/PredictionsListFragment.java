@@ -162,7 +162,7 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
         for (int i = 0; i < stops.size(); i++) {
 
             // Get the next two trips for each direction for each route
-            Trip[][][] predArray = stops.get(i).getSortedTripArray(3);
+            Trip[][][] predArray = stops.get(i).getSortedTripArray(2);
 
             // Loop through each route
             for (int route = 0; route < predArray.length; route++) {
