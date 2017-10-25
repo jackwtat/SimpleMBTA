@@ -18,7 +18,6 @@ import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.R;
 
 import static android.support.v4.content.ContextCompat.getColor;
-import static android.view.View.GONE;
 
 /**
  * Created by jackw on 10/1/2017.
@@ -102,7 +101,7 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                     tertiaryLayout.setVisibility(View.VISIBLE);
 
                     // Hide the secondary prediction layout
-                    secondaryLayout.setVisibility(GONE);
+                    secondaryLayout.setVisibility(View.GONE);
 
 
                 } else {
@@ -117,17 +116,17 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                     populateSecondaryPrediction(listItemView, trips[1]);
 
                     // Hide the tertiary prediction layout
-                    tertiaryLayout.setVisibility(GONE);
+                    tertiaryLayout.setVisibility(View.GONE);
                 }
             } else {
                 // If there are no 2nd, 3rd, or 4th trips,
                 // then hide the secondary and tertiary prediction layouts
-                secondaryLayout.setVisibility(GONE);
-                tertiaryLayout.setVisibility(GONE);
+                secondaryLayout.setVisibility(View.GONE);
+                tertiaryLayout.setVisibility(View.GONE);
             }
         } else {
-            secondaryLayout.setVisibility(GONE);
-            tertiaryLayout.setVisibility(GONE);
+            secondaryLayout.setVisibility(View.GONE);
+            tertiaryLayout.setVisibility(View.GONE);
         }
 
         return listItemView;
@@ -171,6 +170,8 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
         String predictionText = (trip.getArrivalTime() / 60) + " min";
         secondaryPredTextView.setText(predictionText);
 
+        // Set the font and background color of the predicted arrival time
+        // White font and red text if it's 5 minutes or less
         if (trip.getArrivalTime() / 60 <= 5) {
             secondaryPredTextView.setBackgroundColor(ContextCompat.getColor(getContext(),
                     R.color.ApproachingAlert));

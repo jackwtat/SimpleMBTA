@@ -22,9 +22,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 
+import jackwtat.simplembta.data.Alert;
 import jackwtat.simplembta.data.Route;
 import jackwtat.simplembta.data.Stop;
 import jackwtat.simplembta.R;
@@ -235,23 +237,21 @@ public class NearbyListFragment extends PredictionsListFragment {
 
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
+            stops.add(new Stop("place-bvmnl"));
 
             publishProgress(GETTING_PREDICTIONS);
             for (Stop stop : stops) {
                 // Get predictions via MBTA API and add them as instances of Trip
                 stop.addTrips(QueryUtil.fetchPredictionsByStop(stop.getId()));
 
-                // Get service alerts for each trip via the MBTA API
+                // Get service alerts via the MBTA API
+                HashMap<String, ArrayList<Alert>> alerts = QueryUtil.fetchAlerts();
+
+                // For each trip, if there is are alerts for that route,
+                // then assign the alerts to that trip
                 for (Trip trip : stop.getTrips()){
-                    if (!routes.contains(trip.getRoute())){
-                        trip.setAlerts(QueryUtil.fetchAlertsByRoute(trip.getRouteId()));
-                        routes.add(trip.getRoute());
-                    } else {
-                        for(Route route : routes){
-                            if (trip.getRouteId().equals(route.getId())){
-                                trip.setAlerts(route.getAlerts());
-                            }
-                        }
+                    if (alerts.containsKey(trip.getRouteId())){
+                        trip.setAlerts(alerts.get(trip.getRouteId()));
                     }
                 }
             }

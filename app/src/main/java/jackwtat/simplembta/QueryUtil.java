@@ -17,6 +17,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import jackwtat.simplembta.data.Alert;
 import jackwtat.simplembta.data.Trip;
@@ -33,7 +34,7 @@ public class QueryUtil {
     private static final String MBTA_URL = "http://realtime.mbta.com/developer/api/v2/";
 
     //API key
-    private static final String API_KEY = "?api_key=0UkGTkcDrEmX_eT8sqeNoA";
+    private static final String API_KEY = "?api_key=vA6fQJjTJ0akhSwzr-Mf5A";
 
     //Format specification
     private static final String RESPONSE_FORMAT = "&format=json";
@@ -57,9 +58,8 @@ public class QueryUtil {
         return extractPredictionsFromJson(jsonResponse);
     }
 
-    public static ArrayList<Alert> fetchAlertsByRoute(String routeId) {
-        String requestUrl = MBTA_URL + "alertsbyroute" + API_KEY + RESPONSE_FORMAT +
-                "&route=" + routeId;
+    public static HashMap<String, ArrayList<Alert>> fetchAlerts() {
+        String requestUrl = MBTA_URL + "alerts" + API_KEY + RESPONSE_FORMAT;
 
         URL url = createUrl(requestUrl);
 
@@ -201,48 +201,60 @@ public class QueryUtil {
                 }
             }
         } catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to parse prediction");
         }
 
         // Return the list of predictions
         return predictions;
     }
 
-    private static ArrayList<Alert> extractAlertsFromJson(String jsonResponse) {
-        ArrayList<Alert> alertList = new ArrayList<>();
+    private static HashMap<String, ArrayList<Alert>> extractAlertsFromJson(String jsonResponse) {
+
+        // A route may contain multiple alerts, so we use ArrayList<Alert> to store multiple
+        // Alerts for each route
+        HashMap<String, ArrayList<Alert>> alerts = new HashMap<>();
 
         // Current time in seconds
         long currentTime = (new Date().getTime()) / 1000;
 
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(jsonResponse)) {
-            return alertList;
+            return alerts;
         }
 
-        // Try to parse the JSON response string. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
             // Create a JSONObject from the JSON response string
-            JSONObject rootObject = new JSONObject(jsonResponse);
+            JSONObject jRoot = new JSONObject(jsonResponse);
 
-            // Loop through each alert for this route
-            JSONArray alerts = rootObject.getJSONArray("alerts");
-            for (int i = 0; i < alerts.length(); i++) {
-                JSONObject currentAlert = alerts.getJSONObject(i);
+            // Loop through each alert
+            JSONArray jAlertsArray = jRoot.getJSONArray("alerts");
+            for (int i = 0; i < jAlertsArray.length(); i++) {
+
+                // Get the JSON object representing this alert
+                JSONObject jAlert = jAlertsArray.getJSONObject(i);
+
+                // Create a new Alert object
+                // Pass in alert_id and header_text
+                // header_text is sufficient and brief-enough information
+                Alert alert = new Alert(
+                        jAlert.getString("alert_id"),
+                        jAlert.getString("header_text"));
 
                 // Loop through each effect period of this alert
-                JSONArray effectPeriods = currentAlert.getJSONArray("effect_periods");
-                for (int j = 0; j < effectPeriods.length(); j++) {
-                    JSONObject currentPeriod = effectPeriods.getJSONObject(j);
+                JSONArray jEffectPeriods = jAlert.getJSONArray("effect_periods");
+                for (int j = 0; j < jEffectPeriods.length(); j++) {
+
+                    // Get the JSON object representing this effect period
+                    JSONObject jPeriod = jEffectPeriods.getJSONObject(j);
 
                     // Get the start time of the alert
-                    long start = currentPeriod.getLong("effect_start");
+                    long start = jPeriod.getLong("effect_start");
 
                     // Get the end time of the alert, if it exists
                     long end;
                     try {
                         // There exists an end time
-                        end = currentPeriod.getLong("effect_end");
+                        end = jPeriod.getLong("effect_end");
                     } catch (Exception e) {
                         // If there is no end time, then set to -1;
                         end = -1;
@@ -250,18 +262,43 @@ public class QueryUtil {
 
                     // If the current time is between the start/end times, then add alert
                     if (currentTime > start && (currentTime < end || end == -1)) {
-                        String header = currentAlert.getString("header_text");
-                        alertList.add(new Alert(header));
 
-                        break;
+                        // Loop through all the affected services
+                        JSONArray jServices = jAlert.getJSONObject("affected_services")
+                                .getJSONArray("services");
+                        for (int k = 0; k < jServices.length(); k++) {
+
+                            // Get the JSON object representing this affected route
+                            JSONObject jRoute = jServices.getJSONObject(k);
+
+                            // Get the route ID
+                            String routeId = jRoute.getString("route_id");
+
+                            // Check if we already have a key routeId in hash map
+                            // If yes, then add the alert to the existing ArrayList in its value
+                            // If not, then create a new key-value pair for this route
+                            // Reminder: key = routeID, value = ArrayList<Alert>
+                            if (!alerts.containsKey(routeId)) {
+                                alerts.put(routeId, new ArrayList<Alert>());
+                            }
+
+                            // Check if this route already has an instance of this alert
+                            if (!alerts.get(routeId).contains(alert)) {
+                                alerts.get(routeId).add(alert);
+                            }
+                        }
                     }
                 }
+
+
             }
 
+
         } catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to parse alert");
         }
 
-        // Return the list of predictions
-        return alertList;
+        // Return the HashMap of Alerts
+        return alerts;
     }
 }

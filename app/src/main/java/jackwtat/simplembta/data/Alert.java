@@ -5,11 +5,27 @@ package jackwtat.simplembta.data;
  */
 
 public class Alert {
+    private String id;
     private String text;
 
-    public Alert(String text){ this.text = text; }
+    public Alert(String id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
+    public String getId() { return id; }
 
     public String getText() {
         return text;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Alert) {
+            Alert anotherAlert = (Alert) obj;
+            return this.id.equals(anotherAlert.getId());
+        }
+
+        return false;
     }
 }
