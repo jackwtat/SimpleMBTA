@@ -233,19 +233,16 @@ public class NearbyListFragment extends PredictionsListFragment {
             publishProgress(LOADING_DATABASE);
             stopDbHelper.loadDatabase(getContext());
 
-            ArrayList<Route> routes = new ArrayList<>();
-
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
-            stops.add(new Stop("place-bvmnl"));
 
             publishProgress(GETTING_PREDICTIONS);
+            // Get service alerts via the MBTA API
+            HashMap<String, ArrayList<Alert>> alerts = QueryUtil.fetchAlerts();
+
             for (Stop stop : stops) {
                 // Get predictions via MBTA API and add them as instances of Trip
                 stop.addTrips(QueryUtil.fetchPredictionsByStop(stop.getId()));
-
-                // Get service alerts via the MBTA API
-                HashMap<String, ArrayList<Alert>> alerts = QueryUtil.fetchAlerts();
 
                 // For each trip, if there is are alerts for that route,
                 // then assign the alerts to that trip
