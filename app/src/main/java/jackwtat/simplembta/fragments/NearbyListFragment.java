@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Date;
 
 import jackwtat.simplembta.data.Alert;
-import jackwtat.simplembta.data.Route;
 import jackwtat.simplembta.data.Stop;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.QueryUtil;
@@ -83,9 +82,7 @@ public class NearbyListFragment extends PredictionsListFragment {
     public void onResume() {
         super.onResume();
 
-        // Get current time
-        // If sufficient time has lapsed since last refresh,
-        // then automatically refreshed predictions
+        // If sufficient time has lapsed since last refresh, then automatically refreshed predictions
         Date currentTime = new Date();
         if (lastUpdated == null ||
                 ((currentTime.getTime() - lastUpdated.getTime()) > 1000 * ON_RESUME_REFRESH_INTERVAL)) {
@@ -111,11 +108,10 @@ public class NearbyListFragment extends PredictionsListFragment {
         // Clear error status message
         clearErrorStatus(true);
 
+        // Check if device is connected to the internet
         if (!checkNetworkConnection()) {
-            // If no network connectivity found, show error message
             displayTimedErrorStatus(getResources().getString(R.string.no_network_connectivity), false);
         } else {
-            // Refresh current location
             locationServicesClient.refreshLocation();
         }
     }
@@ -133,8 +129,6 @@ public class NearbyListFragment extends PredictionsListFragment {
         if (!found) {
             displayTimedErrorStatus(getResources().getString(R.string.no_location), false);
         } else {
-            // We have both internet and location
-            // Get predictions from MBTA API
             predictionAsyncTask = new PredictionAsyncTask();
             predictionAsyncTask.execute(lastLocation);
         }
@@ -216,9 +210,11 @@ public class NearbyListFragment extends PredictionsListFragment {
         }
     }
 
-    // AsyncTask that asynchronously queries the MBTA API and displays the results upon success
+    /*
+        AsyncTask that asynchronously queries the MBTA API and displays the results upon success
+    */
     private class PredictionAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
-        // AsyncTask statuses
+        // Progress statuses
         private final int LOADING_DATABASE = 1;
         private final int GETTING_NEARBY_STOPS = 2;
         private final int GETTING_PREDICTIONS = 3;
@@ -230,24 +226,26 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
+
+            // Load the stops database
             publishProgress(LOADING_DATABASE);
             stopDbHelper.loadDatabase(getContext());
 
+            // Get all stops within the specified maximum distance from user's location
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
 
+            // Get all service alerts
             publishProgress(GETTING_PREDICTIONS);
-            // Get service alerts via the MBTA API
-            HashMap<String, ArrayList<Alert>> alerts = QueryUtil.fetchAlerts();
+            HashMap<String, ArrayList<Alert>> alerts = QueryUtil.fetchAlerts(getString(R.string.mbta_realtime_api_key));
 
+            // Get predicted trips for each stop
             for (Stop stop : stops) {
-                // Get predictions via MBTA API and add them as instances of Trip
-                stop.addTrips(QueryUtil.fetchPredictionsByStop(stop.getId()));
+                stop.addTrips(QueryUtil.fetchPredictionsByStop(getString(R.string.mbta_realtime_api_key), stop.getId()));
 
-                // For each trip, if there is are alerts for that route,
-                // then assign the alerts to that trip
-                for (Trip trip : stop.getTrips()){
-                    if (alerts.containsKey(trip.getRouteId())){
+                // Add alerts to trips whose route has alerts
+                for (Trip trip : stop.getTrips()) {
+                    if (alerts.containsKey(trip.getRouteId())) {
                         trip.setAlerts(alerts.get(trip.getRouteId()));
                     }
                 }

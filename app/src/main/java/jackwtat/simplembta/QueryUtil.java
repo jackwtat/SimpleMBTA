@@ -1,5 +1,6 @@
 package jackwtat.simplembta;
 
+import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -33,17 +34,14 @@ public class QueryUtil {
     //URL for querying the MBTA realTime API
     private static final String MBTA_URL = "http://realtime.mbta.com/developer/api/v2/";
 
-    //API key
-    private static final String API_KEY = "?api_key=vA6fQJjTJ0akhSwzr-Mf5A";
-
     //Format specification
     private static final String RESPONSE_FORMAT = "&format=json";
 
     private QueryUtil() {
     }
 
-    public static ArrayList<Trip> fetchPredictionsByStop(String stopId) {
-        String requestUrl = MBTA_URL + "predictionsbystop" + API_KEY + RESPONSE_FORMAT +
+    public static ArrayList<Trip> fetchPredictionsByStop(String apiKey, String stopId) {
+        String requestUrl = MBTA_URL + "predictionsbystop" + "?api_key=" + apiKey + RESPONSE_FORMAT +
                 "&stop=" + stopId;
 
         URL url = createUrl(requestUrl);
@@ -58,8 +56,8 @@ public class QueryUtil {
         return extractPredictionsFromJson(jsonResponse);
     }
 
-    public static HashMap<String, ArrayList<Alert>> fetchAlerts() {
-        String requestUrl = MBTA_URL + "alerts" + API_KEY + RESPONSE_FORMAT;
+    public static HashMap<String, ArrayList<Alert>> fetchAlerts(String apiKey) {
+        String requestUrl = MBTA_URL + "alerts" + "?api_key=" + apiKey + RESPONSE_FORMAT;
 
         URL url = createUrl(requestUrl);
 
@@ -161,41 +159,40 @@ public class QueryUtil {
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
             // Create a JSONObject from the JSON response string
-            JSONObject stop = new JSONObject(jsonResponse);
+            JSONObject jStop = new JSONObject(jsonResponse);
 
             // Loop through each mode of transportation at this stop
-            JSONArray modes = stop.getJSONArray("mode");
-            for (int i = 0; i < modes.length(); i++) {
-                JSONObject currentMode = modes.getJSONObject(i);
+            JSONArray jModes = jStop.getJSONArray("mode");
+            for (int i = 0; i < jModes.length(); i++) {
+                JSONObject jMode = jModes.getJSONObject(i);
 
-                // Loop through all routes of the current mode at this stop
-                JSONArray routes = currentMode.getJSONArray("route");
+                // Loop through all routes of this mode at this stop
+                JSONArray routes = jMode.getJSONArray("route");
                 for (int j = 0; j < routes.length(); j++) {
-                    JSONObject currentRoute = routes.getJSONObject(j);
+                    JSONObject jRoute = routes.getJSONObject(j);
 
                     // Loop through all the directions the current route takes from this stop
-                    JSONArray directions = currentRoute.getJSONArray("direction");
-                    for (int k = 0; k < directions.length(); k++) {
-                        JSONObject currentDirection = directions.getJSONObject(k);
+                    JSONArray jDirections = jRoute.getJSONArray("direction");
+                    for (int k = 0; k < jDirections.length(); k++) {
+                        JSONObject jDirection = jDirections.getJSONObject(k);
 
                         // Loop through all trips in this direction
-                        JSONArray trips = currentDirection.getJSONArray("trip");
-                        for (int m = 0; m < trips.length(); m++) {
-                            JSONObject currentTrip = trips.getJSONObject(m);
-
-                            // Create new Trip object and populate with data
-                            Trip trip = new Trip(currentTrip.getString("trip_id"));
-                            trip.setRoute(new Route(currentRoute.getString("route_id"),
-                                    currentRoute.getString("route_name"),
-                                    currentMode.getInt("route_type")));
-                            trip.setStopId(stop.getString("stop_id"));
-                            trip.setStopName(stop.getString("stop_name"));
-                            trip.setDirection(currentDirection.getInt("direction_id"));
-                            trip.setDestination(currentTrip.getString("trip_headsign"));
-                            trip.setArrivalTime(currentTrip.getLong("pre_away"));
+                        JSONArray jTrips = jDirection.getJSONArray("trip");
+                        for (int m = 0; m < jTrips.length(); m++) {
+                            JSONObject jTrip = jTrips.getJSONObject(m);
 
                             // Add trip to the predictions list
-                            predictions.add(trip);
+                            predictions.add(new Trip(
+                                    jTrip.getString("trip_id"),
+                                    new Route(jRoute.getString("route_id"),
+                                            jRoute.getString("route_name"),
+                                            jMode.getInt("route_type")),
+                                    jDirection.getInt("direction_id"),
+                                    jTrip.getString("trip_headsign"),
+                                    jStop.getString("stop_id"),
+                                    jStop.getString("stop_name"),
+                                    jTrip.getLong("pre_away")
+                            ));
                         }
                     }
                 }
@@ -211,7 +208,7 @@ public class QueryUtil {
     private static HashMap<String, ArrayList<Alert>> extractAlertsFromJson(String jsonResponse) {
 
         // A route may contain multiple alerts, so we use ArrayList<Alert> to store multiple
-        // Alerts for each route
+        // alerts for each route
         HashMap<String, ArrayList<Alert>> alerts = new HashMap<>();
 
         // Current time in seconds
@@ -223,14 +220,11 @@ public class QueryUtil {
         }
 
         try {
-            // Create a JSONObject from the JSON response string
             JSONObject jRoot = new JSONObject(jsonResponse);
 
             // Loop through each alert
             JSONArray jAlertsArray = jRoot.getJSONArray("alerts");
             for (int i = 0; i < jAlertsArray.length(); i++) {
-
-                // Get the JSON object representing this alert
                 JSONObject jAlert = jAlertsArray.getJSONObject(i);
 
                 // Create a new Alert object
@@ -243,20 +237,14 @@ public class QueryUtil {
                 // Loop through each effect period of this alert
                 JSONArray jEffectPeriods = jAlert.getJSONArray("effect_periods");
                 for (int j = 0; j < jEffectPeriods.length(); j++) {
-
-                    // Get the JSON object representing this effect period
                     JSONObject jPeriod = jEffectPeriods.getJSONObject(j);
 
-                    // Get the start time of the alert
+                    // Get the start and end times of the alert
                     long start = jPeriod.getLong("effect_start");
-
-                    // Get the end time of the alert, if it exists
                     long end;
                     try {
-                        // There exists an end time
                         end = jPeriod.getLong("effect_end");
                     } catch (Exception e) {
-                        // If there is no end time, then set to -1;
                         end = -1;
                     }
 
@@ -267,12 +255,10 @@ public class QueryUtil {
                         JSONArray jServices = jAlert.getJSONObject("affected_services")
                                 .getJSONArray("services");
                         for (int k = 0; k < jServices.length(); k++) {
-
-                            // Get the JSON object representing this affected route
-                            JSONObject jRoute = jServices.getJSONObject(k);
+                            JSONObject jService = jServices.getJSONObject(k);
 
                             // Get the route ID
-                            String routeId = jRoute.getString("route_id");
+                            String routeId = jService.getString("route_id");
 
                             // Check if we already have a key routeId in hash map
                             // If yes, then add the alert to the existing ArrayList in its value
@@ -283,17 +269,14 @@ public class QueryUtil {
                             }
 
                             // Check if this route already has an instance of this alert
+                            // If not, then add to list of alerts
                             if (!alerts.get(routeId).contains(alert)) {
                                 alerts.get(routeId).add(alert);
                             }
                         }
                     }
                 }
-
-
             }
-
-
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Unable to parse alert");
         }
