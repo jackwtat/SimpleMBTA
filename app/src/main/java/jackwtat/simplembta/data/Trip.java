@@ -25,6 +25,16 @@ public class Trip {
         arrivalTime = -1;
     }
 
+    public Trip (String id, Route route, int direction, String destination, String stopId, String stopName, long arrivalTime){
+        this.id = id;
+        this.route = route;
+        this.direction = direction;
+        this.destination = destination;
+        this.stopId = stopId;
+        this.stopName = stopName;
+        this.arrivalTime = arrivalTime;
+    }
+
     public String getId() {
         return id;
     }
@@ -88,10 +98,6 @@ public class Trip {
     public void setArrivalTime(long arrivalTime) { this.arrivalTime = arrivalTime; }
 
     public boolean hasAlerts(){
-        if (route.getAlerts() != null && route.getAlerts().size() > 0){
-            return true;
-        } else {
-            return false;
-        }
+        return route.getAlerts() != null && route.getAlerts().size() > 0;
     }
 }
