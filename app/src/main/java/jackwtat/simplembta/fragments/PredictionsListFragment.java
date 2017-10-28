@@ -57,11 +57,11 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_predictions_list, container, false);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.predictions_swipe_refresh_layout);
-        predictionsListView = (ListView) rootView.findViewById(R.id.predictions_list_view);
-        updateStatusTextView = (TextView) rootView.findViewById(R.id.update_status_text_view);
-        errorStatusTextView = (TextView) rootView.findViewById(R.id.status_text_view);
-        debugTextView = (TextView) rootView.findViewById(R.id.debug_text_view);
+        swipeRefreshLayout = rootView.findViewById(R.id.predictions_swipe_refresh_layout);
+        predictionsListView = rootView.findViewById(R.id.predictions_list_view);
+        updateStatusTextView = rootView.findViewById(R.id.update_status_text_view);
+        errorStatusTextView = rootView.findViewById(R.id.status_text_view);
+        debugTextView = rootView.findViewById(R.id.debug_text_view);
 
         predictionsListView.setAdapter(predictionsListAdapter);
         predictionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
