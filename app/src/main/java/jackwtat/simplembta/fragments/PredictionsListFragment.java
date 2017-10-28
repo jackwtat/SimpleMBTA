@@ -197,6 +197,9 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
             }
         }
 
+        // Auto-scroll to the top
+        predictionsListView.setSelection(0);
+
         // Update the query time
         lastUpdated = new Date();
         displayUpdateTime(lastUpdated, false);
