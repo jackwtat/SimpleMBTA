@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
-import jackwtat.simplembta.data.Alert;
+import jackwtat.simplembta.data.ServiceAlert;
 import jackwtat.simplembta.data.Route;
 import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.R;
@@ -69,12 +69,12 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Trip[] trips = (Trip[]) parent.getItemAtPosition(position);
 
-                if (trips[0].hasAlerts()) {
-                    ArrayList<Alert> alerts = trips[0].getAlerts();
-                    String alertMessage = alerts.get(0).getText();
+                if (trips[0].hasServiceAlert()) {
+                    ArrayList<ServiceAlert> serviceAlerts = trips[0].getAlerts();
+                    String alertMessage = serviceAlerts.get(0).getText();
 
-                    for (int i = 1; i < alerts.size(); i++) {
-                        alertMessage += "\n\n" + alerts.get(i).getText();
+                    for (int i = 1; i < serviceAlerts.size(); i++) {
+                        alertMessage += "\n\n" + serviceAlerts.get(i).getText();
                     }
 
                     // Create alert dialog builder

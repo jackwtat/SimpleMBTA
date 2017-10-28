@@ -57,9 +57,9 @@ public class Trip {
         return route.getMode();
     }
 
-    public ArrayList<Alert> getAlerts() { return route.getAlerts(); }
+    public ArrayList<ServiceAlert> getAlerts() { return route.getServiceAlerts(); }
 
-    public void setAlerts( ArrayList<Alert> alerts) { route.setAlerts(alerts); }
+    public void setAlerts( ArrayList<ServiceAlert> serviceAlerts) { route.setServiceAlerts(serviceAlerts); }
 
     public String getStopId() { return stopId; }
 
@@ -97,7 +97,17 @@ public class Trip {
 
     public void setArrivalTime(long arrivalTime) { this.arrivalTime = arrivalTime; }
 
-    public boolean hasAlerts(){
-        return route.getAlerts() != null && route.getAlerts().size() > 0;
+    public boolean hasServiceAlert(){
+        return route.getServiceAlerts() != null && route.getServiceAlerts().size() > 0;
+    }
+
+    public boolean hasUrgentServiceAlert(){
+        for (ServiceAlert alert : route.getServiceAlerts()){
+            if (alert.getUrgency() == ServiceAlert.URGENT_ALERT) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

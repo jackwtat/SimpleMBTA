@@ -3,7 +3,6 @@ package jackwtat.simplembta.data;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Double.parseDouble;
 
@@ -16,7 +15,7 @@ public class Route implements Comparable<Route> {
     private String name;
     private String longName;
     private int mode;
-    private ArrayList<Alert> alerts;
+    private ArrayList<ServiceAlert> serviceAlerts;
 
     public class Mode {
         public static final int SUBWAY_LIGHT = 0;
@@ -93,15 +92,15 @@ public class Route implements Comparable<Route> {
         this.name = getShortName(id, name);
         this.longName = name;
         this.mode = mode;
-        alerts = new ArrayList<>();
+        serviceAlerts = new ArrayList<>();
     }
 
-    public Route(String id, String name, int mode, ArrayList<Alert> alerts) {
+    public Route(String id, String name, int mode, ArrayList<ServiceAlert> serviceAlerts) {
         this.id = id;
         this.name = getShortName(id, name);
         this.longName = name;
         this.mode = mode;
-        this.alerts = alerts;
+        this.serviceAlerts = serviceAlerts;
     }
 
     public String getId() {
@@ -118,12 +117,12 @@ public class Route implements Comparable<Route> {
         return mode;
     }
 
-    public ArrayList<Alert> getAlerts() {
-        return alerts;
+    public ArrayList<ServiceAlert> getServiceAlerts() {
+        return serviceAlerts;
     }
 
-    public void setAlerts(ArrayList<Alert> alerts) {
-        this.alerts = alerts;
+    public void setServiceAlerts(ArrayList<ServiceAlert> serviceAlerts) {
+        this.serviceAlerts = serviceAlerts;
     }
 
     @Override

@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,16 +42,16 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
         }
 
         // Prediction Layouts
-        RelativeLayout secondaryLayout = (RelativeLayout)
-                listItemView.findViewById(R.id.secondary_layout);
-        RelativeLayout tertiaryLayout = (RelativeLayout)
-                listItemView.findViewById(R.id.tertiary_layout);
+        RelativeLayout leftSideLayout = listItemView.findViewById(R.id.prediction_left_side);
+        LinearLayout rightSideLayout = listItemView.findViewById(R.id.prediction_right_side);
+        RelativeLayout secondaryLayout = listItemView.findViewById(R.id.secondary_layout);
+        RelativeLayout tertiaryLayout = listItemView.findViewById(R.id.tertiary_layout);
 
         // Route number/name TextView
         TextView routeTextView = (TextView)
                 listItemView.findViewById(R.id.route_text_view);
 
-        // Alert indicator TextView
+        // ServiceAlert indicator TextView
         TextView alertTextView = (TextView)
                 listItemView.findViewById(R.id.alert_indicator_text_view);
 
@@ -61,22 +63,30 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
         Trip[] trips = getItem(position);
 
         // Display the prediction data
-        if (trips != null && trips.length > 0 && trips[0] != null) {
+        try {
+            leftSideLayout.setVisibility(View.VISIBLE);
+            rightSideLayout.setVisibility(View.VISIBLE);
 
             // Display the route name
             routeTextView.setText(trips[0].getRouteName());
 
-            // Set the background color of the route name
+            // Set the background and font colors of the route name
             routeTextView.setBackgroundColor(getBackgroundColorId(listItemView,
                     trips[0].getRouteId()));
-
-            // Set the font color of the route name
             routeTextView.setTextColor(getRouteColor(listItemView, trips[0].getMode(),
                     trips[0].getRouteId()));
 
             // Display service alert indicator if there are alerts
-            if (trips[0].hasAlerts()) {
+            if (trips[0].hasServiceAlert()) {
                 alertTextView.setVisibility(View.VISIBLE);
+
+                // Set the urgency
+                if(trips[0].hasUrgentServiceAlert()){
+                    alertTextView.setText(getContext().getResources().getString(R.string.service_alert_urgent));
+                } else {
+                    alertTextView.setText(getContext().getResources().getString(R.string.service_alert_advisory));
+                }
+
             } else {
                 alertTextView.setVisibility(View.INVISIBLE);
             }
@@ -124,9 +134,9 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
                 secondaryLayout.setVisibility(View.GONE);
                 tertiaryLayout.setVisibility(View.GONE);
             }
-        } else {
-            secondaryLayout.setVisibility(View.GONE);
-            tertiaryLayout.setVisibility(View.GONE);
+        } catch (Exception e) {
+            leftSideLayout.setVisibility(View.GONE);
+            rightSideLayout.setVisibility(View.GONE);
         }
 
         return listItemView;

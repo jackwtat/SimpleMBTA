@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 
-import jackwtat.simplembta.data.Alert;
+import jackwtat.simplembta.data.ServiceAlert;
 import jackwtat.simplembta.data.Stop;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.QueryUtil;
@@ -237,7 +237,7 @@ public class NearbyListFragment extends PredictionsListFragment {
 
             // Get all service alerts
             publishProgress(GETTING_PREDICTIONS);
-            HashMap<String, ArrayList<Alert>> alerts = QueryUtil.fetchAlerts(getString(R.string.mbta_realtime_api_key));
+            HashMap<String, ArrayList<ServiceAlert>> alerts = QueryUtil.fetchAlerts(getString(R.string.mbta_realtime_api_key));
 
             // Get predicted trips for each stop
             for (Stop stop : stops) {

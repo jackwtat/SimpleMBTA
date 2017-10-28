@@ -1,6 +1,5 @@
 package jackwtat.simplembta;
 
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import jackwtat.simplembta.data.Alert;
+import jackwtat.simplembta.data.ServiceAlert;
 import jackwtat.simplembta.data.Trip;
 import jackwtat.simplembta.data.Route;
 
@@ -56,7 +55,7 @@ public class QueryUtil {
         return extractPredictionsFromJson(jsonResponse);
     }
 
-    public static HashMap<String, ArrayList<Alert>> fetchAlerts(String apiKey) {
+    public static HashMap<String, ArrayList<ServiceAlert>> fetchAlerts(String apiKey) {
         String requestUrl = MBTA_URL + "alerts" + "?api_key=" + apiKey + RESPONSE_FORMAT;
 
         URL url = createUrl(requestUrl);
@@ -205,11 +204,11 @@ public class QueryUtil {
         return predictions;
     }
 
-    private static HashMap<String, ArrayList<Alert>> extractAlertsFromJson(String jsonResponse) {
+    private static HashMap<String, ArrayList<ServiceAlert>> extractAlertsFromJson(String jsonResponse) {
 
-        // A route may contain multiple alerts, so we use ArrayList<Alert> to store multiple
+        // A route may contain multiple alerts, so we use ArrayList<ServiceAlert> to store multiple
         // alerts for each route
-        HashMap<String, ArrayList<Alert>> alerts = new HashMap<>();
+        HashMap<String, ArrayList<ServiceAlert>> alerts = new HashMap<>();
 
         // Current time in seconds
         long currentTime = (new Date().getTime()) / 1000;
@@ -227,19 +226,20 @@ public class QueryUtil {
             for (int i = 0; i < jAlertsArray.length(); i++) {
                 JSONObject jAlert = jAlertsArray.getJSONObject(i);
 
-                // Create a new Alert object
+                // Create a new ServiceAlert object
                 // Pass in alert_id and header_text
                 // header_text is sufficient and brief-enough information
-                Alert alert = new Alert(
+                ServiceAlert serviceAlert = new ServiceAlert(
                         jAlert.getString("alert_id"),
-                        jAlert.getString("header_text"));
+                        jAlert.getString("header_text"),
+                        jAlert.getString("alert_lifecycle"));
 
-                // Loop through each effect period of this alert
+                // Loop through each effect period of this serviceAlert
                 JSONArray jEffectPeriods = jAlert.getJSONArray("effect_periods");
                 for (int j = 0; j < jEffectPeriods.length(); j++) {
                     JSONObject jPeriod = jEffectPeriods.getJSONObject(j);
 
-                    // Get the start and end times of the alert
+                    // Get the start and end times of the serviceAlert
                     long start = jPeriod.getLong("effect_start");
                     long end;
                     try {
@@ -248,7 +248,7 @@ public class QueryUtil {
                         end = -1;
                     }
 
-                    // If the current time is between the start/end times, then add alert
+                    // If the current time is between the start/end times, then add serviceAlert
                     if (currentTime > start && (currentTime < end || end == -1)) {
 
                         // Loop through all the affected services
@@ -261,17 +261,17 @@ public class QueryUtil {
                             String routeId = jService.getString("route_id");
 
                             // Check if we already have a key routeId in hash map
-                            // If yes, then add the alert to the existing ArrayList in its value
+                            // If yes, then add the serviceAlert to the existing ArrayList in its value
                             // If not, then create a new key-value pair for this route
-                            // Reminder: key = routeID, value = ArrayList<Alert>
+                            // Reminder: key = routeID, value = ArrayList<ServiceAlert>
                             if (!alerts.containsKey(routeId)) {
-                                alerts.put(routeId, new ArrayList<Alert>());
+                                alerts.put(routeId, new ArrayList<ServiceAlert>());
                             }
 
-                            // Check if this route already has an instance of this alert
+                            // Check if this route already has an instance of this serviceAlert
                             // If not, then add to list of alerts
-                            if (!alerts.get(routeId).contains(alert)) {
-                                alerts.get(routeId).add(alert);
+                            if (!alerts.get(routeId).contains(serviceAlert)) {
+                                alerts.get(routeId).add(serviceAlert);
                             }
                         }
                     }

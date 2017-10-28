@@ -23,7 +23,8 @@
 
     <!-- Other Colors -->
     <color name="ApproachingAlert">#D32F2F</color>
-    <color name="ServiceAlert">#D32F2F</color>
+    <color name="ServiceAlert_Urgent">#D32F2F</color>
+    <color name="ServiceAlert_Advisory">#D32F2F</color>
     <color name="Transparent">#00FFFFFF</color>
 
 </resources>

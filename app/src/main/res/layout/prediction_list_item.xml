@@ -8,7 +8,8 @@
     android:paddingTop="16dp">
 
     <RelativeLayout
-        android:layout_width="56dp"
+        android:id="@+id/prediction_left_side"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp">
@@ -33,13 +34,14 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="6dp"
             android:gravity="center_horizontal"
-            android:text="@string/alert_indicator"
-            android:textColor="@color/ServiceAlert"
-            android:textSize="16sp"
+            android:text="@string/service_alert_advisory"
+            android:textColor="@color/ServiceAlert_Urgent"
+            android:textSize="14sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/prediction_right_side"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
