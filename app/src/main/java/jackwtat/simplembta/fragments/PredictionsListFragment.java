@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,11 +39,11 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView predictionsListView;
-    private TextView updateStatusTextView;
-    private TextView errorStatusTextView;
-    private TextView debugTextView;
+    private TextView statusTextView;
+    private TextView errorTextView;
+    private ProgressBar progressBar;
 
-    protected Date lastUpdated;
+    protected Date lastRefreshed;
     private ArrayAdapter<Trip[]> predictionsListAdapter;
 
     public abstract void refreshPredictions();
@@ -59,9 +61,9 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
 
         swipeRefreshLayout = rootView.findViewById(R.id.predictions_swipe_refresh_layout);
         predictionsListView = rootView.findViewById(R.id.predictions_list_view);
-        updateStatusTextView = rootView.findViewById(R.id.update_status_text_view);
-        errorStatusTextView = rootView.findViewById(R.id.status_text_view);
-        debugTextView = rootView.findViewById(R.id.debug_text_view);
+        statusTextView = rootView.findViewById(R.id.status_message_text_view);
+        errorTextView = rootView.findViewById(R.id.error_message_text_view);
+        progressBar = rootView.findViewById(R.id.progressBar);
 
         predictionsListView.setAdapter(predictionsListAdapter);
         predictionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -107,45 +109,29 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
         refreshPredictions();
     }
 
-    public void displayUpdateTime(Date updatedTime, boolean refreshing) {
-        SimpleDateFormat ft = new SimpleDateFormat("h:mm a");
-        String message = "Updated " + ft.format(updatedTime);
-        updateStatusTextView.setText(message);
-        swipeRefreshLayout.setRefreshing(refreshing);
+    public void setRefreshProgress(int percentage, String message) {
+        swipeRefreshLayout.setRefreshing(true);
+        statusTextView.setText(message);
+        progressBar.setProgress(percentage);
     }
 
-    public void displayUpdateStatus(String message, boolean refreshing) {
-        updateStatusTextView.setText(message);
-        swipeRefreshLayout.setRefreshing(refreshing);
+    public void setStatus(Date statusTime, String errorMessage, boolean showRefreshIcon) {
+        DateFormat ft = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
+        String statusMessage = "Updated " + ft.format(statusTime);
+
+        statusTextView.setText(statusMessage);
+        errorTextView.setText(errorMessage);
+        swipeRefreshLayout.setRefreshing(showRefreshIcon);
     }
 
-    public void displayTimedErrorStatus(String message, boolean refreshing) {
-        clearList(refreshing);
-        errorStatusTextView.setText(message);
-        displayUpdateTime(new Date(), refreshing);
-        swipeRefreshLayout.setRefreshing(refreshing);
+    public void setStatus(String statusMessage, String errorMessage, boolean showRefreshIcon) {
+        statusTextView.setText(statusMessage);
+        errorTextView.setText(errorMessage);
+        swipeRefreshLayout.setRefreshing(showRefreshIcon);
     }
 
-    public void displayUntimedErrorStatus(String message, boolean refreshing) {
-        clearList(refreshing);
-        errorStatusTextView.setText(message);
-        swipeRefreshLayout.setRefreshing(refreshing);
-    }
-
-    public void clearErrorStatus(boolean refreshing) {
-        errorStatusTextView.setText("");
-        swipeRefreshLayout.setRefreshing(refreshing);
-
-    }
-
-    public void clearList(boolean refreshing) {
+    public void clearList() {
         predictionsListAdapter.clear();
-        errorStatusTextView.setText("");
-        swipeRefreshLayout.setRefreshing(refreshing);
-    }
-
-    public void displayDebugMessage(String message) {
-        debugTextView.setText(message);
     }
 
     public void populateList(List<Stop> stops) {
@@ -197,21 +183,21 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
             }
         }
 
+        // Update refresh time
+        lastRefreshed = new Date();
+
         // Auto-scroll to the top
         predictionsListView.setSelection(0);
 
-        // Update the query time
-        lastUpdated = new Date();
-        displayUpdateTime(lastUpdated, false);
+        // Reset progress bar
+        progressBar.setProgress(0);
 
-        // Hide refreshing icon
-        swipeRefreshLayout.setRefreshing(false);
+        // Set statuses
+        setStatus(lastRefreshed, "", false);
 
         // If there are no predictions, show status to user
         if (predictionsListAdapter.getCount() < 1) {
-            displayTimedErrorStatus(getResources().getString(R.string.no_predictions), false);
+            setStatus(new Date(), getResources().getString(R.string.no_predictions), false);
         }
     }
-
-
 }

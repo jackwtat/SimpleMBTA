@@ -8,9 +8,13 @@
     <string name="service_alert_urgent">Alert</string>
 
     <!-- Status Messages -->
-    <string name="getting_predictions">Getting Predictions...</string>
-    <string name="getting_nearby_stops">Finding Nearby Stops...</string>
-    <string name="loading_first_time">Loading For First Time...</string>
+    <string name="getting_location">Getting Location&#8230;</string>
+    <string name="getting_predictions">Getting Predictions&#8230;</string>
+    <string name="getting_nearby_stops">Finding Nearby Stops&#8230;</string>
+    <string name="loading_first_time">Loading For First Time&#8230;</string>
+    <string name="refresh_canceled">Refresh Canceled</string>
+
+    <!-- Error Messages -->
     <string name="no_location">Unable To Get Current Location</string>
     <string name="no_network_connectivity">No Internet Connection</string>
     <string name="no_predictions">No Predictions To Show</string>

@@ -84,8 +84,8 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         // If sufficient time has lapsed since last refresh, then automatically refreshed predictions
         Date currentTime = new Date();
-        if (lastUpdated == null ||
-                ((currentTime.getTime() - lastUpdated.getTime()) > 1000 * ON_RESUME_REFRESH_INTERVAL)) {
+        if (lastRefreshed == null ||
+                ((currentTime.getTime() - lastRefreshed.getTime()) > 1000 * ON_RESUME_REFRESH_INTERVAL)) {
             refreshPredictions();
         }
     }
@@ -99,18 +99,19 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         // Cancel the AsyncTask if it is running
         if (predictionAsyncTask != null && predictionAsyncTask.cancel(true)) {
-            displayTimedErrorStatus(getResources().getString(R.string.no_predictions), false);
+            setRefreshProgress(0, "");
+            setStatus(getResources().getString(R.string.refresh_canceled), "", false);
         }
     }
 
     @Override
     public void refreshPredictions() {
-        // Clear error status message
-        clearErrorStatus(true);
+        setRefreshProgress(0, getResources().getString(R.string.getting_location));
 
         // Check if device is connected to the internet
         if (!checkNetworkConnection()) {
-            displayTimedErrorStatus(getResources().getString(R.string.no_network_connectivity), false);
+            clearList();
+            setStatus(new Date(), getResources().getString(R.string.no_network_connectivity), false);
         } else {
             locationServicesClient.refreshLocation();
         }
@@ -127,7 +128,8 @@ public class NearbyListFragment extends PredictionsListFragment {
 
     private void onLocationFound(boolean found) {
         if (!found) {
-            displayTimedErrorStatus(getResources().getString(R.string.no_location), false);
+            clearList();
+            setStatus(new Date(), getResources().getString(R.string.no_location), false);
         } else {
             predictionAsyncTask = new PredictionAsyncTask();
             predictionAsyncTask.execute(lastLocation);
@@ -214,10 +216,7 @@ public class NearbyListFragment extends PredictionsListFragment {
         AsyncTask that asynchronously queries the MBTA API and displays the results upon success
     */
     private class PredictionAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
-        // Progress statuses
-        private final int LOADING_DATABASE = 1;
-        private final int GETTING_NEARBY_STOPS = 2;
-        private final int GETTING_PREDICTIONS = 3;
+        private final int GETTING_NEARBY_STOPS = 0;
 
         @Override
         protected void onPreExecute() {
@@ -228,7 +227,6 @@ public class NearbyListFragment extends PredictionsListFragment {
         protected List<Stop> doInBackground(Location... locations) {
 
             // Load the stops database
-            publishProgress(LOADING_DATABASE);
             stopDbHelper.loadDatabase(getContext());
 
             // Get all stops within the specified maximum distance from user's location
@@ -236,11 +234,12 @@ public class NearbyListFragment extends PredictionsListFragment {
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
 
             // Get all service alerts
-            publishProgress(GETTING_PREDICTIONS);
             HashMap<String, ArrayList<ServiceAlert>> alerts = QueryUtil.fetchAlerts(getString(R.string.mbta_realtime_api_key));
 
             // Get predicted trips for each stop
-            for (Stop stop : stops) {
+            for (int i = 0; i < stops.size(); i++) {
+                Stop stop = stops.get(i);
+
                 stop.addTrips(QueryUtil.fetchPredictionsByStop(getString(R.string.mbta_realtime_api_key), stop.getId()));
 
                 // Add alerts to trips whose route has alerts
@@ -249,24 +248,18 @@ public class NearbyListFragment extends PredictionsListFragment {
                         trip.setAlerts(alerts.get(trip.getRouteId()));
                     }
                 }
+
+                publishProgress((int) (100 * (i + 1) / stops.size()));
             }
 
             return stops;
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            int status = progress[0];
-
-            switch (status) {
-                case LOADING_DATABASE:
-                    displayUpdateStatus(getResources().getString(R.string.loading_first_time), true);
-                    break;
-                case GETTING_NEARBY_STOPS:
-                    displayUpdateStatus(getResources().getString(R.string.getting_nearby_stops), true);
-                    break;
-                case GETTING_PREDICTIONS:
-                    displayUpdateStatus(getResources().getString(R.string.getting_predictions), true);
-                    break;
+            if (progress[0] == GETTING_NEARBY_STOPS) {
+                setRefreshProgress(0, getResources().getString(R.string.getting_nearby_stops));
+            } else {
+                setRefreshProgress(progress[0], getResources().getString(R.string.getting_predictions));
             }
         }
 
