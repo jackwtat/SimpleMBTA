@@ -66,6 +66,7 @@ public class StopDbHelper extends SQLiteOpenHelper {
         List<String[]> csvLine = new ArrayList<>();
         String[] csvRecord;
 
+        db.beginTransaction();
         try {
             InputStream inputStream = context.getAssets().open(csvFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -84,9 +85,13 @@ public class StopDbHelper extends SQLiteOpenHelper {
                 db.insert(StopEntry.TABLE_NAME, null, values);
             }
             bufferedReader.close();
+            db.setTransactionSuccessful();
 
         } catch (IOException e) {
             e.printStackTrace();
+
+        } finally {
+            db.endTransaction();
         }
     }
 
