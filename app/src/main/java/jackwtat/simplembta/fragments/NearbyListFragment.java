@@ -216,7 +216,8 @@ public class NearbyListFragment extends PredictionsListFragment {
         AsyncTask that asynchronously queries the MBTA API and displays the results upon success
     */
     private class PredictionAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
-        private final int GETTING_NEARBY_STOPS = 0;
+        private final int LOADING_DATABASE = -1;
+        private final int GETTING_NEARBY_STOPS = -2;
 
         @Override
         protected void onPreExecute() {
@@ -227,6 +228,7 @@ public class NearbyListFragment extends PredictionsListFragment {
         protected List<Stop> doInBackground(Location... locations) {
 
             // Load the stops database
+            publishProgress(LOADING_DATABASE);
             stopDbHelper.loadDatabase(getContext());
 
             // Get all stops within the specified maximum distance from user's location
@@ -256,7 +258,9 @@ public class NearbyListFragment extends PredictionsListFragment {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            if (progress[0] == GETTING_NEARBY_STOPS) {
+            if(progress[0] == LOADING_DATABASE){
+                setRefreshProgress(0, getResources().getString(R.string.loading_database));
+            }else if (progress[0] == GETTING_NEARBY_STOPS) {
                 setRefreshProgress(0, getResources().getString(R.string.getting_nearby_stops));
             } else {
                 setRefreshProgress(progress[0], getResources().getString(R.string.getting_predictions));
