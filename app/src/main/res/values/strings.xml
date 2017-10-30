@@ -8,9 +8,10 @@
     <string name="service_alert_urgent">Alert</string>
 
     <!-- Status Messages -->
+    <string name="loading_database">Loading Database&#8230;</string>
     <string name="getting_location">Getting Location&#8230;</string>
-    <string name="getting_predictions">Getting Predictions&#8230;</string>
     <string name="getting_nearby_stops">Finding Nearby Stops&#8230;</string>
+    <string name="getting_predictions">Getting Predictions&#8230;</string>
     <string name="loading_first_time">Loading For First Time&#8230;</string>
     <string name="refresh_canceled">Refresh Canceled</string>
 
