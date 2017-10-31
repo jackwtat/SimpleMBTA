@@ -56,6 +56,7 @@ public class NearbyListFragment extends PredictionsListFragment {
     private Location lastLocation;
     private PredictionAsyncTask predictionAsyncTask;
     private StopDbHelper stopDbHelper;
+    private boolean refreshing;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,21 +101,31 @@ public class NearbyListFragment extends PredictionsListFragment {
         // Cancel the AsyncTask if it is running
         if (predictionAsyncTask != null && predictionAsyncTask.cancel(true)) {
             setRefreshProgress(0, "");
-            setStatus(getResources().getString(R.string.refresh_canceled), "", false);
+            setStatus(getResources().getString(R.string.refresh_canceled), "",
+                    false, false);
         }
     }
 
     @Override
     public void refreshPredictions() {
-        setRefreshProgress(0, getResources().getString(R.string.getting_location));
+        if (!refreshing) {
+            refreshing = true;
 
-        // Check if device is connected to the internet
-        if (!checkNetworkConnection()) {
-            clearList();
-            setStatus(new Date(), getResources().getString(R.string.no_network_connectivity), false);
-        } else {
-            locationServicesClient.refreshLocation();
+            // Check if device is connected to the internet
+            if (!checkNetworkConnection()) {
+                onRefreshError(getResources().getString(R.string.no_network_connectivity));
+            } else {
+
+                setRefreshProgress(0, getResources().getString(R.string.getting_location));
+                locationServicesClient.refreshLocation();
+            }
         }
+    }
+
+    private void onRefreshError(String errorMessage) {
+        refreshing = false;
+        setStatus(new Date(), errorMessage,
+                false, true);
     }
 
     private boolean checkNetworkConnection() {
@@ -128,8 +139,7 @@ public class NearbyListFragment extends PredictionsListFragment {
 
     private void onLocationFound(boolean found) {
         if (!found) {
-            clearList();
-            setStatus(new Date(), getResources().getString(R.string.no_location), false);
+            onRefreshError(getResources().getString(R.string.no_location));
         } else {
             predictionAsyncTask = new PredictionAsyncTask();
             predictionAsyncTask.execute(lastLocation);
@@ -220,11 +230,6 @@ public class NearbyListFragment extends PredictionsListFragment {
         private final int GETTING_NEARBY_STOPS = -2;
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected List<Stop> doInBackground(Location... locations) {
 
             // Load the stops database
@@ -258,9 +263,9 @@ public class NearbyListFragment extends PredictionsListFragment {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            if(progress[0] == LOADING_DATABASE){
+            if (progress[0] == LOADING_DATABASE) {
                 setRefreshProgress(0, getResources().getString(R.string.loading_database));
-            }else if (progress[0] == GETTING_NEARBY_STOPS) {
+            } else if (progress[0] == GETTING_NEARBY_STOPS) {
                 setRefreshProgress(0, getResources().getString(R.string.getting_nearby_stops));
             } else {
                 setRefreshProgress(progress[0], getResources().getString(R.string.getting_predictions));
@@ -269,7 +274,8 @@ public class NearbyListFragment extends PredictionsListFragment {
 
         @Override
         protected void onPostExecute(List<Stop> stops) {
-            populateList(stops);
+            refreshing = false;
+            publishPredictions(stops);
         }
     }
 }
