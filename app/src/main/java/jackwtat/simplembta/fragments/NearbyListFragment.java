@@ -56,7 +56,12 @@ public class NearbyListFragment extends PredictionsListFragment {
     private Location lastLocation;
     private PredictionAsyncTask predictionAsyncTask;
     private StopDbHelper stopDbHelper;
+
     private boolean refreshing;
+    private boolean networkConnectionChecked;
+    private boolean locationConnectionChecked;
+    private boolean hasNetworkConnection;
+    private boolean hasLocationConnection;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,14 +100,15 @@ public class NearbyListFragment extends PredictionsListFragment {
     public void onStop() {
         super.onStop();
 
-        // Disconnect the LocationServicesClient
         locationServicesClient.disconnectClient();
 
-        // Cancel the AsyncTask if it is running
-        if (predictionAsyncTask != null && predictionAsyncTask.cancel(true)) {
-            setRefreshProgress(0, "");
-            setStatus(getResources().getString(R.string.refresh_canceled), "",
-                    false, false);
+        if (predictionAsyncTask!= null){
+            predictionAsyncTask.cancel(true);
+        }
+
+        if (refreshing){
+            onRefreshCanceled();
+            refreshing = false;
         }
     }
 
@@ -111,39 +117,51 @@ public class NearbyListFragment extends PredictionsListFragment {
         if (!refreshing) {
             refreshing = true;
 
-            // Check if device is connected to the internet
-            if (!checkNetworkConnection()) {
-                onRefreshError(getResources().getString(R.string.no_network_connectivity));
-            } else {
+            networkConnectionChecked = false;
+            locationConnectionChecked = false;
 
-                setRefreshProgress(0, getResources().getString(R.string.getting_location));
-                locationServicesClient.refreshLocation();
+            updateNetworkStatus();
+            locationServicesClient.updateLocation();
+        }
+    }
+
+    private void onConnectivityStatusUpdate() {
+        if (networkConnectionChecked && locationConnectionChecked) {
+            if (!hasNetworkConnection) {
+                onRefreshError(getResources().getString(R.string.no_network_connectivity));
+            } else if (!hasLocationConnection) {
+                onRefreshError(getResources().getString(R.string.no_location));
+            } else {
+                predictionAsyncTask = new PredictionAsyncTask();
+                predictionAsyncTask.execute(lastLocation);
             }
         }
     }
 
-    private void onRefreshError(String errorMessage) {
-        refreshing = false;
-        setStatus(new Date(), errorMessage,
-                false, true);
-    }
+    private void updateNetworkStatus() {
+        setRefreshProgress(0, "Checking Network...");
 
-    private boolean checkNetworkConnection() {
         ConnectivityManager cm =
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        hasNetworkConnection = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        networkConnectionChecked = true;
+
+        onConnectivityStatusUpdate();
     }
 
-    private void onLocationFound(boolean found) {
-        if (!found) {
-            onRefreshError(getResources().getString(R.string.no_location));
-        } else {
-            predictionAsyncTask = new PredictionAsyncTask();
-            predictionAsyncTask.execute(lastLocation);
-        }
+    private void updateLocationStatus(boolean connected) {
+        hasLocationConnection = connected;
+        locationConnectionChecked = true;
+
+        onConnectivityStatusUpdate();
+    }
+
+    private void onRefreshError(String errorMessage) {
+        refreshing = false;
+        setStatus(new Date(), errorMessage, false, true);
     }
 
     /*
@@ -170,18 +188,19 @@ public class NearbyListFragment extends PredictionsListFragment {
         @Override
         public void onConnected(@Nullable Bundle bundle) {
             Log.i(LOG_TAG, "Location connection successful");
-            getLocation();
+            updateLocation();
         }
 
         @Override
         public void onConnectionSuspended(int i) {
             Log.i(LOG_TAG, "Location connection suspended");
+            updateLocationStatus(false);
         }
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             Log.e(LOG_TAG, "Location connection failed");
-            onLocationFound(false);
+            updateLocationStatus(false);
         }
 
         @Override
@@ -194,29 +213,35 @@ public class NearbyListFragment extends PredictionsListFragment {
             }
         }
 
-        private void refreshLocation() {
+        private void updateLocation() {
+            setRefreshProgress(0, getResources().getString(R.string.getting_location));
+
+            // Check if googleApiClient is connected
             if (!googleApiClient.isConnected()) {
                 googleApiClient.connect();
-            } else {
-                Log.i(LOG_TAG, "Google API client already connected");
-                getLocation();
             }
-        }
 
-        private void getLocation() {
-            if (ActivityCompat.checkSelfPermission(getContext(),
+            // Check if we have Location permissions
+            else if (ActivityCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Log.e(LOG_TAG, "Location permission missing");
-                onLocationFound(false);
-            } else {
+                updateLocationStatus(false);
+            }
+
+            // Try getting location
+            else {
                 try {
                     LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
                             locationRequest, this);
                     lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-                    onLocationFound(true);
+                    if (lastLocation == null) {
+                        updateLocationStatus(false);
+                    } else {
+                        updateLocationStatus(true);
+                    }
                 } catch (Exception ex) {
                     Log.e(LOG_TAG, "Location services error");
-                    onLocationFound(false);
+                    updateLocationStatus(false);
                 }
             }
         }
@@ -228,6 +253,10 @@ public class NearbyListFragment extends PredictionsListFragment {
     private class PredictionAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
         private final int LOADING_DATABASE = -1;
         private final int GETTING_NEARBY_STOPS = -2;
+
+        @Override
+        protected void onPreExecute() {
+        }
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
