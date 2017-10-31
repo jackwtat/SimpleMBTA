@@ -110,31 +110,43 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
     }
 
     public void setRefreshProgress(int percentage, String message) {
-        swipeRefreshLayout.setRefreshing(true);
-        statusTextView.setText(message);
+        if (!swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
+        if (!statusTextView.getText().toString().equals(message)) {
+            statusTextView.setText(message);
+        }
         progressBar.setProgress(percentage);
     }
 
-    public void setStatus(Date statusTime, String errorMessage, boolean showRefreshIcon) {
+    public void setStatus(Date statusTime, String errorMessage, boolean showRefreshIcon,
+                          boolean clearList) {
         DateFormat ft = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
         String statusMessage = "Updated " + ft.format(statusTime);
 
         statusTextView.setText(statusMessage);
         errorTextView.setText(errorMessage);
         swipeRefreshLayout.setRefreshing(showRefreshIcon);
+        if (clearList) {
+            predictionsListAdapter.clear();
+        }
     }
 
-    public void setStatus(String statusMessage, String errorMessage, boolean showRefreshIcon) {
+    public void setStatus(String statusMessage, String errorMessage, boolean showRefreshIcon,
+                          boolean clearList) {
         statusTextView.setText(statusMessage);
         errorTextView.setText(errorMessage);
         swipeRefreshLayout.setRefreshing(showRefreshIcon);
+        if (clearList) {
+            predictionsListAdapter.clear();
+        }
     }
 
     public void clearList() {
         predictionsListAdapter.clear();
     }
 
-    public void populateList(List<Stop> stops) {
+    public void publishPredictions(List<Stop> stops) {
         // Clear all previous predictions from list
         predictionsListAdapter.clear();
 
@@ -193,11 +205,11 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
         progressBar.setProgress(0);
 
         // Set statuses
-        setStatus(lastRefreshed, "", false);
+        setStatus(lastRefreshed, "", false, false);
 
         // If there are no predictions, show status to user
         if (predictionsListAdapter.getCount() < 1) {
-            setStatus(new Date(), getResources().getString(R.string.no_predictions), false);
+            setStatus(new Date(), getResources().getString(R.string.no_predictions), false, false);
         }
     }
 }
