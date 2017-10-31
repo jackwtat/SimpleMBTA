@@ -61,9 +61,8 @@ public class StopDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void importFromCsv(Context context, String csvFile) {
+    private void importFromCsv(Context context, String csvFile) {
         SQLiteDatabase db = getWritableDatabase();
-        List<String[]> csvLine = new ArrayList<>();
         String[] csvRecord;
 
         db.beginTransaction();
@@ -73,7 +72,6 @@ public class StopDbHelper extends SQLiteOpenHelper {
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
                 csvRecord = line.split(",");
-                csvLine.add(csvRecord);
 
                 ContentValues values = new ContentValues();
                 values.put(StopEntry.COLUMN_STOP_ID, csvRecord[0]);
