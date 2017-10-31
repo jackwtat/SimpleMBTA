@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +108,12 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
     @Override
     public void onRefresh() {
         refreshPredictions();
+    }
+
+    public void onRefreshCanceled() {
+        swipeRefreshLayout.setRefreshing(false);
+        statusTextView.setText(getResources().getString(R.string.refresh_canceled));
+        progressBar.setProgress(0);
     }
 
     public void setRefreshProgress(int percentage, String message) {
