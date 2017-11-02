@@ -271,7 +271,7 @@ public class QueryUtil {
                             // Check if this route already has an instance of this serviceAlert
                             // If not, then add to list of alerts
                             if (!alerts.get(routeId).contains(serviceAlert)) {
-                                alerts.get(routeId).add(serviceAlert);
+                                alerts.get(routeId).add(0,serviceAlert);
                             }
                         }
                     }
