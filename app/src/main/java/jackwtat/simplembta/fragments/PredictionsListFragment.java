@@ -73,11 +73,14 @@ public abstract class PredictionsListFragment extends Fragment implements SwipeR
                 Trip[] trips = (Trip[]) parent.getItemAtPosition(position);
 
                 if (trips[0].hasServiceAlert()) {
+                    // Get and sort service alerts for this trip's route
                     ArrayList<ServiceAlert> serviceAlerts = trips[0].getAlerts();
-                    String alertMessage = serviceAlerts.get(0).getText();
+                    Collections.sort(serviceAlerts);
 
+                    // Construct the alerts dialog message
+                    String alertMessage = serviceAlerts.get(0).getText();
                     for (int i = 1; i < serviceAlerts.size(); i++) {
-                        alertMessage += "\n\n" + serviceAlerts.get(i).getText();
+                        alertMessage+= "\n\n" + serviceAlerts.get(i).getText();
                     }
 
                     // Create alert dialog builder

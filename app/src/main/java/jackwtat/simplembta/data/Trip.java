@@ -103,7 +103,7 @@ public class Trip {
 
     public boolean hasUrgentServiceAlert(){
         for (ServiceAlert alert : route.getServiceAlerts()){
-            if (alert.getUrgency() == ServiceAlert.URGENT_ALERT) {
+            if (alert.getUrgency() == ServiceAlert.URGENT) {
                 return true;
             }
         }

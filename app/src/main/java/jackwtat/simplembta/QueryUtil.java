@@ -232,7 +232,8 @@ public class QueryUtil {
                 ServiceAlert serviceAlert = new ServiceAlert(
                         jAlert.getString("alert_id"),
                         jAlert.getString("header_text"),
-                        jAlert.getString("alert_lifecycle"));
+                        jAlert.getString("alert_lifecycle"),
+                        jAlert.getString("severity"));
 
                 // Loop through each effect period of this serviceAlert
                 JSONArray jEffectPeriods = jAlert.getJSONArray("effect_periods");
@@ -271,7 +272,7 @@ public class QueryUtil {
                             // Check if this route already has an instance of this serviceAlert
                             // If not, then add to list of alerts
                             if (!alerts.get(routeId).contains(serviceAlert)) {
-                                alerts.get(routeId).add(0,serviceAlert);
+                                alerts.get(routeId).add(serviceAlert);
                             }
                         }
                     }
