@@ -269,6 +269,9 @@ public class NearbyListFragment extends PredictionsListFragment {
             publishProgress(GETTING_NEARBY_STOPS);
             List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
 
+            // Let user know we're not getting predictions
+            publishProgress(0);
+
             // Get all service alerts
             HashMap<String, ArrayList<ServiceAlert>> alerts = QueryUtil.fetchAlerts(getString(R.string.mbta_realtime_api_key));
 
