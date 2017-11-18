@@ -295,19 +295,27 @@ public class NearbyListFragment extends PredictionsListFragment {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            if (progress[0] == LOADING_DATABASE) {
-                setRefreshProgress(0, getResources().getString(R.string.loading_database));
-            } else if (progress[0] == GETTING_NEARBY_STOPS) {
-                setRefreshProgress(0, getResources().getString(R.string.getting_nearby_stops));
-            } else {
-                setRefreshProgress(progress[0], getResources().getString(R.string.getting_predictions));
+            try {
+                if (progress[0] == LOADING_DATABASE) {
+                    setRefreshProgress(0, getResources().getString(R.string.loading_database));
+                } else if (progress[0] == GETTING_NEARBY_STOPS) {
+                    setRefreshProgress(0, getResources().getString(R.string.getting_nearby_stops));
+                } else {
+                    setRefreshProgress(progress[0], getResources().getString(R.string.getting_predictions));
+                }
+            } catch (IllegalStateException e){
+                Log.e(LOG_TAG, "Pushing progress update to nonexistent view");
             }
         }
 
         @Override
         protected void onPostExecute(List<Stop> stops) {
-            refreshing = false;
-            publishPredictions(stops);
+            try {
+                refreshing = false;
+                publishPredictions(stops);
+            } catch (IllegalStateException e){
+                Log.e(LOG_TAG, "Pushing query results to nonexistent view");
+            }
         }
     }
 }
