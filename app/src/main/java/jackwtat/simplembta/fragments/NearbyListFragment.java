@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 
+import jackwtat.simplembta.ServicesDbHelper;
 import jackwtat.simplembta.data.ServiceAlert;
 import jackwtat.simplembta.data.Stop;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.QueryUtil;
-import jackwtat.simplembta.StopDbHelper;
 import jackwtat.simplembta.data.Trip;
 
 /**
@@ -55,7 +55,7 @@ public class NearbyListFragment extends PredictionsListFragment {
     private LocationServicesClient locationServicesClient;
     private Location lastLocation;
     private PredictionAsyncTask predictionAsyncTask;
-    private StopDbHelper stopDbHelper;
+    private ServicesDbHelper servicesDbHelper;
 
     private boolean refreshing;
     private boolean networkConnectionChecked;
@@ -67,7 +67,7 @@ public class NearbyListFragment extends PredictionsListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationServicesClient = new LocationServicesClient();
-        stopDbHelper = new StopDbHelper(getContext());
+        servicesDbHelper = new ServicesDbHelper(getContext());
     }
 
     @Override
@@ -263,11 +263,11 @@ public class NearbyListFragment extends PredictionsListFragment {
 
             // Load the stops database
             publishProgress(LOADING_DATABASE);
-            stopDbHelper.loadDatabase(getContext());
+            servicesDbHelper.loadDatabase(getContext());
 
             // Get all stops within the specified maximum distance from user's location
             publishProgress(GETTING_NEARBY_STOPS);
-            List<Stop> stops = stopDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
+            List<Stop> stops = servicesDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
 
             // Let user know we're not getting predictions
             publishProgress(0);

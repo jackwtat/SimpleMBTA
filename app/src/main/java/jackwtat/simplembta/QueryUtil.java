@@ -233,7 +233,7 @@ public class QueryUtil {
                         jAlert.getString("alert_id"),
                         jAlert.getString("header_text"),
                         jAlert.getString("alert_lifecycle"),
-                        jAlert.getString("severity"));
+                        ServiceAlert.Severity.valueOf(jAlert.getString("severity").toUpperCase()));
 
                 // Loop through each effect period of this serviceAlert
                 JSONArray jEffectPeriods = jAlert.getJSONArray("effect_periods");

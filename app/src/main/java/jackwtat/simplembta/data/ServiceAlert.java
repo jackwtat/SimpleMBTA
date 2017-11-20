@@ -8,33 +8,35 @@ import android.support.annotation.NonNull;
 
 public class ServiceAlert implements Comparable<ServiceAlert> {
 
-    public static final int URGENT = 0;
-    public static final int ADVISORY = 1;
+    public enum Urgency {
+        ALERT,
+        ADVISORY
+    }
 
-    private static final String[] SEVERITIES =
-            {"Severe", "Significant", "Moderate", "Minor", "Information"};
+    public enum Severity {
+        SEVERE,
+        SIGNIFICANT,
+        MODERATE,
+        MINOR,
+        INFORMATION
+    }
 
     private String id;
     private String text;
     private String status;
-    private int urgency;
-    private int severity;
+    private Urgency urgency;
+    private Severity severity;
 
-    public ServiceAlert(String id, String text, String status, String severity) {
+    public ServiceAlert(String id, String text, String status, Severity severity) {
         this.id = id;
         this.text = text;
         this.status = status;
+        this.severity = severity;
 
         if (status.toLowerCase().contains("ongoing")) {
-            this.urgency = ADVISORY;
+            this.urgency = Urgency.ADVISORY;
         } else {
-            this.urgency = URGENT;
-        }
-
-        for (int i = 0; i < SEVERITIES.length; i++) {
-            if (severity.equals(SEVERITIES[i])) {
-                this.severity = i;
-            }
+            this.urgency = Urgency.ALERT;
         }
     }
 
@@ -50,11 +52,11 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
         return status;
     }
 
-    public int getUrgency() {
+    public Urgency getUrgency() {
         return urgency;
     }
 
-    public int getSeverity() {
+    public Severity getSeverity() {
         return severity;
     }
 
@@ -71,9 +73,9 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
     @Override
     public int compareTo(@NonNull ServiceAlert serviceAlert) {
         if (this.urgency != serviceAlert.getUrgency()) {
-            return Integer.compare(this.urgency, serviceAlert.getUrgency());
+            return this.urgency.compareTo(serviceAlert.getUrgency());
         } else if (this.severity != serviceAlert.getSeverity()) {
-            return Integer.compare(this.severity, serviceAlert.getSeverity());
+            return this.severity.compareTo(serviceAlert.getSeverity());
         } else {
             return this.id.compareTo(serviceAlert.getId());
         }
