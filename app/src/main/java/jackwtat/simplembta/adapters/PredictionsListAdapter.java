@@ -47,16 +47,13 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
         RelativeLayout tertiaryLayout = listItemView.findViewById(R.id.tertiary_layout);
 
         // Route number/name TextView
-        TextView routeTextView = (TextView)
-                listItemView.findViewById(R.id.route_text_view);
+        TextView routeTextView = listItemView.findViewById(R.id.route_text_view);
 
         // ServiceAlert indicator TextView
-        TextView alertTextView = (TextView)
-                listItemView.findViewById(R.id.alert_indicator_text_view);
+        TextView alertTextView = listItemView.findViewById(R.id.alert_indicator_text_view);
 
         // Stop name TextView and spacer
-        TextView stopTextView = (TextView)
-                listItemView.findViewById(R.id.stop_text_view);
+        TextView stopTextView = listItemView.findViewById(R.id.stop_text_view);
 
         // Prediction data
         Trip[] trips = getItem(position);
@@ -142,9 +139,9 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
     }
 
     private void populatePrimaryPrediction(View listItemView, Trip trip) {
-        TextView primaryDestTextView = (TextView)
+        TextView primaryDestTextView =
                 listItemView.findViewById(R.id.primary_destination_text_view);
-        TextView primaryPredTextView = (TextView)
+        TextView primaryPredTextView =
                 listItemView.findViewById(R.id.primary_time_text_view);
 
         primaryDestTextView.setText(trip.getDestination());
@@ -169,9 +166,9 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
     }
 
     private void populateSecondaryPrediction(View listItemView, Trip trip) {
-        TextView secondaryDestTextView = (TextView)
+        TextView secondaryDestTextView =
                 listItemView.findViewById(R.id.secondary_destination_text_view);
-        TextView secondaryPredTextView = (TextView)
+        TextView secondaryPredTextView =
                 listItemView.findViewById(R.id.secondary_time_text_view);
 
         secondaryDestTextView.setText(trip.getDestination());
@@ -195,7 +192,7 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
     }
 
     private void populateTertiaryPrediction(View listItemView, Trip trip) {
-        TextView tertiaryPredTextView = (TextView)
+        TextView tertiaryPredTextView =
                 listItemView.findViewById(R.id.tertiary_time_text_view);
 
         String predictionText = Long.toString(trip.getArrivalTime() / 60);
