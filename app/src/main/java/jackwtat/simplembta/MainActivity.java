@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
-import jackwtat.simplembta.fragments.PredictionsListFragment;
+import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
         predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        viewPager = (ViewPager) findViewById(R.id.fragment_container);
+        viewPager = findViewById(R.id.fragment_container);
         viewPager.setAdapter(predictionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
     }
@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private PredictionsListFragment getCurrentFragment() {
-        return (PredictionsListFragment) getSupportFragmentManager()
+    private NearbyPredictionsFragment getCurrentFragment() {
+        return (NearbyPredictionsFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
     }
 }
