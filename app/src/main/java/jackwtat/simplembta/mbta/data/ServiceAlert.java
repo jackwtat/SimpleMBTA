@@ -1,4 +1,4 @@
-package jackwtat.simplembta.data;
+package jackwtat.simplembta.mbta.data;
 
 import android.support.annotation.NonNull;
 

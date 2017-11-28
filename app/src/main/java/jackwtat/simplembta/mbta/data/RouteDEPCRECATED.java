@@ -1,4 +1,4 @@
-package jackwtat.simplembta.data;
+package jackwtat.simplembta.mbta.data;
 
 import android.support.annotation.NonNull;
 
@@ -10,7 +10,7 @@ import static java.lang.Double.parseDouble;
  * Created by jackw on 9/7/2017.
  */
 
-public class Route implements Comparable<Route> {
+public class RouteDEPCRECATED implements Comparable<RouteDEPCRECATED> {
     private String id;
     private String name;
     private String longName;
@@ -87,7 +87,7 @@ public class Route implements Comparable<Route> {
         return "";
     }
 
-    public Route(String id, String name, int mode) {
+    public RouteDEPCRECATED(String id, String name, int mode) {
         this.id = id;
         this.name = getShortName(id, name);
         this.longName = name;
@@ -95,7 +95,7 @@ public class Route implements Comparable<Route> {
         serviceAlerts = new ArrayList<>();
     }
 
-    public Route(String id, String name, int mode, ArrayList<ServiceAlert> serviceAlerts) {
+    public RouteDEPCRECATED(String id, String name, int mode, ArrayList<ServiceAlert> serviceAlerts) {
         this.id = id;
         this.name = getShortName(id, name);
         this.longName = name;
@@ -126,7 +126,7 @@ public class Route implements Comparable<Route> {
     }
 
     @Override
-    public int compareTo(@NonNull Route anotherRoute) {
+    public int compareTo(@NonNull RouteDEPCRECATED anotherRoute) {
         String anotherId = anotherRoute.getId();
         int anotherMode = anotherRoute.getMode();
         if (this.mode != anotherMode) {
@@ -142,7 +142,7 @@ public class Route implements Comparable<Route> {
                 5. Boat/Ferry
              */
             return Integer.compare(this.mode, anotherMode);
-        } else if (this.mode != Route.Mode.BUS && anotherMode != Mode.BUS) {
+        } else if (this.mode != RouteDEPCRECATED.Mode.BUS && anotherMode != Mode.BUS) {
             // We've established that both routes are of the same mode
             // If both mode are not buses
             // Then compare the IDs alphabetically
@@ -159,8 +159,8 @@ public class Route implements Comparable<Route> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Route) {
-            Route anotherRoute = (Route) obj;
+        if (obj instanceof RouteDEPCRECATED) {
+            RouteDEPCRECATED anotherRoute = (RouteDEPCRECATED) obj;
             return this.id.equals(anotherRoute.getId());
         }
 

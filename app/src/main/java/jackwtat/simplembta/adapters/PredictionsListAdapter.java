@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import jackwtat.simplembta.data.Route;
-import jackwtat.simplembta.data.Trip;
+import jackwtat.simplembta.mbta.data.RouteDEPCRECATED;
+import jackwtat.simplembta.mbta.data.Trip;
 import jackwtat.simplembta.R;
 
 import static android.support.v4.content.ContextCompat.getColor;
@@ -46,13 +46,13 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
         RelativeLayout secondaryLayout = listItemView.findViewById(R.id.secondary_layout);
         RelativeLayout tertiaryLayout = listItemView.findViewById(R.id.tertiary_layout);
 
-        // Route number/name TextView
+        // RouteDEPCRECATED number/name TextView
         TextView routeTextView = listItemView.findViewById(R.id.route_text_view);
 
         // ServiceAlert indicator TextView
         TextView alertTextView = listItemView.findViewById(R.id.alert_indicator_text_view);
 
-        // Stop name TextView and spacer
+        // StopEntity name TextView and spacer
         TextView stopTextView = listItemView.findViewById(R.id.stop_text_view);
 
         // Prediction data
@@ -244,7 +244,7 @@ public class PredictionsListAdapter extends ArrayAdapter<Trip[]> {
 
     // Returns the text color of the route display
     private int getRouteColor(View view, int mode, String routeId) {
-        if ((mode != Route.Mode.BUS && mode != Route.Mode.UNKNOWN) ||
+        if ((mode != RouteDEPCRECATED.Mode.BUS && mode != RouteDEPCRECATED.Mode.UNKNOWN) ||
                 (routeId.equals("741") || routeId.equals("742") || routeId.equals("746") ||
                         routeId.equals("749") || routeId.equals("751"))) {
             return getColor(view.getContext(), R.color.HighlightedText);

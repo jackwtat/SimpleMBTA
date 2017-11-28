@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jackwtat.simplembta.listeners.OnLocationUpdateFailedListener;
-import jackwtat.simplembta.listeners.LocationUpdateListener;
+import jackwtat.simplembta.listeners.OnLocationUpdateListener;
 
 
 /**
@@ -37,7 +37,7 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private Location lastLocation;
-    private List<LocationUpdateListener> updateListeners = new ArrayList<>();
+    private List<OnLocationUpdateListener> updateListeners = new ArrayList<>();
     private List<OnLocationUpdateFailedListener> updateFailedListeners = new ArrayList<>();
 
     public LocationService(Context context, long updateInterval) {
@@ -74,8 +74,8 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
     public void onLocationChanged(Location location) {
     }
 
-    // Register LocationUpdateListener with this service
-    public void addUpdateListener(LocationUpdateListener listener) {
+    // Register OnLocationUpdateListener with this service
+    public void addUpdateListener(OnLocationUpdateListener listener) {
         updateListeners.add(listener);
     }
 
@@ -121,7 +121,7 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
 
                 lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-                for (LocationUpdateListener listener : updateListeners) {
+                for (OnLocationUpdateListener listener : updateListeners) {
                     listener.onLocationUpdate(lastLocation);
                 }
             } catch (Exception ex) {

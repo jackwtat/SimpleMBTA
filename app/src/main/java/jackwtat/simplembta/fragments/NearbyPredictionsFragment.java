@@ -29,16 +29,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import jackwtat.simplembta.QueryUtil;
-import jackwtat.simplembta.ServicesDbHelper;
+import jackwtat.simplembta.mbta.api.PredictionsByStopQuery;
+import jackwtat.simplembta.mbta.api.RealTimeApi;
+import jackwtat.simplembta.mbta.api.ServiceAlertsQuery;
+import jackwtat.simplembta.mbta.data.RouteDEPCRECATED;
+import jackwtat.simplembta.mbta.database.MbtaDbHelper;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
-import jackwtat.simplembta.data.ServiceAlert;
-import jackwtat.simplembta.data.Route;
-import jackwtat.simplembta.data.Trip;
+import jackwtat.simplembta.mbta.data.ServiceAlert;
+import jackwtat.simplembta.mbta.data.Trip;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.data.Stop;
+import jackwtat.simplembta.mbta.data.Stop;
 import jackwtat.simplembta.listeners.OnLocationUpdateFailedListener;
-import jackwtat.simplembta.listeners.LocationUpdateListener;
+import jackwtat.simplembta.listeners.OnLocationUpdateListener;
 import jackwtat.simplembta.services.LocationService;
 import jackwtat.simplembta.services.NetworkConnectivityService;
 
@@ -47,7 +49,7 @@ import jackwtat.simplembta.services.NetworkConnectivityService;
  */
 
 public class NearbyPredictionsFragment extends Fragment implements OnRefreshListener,
-        LocationUpdateListener, OnLocationUpdateFailedListener {
+        OnLocationUpdateListener, OnLocationUpdateFailedListener {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
     // Fine Location Permission
@@ -72,7 +74,7 @@ public class NearbyPredictionsFragment extends Fragment implements OnRefreshList
     private LocationService locationService;
     private NetworkConnectivityService networkConnectivityService;
     private PredictionAsyncTask predictionAsyncTask;
-    private ServicesDbHelper servicesDbHelper;
+    private MbtaDbHelper mbtaDbHelper;
 
     private boolean refreshing;
     protected Date lastRefreshed;
@@ -88,7 +90,7 @@ public class NearbyPredictionsFragment extends Fragment implements OnRefreshList
 
         networkConnectivityService = new NetworkConnectivityService(getContext());
 
-        servicesDbHelper = new ServicesDbHelper(getContext());
+        mbtaDbHelper = new MbtaDbHelper(getContext());
 
         locationService.addUpdateListener(this);
         locationService.addUpdateFailedListener(this);
@@ -210,7 +212,8 @@ public class NearbyPredictionsFragment extends Fragment implements OnRefreshList
         onRefreshError(getResources().getString(R.string.no_location));
     }
 
-    //
+    // Get network connectivity status and most recent location, and if successful,
+    // fetch MBTA predictions based on location
     public void refreshPredictions() {
         if (!refreshing) {
             refreshing = true;
@@ -296,7 +299,7 @@ public class NearbyPredictionsFragment extends Fragment implements OnRefreshList
                 // Get array of directions in order we want displayed
                 //  1. Inbound
                 //  2. Outbound
-                int[] directions = {Route.Direction.INBOUND, Route.Direction.OUTBOUND};
+                int[] directions = {RouteDEPCRECATED.Direction.INBOUND, RouteDEPCRECATED.Direction.OUTBOUND};
 
                 //Loop through each direction
                 for (int direction : directions) {
@@ -352,26 +355,27 @@ public class NearbyPredictionsFragment extends Fragment implements OnRefreshList
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
+            RealTimeApi rt = new RealTimeApi(getString(R.string.mbta_realtime_api_key));
 
             // Load the stops database
             publishProgress(LOADING_DATABASE);
-            servicesDbHelper.loadDatabase(getContext());
+            mbtaDbHelper.loadDatabase(getContext());
 
             // Get all stops within the specified maximum distance from user's location
             publishProgress(GETTING_NEARBY_STOPS);
-            List<Stop> stops = servicesDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
+            List<Stop> stops = mbtaDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
 
             // Let user know we're not getting predictions
             publishProgress(0);
 
             // Get all service alerts
-            HashMap<String, ArrayList<ServiceAlert>> alerts = QueryUtil.fetchAlerts(getString(R.string.mbta_realtime_api_key));
+            HashMap<String, ArrayList<ServiceAlert>> alerts = ServiceAlertsQuery.getServiceAlerts(rt);
 
             // Get predicted trips for each stop
             for (int i = 0; i < stops.size(); i++) {
                 Stop stop = stops.get(i);
 
-                stop.addTrips(QueryUtil.fetchPredictionsByStop(getString(R.string.mbta_realtime_api_key), stop.getId()));
+                stop.addTrips(PredictionsByStopQuery.getPredictions(rt, stop.getId()));
 
                 // Add alerts to trips whose route has alerts
                 for (Trip trip : stop.getTrips()) {
