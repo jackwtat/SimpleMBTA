@@ -29,6 +29,8 @@ import jackwtat.simplembta.mbta.database.MbtaDbContract.StopRouteJoinEntity;
 public class MbtaDbHelper extends SQLiteOpenHelper {
     private static final String LOG_TAG = "MbtaDbHelper";
 
+    private Context context;
+
     private static final String DATABASE_NAME = "mbta.db";
     private static final int DATABASE_VERSION = 2;
 
@@ -41,6 +43,8 @@ public class MbtaDbHelper extends SQLiteOpenHelper {
 
     public MbtaDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
+        loadDatabase();
     }
 
     @Override
@@ -75,22 +79,22 @@ public class MbtaDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void loadDatabase(Context context) {
+    private void loadDatabase() {
         if (DatabaseUtils.queryNumEntries(getReadableDatabase(), StopEntity.TABLE_NAME) !=
                 STOP_COUNT) {
             getWritableDatabase().delete(StopEntity.TABLE_NAME, null, null);
-            importStopsFromCsv(context);
+            importStopsFromCsv();
         }
 
         if (DatabaseUtils.queryNumEntries(getReadableDatabase(), RouteEntity.TABLE_NAME) !=
                 ROUTE_COUNT) {
             getWritableDatabase().delete(StopEntity.TABLE_NAME, null, null);
-            importRoutesFromCsv(context);
+            importRoutesFromCsv();
         }
     }
 
     // Populate the Stops database with data from stops CSV file
-    private void importStopsFromCsv(Context context) {
+    private void importStopsFromCsv() {
         SQLiteDatabase db = getWritableDatabase();
         String[] csvRecord;
 
@@ -123,7 +127,7 @@ public class MbtaDbHelper extends SQLiteOpenHelper {
     }
 
     // Populate the Routes database with data from routes CSV file
-    private void importRoutesFromCsv(Context context) {
+    private void importRoutesFromCsv() {
         SQLiteDatabase db = getWritableDatabase();
         String[] csvRecord;
 
@@ -346,6 +350,4 @@ public class MbtaDbHelper extends SQLiteOpenHelper {
 
         return new Stop(stopId, stopName, stopLat, stopLon);
     }
-
-
 }
