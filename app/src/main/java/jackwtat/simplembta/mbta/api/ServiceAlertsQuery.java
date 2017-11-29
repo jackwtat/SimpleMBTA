@@ -17,11 +17,15 @@ import jackwtat.simplembta.mbta.data.ServiceAlert;
  * Created by jackw on 11/28/2017.
  */
 
-public class ServiceAlertsQuery {
+public class ServiceAlertsQuery extends RestApiGetQuery {
     private final static String LOG_TAG = "ServiceAlertsQuery";
 
-    public static HashMap<String, ArrayList<ServiceAlert>> getServiceAlerts(RealTimeApi rt) {
-        String jsonResponse = rt.query("alerts", new HashMap<String, String>());
+    public ServiceAlertsQuery(RealTimeApi api){
+        super(api);
+    }
+
+    public HashMap<String, ArrayList<ServiceAlert>> get() {
+        String jsonResponse = super.get("alerts", new HashMap<String, String>());
 
         // A route may contain multiple alerts, so we use ArrayList<ServiceAlert> to store multiple
         // alerts for each route

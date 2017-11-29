@@ -17,14 +17,18 @@ import jackwtat.simplembta.mbta.data.Trip;
  * Created by jackw on 11/28/2017.
  */
 
-public class PredictionsByStopQuery {
+public class PredictionsByStopQuery extends RestApiGetQuery {
     private static final String LOG_TAG = "PredictionsByStopQuery";
 
-    public static ArrayList<Trip> getPredictions(RealTimeApi rt, String stopId) {
+    public PredictionsByStopQuery(RealTimeApi api){
+        super(api);
+    }
+
+    public ArrayList<Trip> get(String stopId) {
         HashMap<String, String> params = new HashMap<>();
         params.put("stop", stopId);
 
-        String jsonResponse = rt.query("predictionsbystop", params);
+        String jsonResponse = super.get("predictionsbystop", params);
 
         ArrayList<Trip> predictions = new ArrayList<>();
 

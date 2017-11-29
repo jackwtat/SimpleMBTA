@@ -16,8 +16,8 @@ import java.util.HashMap;
  * Created by jackw on 11/28/2017.
  */
 
-public class RealTimeApi {
-    private static final String LOG_TAG = "Query Util";
+public class RealTimeApi implements RestApiGettable {
+    private static final String LOG_TAG = "RealTime API";
 
     //URL for querying the MBTA realTime API
     private static final String MBTA_URL = "http://realtime.mbta.com/developer/api/v2/";
@@ -32,11 +32,12 @@ public class RealTimeApi {
     }
 
     // Queries the MBTA API and returns the response as a string representation of a JSON object
-    public String query(String query, HashMap<String, String> params) {
-        // Build query URL as String
+    @Override
+    public String get(String query, HashMap<String, String> params) {
+        // Build get URL as String
         String requestUrl = MBTA_URL + query + "?api_key=" + apiKey + RESPONSE_FORMAT;
 
-        // Append the parameters and respective arguments to the query URL
+        // Append the parameters and respective arguments to the get URL
         for(String param : params.keySet()){
             String arg = params.get(param);
             requestUrl += "&" + param + "=" + arg;
