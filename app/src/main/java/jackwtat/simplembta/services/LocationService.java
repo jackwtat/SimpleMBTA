@@ -18,13 +18,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jackwtat.simplembta.listeners.OnLocationUpdateFailedListener;
-import jackwtat.simplembta.listeners.OnLocationUpdateListener;
-
-
 /**
  * Created by jackw on 11/24/2017.
  */
@@ -37,8 +30,8 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private Location lastLocation;
-    private List<OnLocationUpdateListener> updateListeners = new ArrayList<>();
-    private List<OnLocationUpdateFailedListener> updateFailedListeners = new ArrayList<>();
+    private OnLocationUpdateListener updateListener;
+    private OnLocationUpdateFailedListener updateFailedListener;
 
     public LocationService(Context context, long updateInterval) {
         this.context = context;
@@ -75,13 +68,13 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
     }
 
     // Register OnLocationUpdateListener with this service
-    public void addUpdateListener(OnLocationUpdateListener listener) {
-        updateListeners.add(listener);
+    public void setOnLocationUpdateListener(OnLocationUpdateListener listener) {
+        updateListener = listener;
     }
 
     // Register OnLocationUpdateFailedListener with this service
-    public void addUpdateFailedListener(OnLocationUpdateFailedListener listener) {
-        updateFailedListeners.add(listener);
+    public void setOnLocationUpdateFailedListener(OnLocationUpdateFailedListener listener) {
+        updateFailedListener = listener;
     }
 
     public void connectClient() {
@@ -108,9 +101,7 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e(LOG_TAG, "Location permission missing");
 
-            for (OnLocationUpdateFailedListener listener : updateFailedListeners) {
-                listener.onLocationUpdateFailed();
-            }
+            updateFailedListener.onLocationUpdateFailed();
         }
 
         // Try getting location
@@ -121,20 +112,24 @@ public class LocationService implements LocationListener, ConnectionCallbacks,
 
                 lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-                for (OnLocationUpdateListener listener : updateListeners) {
-                    listener.onLocationUpdate(lastLocation);
-                }
+                updateListener.onLocationUpdate(lastLocation);
             } catch (Exception ex) {
                 Log.e(LOG_TAG, "Location services error");
 
-                for (OnLocationUpdateFailedListener listener : updateFailedListeners) {
-                    listener.onLocationUpdateFailed();
-                }
+                updateFailedListener.onLocationUpdateFailed();
             }
         }
     }
 
     public Location getLastLocation() {
         return lastLocation;
+    }
+
+    public interface OnLocationUpdateListener {
+        void onLocationUpdate(Location location);
+    }
+
+    public interface OnLocationUpdateFailedListener {
+        void onLocationUpdateFailed();
     }
 }
