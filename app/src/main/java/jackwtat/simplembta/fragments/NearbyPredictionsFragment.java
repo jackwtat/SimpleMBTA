@@ -1,7 +1,6 @@
 package jackwtat.simplembta.fragments;
 
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,21 +25,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import jackwtat.simplembta.asynctasks.NearbyPredictionsAsyncTask;
-import jackwtat.simplembta.asynctasks.NearbyPredictionsAsyncTask.OnPostExecuteListener;
-import jackwtat.simplembta.asynctasks.NearbyPredictionsAsyncTask.OnProgressUpdateListener;
-import jackwtat.simplembta.mbta.api.RealTimeApi;
+import jackwtat.simplembta.controllers.NearbyPredictionsController;
+import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
+import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
+import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
+import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpdateListener;
 import jackwtat.simplembta.mbta.data.RouteDEPCRECATED;
-import jackwtat.simplembta.mbta.database.MbtaDbHelper;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
 import jackwtat.simplembta.mbta.data.ServiceAlert;
 import jackwtat.simplembta.mbta.data.Trip;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.data.Stop;
-import jackwtat.simplembta.services.LocationService;
-import jackwtat.simplembta.services.LocationService.OnLocationUpdateListener;
-import jackwtat.simplembta.services.LocationService.OnLocationUpdateFailedListener;
-import jackwtat.simplembta.services.NetworkConnectivityService;
 
 /**
  * Created by jackw on 8/21/2017.
@@ -49,17 +44,7 @@ import jackwtat.simplembta.services.NetworkConnectivityService;
 public class NearbyPredictionsFragment extends Fragment {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
-    // Fine Location Permission
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
-
-    // Time between location updates, in seconds
-    private final long LOCATION_UPDATE_INTERVAL = 15;
-
-    // Time since last refresh before predictions can automatically refresh onResume, in seconds
-    private final long ON_RESUME_REFRESH_INTERVAL = 120;
-
-    // Maximum distance to stop in miles
-    private final double MAX_DISTANCE = .5;
 
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -68,14 +53,7 @@ public class NearbyPredictionsFragment extends Fragment {
     private TextView errorTextView;
     private ProgressBar progressBar;
 
-    private LocationService locationService;
-    private NetworkConnectivityService networkConnectivityService;
-    private NearbyPredictionsAsyncTask nearbyPredictionsAsyncTask;
-    private MbtaDbHelper mbtaDbHelper;
-    private RealTimeApi realTimeApi;
-
-    private boolean refreshing;
-    protected Date lastRefreshed;
+    private NearbyPredictionsController controller;
     private ArrayAdapter<Trip[]> predictionsListAdapter;
 
     @Override
@@ -84,27 +62,44 @@ public class NearbyPredictionsFragment extends Fragment {
 
         predictionsListAdapter = new PredictionsListAdapter(getActivity(), new ArrayList<Trip[]>());
 
-        networkConnectivityService = new NetworkConnectivityService(getContext());
+        controller = new NearbyPredictionsController(getContext());
 
-        locationService = new LocationService(getContext(), LOCATION_UPDATE_INTERVAL);
-        locationService.setOnLocationUpdateListener(new OnLocationUpdateListener() {
+        controller.setNetworkErrorListener(new OnNetworkErrorListener() {
             @Override
-            public void onLocationUpdate(Location location) {
-                if (refreshing) {
-                    fetchNearbyPredictions(location);
-                }
+            public void onNetworkError() {
+                onRefreshError(getResources().getString(R.string.no_network_connectivity));
             }
         });
-        locationService.setOnLocationUpdateFailedListener(new OnLocationUpdateFailedListener() {
+
+        controller.setOnLocationErrorListener(new OnLocationErrorListener() {
             @Override
-            public void onLocationUpdateFailed() {
+            public void onLocationError() {
                 onRefreshError(getResources().getString(R.string.no_location));
             }
         });
 
-        mbtaDbHelper = new MbtaDbHelper(getContext());
+        controller.setOnProgressUpdateListener(new OnProgressUpdateListener() {
+            @Override
+            public void onProgressUpdate(int progress) {
+                try {
+                    setRefreshProgress(progress,
+                            getResources().getString(R.string.getting_predictions));
+                } catch (IllegalStateException e) {
+                    Log.e(LOG_TAG, "Pushing progress update to nonexistent view");
+                }
+            }
+        });
 
-        realTimeApi = new RealTimeApi(getString(R.string.mbta_realtime_api_key));
+        controller.setOnPostExecuteListener(new OnPostExecuteListener() {
+            @Override
+            public void onPostExecute(List<Stop> stops) {
+                try {
+                    publishPredictions(stops);
+                } catch (IllegalStateException e) {
+                    Log.e(LOG_TAG, "Pushing get results to nonexistent view");
+                }
+            }
+        });
     }
 
     @Nullable
@@ -177,79 +172,23 @@ public class NearbyPredictionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        // If sufficient time has lapsed since last refresh, then automatically refreshed predictions
-        Date currentTime = new Date();
-        if (lastRefreshed == null ||
-                ((currentTime.getTime() - lastRefreshed.getTime()) > 1000 * ON_RESUME_REFRESH_INTERVAL)) {
-            refreshPredictions();
-        }
+        controller.getPredictions(false);
     }
 
     @Override
     public void onStop() {
-        super.onStop();
-
-        // Disconnect LocationServices
-        locationService.disconnectClient();
-
-        // Cancel the AsyncTask if it is running
-        if (nearbyPredictionsAsyncTask != null) {
-            nearbyPredictionsAsyncTask.cancel(true);
-        }
-
-        // Update the UI to indicate that predictions refreshing is canceled
-        if (refreshing) {
+        if (controller.isRunning()) {
             onRefreshCanceled();
-            refreshing = false;
         }
+
+        controller.cancel();
+
+        super.onStop();
     }
 
-    // Get network connectivity status and most recent location, and if successful,
-    // fetch MBTA predictions based on location
+    // Call the controller to get the latest MBTA predictions
     public void refreshPredictions() {
-        if (!refreshing) {
-            refreshing = true;
-
-            setRefreshProgress(0, getResources().getString(R.string.getting_predictions));
-
-            if (networkConnectivityService.isConnected()) {
-                locationService.updateLocation();
-            } else {
-                onRefreshError(getResources().getString(R.string.no_network_connectivity));
-            }
-        }
-    }
-
-    private void fetchNearbyPredictions(Location location){
-        nearbyPredictionsAsyncTask = new NearbyPredictionsAsyncTask(realTimeApi, mbtaDbHelper,
-                MAX_DISTANCE);
-
-        nearbyPredictionsAsyncTask.setOnProgressUpdateListener(new OnProgressUpdateListener() {
-            @Override
-            public void onProgressUpdate(int progress) {
-                try {
-                    setRefreshProgress(progress,
-                            getResources().getString(R.string.getting_predictions));
-                } catch (IllegalStateException e) {
-                    Log.e(LOG_TAG, "Pushing progress update to nonexistent view");
-                }
-            }
-        });
-
-        nearbyPredictionsAsyncTask.setOnPostExecuteListener(new OnPostExecuteListener() {
-            @Override
-            public void onPostExecute(List<Stop> stops) {
-                try {
-                    refreshing = false;
-                    publishPredictions(stops);
-                } catch (IllegalStateException e) {
-                    Log.e(LOG_TAG, "Pushing get results to nonexistent view");
-                }
-            }
-        });
-
-        nearbyPredictionsAsyncTask.execute(location);
+        controller.getPredictions(true);
     }
 
     // Updates the UI to show that predictions refresh has been canceled
@@ -261,7 +200,6 @@ public class NearbyPredictionsFragment extends Fragment {
 
     // Updates the UI to display an error message if refresh fails
     private void onRefreshError(String errorMessage) {
-        refreshing = false;
         setStatus(new Date(), errorMessage, false, true);
     }
 
@@ -278,7 +216,7 @@ public class NearbyPredictionsFragment extends Fragment {
 
     // Update the UI to display a given status message
     private void setStatus(String statusMessage, String errorMessage, boolean showRefreshIcon,
-                          boolean clearList) {
+                           boolean clearList) {
         statusTextView.setText(statusMessage);
         errorTextView.setText(errorMessage);
         swipeRefreshLayout.setRefreshing(showRefreshIcon);
@@ -289,7 +227,7 @@ public class NearbyPredictionsFragment extends Fragment {
 
     // Update the UI to display a given timestamped status message
     private void setStatus(Date statusTime, String errorMessage, boolean showRefreshIcon,
-                          boolean clearList) {
+                           boolean clearList) {
         DateFormat ft = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
         String statusMessage = "Updated " + ft.format(statusTime);
 
@@ -351,9 +289,6 @@ public class NearbyPredictionsFragment extends Fragment {
             }
         }
 
-        // Update refresh time
-        lastRefreshed = new Date();
-
         // Auto-scroll to the top
         predictionsListView.setSelection(0);
 
@@ -361,7 +296,7 @@ public class NearbyPredictionsFragment extends Fragment {
         progressBar.setProgress(0);
 
         // Set statuses
-        setStatus(lastRefreshed, "", false, false);
+        setStatus(controller.getLastRefreshedDate(), "", false, false);
 
         // If there are no predictions, show status to user
         if (predictionsListAdapter.getCount() < 1) {
