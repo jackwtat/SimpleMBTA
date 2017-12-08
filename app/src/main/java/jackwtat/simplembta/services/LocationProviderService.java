@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -18,8 +17,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.util.Date;
 
 /**
  * Created by jackw on 12/4/2017.
