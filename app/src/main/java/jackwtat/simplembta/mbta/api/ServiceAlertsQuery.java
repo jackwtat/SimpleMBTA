@@ -20,12 +20,12 @@ import jackwtat.simplembta.mbta.data.ServiceAlert;
 public class ServiceAlertsQuery extends RestApiGetQuery {
     private final static String LOG_TAG = "ServiceAlertsQuery";
 
-    public ServiceAlertsQuery(RealTimeApi api){
-        super(api);
+    public ServiceAlertsQuery(RealTimeApi api) {
+        super(api, "alerts");
     }
 
     public HashMap<String, ArrayList<ServiceAlert>> get() {
-        String jsonResponse = super.get("alerts", new HashMap<String, String>());
+        String jsonResponse = super.get(new HashMap<String, String>());
 
         // A route may contain multiple alerts, so we use ArrayList<ServiceAlert> to store multiple
         // alerts for each route
@@ -96,7 +96,7 @@ public class ServiceAlertsQuery extends RestApiGetQuery {
                                     alerts.get(routeId).add(serviceAlert);
                                 }
                             }
-                        } catch (JSONException e){
+                        } catch (JSONException e) {
                             Log.e(LOG_TAG, "No route associated with alert");
                             e.printStackTrace();
                         }

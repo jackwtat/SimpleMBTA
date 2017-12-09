@@ -6,15 +6,16 @@ import java.util.HashMap;
  * Created by jackw on 11/29/2017.
  */
 
-public abstract class RestApiGetQuery implements RestApiGettable {
-    protected final RestApiGettable api;
+public abstract class RestApiGetQuery {
+    private final RestApiGettable api;
+    private String query;
 
-    protected RestApiGetQuery(RestApiGettable api){
+    protected RestApiGetQuery(RestApiGettable api, String query) {
         this.api = api;
+        this.query = query;
     }
 
-    @Override
-    public String get(String query, HashMap<String, String> params){
+    public String get(HashMap<String, String> params) {
         return api.get(query, params);
     }
 }

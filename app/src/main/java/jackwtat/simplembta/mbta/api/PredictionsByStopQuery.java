@@ -20,15 +20,15 @@ import jackwtat.simplembta.mbta.data.Trip;
 public class PredictionsByStopQuery extends RestApiGetQuery {
     private static final String LOG_TAG = "PredictionsByStopQuery";
 
-    public PredictionsByStopQuery(RealTimeApi api){
-        super(api);
+    public PredictionsByStopQuery(RealTimeApi api) {
+        super(api, "predictionsbystop");
     }
 
     public ArrayList<Trip> get(String stopId) {
         HashMap<String, String> params = new HashMap<>();
         params.put("stop", stopId);
 
-        String jsonResponse = super.get("predictionsbystop", params);
+        String jsonResponse = super.get(params);
 
         ArrayList<Trip> predictions = new ArrayList<>();
 
@@ -50,9 +50,9 @@ public class PredictionsByStopQuery extends RestApiGetQuery {
                 JSONObject jMode = jModes.getJSONObject(i);
 
                 // Loop through all routes of this mode at this stop
-                JSONArray routes = jMode.getJSONArray("route");
-                for (int j = 0; j < routes.length(); j++) {
-                    JSONObject jRoute = routes.getJSONObject(j);
+                JSONArray jRoutes = jMode.getJSONArray("route");
+                for (int j = 0; j < jRoutes.length(); j++) {
+                    JSONObject jRoute = jRoutes.getJSONObject(j);
 
                     // Loop through all the directions the current route takes from this stop
                     JSONArray jDirections = jRoute.getJSONArray("direction");
