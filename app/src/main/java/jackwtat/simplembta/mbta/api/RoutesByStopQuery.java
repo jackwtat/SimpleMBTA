@@ -57,7 +57,7 @@ public class RoutesByStopQuery extends RestApiGetQuery {
 
 
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to parse routes");
+            Log.e(LOG_TAG, "Unable to parse routes for stop " + stopId);
             e.printStackTrace();
         }
 
