@@ -7,11 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import jackwtat.simplembta.mbta.data.Trip;
 
 /**
  * Created by jackw on 12/7/2017.
