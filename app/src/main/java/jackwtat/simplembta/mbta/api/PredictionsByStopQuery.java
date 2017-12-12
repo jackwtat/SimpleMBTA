@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import jackwtat.simplembta.mbta.data.RouteDEPCRECATED;
+import jackwtat.simplembta.mbta.data.Route;
 import jackwtat.simplembta.mbta.data.Trip;
 
 /**
@@ -67,7 +67,7 @@ public class PredictionsByStopQuery extends RestApiGetQuery {
                             // Add trip to the predictions list
                             predictions.add(new Trip(
                                     jTrip.getString("trip_id"),
-                                    new RouteDEPCRECATED(jRoute.getString("route_id"),
+                                    new Route(jRoute.getString("route_id"),
                                             jRoute.getString("route_name"),
                                             jMode.getInt("route_type")),
                                     jDirection.getInt("direction_id"),
