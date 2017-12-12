@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Trip {
     private String id;
-    private RouteDEPCRECATED route;
+    private Route route;
     private int direction;
     private String destination;
     private String stopId;
@@ -18,14 +18,14 @@ public class Trip {
     public Trip(String id) {
         this.id = id;
         route = null;
-        direction = RouteDEPCRECATED.Direction.UNKNOWN;
+        direction = Route.Direction.UNKNOWN;
         destination = "";
         stopId = "";
         stopName = "";
         arrivalTime = -1;
     }
 
-    public Trip (String id, RouteDEPCRECATED route, int direction, String destination, String stopId, String stopName, long arrivalTime){
+    public Trip (String id, Route route, int direction, String destination, String stopId, String stopName, long arrivalTime){
         this.id = id;
         this.route = route;
         this.direction = direction;
@@ -39,9 +39,9 @@ public class Trip {
         return id;
     }
 
-    public void setRoute(RouteDEPCRECATED route) { this.route = route;}
+    public void setRoute(Route route) { this.route = route;}
 
-    public RouteDEPCRECATED getRoute() { return route; }
+    public Route getRoute() { return route; }
 
     public String getRouteId() {
         return route.getId();

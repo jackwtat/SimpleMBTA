@@ -30,7 +30,7 @@ import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErr
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpdateListener;
-import jackwtat.simplembta.mbta.data.RouteDEPCRECATED;
+import jackwtat.simplembta.mbta.data.Route;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
 import jackwtat.simplembta.mbta.data.ServiceAlert;
 import jackwtat.simplembta.mbta.data.Trip;
@@ -262,7 +262,7 @@ public class NearbyPredictionsFragment extends Fragment {
                 // Get array of directions in order we want displayed
                 //  1. Inbound
                 //  2. Outbound
-                int[] directions = {RouteDEPCRECATED.Direction.INBOUND, RouteDEPCRECATED.Direction.OUTBOUND};
+                int[] directions = {Route.Direction.INBOUND, Route.Direction.OUTBOUND};
 
                 //Loop through each direction
                 for (int direction : directions) {

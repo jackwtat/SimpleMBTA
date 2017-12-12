@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import jackwtat.simplembta.mbta.data.Route;
+import jackwtat.simplembta.mbta.dataNew.Route;
 import jackwtat.simplembta.mbta.data.Stop;
 
 import jackwtat.simplembta.mbta.database.MbtaDbContract.StopEntity;

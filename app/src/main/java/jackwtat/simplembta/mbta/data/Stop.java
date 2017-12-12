@@ -17,7 +17,7 @@ public class Stop implements Comparable<Stop> {
     private double latitude;
     private double longitude;
     private double distance;
-    private ArrayList<RouteDEPCRECATED> routeList = new ArrayList<>();
+    private ArrayList<Route> routeList = new ArrayList<>();
     private ArrayList<Trip> tripList = new ArrayList<>();
 
     public Stop(String id) {
@@ -64,7 +64,7 @@ public class Stop implements Comparable<Stop> {
         return distance;
     }
 
-    public ArrayList<RouteDEPCRECATED> getRoutes() { return routeList; }
+    public ArrayList<Route> getRoutes() { return routeList; }
 
     public ArrayList<Trip> getTrips() { return tripList; }
 
@@ -110,7 +110,7 @@ public class Stop implements Comparable<Stop> {
     //        y = direction, i.e. inbound/outbound
     //        z = next tripList
     public Trip[][][] getSortedTripArray(int perDirectionLimit) {
-        Trip[][][] tripArray = new Trip[routeList.size()][RouteDEPCRECATED.Direction.COUNT][perDirectionLimit];
+        Trip[][][] tripArray = new Trip[routeList.size()][Route.Direction.COUNT][perDirectionLimit];
 
         // Sort the routes
         Collections.sort(routeList);
