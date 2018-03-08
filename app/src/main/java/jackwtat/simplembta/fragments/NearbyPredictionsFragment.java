@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,17 +25,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import jackwtat.simplembta.R;
+import jackwtat.simplembta.adapters.PredictionPairListAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpdateListener;
-import jackwtat.simplembta.mbta.data.Route;
-import jackwtat.simplembta.adapters.PredictionsListAdapter;
-import jackwtat.simplembta.mbta.data.ServiceAlert;
-import jackwtat.simplembta.mbta.data.Trip;
-import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.data.Stop;
+import jackwtat.simplembta.mbta.structures.Mode;
+import jackwtat.simplembta.mbta.structures.Prediction;
+import jackwtat.simplembta.mbta.structures.ServiceAlert;
+import jackwtat.simplembta.mbta.structures.Stop;
+
 
 /**
  * Created by jackw on 8/21/2017.
@@ -49,18 +50,20 @@ public class NearbyPredictionsFragment extends Fragment {
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView predictionsListView;
-    private TextView statusTextView;
+    private TextView statusMsgTextView;
+    private TextView statusTimeTextView;
     private TextView errorTextView;
     private ProgressBar progressBar;
 
     private NearbyPredictionsController controller;
-    private ArrayAdapter<Trip[]> predictionsListAdapter;
+    private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        predictionsListAdapter = new PredictionsListAdapter(getActivity(), new ArrayList<Trip[]>());
+        predictionsListAdapter = new PredictionPairListAdapter(
+                getActivity(), new ArrayList<ArrayList<Prediction>>());
 
         controller = new NearbyPredictionsController(getContext());
 
@@ -109,37 +112,12 @@ public class NearbyPredictionsFragment extends Fragment {
 
         swipeRefreshLayout = rootView.findViewById(R.id.predictions_swipe_refresh_layout);
         predictionsListView = rootView.findViewById(R.id.predictions_list_view);
-        statusTextView = rootView.findViewById(R.id.status_message_text_view);
+        statusMsgTextView = rootView.findViewById(R.id.status_message_text_view);
+        statusTimeTextView = rootView.findViewById(R.id.status_time_text_view);
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
         progressBar = rootView.findViewById(R.id.progressBar);
 
         predictionsListView.setAdapter(predictionsListAdapter);
-        predictionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Trip[] trips = (Trip[]) parent.getItemAtPosition(position);
-
-                if (trips[0].hasServiceAlert()) {
-                    // Get and sort service alerts for this trip's route
-                    ArrayList<ServiceAlert> serviceAlerts = trips[0].getAlerts();
-                    Collections.sort(serviceAlerts);
-
-                    // Construct the alerts dialog message
-                    String alertMessage = serviceAlerts.get(0).getText();
-                    for (int i = 1; i < serviceAlerts.size(); i++) {
-                        alertMessage += "\n\n" + serviceAlerts.get(i).getText();
-                    }
-
-                    // Create alert dialog builder
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(trips[0].getRouteLongName());
-                    builder.setMessage(alertMessage);
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            }
-        });
 
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
                 R.color.colorAccent));
@@ -147,7 +125,7 @@ public class NearbyPredictionsFragment extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        refreshPredictions();
+                        forceRefresh();
                     }
                 }
         );
@@ -165,7 +143,6 @@ public class NearbyPredictionsFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_ACCESS_FINE_LOCATION);
-
         }
     }
 
@@ -186,15 +163,15 @@ public class NearbyPredictionsFragment extends Fragment {
         super.onStop();
     }
 
-    // Call the controller to get the latest MBTA predictions
-    public void refreshPredictions() {
+    // Call the controller to get the latest MBTA values
+    public void forceRefresh() {
         controller.getPredictions(true);
     }
 
-    // Updates the UI to show that predictions refresh has been canceled
+    // Updates the UI to show that values refresh has been canceled
     private void onRefreshCanceled() {
         swipeRefreshLayout.setRefreshing(false);
-        statusTextView.setText(getResources().getString(R.string.refresh_canceled));
+        statusMsgTextView.setText(getResources().getString(R.string.refresh_canceled));
         progressBar.setProgress(0);
     }
 
@@ -203,35 +180,25 @@ public class NearbyPredictionsFragment extends Fragment {
         setStatus(new Date(), errorMessage, false, true);
     }
 
-    // Updates the UI to display predictions refresh progress
+    // Updates the UI to display values refresh progress
     private void setRefreshProgress(int percentage, String message) {
         if (!swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(true);
         }
-        if (!statusTextView.getText().toString().equals(message)) {
-            statusTextView.setText(message);
+        if (!statusMsgTextView.getText().toString().equals(message)) {
+            statusMsgTextView.setText(message);
         }
         progressBar.setProgress(percentage);
-    }
-
-    // Update the UI to display a given status message
-    private void setStatus(String statusMessage, String errorMessage, boolean showRefreshIcon,
-                           boolean clearList) {
-        statusTextView.setText(statusMessage);
-        errorTextView.setText(errorMessage);
-        swipeRefreshLayout.setRefreshing(showRefreshIcon);
-        if (clearList) {
-            predictionsListAdapter.clear();
-        }
     }
 
     // Update the UI to display a given timestamped status message
     private void setStatus(Date statusTime, String errorMessage, boolean showRefreshIcon,
                            boolean clearList) {
         DateFormat ft = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        String statusMessage = "Updated " + ft.format(statusTime);
+        String statusMessage = getResources().getString(R.string.updated) + " " + ft.format(statusTime);
 
-        statusTextView.setText(statusMessage);
+        statusTimeTextView.setText(statusMessage);
+        statusMsgTextView.setText("");
         errorTextView.setText(errorMessage);
         swipeRefreshLayout.setRefreshing(showRefreshIcon);
         if (clearList) {
@@ -239,55 +206,89 @@ public class NearbyPredictionsFragment extends Fragment {
         }
     }
 
-    // Display the given list of predictions
+    // Display the given list of values
     private void publishPredictions(List<Stop> stops) {
-        // Clear all previous predictions from list
+        // Clear all previous values from list
         predictionsListAdapter.clear();
 
-        // Sort the stops by distance
+        // Initialize the data structure that stores route-direction combos that have been processed
+        ArrayList<String> displayed = new ArrayList<>();
+
+        // Sort the stops
         Collections.sort(stops);
 
-        // We will keep track of each route-direction pair we process and ignore duplicates
-        ArrayList<String> rd = new ArrayList<>();
+        // Loop through each stop
+        for (Stop s : stops) {
 
-        // Loop through every stop
-        for (int i = 0; i < stops.size(); i++) {
+            // Sort the predictions
+            Collections.sort(s.getPredictions());
 
-            // Get the next two trips for each direction for each route
-            Trip[][][] allPredictions = stops.get(i).getSortedTripArray(2);
+            // Loop through each prediction
+            for (int i = 0; i < s.getPredictions().size(); i++) {
+                Prediction p = s.getPredictions().get(i);
 
-            // Loop through each route
-            for (Trip[][] route : allPredictions) {
+                // Create a unique identifier for the route-direction combo by concatenating
+                // the direction ID and the route ID
+                String rd = p.getTrip().getDirection() + ":" + p.getRoute().getId();
 
-                // Get array of directions in order we want displayed
-                //  1. Inbound
-                //  2. Outbound
-                int[] directions = {Route.Direction.INBOUND, Route.Direction.OUTBOUND};
+                // If we haven't already processed this route-direction combo,
+                // then okay to display
+                if (!displayed.contains(rd)) {
+                    displayed.add(rd);
 
-                //Loop through each direction
-                for (int direction : directions) {
+                    ArrayList<Prediction> predictions = new ArrayList<>();
 
-                    // Get the next trip for current route going in current direction
-                    Trip trip = route[direction][0];
+                    predictions.add(p);
 
-                    // Check if there are trips for that route/direction
-                    if (trip != null) {
-
-                        // Check if we have already processed that route-direction
-                        // If not, continue to display trips
-                        if (!rd.contains(trip.getDirection() + "-" + trip.getRouteId())) {
-
-                            // Add predictions to the list to display
-                            predictionsListAdapter.add(route[direction]);
-
-                            // Add route-direction pair so we know these trips are already
-                            // displayed in the list
-                            rd.add(trip.getDirection() + "-" + trip.getRouteId());
+                    // Get the next prediction, too, if same route-direction
+                    if (i + 1 < s.getPredictions().size()) {
+                        Prediction p2 = s.getPredictions().get(i + 1);
+                        if (p2.getRoute().getId().equals(p.getRoute().getId()) &&
+                                p2.getTrip().getDirection() == p.getTrip().getDirection()) {
+                            predictions.add(p2);
                         }
                     }
+
+                    // Display in the list
+                    predictionsListAdapter.add(predictions);
                 }
             }
         }
+
+        // Set the OnItemClickListener for displaying ServiceAlerts
+        predictionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if (predictionsListAdapter.getItem(position) != null &&
+                        predictionsListAdapter.getItem(position).size() > 0) {
+                    Prediction p = predictionsListAdapter.getItem(position).get(0);
+
+                    if (p.getRoute().getServiceAlerts().size() > 0) {
+                        ArrayList<ServiceAlert> alerts = p.getRoute().getServiceAlerts();
+                        Collections.sort(alerts);
+
+                        // Construct the alerts dialog message
+                        StringBuilder alertMessage = new StringBuilder(alerts.get(0).getHeader());
+                        for (int i = 1; i < alerts.size(); i++) {
+                            alertMessage.append("\n\n").append(alerts.get(i).getHeader());
+                        }
+
+                        // Create alert dialog builder
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                        if (p.getRoute().getMode() == Mode.BUS)
+                            builder.setTitle(p.getRoute().getShortName());
+                        else
+                            builder.setTitle(p.getRoute().getLongName());
+
+                        builder.setMessage(alertMessage.toString());
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                }
+            }
+        });
 
         // Auto-scroll to the top
         predictionsListView.setSelection(0);
@@ -298,9 +299,8 @@ public class NearbyPredictionsFragment extends Fragment {
         // Set statuses
         setStatus(controller.getLastRefreshedDate(), "", false, false);
 
-        // If there are no predictions, show status to user
-        if (predictionsListAdapter.getCount() < 1) {
+        // If there are no values, show status to user
+        if (predictionsListAdapter.getCount() < 1)
             setStatus(new Date(), getResources().getString(R.string.no_predictions), false, false);
-        }
     }
 }

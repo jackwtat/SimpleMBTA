@@ -14,6 +14,7 @@
     <string name="getting_predictions">Getting Predictions&#8230;</string>
     <string name="loading_first_time">Loading For First Time&#8230;</string>
     <string name="refresh_canceled">Refresh Canceled</string>
+    <string name="updated">Last Updated</string>
 
     <!-- Error Messages -->
     <string name="no_location">Unable To Get Current Location</string>

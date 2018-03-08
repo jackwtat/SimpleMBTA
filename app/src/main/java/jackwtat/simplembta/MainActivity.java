@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getCurrentFragment().refreshPredictions();
+                getCurrentFragment().forceRefresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);

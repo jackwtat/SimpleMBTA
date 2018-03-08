@@ -15,7 +15,7 @@
         android:layout_marginRight="12dp">
 
         <TextView
-            android:id="@+id/route_text_view"
+            android:id="@+id/route_text_view_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -27,14 +27,28 @@
             tools:text="106" />
 
         <TextView
-            android:id="@+id/alert_indicator_text_view"
-            android:layout_width="wrap_content"
+            android:id="@+id/route_text_view_2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/route_text_view"
+            android:layout_below="@id/route_text_view_1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="6dp"
             android:gravity="center_horizontal"
-            android:text="@string/service_alert_advisory"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="108" />
+
+        <TextView
+            android:id="@+id/alert_indicator_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/route_text_view_2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal"
+            android:text="@string/service_alert_urgent"
             android:textColor="@color/ServiceAlert_Urgent"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -53,7 +67,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/primary_time_text_view"
+                android:id="@+id/time_text_view_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -64,12 +78,12 @@
                 tools:text="50 min" />
 
             <TextView
-                android:id="@+id/primary_destination_text_view"
+                android:id="@+id/destination_text_view_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="12dp"
-                android:layout_toStartOf="@id/primary_time_text_view"
+                android:layout_toStartOf="@id/time_text_view_1"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="Malden Center" />
@@ -82,7 +96,7 @@
             android:layout_marginTop="6dp">
 
             <TextView
-                android:id="@+id/secondary_time_text_view"
+                android:id="@+id/time_text_view_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -93,12 +107,12 @@
                 tools:text="75 min" />
 
             <TextView
-                android:id="@+id/secondary_destination_text_view"
+                android:id="@+id/destination_text_view_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="12dp"
-                android:layout_toStartOf="@id/secondary_time_text_view"
+                android:layout_toStartOf="@id/time_text_view_2"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="Wellington" />
@@ -117,7 +131,7 @@
                 android:layout_alignParentEnd="true">
 
                 <TextView
-                    android:id="@+id/tertiary_time_text_view"
+                    android:id="@+id/time_text_view_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="4dp"

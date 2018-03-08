@@ -3,7 +3,6 @@ package jackwtat.simplembta.controllers;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,13 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.api.PredictionsByStopQuery;
-import jackwtat.simplembta.mbta.api.RealTimeApi;
-import jackwtat.simplembta.mbta.api.ServiceAlertsQuery;
-import jackwtat.simplembta.mbta.data.ServiceAlert;
-import jackwtat.simplembta.mbta.data.Stop;
-import jackwtat.simplembta.mbta.data.Trip;
-import jackwtat.simplembta.mbta.database.MbtaDbHelper;
+import jackwtat.simplembta.mbta.api.v3.V3RealTimeApi;
+import jackwtat.simplembta.mbta.api.v3.queries.PredictionsAtStopsByLocation;
+import jackwtat.simplembta.mbta.structures.*;
 import jackwtat.simplembta.services.LocationProviderService;
 import jackwtat.simplembta.services.NetworkConnectivityService;
 
@@ -28,7 +23,7 @@ import jackwtat.simplembta.services.NetworkConnectivityService;
 public class NearbyPredictionsController {
     private final String LOG_TAG = "NPController";
 
-    // Time since last refresh before predictions can automatically refresh onResume, in seconds
+    // Time since last refresh before values can automatically refresh onResume, in seconds
     private final long MINIMUM_REFRESH_INTERVAL = 120;
 
     // Time between location updates, in seconds
@@ -37,11 +32,7 @@ public class NearbyPredictionsController {
     // Fastest time between location updates, in seconds
     private final long FASTEST_LOCATION_INTERVAL = 2;
 
-    // Maximum distance to stop in miles
-    private final double MAX_DISTANCE = .5;
-
-    private RealTimeApi realTimeApi;
-    private MbtaDbHelper mbtaDbHelper;
+    private V3RealTimeApi realTimeApi;
     private NetworkConnectivityService networkConnectivityService;
     private LocationProviderService locationProviderService;
     private PredictionsAsyncTask predictionsAsyncTask;
@@ -55,9 +46,7 @@ public class NearbyPredictionsController {
     private Date lastRefreshed;
 
     public NearbyPredictionsController(Context context) {
-        realTimeApi = new RealTimeApi(context.getString(R.string.mbta_realtime_api_key));
-
-        mbtaDbHelper = new MbtaDbHelper(context);
+        realTimeApi = new V3RealTimeApi(context.getString(R.string.v3_mbta_realtime_api_key));
 
         networkConnectivityService = new NetworkConnectivityService(context);
 
@@ -71,6 +60,7 @@ public class NearbyPredictionsController {
                 new Date().getTime() - lastRefreshed.getTime() >= 1000 * MINIMUM_REFRESH_INTERVAL) {
 
             refreshing = true;
+            onProgressUpdateListener.onProgressUpdate(0);
 
             if (!networkConnectivityService.isConnected()) {
                 refreshing = false;
@@ -159,31 +149,12 @@ public class NearbyPredictionsController {
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
+            PredictionsAtStopsByLocation query = new PredictionsAtStopsByLocation(realTimeApi);
 
-            // Get all stops within the specified maximum distance from user's location
-            List<Stop> stops = mbtaDbHelper.getStopsByLocation(locations[0], MAX_DISTANCE);
+            HashMap<String, Stop> stops = query.get(
+                    locations[0].getLatitude(), locations[0].getLongitude());
 
-            // Get all service alerts
-            HashMap<String, ArrayList<ServiceAlert>> alerts = new ServiceAlertsQuery(realTimeApi).get();
-
-            // Get predicted trips for each stop
-            PredictionsByStopQuery pbsQuery = new PredictionsByStopQuery(realTimeApi);
-            for (int i = 0; i < stops.size(); i++) {
-                Stop stop = stops.get(i);
-
-                stop.addTrips(pbsQuery.get(stop.getId()));
-
-                // Add alerts to trips whose route has alerts
-                for (Trip trip : stop.getTrips()) {
-                    if (alerts.containsKey(trip.getRouteId())) {
-                        trip.setAlerts(alerts.get(trip.getRouteId()));
-                    }
-                }
-
-                publishProgress((int) (100 * (i + 1) / stops.size()));
-            }
-
-            return stops;
+            return new ArrayList<>(stops.values());
         }
 
         @Override

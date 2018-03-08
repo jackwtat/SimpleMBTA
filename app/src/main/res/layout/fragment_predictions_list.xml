@@ -13,18 +13,33 @@
         android:max="100" />
 
     <TextView
-        android:id="@+id/status_message_text_view"
+        android:id="@+id/status_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:gravity="end"
-        android:paddingBottom="4dp"
+        android:paddingBottom="1dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:paddingTop="4dp"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Updated 12:00 AM" />
+
+    <TextView
+        android:id="@+id/status_message_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/status_time_text_view"
+        android:gravity="end"
+        android:paddingBottom="4dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="1dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Getting predictions&#8230;" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/predictions_swipe_refresh_layout"

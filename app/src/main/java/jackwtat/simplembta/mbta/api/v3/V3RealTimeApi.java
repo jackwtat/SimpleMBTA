@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.api;
+package jackwtat.simplembta.mbta.api.v3;
 
 import android.util.Log;
 
@@ -10,40 +10,39 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 /**
- * Created by jackw on 11/28/2017.
+ * Created by jackw on 1/16/2018.
  */
 
-public class RealTimeApi implements RestApiGettable {
+public class V3RealTimeApi {
     private static final String LOG_TAG = "RealTime API";
 
-    //URL for querying the MBTA realTime API
-    private static final String MBTA_URL = "http://realtime.mbta.com/developer/api/v2/";
+    // URL for querying the MBTA realTime API
+    private static final String MBTA_URL = "https://api-v3.mbta.com/";
 
-    //Format specification
-    private static final String RESPONSE_FORMAT = "&format=json";
-
+    // The API key
     private String apiKey;
 
-    public RealTimeApi(String apiKey){
+    public V3RealTimeApi(String apiKey) {
         this.apiKey = apiKey;
     }
 
     // Queries the MBTA API and returns the response as a string representation of a JSON object
-    @Override
     public String get(String query, HashMap<String, String> params) {
         // Build get URL as String
-        String requestUrl = MBTA_URL + query + "?api_key=" + apiKey + RESPONSE_FORMAT;
+        StringBuilder requestUrl = new StringBuilder(MBTA_URL + query + "?api_key=" + apiKey);
 
         // Append the parameters and respective arguments to the get URL
-        for(String param : params.keySet()){
+        for (String param : params.keySet()) {
             String arg = params.get(param);
-            requestUrl += "&" + param + "=" + arg;
+            requestUrl.append("&").append(param).append("=").append(arg);
         }
 
-        URL url = createUrl(requestUrl);
+        URL url = createUrl(requestUrl.toString());
 
         String jsonResponse = null;
         try {
@@ -97,7 +96,7 @@ public class RealTimeApi implements RestApiGettable {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving JSON results.", e);
+            Log.e(LOG_TAG, "Problem making HTTP request.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -128,5 +127,24 @@ public class RealTimeApi implements RestApiGettable {
             }
         }
         return output.toString();
+    }
+
+    /**
+     * Convert Date/Time from MBTA's string format to Java's Data object
+     */
+
+    public static Date parseDate(String date) {
+        try {
+            int year = Integer.parseInt(date.substring(0, 4));
+            int month = Integer.parseInt(date.substring(5, 7)) - 1;
+            int day = Integer.parseInt(date.substring(8, 10));
+            int hour = Integer.parseInt(date.substring(11, 13));
+            int minute = Integer.parseInt(date.substring(14, 16));
+            int second = Integer.parseInt(date.substring(17, 19));
+
+            return new GregorianCalendar(year, month, day, hour, minute, second).getTime();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
