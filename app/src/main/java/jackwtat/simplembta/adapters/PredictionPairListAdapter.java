@@ -1,10 +1,11 @@
 package jackwtat.simplembta.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
         }
 
         // Check if there are no Predictions
-        if (predictions == null || predictions.size() < 1 ) {
+        if (predictions == null || predictions.size() < 1) {
             return listItemView;
         }
 
@@ -52,8 +53,7 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
         Prediction p1 = predictions.get(0);
 
         // Initialize all the views
-        TextView routeName_1 = listItemView.findViewById(R.id.route_text_view_1);
-        TextView routeName_2 = listItemView.findViewById(R.id.route_text_view_2);
+        TextView routeName = listItemView.findViewById(R.id.route_text_view);
         TextView stopName = listItemView.findViewById(R.id.stop_text_view);
         TextView alertIndicator = listItemView.findViewById(R.id.alert_indicator_text_view);
         TextView destination_1 = listItemView.findViewById(R.id.destination_text_view_1);
@@ -63,7 +63,6 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
         TextView departureTime_3 = listItemView.findViewById(R.id.time_text_view_3);
 
         // Hide the views that have optional values for now
-        routeName_2.setVisibility(View.GONE);
         destination_2.setVisibility(View.GONE);
         departureTime_2.setVisibility(View.GONE);
         departureTime_3.setVisibility(View.GONE);
@@ -73,15 +72,19 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
         stopName.setText(p1.getStopName());
 
         // Set the route name
-        setRouteView(p1.getRoute(), routeName_1);
+        setRouteView(p1.getRoute(), routeName);
 
         // Set the destination and departure time for the first prediction
         setPredictionViews(p1, departureTime_1, destination_1);
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : p1.getRoute().getServiceAlerts()) {
-            if (alert.isActive()) {
-                alertIndicator.setVisibility(View.VISIBLE);
+            alertIndicator.setVisibility(View.VISIBLE);
+            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW || alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                alertIndicator.setText(getContext().getResources().getString(R.string.service_alert_urgent));
+                break;
+            } else {
+                alertIndicator.setText(getContext().getResources().getString(R.string.service_alert_advisory));
             }
         }
 
@@ -103,8 +106,11 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
     }
 
     private void setRouteView(Route rte, TextView routeView) {
+        Drawable bkgd = getContext().getResources().getDrawable(R.drawable.route_background);
+        DrawableCompat.setTint(bkgd, Color.parseColor(rte.getColor()));
+        routeView.setBackground(bkgd);
+
         routeView.setTextColor(Color.parseColor(rte.getTextColor()));
-        routeView.setBackgroundColor(Color.parseColor(rte.getColor()));
 
         String routeId = rte.getId();
         Mode mode = rte.getMode();

@@ -9,16 +9,17 @@
 
     <RelativeLayout
         android:id="@+id/prediction_left_side"
-        android:layout_width="60dp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp">
 
         <TextView
-            android:id="@+id/route_text_view_1"
+            android:id="@+id/route_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/route_background"
             android:gravity="center_horizontal"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
@@ -27,24 +28,10 @@
             tools:text="106" />
 
         <TextView
-            android:id="@+id/route_text_view_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/route_text_view_1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="6dp"
-            android:gravity="center_horizontal"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="108" />
-
-        <TextView
             android:id="@+id/alert_indicator_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/route_text_view_2"
+            android:layout_below="@id/route_text_view"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="6dp"
             android:gravity="center_horizontal"

@@ -11,19 +11,35 @@ import java.util.Date;
  */
 
 public class ServiceAlert implements Comparable<ServiceAlert> {
+
+    public enum Lifecycle {NEW, ONGOING, ONGOING_UPCOMING, UPCOMING, UNKNOWN}
+
     private String id = "";
     private String header = "";
     private String effect = "";
     private int severity = 0;
+    private Lifecycle lifecycle = Lifecycle.UNKNOWN;
     private ArrayList<String> affectedRoutes = new ArrayList<>();
     private ArrayList<Mode> blanketModes = new ArrayList<>();
     private ArrayList<ActivePeriod> activePeriods = new ArrayList<>();
 
-    public ServiceAlert(String id, String header, String effect, int severity) {
+    public ServiceAlert(String id, String header, String effect, int severity, String lifecycle) {
         this.id = id;
         this.header = header;
         this.effect = effect;
         this.severity = severity;
+
+        if (lifecycle.toUpperCase().equals("NEW")) {
+            this.lifecycle = Lifecycle.NEW;
+        } else if (lifecycle.toUpperCase().equals("ONGOING")) {
+            this.lifecycle = Lifecycle.ONGOING;
+        } else if (lifecycle.toUpperCase().equals("ONGOING_UPCOMING")) {
+            this.lifecycle = Lifecycle.ONGOING_UPCOMING;
+        } else if (lifecycle.toUpperCase().equals("UPCOMING")) {
+            this.lifecycle = Lifecycle.UPCOMING;
+        } else {
+            this.lifecycle = Lifecycle.UNKNOWN;
+        }
     }
 
     public String getId() {
@@ -40,6 +56,10 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
 
     public int getSeverity() {
         return severity;
+    }
+
+    public Lifecycle getLifecycle() {
+        return lifecycle;
     }
 
     public ArrayList<String> getAffectedRoutes() {
@@ -77,11 +97,11 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
 
     @Override
     public int compareTo(@NonNull ServiceAlert serviceAlert) {
-        if (this.severity != serviceAlert.getSeverity()){
+        if (this.severity != serviceAlert.getSeverity()) {
             return Integer.compare(serviceAlert.getSeverity(), this.severity);
-        } else if (this.isActive() && !serviceAlert.isActive()){
+        } else if (this.isActive() && !serviceAlert.isActive()) {
             return -1;
-        } else  if (!this.isActive() && serviceAlert.isActive()){
+        } else if (!this.isActive() && serviceAlert.isActive()) {
             return 1;
         } else {
             return 0;

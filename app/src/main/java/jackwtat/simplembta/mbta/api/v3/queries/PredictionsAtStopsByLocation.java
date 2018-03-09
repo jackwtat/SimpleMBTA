@@ -114,8 +114,10 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
                             String header = jAttributes.getString("short_header");
                             String effect = jAttributes.getString("effect");
                             int severity = jAttributes.getInt("severity");
+                            String lifecycle = jAttributes.getString("lifecycle");
 
-                            ServiceAlert alert = new ServiceAlert(id, header, effect, severity);
+                            ServiceAlert alert = new ServiceAlert(
+                                    id, header, effect, severity, lifecycle);
 
                             JSONArray jRoutes = jAttributes.getJSONArray("informed_entity");
 
@@ -165,8 +167,8 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
             // Add service alerts to their respective routes
             for (ServiceAlert alert : alerts) {
                 for (Route route : routes.values()) {
-                    if(alert.getAffectedRoutes().contains(route.getId())||
-                            alert.getBlanketModes().contains(route.getMode())){
+                    if (alert.getAffectedRoutes().contains(route.getId()) ||
+                            alert.getBlanketModes().contains(route.getMode())) {
                         route.addServiceAlert(alert);
                     }
                 }
