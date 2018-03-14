@@ -26,9 +26,9 @@ public class PredictionsByLocationQuery extends Query {
     private static final String LOG_TAG = "PredByLocationQuery";
 
     HashMap<String, Stop> stops = new HashMap<>();
-    ArrayList<ServiceAlert> alerts = new ArrayList<>();
     HashMap<String, Route> routes = new HashMap<>();
     HashMap<String, Trip> trips = new HashMap<>();
+    ArrayList<ServiceAlert> alerts = new ArrayList<>();
     ArrayList<String> parentStopIds = new ArrayList<>();
 
     public PredictionsByLocationQuery(String apiKey) {
@@ -40,7 +40,7 @@ public class PredictionsByLocationQuery extends Query {
 
         params.put("filter[latitude]", Double.toString(latitude));
         params.put("filter[longitude]", Double.toString(longitude));
-        params.put("include", "stop,route,trip,alerts");
+        params.put("include", "stop,route,trip");
 
         String jsonResponse = super.get("predictions", params);
 
@@ -105,45 +105,6 @@ public class PredictionsByLocationQuery extends Query {
 
                             trips.put(id, new Trip(id, direction, destination));
 
-                        } else if (type.equals("alert")) {
-                            String header = jAttributes.getString("short_header");
-                            String effect = jAttributes.getString("effect");
-                            int severity = jAttributes.getInt("severity");
-                            String lifecycle = jAttributes.getString("lifecycle");
-
-                            ServiceAlert alert = new ServiceAlert(
-                                    id, header, effect, severity, lifecycle);
-
-                            JSONArray jRoutes = jAttributes.getJSONArray("informed_entity");
-
-                            for (int j = 0; j < jRoutes.length(); j++) {
-                                JSONObject jAffectedRoute = jRoutes.getJSONObject(j);
-                                if (jAffectedRoute.has("route_type")) {
-                                    if (jAffectedRoute.has("route")) {
-                                        alert.addAffectedRoute(
-                                                jAffectedRoute.getString("route"));
-                                    } else {
-                                        alert.addBlanketMode(Mode.getModeFromType(
-                                                jAffectedRoute.getInt("route_type")));
-                                    }
-                                }
-                            }
-
-                            JSONArray jActivePeriods =
-                                    jAttributes.getJSONArray("active_period");
-
-                            for (int j = 0; j < jActivePeriods.length(); j++) {
-                                JSONObject jActiveTimes = jActivePeriods.getJSONObject(j);
-                                String startTime = jActiveTimes.getString("start");
-                                String endTime = jActiveTimes.getString("end");
-
-                                alert.addActivePeriod(
-                                        Query.parseDate(startTime),
-                                        Query.parseDate(endTime));
-                            }
-
-                            alerts.add(alert);
-
                         } else {
                             Log.e(LOG_TAG, "Unknown linked object type:\n" +
                                     jLinkedObj.toString());
@@ -160,6 +121,7 @@ public class PredictionsByLocationQuery extends Query {
             }
 
             // Add service alerts to their respective routes
+            alerts = new ServiceAlertsByRouteQuery(apiKey).get(new ArrayList<>(routes.keySet()));
             for (ServiceAlert alert : alerts) {
                 for (Route route : routes.values()) {
                     if (alert.getAffectedRoutes().contains(route.getId()) ||
