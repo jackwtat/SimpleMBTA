@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.structures;
+package jackwtat.simplembta.mbta.structure;
 
 /**
  * Created by jackw on 2/22/2018.

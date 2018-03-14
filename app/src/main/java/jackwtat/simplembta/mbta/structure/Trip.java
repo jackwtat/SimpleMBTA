@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.structures;
+package jackwtat.simplembta.mbta.structure;
 
 import android.support.annotation.NonNull;
 

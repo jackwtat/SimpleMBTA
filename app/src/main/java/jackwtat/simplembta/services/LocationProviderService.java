@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -26,7 +27,9 @@ public class LocationProviderService {
     private final String LOG_TAG = "LocationProviderService";
 
     private Context context;
+    private FusedLocationProviderClient locationClient;
     private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
     private OnUpdateSuccessListener onUpdateSuccessListener;
     private OnUpdateFailedListener onUpdateFailedListener;
@@ -34,10 +37,19 @@ public class LocationProviderService {
     public LocationProviderService(Context context, long updateInterval, long fastestInterval) {
         this.context = context;
 
+        locationClient = LocationServices.getFusedLocationProviderClient(context);
+
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(updateInterval * 1000);
         locationRequest.setFastestInterval(fastestInterval * 1000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                locationResult.getLastLocation();
+            }
+        };
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
@@ -48,22 +60,14 @@ public class LocationProviderService {
 
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.getFusedLocationProviderClient(context).requestLocationUpdates(
+            locationClient.requestLocationUpdates(
                     locationRequest,
-                    new LocationCallback() {
-                        @Override
-                        public void onLocationResult(LocationResult locationResult) {
-                            locationResult.getLastLocation();
-                        }
-                    },
+                    locationCallback,
                     Looper.myLooper());
         }
     }
 
     public void getLastLocation() {
-        FusedLocationProviderClient locationClient =
-                LocationServices.getFusedLocationProviderClient(context);
-
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationClient.getLastLocation()
@@ -86,6 +90,8 @@ public class LocationProviderService {
         } else {
             onUpdateFailedListener.onUpdateFailed();
         }
+
+        locationClient.removeLocationUpdates(locationCallback);
     }
 
     // Register OnUpdateSuccessListener with this service

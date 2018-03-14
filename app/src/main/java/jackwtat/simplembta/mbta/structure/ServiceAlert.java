@@ -1,8 +1,7 @@
-package jackwtat.simplembta.mbta.structures;
+package jackwtat.simplembta.mbta.structure;
 
 import android.support.annotation.NonNull;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 

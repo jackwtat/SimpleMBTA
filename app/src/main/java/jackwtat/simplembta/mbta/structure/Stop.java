@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.structures;
+package jackwtat.simplembta.mbta.structure;
 
 import android.support.annotation.NonNull;
 
@@ -143,7 +143,7 @@ public class Stop implements Comparable<Stop> {
     }
 
     public void addPredictions(List<Prediction> predictions) {
-        predictions.addAll(predictions);
+        this.predictions.addAll(predictions);
     }
 
     private double calculateDistance(double originLat, double originLon) {

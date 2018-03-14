@@ -16,10 +16,10 @@ import android.graphics.Color;
 import java.util.ArrayList;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.structures.Mode;
-import jackwtat.simplembta.mbta.structures.Prediction;
-import jackwtat.simplembta.mbta.structures.Route;
-import jackwtat.simplembta.mbta.structures.ServiceAlert;
+import jackwtat.simplembta.mbta.structure.Mode;
+import jackwtat.simplembta.mbta.structure.Prediction;
+import jackwtat.simplembta.mbta.structure.Route;
+import jackwtat.simplembta.mbta.structure.ServiceAlert;
 
 /**
  * Created by jackw on 12/26/2017.
@@ -108,8 +108,8 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
     private void setRouteView(Route rte, TextView routeView) {
         Drawable bkgd = getContext().getResources().getDrawable(R.drawable.route_background);
         DrawableCompat.setTint(bkgd, Color.parseColor(rte.getColor()));
-        routeView.setBackground(bkgd);
 
+        routeView.setBackground(bkgd);
         routeView.setTextColor(Color.parseColor(rte.getTextColor()));
 
         String routeId = rte.getId();
@@ -117,40 +117,44 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
 
         if (mode == Mode.HEAVY_RAIL) {
             if (routeId.equals("Red"))
-                routeView.setText("RL");
+                routeView.setText(getContext().getResources().getString(R.string.red_line_short_name));
             else if (routeId.equals("Orange"))
-                routeView.setText("OL");
+                routeView.setText(getContext().getResources().getString(R.string.orange_line_short_name));
             else if (routeId.equals("Blue"))
-                routeView.setText("BL");
+                routeView.setText(getContext().getResources().getString(R.string.blue_line_short_name));
+            else
+                routeView.setText(routeId);
 
         } else if (mode == Mode.LIGHT_RAIL) {
             if (routeId.equals("Green-B"))
-                routeView.setText("GL-B");
+                routeView.setText(getContext().getResources().getString(R.string.green_line_b_short_name));
             else if (routeId.equals("Green-C"))
-                routeView.setText("GL-C");
+                routeView.setText(getContext().getResources().getString(R.string.green_line_c_short_name));
             else if (routeId.equals("Green-D"))
-                routeView.setText("GL-D");
+                routeView.setText(getContext().getResources().getString(R.string.green_line_d_short_name));
             else if (routeId.equals("Green-E"))
-                routeView.setText("GL-E");
+                routeView.setText(getContext().getResources().getString(R.string.green_line_e_short_name));
             else if (routeId.equals("Mattapan"))
-                routeView.setText("RL-M");
+                routeView.setText(getContext().getResources().getString(R.string.red_line_mattapan_short_name));
+            else
+                routeView.setText(routeId);
 
         } else if (mode == Mode.BUS) {
             if (routeId.equals("746"))
-                routeView.setText("SL");
+                routeView.setText(getContext().getResources().getString(R.string.silver_line_waterfront_short_name));
             else if (!rte.getShortName().equals("") && !rte.getShortName().equals("null"))
                 routeView.setText(rte.getShortName());
             else
-                routeView.setText(rte.getId());
+                routeView.setText(routeId);
 
         } else if (mode == Mode.COMMUTER_RAIL) {
-            routeView.setText("CR");
+            routeView.setText(getContext().getResources().getString(R.string.commuter_rail_short_name));
 
         } else if (mode == Mode.FERRY) {
-            routeView.setText("BOAT");
+            routeView.setText(getContext().getResources().getString(R.string.ferry_short_name));
 
         } else {
-            routeView.setText(rte.getId());
+            routeView.setText(routeId);
         }
     }
 
@@ -159,8 +163,8 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
         departureTimeView.setVisibility(View.VISIBLE);
 
         if (prediction.getDepartureTime() != null) {
-            if (prediction.timeUntilDeparture() > 0) {
-                String dt = (prediction.timeUntilDeparture() / 60000) + " min";
+            if (prediction.getTimeUntilDeparture() > 0) {
+                String dt = (prediction.getTimeUntilDeparture() / 60000) + " min";
                 departureTimeView.setText(dt);
             } else {
                 departureTimeView.setText("0 min");
@@ -171,7 +175,7 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
                 destinationView.setText(prediction.getTrip().getDestination());
                 destinationView.setVisibility(View.VISIBLE);
 
-                if (prediction.timeUntilDeparture() / 60000 <= 5) {
+                if (prediction.getTimeUntilDeparture() / 60000 <= 5) {
                     departureTimeView.setBackgroundColor(ContextCompat.getColor(getContext(),
                             R.color.ApproachingAlert));
                     departureTimeView.setTextColor(ContextCompat.getColor(getContext(),

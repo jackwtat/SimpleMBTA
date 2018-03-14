@@ -1,6 +1,7 @@
 package jackwtat.simplembta.fragments;
 
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -32,10 +33,11 @@ import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErr
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpdateListener;
-import jackwtat.simplembta.mbta.structures.Mode;
-import jackwtat.simplembta.mbta.structures.Prediction;
-import jackwtat.simplembta.mbta.structures.ServiceAlert;
-import jackwtat.simplembta.mbta.structures.Stop;
+import jackwtat.simplembta.mbta.structure.Mode;
+import jackwtat.simplembta.mbta.structure.Prediction;
+import jackwtat.simplembta.mbta.structure.Route;
+import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.mbta.structure.Stop;
 
 
 /**
@@ -54,6 +56,7 @@ public class NearbyPredictionsFragment extends Fragment {
     private TextView statusTimeTextView;
     private TextView errorTextView;
     private ProgressBar progressBar;
+    private AlertDialog serviceAlertsDialog;
 
     private NearbyPredictionsController controller;
     private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
@@ -153,6 +156,16 @@ public class NearbyPredictionsFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        // Hide alert dialog if user has it open
+        if (serviceAlertsDialog != null) {
+            serviceAlertsDialog.cancel();
+        }
+    }
+
+    @Override
     public void onStop() {
         if (controller.isRunning()) {
             onRefreshCanceled();
@@ -210,6 +223,11 @@ public class NearbyPredictionsFragment extends Fragment {
     private void publishPredictions(List<Stop> stops) {
         // Clear all previous values from list
         predictionsListAdapter.clear();
+
+        // Hide alerts dialog if user has it open
+        if (serviceAlertsDialog != null) {
+            serviceAlertsDialog.cancel();
+        }
 
         // Initialize the data structure that stores route-direction combos that have been processed
         ArrayList<String> displayed = new ArrayList<>();
@@ -273,18 +291,37 @@ public class NearbyPredictionsFragment extends Fragment {
                             alertMessage.append("\n\n").append(alerts.get(i).getHeader());
                         }
 
+                        Route route = p.getRoute();
+
+                        // Set the route name
+                        LayoutInflater inflater = getLayoutInflater();
+                        TextView routeNameView = (TextView) inflater.inflate(
+                                R.layout.route_name, null);
+                        StringBuilder name = new StringBuilder();
+
+                        routeNameView.setBackgroundColor(Color.parseColor(route.getColor()));
+                        routeNameView.setTextColor(Color.parseColor(route.getTextColor()));
+
+                        if (route.getMode() == Mode.BUS && !route.getLongName().contains("Silver Line"))
+                            if (!route.getShortName().equals("") &&
+                                    !route.getShortName().equals("null"))
+                                name.append(getResources().getString(R.string.route)).append(" ").append(route.getShortName());
+                            else
+                                name.append(route.getId());
+
+                        else
+                            name.append(route.getLongName());
+
+                        routeNameView.setText(name.toString());
+
                         // Create alert dialog builder
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                        if (p.getRoute().getMode() == Mode.BUS)
-                            builder.setTitle(p.getRoute().getShortName());
-                        else
-                            builder.setTitle(p.getRoute().getLongName());
-
                         builder.setMessage(alertMessage.toString());
 
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        serviceAlertsDialog = builder.create();
+                        serviceAlertsDialog.setCustomTitle(routeNameView);
+                        serviceAlertsDialog.setMessage(alertMessage.toString());
+                        serviceAlertsDialog.show();
                     }
                 }
             }

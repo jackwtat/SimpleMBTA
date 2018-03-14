@@ -1,7 +1,6 @@
-package jackwtat.simplembta.mbta.structures;
+package jackwtat.simplembta.mbta.structure;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.Date;
 
@@ -17,6 +16,7 @@ public class Prediction implements Comparable<Prediction> {
     private Route route = null;
     private Trip trip = null;
     private Date departureTime = null;
+    private long timeUntilDeparture = 0;
 
     public Prediction(String id, String stopId, String stopName, Route route, Trip trip,
                       Date departureTime) {
@@ -26,6 +26,9 @@ public class Prediction implements Comparable<Prediction> {
         this.route = route;
         this.trip = trip;
         this.departureTime = departureTime;
+        if(departureTime != null) {
+            this.timeUntilDeparture = departureTime.getTime() - new Date().getTime();
+        }
     }
 
     public String getId() {
@@ -52,8 +55,8 @@ public class Prediction implements Comparable<Prediction> {
         return departureTime;
     }
 
-    public long timeUntilDeparture() {
-        return departureTime.getTime() - new Date().getTime();
+    public long getTimeUntilDeparture(){
+        return timeUntilDeparture;
     }
 
     @Override

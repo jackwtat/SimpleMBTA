@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.api.v3;
+package jackwtat.simplembta.mbta.v3api;
 
 import android.util.Log;
 
@@ -18,16 +18,16 @@ import java.util.HashMap;
  * Created by jackw on 1/16/2018.
  */
 
-public class V3RealTimeApi {
-    private static final String LOG_TAG = "RealTime API";
+public class Query {
+    private static final String LOG_TAG = "V3RealTimeAPIQuery";
 
     // URL for querying the MBTA realTime API
     private static final String MBTA_URL = "https://api-v3.mbta.com/";
 
     // The API key
-    private String apiKey;
+    protected String apiKey;
 
-    public V3RealTimeApi(String apiKey) {
+    public Query(String apiKey) {
         this.apiKey = apiKey;
     }
 

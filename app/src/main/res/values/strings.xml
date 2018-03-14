@@ -8,16 +8,29 @@
     <string name="service_alert_urgent">Alert</string>
 
     <!-- Status Messages -->
-    <string name="loading_database">Loading Database&#8230;</string>
     <string name="getting_location">Getting Location&#8230;</string>
-    <string name="getting_nearby_stops">Finding Nearby Stops&#8230;</string>
     <string name="getting_predictions">Getting Predictions&#8230;</string>
-    <string name="loading_first_time">Loading For First Time&#8230;</string>
     <string name="refresh_canceled">Refresh Canceled</string>
     <string name="updated">Last Updated</string>
 
     <!-- Error Messages -->
     <string name="no_location">Unable To Get Current Location</string>
-    <string name="no_network_connectivity">No Internet Connection</string>
+    <string name="no_network_connectivity">Unable To Connect To Internet</string>
     <string name="no_predictions">No Predictions To Show</string>
+
+    <!-- Route Short Names -->
+    <string name="red_line_short_name">RL</string>
+    <string name="red_line_mattapan_short_name">RL-M</string>
+    <string name="orange_line_short_name">OL</string>
+    <string name="blue_line_short_name">BL</string>
+    <string name="green_line_b_short_name">GL-B</string>
+    <string name="green_line_c_short_name">GL-C</string>
+    <string name="green_line_d_short_name">GL-D</string>
+    <string name="green_line_e_short_name">GL-E</string>
+    <string name="silver_line_waterfront_short_name">SL-W</string>
+    <string name="commuter_rail_short_name">CR</string>
+    <string name="ferry_short_name">FERRY</string>
+
+    <!-- Miscellaneous Strings -->
+    <string name="route">Route</string>
 </resources>

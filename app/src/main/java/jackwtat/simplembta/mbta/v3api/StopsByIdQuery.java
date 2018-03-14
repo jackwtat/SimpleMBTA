@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.api.v3.queries;
+package jackwtat.simplembta.mbta.v3api;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,19 +10,17 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import jackwtat.simplembta.mbta.api.v3.RestApiGetQuery;
-import jackwtat.simplembta.mbta.api.v3.V3RealTimeApi;
-import jackwtat.simplembta.mbta.structures.Stop;
+import jackwtat.simplembta.mbta.structure.Stop;
 
 /**
  * Created by jackw on 3/2/2018.
  */
 
-public class StopsById extends RestApiGetQuery {
+public class StopsByIdQuery extends Query {
     private static final String LOG_TAG = "StopsByIdQuery";
 
-    public StopsById(V3RealTimeApi api) {
-        super(api, "stops");
+    public StopsByIdQuery(String apiKey) {
+        super(apiKey);
     }
 
     public HashMap<String, Stop> get(List<String> stopIds) {
@@ -34,7 +32,7 @@ public class StopsById extends RestApiGetQuery {
         HashMap<String, String> params = new HashMap<>();
         params.put("filter[id]", arg.toString());
 
-        String jsonResponse = super.get(params);
+        String jsonResponse = super.get("stops", params);
 
         HashMap<String, Stop> stops = new HashMap<>();
 

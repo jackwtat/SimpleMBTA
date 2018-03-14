@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.api.v3.queries;
+package jackwtat.simplembta.mbta.v3api;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,24 +11,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import jackwtat.simplembta.mbta.api.v3.RestApiGetQuery;
-import jackwtat.simplembta.mbta.api.v3.V3RealTimeApi;
-import jackwtat.simplembta.mbta.structures.Prediction;
-import jackwtat.simplembta.mbta.structures.ServiceAlert;
-import jackwtat.simplembta.mbta.structures.Mode;
-import jackwtat.simplembta.mbta.structures.Route;
-import jackwtat.simplembta.mbta.structures.Stop;
-import jackwtat.simplembta.mbta.structures.Trip;
+import jackwtat.simplembta.mbta.structure.Prediction;
+import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.mbta.structure.Mode;
+import jackwtat.simplembta.mbta.structure.Route;
+import jackwtat.simplembta.mbta.structure.Stop;
+import jackwtat.simplembta.mbta.structure.Trip;
 
 /**
  * Created by jackw on 1/18/2018.
  */
 
-public class PredictionsAtStopsByLocation extends RestApiGetQuery {
-    private static final String LOG_TAG = "PredsByLocationQuery";
+public class PredictionsByLocationQuery extends Query {
+    private static final String LOG_TAG = "PredByLocationQuery";
 
-    public PredictionsAtStopsByLocation(V3RealTimeApi api) {
-        super(api, "predictions");
+    HashMap<String, Stop> stops = new HashMap<>();
+    ArrayList<ServiceAlert> alerts = new ArrayList<>();
+    HashMap<String, Route> routes = new HashMap<>();
+    HashMap<String, Trip> trips = new HashMap<>();
+    ArrayList<String> parentStopIds = new ArrayList<>();
+
+    public PredictionsByLocationQuery(String apiKey) {
+        super(apiKey);
     }
 
     public HashMap<String, Stop> get(double latitude, double longitude) {
@@ -38,9 +42,7 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
         params.put("filter[longitude]", Double.toString(longitude));
         params.put("include", "stop,route,trip,alerts");
 
-        String jsonResponse = super.get(params);
-
-        HashMap<String, Stop> stops = new HashMap<>();
+        String jsonResponse = super.get("predictions", params);
 
         if (TextUtils.isEmpty(jsonResponse)) {
             return stops;
@@ -48,13 +50,6 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
 
         try {
             JSONObject jRoot = new JSONObject(jsonResponse);
-
-            // Create temporary data structures for storing Routes and Trips
-            ArrayList<String> parentStopIds = new ArrayList<>();
-
-            ArrayList<ServiceAlert> alerts = new ArrayList<>();
-            HashMap<String, Route> routes = new HashMap<>();
-            HashMap<String, Trip> trips = new HashMap<>();
 
             // Parse linked data (Stop, Route, and Trip)
             if (jRoot.has("included")) {
@@ -143,8 +138,8 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
                                 String endTime = jActiveTimes.getString("end");
 
                                 alert.addActivePeriod(
-                                        V3RealTimeApi.parseDate(startTime),
-                                        V3RealTimeApi.parseDate(endTime));
+                                        Query.parseDate(startTime),
+                                        Query.parseDate(endTime));
                             }
 
                             alerts.add(alert);
@@ -176,7 +171,7 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
 
             // Get Parent Stops data
             if (parentStopIds.size() > 0) {
-                HashMap<String, Stop> parentStops = new StopsById(api).get(parentStopIds);
+                HashMap<String, Stop> parentStops = new StopsByIdQuery(apiKey).get(parentStopIds);
 
                 for (Stop s : parentStops.values()) {
                     s.setDistance(latitude, longitude);
@@ -223,7 +218,7 @@ public class PredictionsAtStopsByLocation extends RestApiGetQuery {
                                     .getString("id"));
 
                             if (relatedStop != null && relatedRoute != null && relatedTrip != null) {
-                                Date deptTime = V3RealTimeApi.parseDate(departure);
+                                Date deptTime = Query.parseDate(departure);
 
                                 if (relatedStop.hasParentStop()) {
                                     Stop parentStop = stops.get(relatedStop.getParentStopId());

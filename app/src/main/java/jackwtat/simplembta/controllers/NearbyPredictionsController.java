@@ -6,13 +6,11 @@ import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.api.v3.V3RealTimeApi;
-import jackwtat.simplembta.mbta.api.v3.queries.PredictionsAtStopsByLocation;
-import jackwtat.simplembta.mbta.structures.*;
+import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
+import jackwtat.simplembta.mbta.structure.*;
 import jackwtat.simplembta.services.LocationProviderService;
 import jackwtat.simplembta.services.NetworkConnectivityService;
 
@@ -24,7 +22,7 @@ public class NearbyPredictionsController {
     private final String LOG_TAG = "NPController";
 
     // Time since last refresh before values can automatically refresh onResume, in seconds
-    private final long MINIMUM_REFRESH_INTERVAL = 120;
+    private final long MINIMUM_REFRESH_INTERVAL = 60;
 
     // Time between location updates, in seconds
     private final long LOCATION_UPDATE_INTERVAL = 15;
@@ -32,7 +30,7 @@ public class NearbyPredictionsController {
     // Fastest time between location updates, in seconds
     private final long FASTEST_LOCATION_INTERVAL = 2;
 
-    private V3RealTimeApi realTimeApi;
+    private String realTimeApiKey;
     private NetworkConnectivityService networkConnectivityService;
     private LocationProviderService locationProviderService;
     private PredictionsAsyncTask predictionsAsyncTask;
@@ -46,12 +44,28 @@ public class NearbyPredictionsController {
     private Date lastRefreshed;
 
     public NearbyPredictionsController(Context context) {
-        realTimeApi = new V3RealTimeApi(context.getString(R.string.v3_mbta_realtime_api_key));
+        realTimeApiKey = context.getString(R.string.v3_mbta_realtime_api_key);
 
         networkConnectivityService = new NetworkConnectivityService(context);
 
         locationProviderService = new LocationProviderService(context, LOCATION_UPDATE_INTERVAL,
                 FASTEST_LOCATION_INTERVAL);
+
+        locationProviderService.setOnUpdateSuccessListener(new LocationProviderService.OnUpdateSuccessListener() {
+            @Override
+            public void onUpdateSuccess(Location location) {
+                predictionsAsyncTask = new PredictionsAsyncTask();
+                predictionsAsyncTask.execute(location);
+            }
+        });
+
+        locationProviderService.setOnUpdateFailedListener(new LocationProviderService.OnUpdateFailedListener() {
+            @Override
+            public void onUpdateFailed() {
+                refreshing = false;
+                onLocationErrorListener.onLocationError();
+            }
+        });
     }
 
     public void getPredictions(boolean ignoreTimeLimit) {
@@ -66,22 +80,6 @@ public class NearbyPredictionsController {
                 refreshing = false;
                 onNetworkErrorListener.onNetworkError();
             } else {
-                locationProviderService.setOnUpdateSuccessListener(new LocationProviderService.OnUpdateSuccessListener() {
-                    @Override
-                    public void onUpdateSuccess(Location location) {
-                        predictionsAsyncTask = new PredictionsAsyncTask();
-                        predictionsAsyncTask.execute(location);
-                    }
-                });
-
-                locationProviderService.setOnUpdateFailedListener(new LocationProviderService.OnUpdateFailedListener() {
-                    @Override
-                    public void onUpdateFailed() {
-                        refreshing = false;
-                        onLocationErrorListener.onLocationError();
-                    }
-                });
-
                 locationProviderService.getLastLocation();
             }
         }
@@ -149,12 +147,10 @@ public class NearbyPredictionsController {
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
-            PredictionsAtStopsByLocation query = new PredictionsAtStopsByLocation(realTimeApi);
-
-            HashMap<String, Stop> stops = query.get(
-                    locations[0].getLatitude(), locations[0].getLongitude());
-
-            return new ArrayList<>(stops.values());
+            return new ArrayList<>(
+                    new PredictionsByLocationQuery(realTimeApiKey)
+                            .get(locations[0].getLatitude(), locations[0].getLongitude())
+                            .values());
         }
 
         @Override
