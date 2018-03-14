@@ -159,6 +159,8 @@ public class NearbyPredictionsFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        controller.disconnect();
+
         // Hide alert dialog if user has it open
         if (serviceAlertsDialog != null) {
             serviceAlertsDialog.cancel();

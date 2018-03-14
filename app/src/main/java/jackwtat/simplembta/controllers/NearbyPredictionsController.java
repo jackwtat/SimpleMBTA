@@ -101,6 +101,10 @@ public class NearbyPredictionsController {
         return lastRefreshed;
     }
 
+    public void disconnect(){
+        locationProviderService.disconnect();
+    }
+
     /*
         Event Listener Setter Methods
      */

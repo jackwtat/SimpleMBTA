@@ -57,19 +57,16 @@ public class LocationProviderService {
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(context);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+    }
 
+    public void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationClient.requestLocationUpdates(
                     locationRequest,
                     locationCallback,
                     Looper.myLooper());
-        }
-    }
 
-    public void getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationClient.getLastLocation()
                     .addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
@@ -90,7 +87,9 @@ public class LocationProviderService {
         } else {
             onUpdateFailedListener.onUpdateFailed();
         }
+    }
 
+    public void disconnect() {
         locationClient.removeLocationUpdates(locationCallback);
     }
 
