@@ -298,7 +298,7 @@ public class NearbyPredictionsFragment extends Fragment {
                         View serviceAlertsRouteNameAccent = serviceAlertsHeader.findViewById(R.id.service_alert_route_name_accent);
                         serviceAlertsRouteName.setBackgroundColor(Color.parseColor(rte.getColor()));
                         serviceAlertsRouteName.setTextColor(Color.parseColor(rte.getTextColor()));
-                        
+
                         if (rte.getMode() == Mode.BUS && !rte.getLongName().contains("Silver Line")) {
 
                             serviceAlertsRouteNameAccent.setVisibility(View.VISIBLE);
