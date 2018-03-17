@@ -22,13 +22,13 @@ public class NearbyPredictionsController {
     private final String LOG_TAG = "NPController";
 
     // Time since last refresh before values can automatically refresh onResume, in seconds
-    private final long MINIMUM_REFRESH_INTERVAL = 60;
+    private final long MINIMUM_REFRESH_INTERVAL = 60000;
 
     // Time between location updates, in seconds
-    private final long LOCATION_UPDATE_INTERVAL = 15;
+    private final long LOCATION_UPDATE_INTERVAL = 10000;
 
     // Fastest time between location updates, in seconds
-    private final long FASTEST_LOCATION_INTERVAL = 2;
+    private final long FASTEST_LOCATION_INTERVAL = 1000;
 
     private String realTimeApiKey;
     private NetworkConnectivityService networkConnectivityService;
@@ -71,7 +71,7 @@ public class NearbyPredictionsController {
     public void getPredictions(boolean ignoreTimeLimit) {
         if (!refreshing && (ignoreTimeLimit ||
                 lastRefreshed == null ||
-                new Date().getTime() - lastRefreshed.getTime() >= 1000 * MINIMUM_REFRESH_INTERVAL)) {
+                new Date().getTime() - lastRefreshed.getTime() >= MINIMUM_REFRESH_INTERVAL)) {
 
             refreshing = true;
             onProgressUpdateListener.onProgressUpdate(0);

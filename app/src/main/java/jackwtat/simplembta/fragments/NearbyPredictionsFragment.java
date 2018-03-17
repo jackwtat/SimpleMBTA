@@ -62,8 +62,9 @@ public class NearbyPredictionsFragment extends Fragment {
 
     private AlertDialog serviceAlertsDialog;
     private View serviceAlertsHeader;
+    private View serviceAlertsBody;
     private ArrayAdapter<ServiceAlert> serviceAlertsArrayAdapter;
-    private ListView serviceAlertsBody;
+    private ListView serviceAlertsListView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -168,7 +169,7 @@ public class NearbyPredictionsFragment extends Fragment {
 
         // Hide alert dialog if user has it open
         if (serviceAlertsDialog != null) {
-            serviceAlertsDialog.cancel();
+            serviceAlertsDialog.dismiss();
         }
     }
 
@@ -232,7 +233,7 @@ public class NearbyPredictionsFragment extends Fragment {
 
         // Hide alerts dialog if user has it open
         if (serviceAlertsDialog != null) {
-            serviceAlertsDialog.cancel();
+            serviceAlertsDialog.dismiss();
         }
 
         // Initialize the data structure that stores route-direction combos that have been processed
@@ -288,24 +289,21 @@ public class NearbyPredictionsFragment extends Fragment {
                     Route rte = predictionsListAdapter.getItem(position).get(0).getRoute();
                     Collections.sort(rte.getServiceAlerts());
 
-                    if (rte.getServiceAlerts() != null && rte.getServiceAlerts().size() > 0) {
+                    if (rte.getServiceAlerts().size() > 0) {
 
                         // Build Service Alert Route Header
                         serviceAlertsHeader = getLayoutInflater().inflate(
-                                R.layout.service_alert_header, null);
+                                R.layout.service_alerts_header, null);
                         TextView serviceAlertsRouteName = serviceAlertsHeader.findViewById(R.id.service_alert_route_name);
                         View serviceAlertsRouteNameAccent = serviceAlertsHeader.findViewById(R.id.service_alert_route_name_accent);
                         serviceAlertsRouteName.setBackgroundColor(Color.parseColor(rte.getColor()));
                         serviceAlertsRouteName.setTextColor(Color.parseColor(rte.getTextColor()));
+                        
+                        if (rte.getMode() == Mode.BUS && !rte.getLongName().contains("Silver Line")) {
 
-
-                        if (rte.getMode() == Mode.BUS) {
                             serviceAlertsRouteNameAccent.setVisibility(View.VISIBLE);
 
-                            if (rte.getLongName().contains("Silver Line")) {
-                                serviceAlertsRouteName.setText(rte.getLongName());
-
-                            } else if (!rte.getShortName().equals("") && !rte.getShortName().equals("null")) {
+                            if (!rte.getShortName().equals("") && !rte.getShortName().equals("null")) {
                                 serviceAlertsRouteName.setText(new StringBuilder()
                                         .append(getResources().getString(R.string.route_prefix))
                                         .append(" ")
@@ -320,11 +318,13 @@ public class NearbyPredictionsFragment extends Fragment {
                         }
 
                         // Build Service Alerts Body
+                        serviceAlertsBody = LayoutInflater.from(getContext()).inflate(
+                                R.layout.service_alerts_body, null);
                         serviceAlertsArrayAdapter.clear();
                         serviceAlertsArrayAdapter.addAll(rte.getServiceAlerts());
-                        serviceAlertsBody = new ListView(getContext());
-                        serviceAlertsBody.setAdapter(serviceAlertsArrayAdapter);
-                        serviceAlertsBody.setScrollbarFadingEnabled(false);
+                        serviceAlertsListView = serviceAlertsBody.findViewById(R.id.service_alerts_list_view);
+                        serviceAlertsListView.setAdapter(serviceAlertsArrayAdapter);
+
 
                         // Create alert dialog builder
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

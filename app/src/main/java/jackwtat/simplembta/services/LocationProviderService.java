@@ -41,8 +41,8 @@ public class LocationProviderService {
 
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(updateInterval * 1000);
-        locationRequest.setFastestInterval(fastestInterval * 1000);
+        locationRequest.setInterval(updateInterval);
+        locationRequest.setFastestInterval(fastestInterval);
 
         locationCallback = new LocationCallback() {
             @Override
