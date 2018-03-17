@@ -1,5 +1,6 @@
 package jackwtat.simplembta.fragments;
 
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -27,7 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.PredictionPairListAdapter;
+import jackwtat.simplembta.adapters.PredictionsListAdapter;
+import jackwtat.simplembta.adapters.ServiceAlertsListAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
@@ -55,18 +56,24 @@ public class NearbyPredictionsFragment extends Fragment {
     private TextView statusMsgTextView;
     private TextView statusTimeTextView;
     private TextView errorTextView;
-    private ProgressBar progressBar;
-    private AlertDialog serviceAlertsDialog;
 
     private NearbyPredictionsController controller;
     private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
+
+    private AlertDialog serviceAlertsDialog;
+    private View serviceAlertsHeader;
+    private ArrayAdapter<ServiceAlert> serviceAlertsArrayAdapter;
+    private ListView serviceAlertsBody;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        predictionsListAdapter = new PredictionPairListAdapter(
+        predictionsListAdapter = new PredictionsListAdapter(
                 getActivity(), new ArrayList<ArrayList<Prediction>>());
+
+        serviceAlertsArrayAdapter = new ServiceAlertsListAdapter(
+                getActivity(), new ArrayList<ServiceAlert>());
 
         controller = new NearbyPredictionsController(getContext());
 
@@ -118,7 +125,6 @@ public class NearbyPredictionsFragment extends Fragment {
         statusMsgTextView = rootView.findViewById(R.id.status_message_text_view);
         statusTimeTextView = rootView.findViewById(R.id.status_time_text_view);
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
-        progressBar = rootView.findViewById(R.id.progressBar);
 
         predictionsListView.setAdapter(predictionsListAdapter);
 
@@ -152,14 +158,13 @@ public class NearbyPredictionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        controller.connectLocationService();
         controller.getPredictions(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        controller.disconnect();
 
         // Hide alert dialog if user has it open
         if (serviceAlertsDialog != null) {
@@ -174,6 +179,7 @@ public class NearbyPredictionsFragment extends Fragment {
         }
 
         controller.cancel();
+        controller.disconnectLocationService();
 
         super.onStop();
     }
@@ -187,7 +193,6 @@ public class NearbyPredictionsFragment extends Fragment {
     private void onRefreshCanceled() {
         swipeRefreshLayout.setRefreshing(false);
         statusMsgTextView.setText(getResources().getString(R.string.refresh_canceled));
-        progressBar.setProgress(0);
     }
 
     // Updates the UI to display an error message if refresh fails
@@ -203,7 +208,6 @@ public class NearbyPredictionsFragment extends Fragment {
         if (!statusMsgTextView.getText().toString().equals(message)) {
             statusMsgTextView.setText(message);
         }
-        progressBar.setProgress(percentage);
     }
 
     // Update the UI to display a given timestamped status message
@@ -281,48 +285,59 @@ public class NearbyPredictionsFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (predictionsListAdapter.getItem(position) != null &&
                         predictionsListAdapter.getItem(position).size() > 0) {
-                    Prediction p = predictionsListAdapter.getItem(position).get(0);
+                    Route rte = predictionsListAdapter.getItem(position).get(0).getRoute();
+                    Collections.sort(rte.getServiceAlerts());
 
-                    if (p.getRoute().getServiceAlerts().size() > 0) {
-                        ArrayList<ServiceAlert> alerts = p.getRoute().getServiceAlerts();
-                        Collections.sort(alerts);
+                    if (rte.getServiceAlerts() != null && rte.getServiceAlerts().size() > 0) {
 
-                        // Construct the alerts dialog message
-                        StringBuilder alertMessage = new StringBuilder(alerts.get(0).getHeader());
-                        for (int i = 1; i < alerts.size(); i++) {
-                            alertMessage.append("\n\n").append(alerts.get(i).getHeader());
+                        // Build Service Alert Route Header
+                        serviceAlertsHeader = getLayoutInflater().inflate(
+                                R.layout.service_alert_header, null);
+                        TextView serviceAlertsRouteName = serviceAlertsHeader.findViewById(R.id.service_alert_route_name);
+                        View serviceAlertsRouteNameAccent = serviceAlertsHeader.findViewById(R.id.service_alert_route_name_accent);
+                        serviceAlertsRouteName.setBackgroundColor(Color.parseColor(rte.getColor()));
+                        serviceAlertsRouteName.setTextColor(Color.parseColor(rte.getTextColor()));
+
+
+                        if (rte.getMode() == Mode.BUS) {
+                            serviceAlertsRouteNameAccent.setVisibility(View.VISIBLE);
+
+                            if (rte.getLongName().contains("Silver Line")) {
+                                serviceAlertsRouteName.setText(rte.getLongName());
+
+                            } else if (!rte.getShortName().equals("") && !rte.getShortName().equals("null")) {
+                                serviceAlertsRouteName.setText(new StringBuilder()
+                                        .append(getResources().getString(R.string.route_prefix))
+                                        .append(" ")
+                                        .append(rte.getShortName()));
+
+                            } else {
+                                serviceAlertsRouteName.setText(rte.getId());
+                            }
+                        } else {
+                            serviceAlertsRouteName.setText(rte.getLongName());
+                            serviceAlertsRouteNameAccent.setVisibility(View.GONE);
                         }
 
-                        Route route = p.getRoute();
-
-                        // Set the route name
-                        LayoutInflater inflater = getLayoutInflater();
-                        TextView routeNameView = (TextView) inflater.inflate(
-                                R.layout.route_name, null);
-                        StringBuilder name = new StringBuilder();
-
-                        routeNameView.setBackgroundColor(Color.parseColor(route.getColor()));
-                        routeNameView.setTextColor(Color.parseColor(route.getTextColor()));
-
-                        if (route.getMode() == Mode.BUS && !route.getLongName().contains("Silver Line"))
-                            if (!route.getShortName().equals("") &&
-                                    !route.getShortName().equals("null"))
-                                name.append(getResources().getString(R.string.route)).append(" ").append(route.getShortName());
-                            else
-                                name.append(route.getId());
-
-                        else
-                            name.append(route.getLongName());
-
-                        routeNameView.setText(name.toString());
+                        // Build Service Alerts Body
+                        serviceAlertsArrayAdapter.clear();
+                        serviceAlertsArrayAdapter.addAll(rte.getServiceAlerts());
+                        serviceAlertsBody = new ListView(getContext());
+                        serviceAlertsBody.setAdapter(serviceAlertsArrayAdapter);
+                        serviceAlertsBody.setScrollbarFadingEnabled(false);
 
                         // Create alert dialog builder
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(alertMessage.toString());
+                        builder.setCustomTitle(serviceAlertsHeader);
+                        builder.setView(serviceAlertsBody);
+                        builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                serviceAlertsDialog.dismiss();
+                            }
+                        });
 
                         serviceAlertsDialog = builder.create();
-                        serviceAlertsDialog.setCustomTitle(routeNameView);
-                        serviceAlertsDialog.setMessage(alertMessage.toString());
                         serviceAlertsDialog.show();
                     }
                 }
@@ -332,14 +347,14 @@ public class NearbyPredictionsFragment extends Fragment {
         // Auto-scroll to the top
         predictionsListView.setSelection(0);
 
-        // Reset progress bar
-        progressBar.setProgress(0);
-
         // Set statuses
         setStatus(controller.getLastRefreshedDate(), "", false, false);
 
         // If there are no values, show status to user
         if (predictionsListAdapter.getCount() < 1)
-            setStatus(new Date(), getResources().getString(R.string.no_predictions), false, false);
+
+            setStatus(new Date(), getResources().
+
+                    getString(R.string.no_predictions), false, false);
     }
 }

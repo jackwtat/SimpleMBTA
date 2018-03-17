@@ -69,9 +69,9 @@ public class NearbyPredictionsController {
     }
 
     public void getPredictions(boolean ignoreTimeLimit) {
-        if (ignoreTimeLimit ||
+        if (!refreshing && (ignoreTimeLimit ||
                 lastRefreshed == null ||
-                new Date().getTime() - lastRefreshed.getTime() >= 1000 * MINIMUM_REFRESH_INTERVAL) {
+                new Date().getTime() - lastRefreshed.getTime() >= 1000 * MINIMUM_REFRESH_INTERVAL)) {
 
             refreshing = true;
             onProgressUpdateListener.onProgressUpdate(0);
@@ -101,7 +101,11 @@ public class NearbyPredictionsController {
         return lastRefreshed;
     }
 
-    public void disconnect(){
+    public void connectLocationService() {
+        locationProviderService.connect();
+    }
+
+    public void disconnectLocationService() {
         locationProviderService.disconnect();
     }
 

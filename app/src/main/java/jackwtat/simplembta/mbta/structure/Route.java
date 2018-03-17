@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import jackwtat.simplembta.R;
+
 /**
  * Created by jackw on 11/27/2017.
  */

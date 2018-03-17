@@ -25,8 +25,8 @@ import jackwtat.simplembta.mbta.structure.ServiceAlert;
  * Created by jackw on 12/26/2017.
  */
 
-public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction>> {
-    public PredictionPairListAdapter(
+public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> {
+    public PredictionsListAdapter(
             @NonNull Context context, ArrayList<ArrayList<Prediction>> predictions) {
         super(context, 0, predictions);
     }
@@ -82,9 +82,11 @@ public class PredictionPairListAdapter extends ArrayAdapter<ArrayList<Prediction
             alertIndicator.setVisibility(View.VISIBLE);
             if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW || alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
                 alertIndicator.setText(getContext().getResources().getString(R.string.service_alert_urgent));
+                alertIndicator.setTextColor(ContextCompat.getColor(getContext(), R.color.ServiceAlert_Urgent));
                 break;
             } else {
                 alertIndicator.setText(getContext().getResources().getString(R.string.service_alert_advisory));
+                alertIndicator.setTextColor(ContextCompat.getColor(getContext(), R.color.ServiceAlert_Advisory));
             }
         }
 

@@ -12,19 +12,20 @@
     <color name="TabSelectedText">#ffffff</color>
 
     <!-- Line Colors -->
-    <color name="RedLine">#E12D27</color>
-    <color name="OrangeLine">#E87200</color>
-    <color name="BlueLine">#2F5DA6</color>
-    <color name="GreenLine">#427B1D</color>
-    <color name="SilverLine">#555555</color>
-    <color name="LocalBus">#FFFF7C</color>
-    <color name="CommuterRail">#8B118F</color>
-    <color name="Boat">#5DA9E8</color>
+    <color name="RedLine">#da291c</color>
+    <color name="OrangeLine">#ed8b00</color>
+    <color name="BlueLine">#003da5</color>
+    <color name="GreenLine">#00843d</color>
+    <color name="SilverLine">#7c878e</color>
+    <color name="Bus">#ffc72c</color>
+    <color name="BusAccent">#3191e1</color>
+    <color name="CommuterRail">#80276c</color>
+    <color name="Boat">#008eaa</color>
 
     <!-- Other Colors -->
     <color name="ApproachingAlert">#D32F2F</color>
-    <color name="ServiceAlert_Urgent">#D32F2F</color>
-    <color name="ServiceAlert_Advisory">#D32F2F</color>
+    <color name="ServiceAlert_Urgent">#da291c</color>
+    <color name="ServiceAlert_Advisory">#da291c</color>
     <color name="Transparent">#00FFFFFF</color>
 
 </resources>

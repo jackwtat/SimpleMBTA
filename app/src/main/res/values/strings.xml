@@ -18,7 +18,7 @@
     <string name="no_network_connectivity">Unable To Connect To Internet</string>
     <string name="no_predictions">No Predictions To Show</string>
 
-    <!-- Route Short Names -->
+    <!-- Route Abbreviations -->
     <string name="red_line_short_name">RL</string>
     <string name="red_line_mattapan_short_name">RL-M</string>
     <string name="orange_line_short_name">OL</string>
@@ -31,6 +31,42 @@
     <string name="commuter_rail_short_name">CR</string>
     <string name="ferry_short_name">FERRY</string>
 
+    <!-- Service Alert Headers -->
+    <string name="UPCOMING">Upcoming</string>
+    <string name="ACCESS_ISSUE">Access Issue</string>
+    <string name="ADDITIONAL_SERVICE">Additional Service</string>
+    <string name="AMBER_ALERT">Amber Alert</string>
+    <string name="BIKE_ISSUE">Bike Issue</string>
+    <string name="CANCELLATION">Cancellation</string>
+    <string name="DELAY">Delay</string>
+    <string name="DETOUR">Detour</string>
+    <string name="DOCK_CLOSURE">Dock Closure</string>
+    <string name="DOCK_ISSUE">Dock Issue</string>
+    <string name="ELEVATOR_CLOSURE">Elevator Closure</string>
+    <string name="ESCALATOR_CLOSURE">Escalator Closure</string>
+    <string name="EXTRA_SERVICE">Extra Service</string>
+    <string name="FACILITY_ISSUE">Facility Issue</string>
+    <string name="MODIFIED_SERVICE">Modified Service</string>
+    <string name="NO_SERVICE">No Service</string>
+    <string name="OTHER_EFFECT">Other Effect</string>
+    <string name="PARKING_CLOSURE">Parking Closure</string>
+    <string name="PARKING_ISSUE">Parking Issue</string>
+    <string name="POLICY_CHANGE">Policy Change</string>
+    <string name="SCHEDULE_CHANGE">Schedule Change</string>
+    <string name="SERVICE_CHANGE">Service Change</string>
+    <string name="SHUTTLE">Bus Shuttle</string>
+    <string name="SNOW_ROUTE">Snow Route</string>
+    <string name="STATION_CLOSURE">Station Closure</string>
+    <string name="STATION_ISSUE">Station Issue</string>
+    <string name="STOP_CLOSURE">Stop Closure</string>
+    <string name="STOP_MOVE">Stop Move</string>
+    <string name="STOP_MOVED">Stop Moved</string>
+    <string name="SUMMARY">Summary</string>
+    <string name="SUSPENSION">Suspension</string>
+    <string name="TRACK_CHANGE">Track Change</string>
+    <string name="UNKNOWN_EFFECT">Unknown Effect</string>
+
     <!-- Miscellaneous Strings -->
-    <string name="route">Route</string>
+    <string name="dialog_close_button">Close</string>
+    <string name="route_prefix">Route</string>
 </resources>

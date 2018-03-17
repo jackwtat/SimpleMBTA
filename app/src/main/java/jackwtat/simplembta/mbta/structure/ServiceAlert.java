@@ -11,12 +11,13 @@ import java.util.Date;
 
 public class ServiceAlert implements Comparable<ServiceAlert> {
 
-    public enum Lifecycle {NEW, ONGOING, ONGOING_UPCOMING, UPCOMING, UNKNOWN}
+    public enum Lifecycle {NEW, ONGOING, UPCOMING, ONGOING_UPCOMING, UNKNOWN}
 
     private String id = "";
     private String header = "";
     private String effect = "";
     private int severity = 0;
+    private int lifecycleStage = -1;
     private Lifecycle lifecycle = Lifecycle.UNKNOWN;
     private ArrayList<String> affectedRoutes = new ArrayList<>();
     private ArrayList<Mode> blanketModes = new ArrayList<>();
@@ -30,13 +31,18 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
 
         if (lifecycle.toUpperCase().equals("NEW")) {
             this.lifecycle = Lifecycle.NEW;
+            this.lifecycleStage = 0;
         } else if (lifecycle.toUpperCase().equals("ONGOING")) {
+            this.lifecycleStage = 1;
             this.lifecycle = Lifecycle.ONGOING;
-        } else if (lifecycle.toUpperCase().equals("ONGOING_UPCOMING")) {
-            this.lifecycle = Lifecycle.ONGOING_UPCOMING;
         } else if (lifecycle.toUpperCase().equals("UPCOMING")) {
+            this.lifecycleStage = 2;
             this.lifecycle = Lifecycle.UPCOMING;
+        } else if (lifecycle.toUpperCase().equals("ONGOING_UPCOMING")) {
+            this.lifecycleStage = 3;
+            this.lifecycle = Lifecycle.ONGOING_UPCOMING;
         } else {
+            this.lifecycleStage = 4;
             this.lifecycle = Lifecycle.UNKNOWN;
         }
     }
@@ -96,14 +102,16 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
 
     @Override
     public int compareTo(@NonNull ServiceAlert serviceAlert) {
-        if (this.severity != serviceAlert.getSeverity()) {
-            return Integer.compare(serviceAlert.getSeverity(), this.severity);
-        } else if (this.isActive() && !serviceAlert.isActive()) {
+        if (this.isActive() && !serviceAlert.isActive()) {
             return -1;
         } else if (!this.isActive() && serviceAlert.isActive()) {
             return 1;
+        } else if (this.lifecycleStage != serviceAlert.lifecycleStage){
+            return Integer.compare(this.lifecycleStage, serviceAlert.lifecycleStage);
+        } else if (this.severity != serviceAlert.getSeverity()) {
+            return Integer.compare(serviceAlert.getSeverity(), this.severity);
         } else {
-            return 0;
+            return this.id.compareTo(serviceAlert.getId());
         }
     }
 
