@@ -265,11 +265,12 @@ public class PredictionsListFragment extends Fragment {
 
                     predictions.add(p);
 
-                    // Get the next prediction, too, if same route-direction
-                    while (i + 1 < s.getPredictions().size() &&
-                            (s.getPredictions().get(i + 1).getRoute().getId().equals(p.getRoute().getId()) &&
-                                    s.getPredictions().get(i + 1).getTrip().getDirection() == p.getTrip().getDirection())) {
-                        predictions.add(s.getPredictions().get(i + 1));
+                    // Add the next predictions, too, if same route-direction
+                    for (int j = i + 1; j < s.getPredictions().size() &&
+                            (s.getPredictions().get(j).getRoute().getId().equals(p.getRoute().getId()) &&
+                                    s.getPredictions().get(j).getTrip().getDirection() == p.getTrip().getDirection()); j++) {
+                        predictions.add(s.getPredictions().get(j));
+                        i = j;
                     }
 
                     // Display in the list
