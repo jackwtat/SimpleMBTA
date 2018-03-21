@@ -66,7 +66,9 @@
     <string name="TRACK_CHANGE">Track Change</string>
     <string name="UNKNOWN_EFFECT">Unknown Effect</string>
 
-    <!-- Miscellaneous Strings -->
+    <!-- Dialog Box Strings -->
     <string name="dialog_close_button">Close</string>
+    <string name="add_to_favorites">Add To Favorites</string>
+    <string name="remove_from_favorites">Remove From Favorites</string>
     <string name="route_prefix">Route</string>
 </resources>

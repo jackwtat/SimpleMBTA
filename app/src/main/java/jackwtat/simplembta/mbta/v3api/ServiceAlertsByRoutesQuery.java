@@ -18,11 +18,17 @@ import jackwtat.simplembta.mbta.structure.ServiceAlert;
  * Created by jackw on 3/11/2018.
  */
 
-public class ServiceAlertsByRouteQuery extends Query {
+public class ServiceAlertsByRoutesQuery extends Query {
     final private String LOG_TAG = "AlertsByRouteQuery";
 
-    public ServiceAlertsByRouteQuery(String apiKey) {
+    public ServiceAlertsByRoutesQuery(String apiKey) {
         super(apiKey);
+    }
+
+    public ArrayList<ServiceAlert> get(String routeId) {
+        ArrayList<String> rte = new ArrayList<>();
+        rte.add(routeId);
+        return get(rte);
     }
 
     public ArrayList<ServiceAlert> get(List<String> routeIds) {

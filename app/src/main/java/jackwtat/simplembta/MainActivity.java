@@ -4,14 +4,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
-import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
+import jackwtat.simplembta.fragments.PredictionsListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private NearbyPredictionsFragment getCurrentFragment() {
-        return (NearbyPredictionsFragment) getSupportFragmentManager()
+    private PredictionsListFragment getCurrentFragment() {
+        return (PredictionsListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
     }
 }

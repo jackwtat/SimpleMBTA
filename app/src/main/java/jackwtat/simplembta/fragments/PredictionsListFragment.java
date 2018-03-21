@@ -45,7 +45,7 @@ import jackwtat.simplembta.mbta.structure.Stop;
  * Created by jackw on 8/21/2017.
  */
 
-public class NearbyPredictionsFragment extends Fragment {
+public class PredictionsListFragment extends Fragment {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -266,12 +266,10 @@ public class NearbyPredictionsFragment extends Fragment {
                     predictions.add(p);
 
                     // Get the next prediction, too, if same route-direction
-                    if (i + 1 < s.getPredictions().size()) {
-                        Prediction p2 = s.getPredictions().get(i + 1);
-                        if (p2.getRoute().getId().equals(p.getRoute().getId()) &&
-                                p2.getTrip().getDirection() == p.getTrip().getDirection()) {
-                            predictions.add(p2);
-                        }
+                    while (i + 1 < s.getPredictions().size() &&
+                            (s.getPredictions().get(i + 1).getRoute().getId().equals(p.getRoute().getId()) &&
+                                    s.getPredictions().get(i + 1).getTrip().getDirection() == p.getTrip().getDirection())) {
+                        predictions.add(s.getPredictions().get(i + 1));
                     }
 
                     // Display in the list

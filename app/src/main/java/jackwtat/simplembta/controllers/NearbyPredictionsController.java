@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
@@ -21,14 +23,23 @@ import jackwtat.simplembta.services.NetworkConnectivityService;
 public class NearbyPredictionsController {
     private final String LOG_TAG = "NPController";
 
-    // Time since last refresh before values can automatically refresh onResume, in seconds
+    // Time since last refresh before values can automatically refresh onResume, in milliseconds
     private final long MINIMUM_REFRESH_INTERVAL = 60000;
 
-    // Time between location updates, in seconds
+    // Time between location updates, in milliseconds
     private final long LOCATION_UPDATE_INTERVAL = 10000;
 
-    // Fastest time between location updates, in seconds
-    private final long FASTEST_LOCATION_INTERVAL = 1000;
+    // Fastest time between location updates, in milliseconds
+    private final long FASTEST_LOCATION_INTERVAL = 2000;
+
+    // Maximum age of location data, in milliseconds
+    private final long MAXIMUM_LOCATION_AGE = 15000;
+
+    // Time to wait between attempts to get recent location, in milliseconds
+    private final int LOCATION_ATTEMPT_WAIT_TIME = 500;
+
+    // Maximum number of attempts to get recent location
+    private final int MAXIMUM_LOCATION_ATTEMPTS = 10;
 
     private String realTimeApiKey;
     private NetworkConnectivityService networkConnectivityService;
@@ -42,6 +53,7 @@ public class NearbyPredictionsController {
 
     private boolean refreshing;
     private Date lastRefreshed;
+    private int locationAttempts;
 
     public NearbyPredictionsController(Context context) {
         realTimeApiKey = context.getString(R.string.v3_mbta_realtime_api_key);
@@ -54,8 +66,26 @@ public class NearbyPredictionsController {
         locationProviderService.setOnUpdateSuccessListener(new LocationProviderService.OnUpdateSuccessListener() {
             @Override
             public void onUpdateSuccess(Location location) {
-                predictionsAsyncTask = new PredictionsAsyncTask();
-                predictionsAsyncTask.execute(location);
+                if (new Date().getTime() - location.getTime() < MAXIMUM_LOCATION_AGE) {
+                    // If the location is new enough, okay to query predictions
+                    predictionsAsyncTask = new PredictionsAsyncTask();
+                    predictionsAsyncTask.execute(location);
+
+                } else if (locationAttempts < MAXIMUM_LOCATION_ATTEMPTS) {
+                    // If location is too old, wait and then try again
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            locationAttempts++;
+                            locationProviderService.getLastLocation();
+                        }
+                    }, LOCATION_ATTEMPT_WAIT_TIME);
+
+                } else {
+                    // If location is still too old after many attempts, query predictions anyway
+                    predictionsAsyncTask = new PredictionsAsyncTask();
+                    predictionsAsyncTask.execute(location);
+                }
             }
         });
 
@@ -80,6 +110,7 @@ public class NearbyPredictionsController {
                 refreshing = false;
                 onNetworkErrorListener.onNetworkError();
             } else {
+                locationAttempts = 0;
                 locationProviderService.getLastLocation();
             }
         }

@@ -25,17 +25,17 @@ import jackwtat.simplembta.mbta.structure.Trip;
 public class PredictionsByLocationQuery extends Query {
     private static final String LOG_TAG = "PredByLocationQuery";
 
-    HashMap<String, Stop> stops = new HashMap<>();
-    HashMap<String, Route> routes = new HashMap<>();
-    HashMap<String, Trip> trips = new HashMap<>();
-    ArrayList<ServiceAlert> alerts = new ArrayList<>();
-    ArrayList<String> parentStopIds = new ArrayList<>();
-
     public PredictionsByLocationQuery(String apiKey) {
         super(apiKey);
     }
 
     public HashMap<String, Stop> get(double latitude, double longitude) {
+        HashMap<String, Stop> stops = new HashMap<>();
+        HashMap<String, Route> routes = new HashMap<>();
+        HashMap<String, Trip> trips = new HashMap<>();
+        ArrayList<ServiceAlert> alerts = new ArrayList<>();
+        ArrayList<String> parentStopIds = new ArrayList<>();
+
         HashMap<String, String> params = new HashMap<>();
 
         params.put("filter[latitude]", Double.toString(latitude));
@@ -121,7 +121,7 @@ public class PredictionsByLocationQuery extends Query {
             }
 
             // Add service alerts to their respective routes
-            alerts = new ServiceAlertsByRouteQuery(apiKey).get(new ArrayList<>(routes.keySet()));
+            alerts.addAll(new ServiceAlertsByRoutesQuery(apiKey).get(new ArrayList<>(routes.keySet())));
             for (ServiceAlert alert : alerts) {
                 for (Route route : routes.values()) {
                     if (alert.getAffectedRoutes().contains(route.getId()) ||

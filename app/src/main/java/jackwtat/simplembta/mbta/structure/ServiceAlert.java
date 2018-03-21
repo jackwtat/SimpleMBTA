@@ -111,7 +111,7 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
         } else if (this.severity != serviceAlert.getSeverity()) {
             return Integer.compare(serviceAlert.getSeverity(), this.severity);
         } else {
-            return this.id.compareTo(serviceAlert.getId());
+            return serviceAlert.getId().compareTo(this.id);
         }
     }
 
