@@ -61,21 +61,23 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         TextView departureTime_1 = listItemView.findViewById(R.id.time_text_view_1);
         TextView departureTime_2 = listItemView.findViewById(R.id.time_text_view_2);
         TextView departureTime_3 = listItemView.findViewById(R.id.time_text_view_3);
+        TextView departureTime_4 = listItemView.findViewById(R.id.time_text_view_4);
+        TextView trainNumber_1 = listItemView.findViewById(R.id.train_text_view_1);
+        TextView trainNumber_2 = listItemView.findViewById(R.id.train_text_view_2);
 
         // Hide the views that have optional values for now
-        destination_2.setVisibility(View.GONE);
-        departureTime_2.setVisibility(View.GONE);
-        departureTime_3.setVisibility(View.GONE);
         alertIndicator.setVisibility(View.GONE);
+        destination_2.setVisibility(View.GONE);
+        departureTime_3.setVisibility(View.GONE);
+        departureTime_4.setVisibility(View.GONE);
+        trainNumber_1.setVisibility(View.GONE);
+        trainNumber_2.setVisibility(View.GONE);
 
         // Set the stop name
         stopName.setText(p1.getStopName());
 
         // Set the route name
         setRouteView(p1.getRoute(), routeName);
-
-        // Set the destination and departure time for the first prediction
-        setPredictionViews(p1, departureTime_1, destination_1);
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : p1.getRoute().getServiceAlerts()) {
@@ -90,17 +92,34 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
             }
         }
 
-        // Set the departure time of the second prediction if it exists,
-        // departure time of first prediction is not null (i.e. prediction is not an alerts holder)
-        // and destination is different from first prediction
+        // Set the destination and departure times of the predictions
         if (predictions.size() > 1 && p1.getDepartureTime() != null) {
             Prediction p2 = predictions.get(1);
 
-            if (p2.getTrip().getDestination()
-                    .equals(p1.getTrip().getDestination())) {
-                setPredictionViews(p2, departureTime_3, null);
+            if (p2.getTrip().getDestination().equals(p1.getTrip().getDestination()) &&
+                    p1.getRoute().getMode() != Mode.COMMUTER_RAIL) {
+                setPredictionViews(p1, p2, departureTime_1, departureTime_2, destination_1);
             } else {
-                setPredictionViews(p2, departureTime_2, destination_2);
+                setPredictionViews(p1, null, departureTime_1, departureTime_2, destination_1);
+                setPredictionViews(p2, null, departureTime_3, departureTime_4, destination_2);
+            }
+        } else {
+            setPredictionViews(p1, null, departureTime_1, departureTime_2, destination_1);
+        }
+
+        // Set the train numbers if commuter rail
+        if (p1.getRoute().getMode() == Mode.COMMUTER_RAIL && !p1.getTrip().getName().equals("")) {
+            String tno = "(Train " + p1.getTrip().getName() + ")";
+            trainNumber_1.setText(tno);
+            trainNumber_1.setVisibility(View.VISIBLE);
+
+            if (predictions.size() > 1) {
+                Prediction p2 = predictions.get(1);
+                if (p2 != null && !p2.getTrip().getName().equals("")) {
+                    tno = "(Train " + p2.getTrip().getName() + ")";
+                    trainNumber_2.setText(tno);
+                    trainNumber_2.setVisibility(View.VISIBLE);
+                }
             }
         }
 
@@ -160,44 +179,46 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         }
     }
 
-    private void setPredictionViews(Prediction prediction, TextView departureTimeView,
-                                    @Nullable TextView destinationView) {
-        departureTimeView.setVisibility(View.VISIBLE);
+    private void setPredictionViews(Prediction prediction_1, @Nullable Prediction prediction_2,
+                                    TextView departureTimeView_1, TextView departureTimeView_2,
+                                    TextView destinationView) {
+        departureTimeView_1.setVisibility(View.VISIBLE);
+        departureTimeView_2.setVisibility(View.VISIBLE);
+        String dept_1;
+        String dept_2;
+        String dest;
 
-        if (prediction.getDepartureTime() != null) {
-            if (prediction.getTimeUntilDeparture() > 0) {
-                String dt = (prediction.getTimeUntilDeparture() / 60000) + " min";
-                departureTimeView.setText(dt);
+        if (prediction_1.getDepartureTime() != null) {
+            if (prediction_1.getTimeUntilDeparture() > 0) {
+                dept_1 = (prediction_1.getTimeUntilDeparture() / 60000) + "";
             } else {
-                departureTimeView.setText("0 min");
+                dept_1 = "0";
             }
 
-
-            if (destinationView != null) {
-                destinationView.setText(prediction.getTrip().getDestination());
-                destinationView.setVisibility(View.VISIBLE);
-
-                if (prediction.getTimeUntilDeparture() / 60000 <= 5) {
-                    departureTimeView.setBackgroundColor(ContextCompat.getColor(getContext(),
-                            R.color.ApproachingAlert));
-                    departureTimeView.setTextColor(ContextCompat.getColor(getContext(),
-                            R.color.HighlightedText));
+            if (prediction_2 != null && prediction_2.getDepartureTime() != null) {
+                dept_1 = dept_1 + ",";
+                if (prediction_2.getTimeUntilDeparture() > 0) {
+                    dept_2 = (prediction_2.getTimeUntilDeparture() / 60000) + " min";
                 } else {
-                    departureTimeView.setBackgroundColor(ContextCompat.getColor(getContext(),
-                            R.color.Transparent));
-                    departureTimeView.setTextColor(ContextCompat.getColor(getContext(),
-                            R.color.PrimaryText));
+                    dept_2 = "0 min";
                 }
+            } else {
+                dept_2 = "min";
             }
+
+            departureTimeView_1.setText(dept_1);
+            departureTimeView_2.setText(dept_2);
+
+            dest = prediction_1.getTrip().getDestination();
+            destinationView.setText(dest);
+            destinationView.setVisibility(View.VISIBLE);
+
         } else {
-            departureTimeView.setText("---");
-            departureTimeView.setBackgroundColor(ContextCompat.getColor(getContext(),
-                    R.color.Transparent));
-            departureTimeView.setTextColor(ContextCompat.getColor(getContext(),
-                    R.color.PrimaryText));
+            departureTimeView_1.setText("---");
+            departureTimeView_2.setText("");
 
             if (destinationView != null) {
-                destinationView.setText(prediction.getTrip().getDestination());
+                destinationView.setText(prediction_1.getTrip().getDestination());
                 destinationView.setVisibility(View.VISIBLE);
             }
         }

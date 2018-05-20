@@ -102,8 +102,9 @@ public class PredictionsByLocationQuery extends Query {
                         } else if (type.equals("trip")) {
                             int direction = jAttributes.getInt("direction_id");
                             String destination = jAttributes.getString("headsign");
+                            String name = jAttributes.getString("name");
 
-                            trips.put(id, new Trip(id, direction, destination));
+                            trips.put(id, new Trip(id, direction, destination, name));
 
                         } else {
                             Log.e(LOG_TAG, "Unknown linked object type:\n" +

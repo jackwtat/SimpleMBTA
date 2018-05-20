@@ -11,6 +11,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
+import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
+import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
+import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
 import jackwtat.simplembta.mbta.structure.*;
 import jackwtat.simplembta.services.LocationProviderService;
@@ -20,7 +24,7 @@ import jackwtat.simplembta.services.NetworkConnectivityService;
  * Created by jackw on 12/1/2017.
  */
 
-public class NearbyPredictionsController {
+public class NearbyPredictionsController implements PredictionsController {
     private final String LOG_TAG = "NPController";
 
     // Time since last refresh before values can automatically refresh onResume, in milliseconds
@@ -46,17 +50,26 @@ public class NearbyPredictionsController {
     private LocationProviderService locationProviderService;
     private PredictionsAsyncTask predictionsAsyncTask;
 
+    private boolean refreshing;
+    private Date lastRefreshed;
+    private int locationAttempts;
+
     private OnNetworkErrorListener onNetworkErrorListener;
     private OnLocationErrorListener onLocationErrorListener;
     private OnProgressUpdateListener onProgressUpdateListener;
     private OnPostExecuteListener onPostExecuteListener;
 
-    private boolean refreshing;
-    private Date lastRefreshed;
-    private int locationAttempts;
-
-    public NearbyPredictionsController(Context context) {
+    public NearbyPredictionsController(Context context,
+                                       OnPostExecuteListener onPostExecuteListener,
+                                       OnProgressUpdateListener onProgressUpdateListener,
+                                       OnNetworkErrorListener onNetworkErrorListener,
+                                       OnLocationErrorListener onLocationErrorListener) {
         realTimeApiKey = context.getString(R.string.v3_mbta_realtime_api_key);
+
+        this.onPostExecuteListener = onPostExecuteListener;
+        this.onProgressUpdateListener = onProgressUpdateListener;
+        this.onNetworkErrorListener = onNetworkErrorListener;
+        this.onLocationErrorListener = onLocationErrorListener;
 
         networkConnectivityService = new NetworkConnectivityService(context);
 
@@ -92,96 +105,75 @@ public class NearbyPredictionsController {
         locationProviderService.setOnUpdateFailedListener(new LocationProviderService.OnUpdateFailedListener() {
             @Override
             public void onUpdateFailed() {
-                refreshing = false;
-                onLocationErrorListener.onLocationError();
+                onLocationUpdateFailed();
             }
         });
     }
 
-    public void getPredictions(boolean ignoreTimeLimit) {
-        if (!refreshing && (ignoreTimeLimit ||
-                lastRefreshed == null ||
+    @Override
+    public void connect() {
+        locationProviderService.connect();
+    }
+
+    @Override
+    public void disconnect() {
+        locationProviderService.disconnect();
+    }
+
+    @Override
+    public void update() {
+        if (!refreshing && (lastRefreshed == null ||
                 new Date().getTime() - lastRefreshed.getTime() >= MINIMUM_REFRESH_INTERVAL)) {
 
-            refreshing = true;
-            onProgressUpdateListener.onProgressUpdate(0);
-
-            if (!networkConnectivityService.isConnected()) {
-                refreshing = false;
-                onNetworkErrorListener.onNetworkError();
-            } else {
-                locationAttempts = 0;
-                locationProviderService.getLastLocation();
-            }
+            getPredictions();
         }
     }
 
+    @Override
+    public void forceUpdate() {
+        if (!refreshing) {
+            getPredictions();
+        }
+    }
+
+    @Override
     public void cancel() {
         refreshing = false;
 
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
         }
+
+        locationProviderService.disconnect();
     }
 
+    @Override
     public boolean isRunning() {
         return refreshing;
     }
 
-    public Date getLastRefreshedDate() {
-        return lastRefreshed;
+    private void getPredictions() {
+        refreshing = true;
+        onProgressUpdateListener.onProgressUpdate(0);
+
+        if (!networkConnectivityService.isConnected()) {
+            refreshing = false;
+            onNetworkErrorListener.onNetworkError();
+        } else {
+            locationAttempts = 0;
+            locationProviderService.getLastLocation();
+        }
     }
 
-    public void connectLocationService() {
-        locationProviderService.connect();
+    private void onLocationUpdateFailed() {
+        refreshing = false;
+        onLocationErrorListener.onLocationError();
     }
-
-    public void disconnectLocationService() {
-        locationProviderService.disconnect();
-    }
-
-    /*
-        Event Listener Setter Methods
-     */
-    public void setNetworkErrorListener(OnNetworkErrorListener listener) {
-        onNetworkErrorListener = listener;
-    }
-
-    public void setOnLocationErrorListener(OnLocationErrorListener listener) {
-        onLocationErrorListener = listener;
-    }
-
-    public void setOnProgressUpdateListener(OnProgressUpdateListener listener) {
-        onProgressUpdateListener = listener;
-    }
-
-    public void setOnPostExecuteListener(OnPostExecuteListener listener) {
-        onPostExecuteListener = listener;
-    }
-
-    /*
-        Event Listener Interfaces
-     */
-    public interface OnNetworkErrorListener {
-        void onNetworkError();
-    }
-
-    public interface OnLocationErrorListener {
-        void onLocationError();
-    }
-
-    public interface OnProgressUpdateListener {
-        void onProgressUpdate(int progress);
-    }
-
-    public interface OnPostExecuteListener {
-        void onPostExecute(List<Stop> stops);
-    }
-
 
     private class PredictionsAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
         @Override
         protected void onPreExecute() {
+            onProgressUpdateListener.onProgressUpdate(0);
         }
 
         @Override
@@ -190,11 +182,6 @@ public class NearbyPredictionsController {
                     new PredictionsByLocationQuery(realTimeApiKey)
                             .get(locations[0].getLatitude(), locations[0].getLongitude())
                             .values());
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            onProgressUpdateListener.onProgressUpdate(progress[0]);
         }
 
         @Override

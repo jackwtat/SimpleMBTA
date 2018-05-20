@@ -1,6 +1,7 @@
 package jackwtat.simplembta.services;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,6 +35,7 @@ public class LocationProviderService {
     private OnUpdateSuccessListener onUpdateSuccessListener;
     private OnUpdateFailedListener onUpdateFailedListener;
 
+    @SuppressLint("RestrictedApi")
     public LocationProviderService(Context context, long updateInterval, long fastestInterval) {
         this.context = context;
 

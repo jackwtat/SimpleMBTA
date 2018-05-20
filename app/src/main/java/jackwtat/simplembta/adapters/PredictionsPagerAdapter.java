@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import jackwtat.simplembta.fragments.PredictionsListFragment;
+import jackwtat.simplembta.fragments.FavoritesFragment;
+import jackwtat.simplembta.fragments.MapFragment;
+import jackwtat.simplembta.fragments.NearbyFragment;
 
 /**
  * Created by jackw on 8/21/2017.
@@ -12,13 +14,23 @@ import jackwtat.simplembta.fragments.PredictionsListFragment;
 
 public class PredictionsPagerAdapter extends FragmentPagerAdapter {
     final private int PAGE_COUNT = 1;
-    final private String[] TAB_TITLES = {"Nearby", "Map", "Saved"};
+    final private String[] TAB_TITLES = {"Nearby", "Map", "Favorites"};
 
-    public PredictionsPagerAdapter(FragmentManager fm){super(fm);}
+    private Fragment[] fragments = new Fragment[3];
+
+    public PredictionsPagerAdapter(FragmentManager fm,
+                                   NearbyFragment nearbyFragment,
+                                   MapFragment mapFragment,
+                                   FavoritesFragment favoritesFragment) {
+        super(fm);
+        fragments[0] = nearbyFragment;
+        fragments[1] = mapFragment;
+        fragments[2] = favoritesFragment;
+    }
 
     @Override
     public Fragment getItem(int position) {
-        return new PredictionsListFragment();
+        return fragments[position];
     }
 
     @Override

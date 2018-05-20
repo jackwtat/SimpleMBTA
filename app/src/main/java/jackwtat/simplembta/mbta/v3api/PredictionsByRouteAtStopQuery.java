@@ -75,8 +75,9 @@ public class PredictionsByRouteAtStopQuery extends Query {
 
                         } else if (type.equals("trip")) {
                             String destination = jAttributes.getString("headsign");
+                            String name = jAttributes.getString("name");
 
-                            trips.put(id, new Trip(id, direction, destination));
+                            trips.put(id, new Trip(id, direction, destination, name));
 
                         } else {
                             Log.e(LOG_TAG, "Unknown linked object type:\n" +

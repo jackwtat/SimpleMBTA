@@ -30,10 +30,11 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
 import jackwtat.simplembta.adapters.ServiceAlertsListAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpdateListener;
+import jackwtat.simplembta.controllers.PredictionsController;
+import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
+import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
+import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
+import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
 import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
@@ -45,19 +46,18 @@ import jackwtat.simplembta.mbta.structure.Stop;
  * Created by jackw on 8/21/2017.
  */
 
-public class PredictionsListFragment extends Fragment {
-    private final static String LOG_TAG = "NearbyPredsFragment";
+public class NearbyFragment extends RefreshableFragment{
+    private final static String LOG_TAG = "NearbyFragment";
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView predictionsListView;
-    private TextView statusMsgTextView;
     private TextView statusTimeTextView;
     private TextView errorTextView;
 
-    private NearbyPredictionsController controller;
+    private PredictionsController controller;
     private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
 
     private AlertDialog serviceAlertsDialog;
@@ -76,44 +76,35 @@ public class PredictionsListFragment extends Fragment {
         serviceAlertsArrayAdapter = new ServiceAlertsListAdapter(
                 getActivity(), new ArrayList<ServiceAlert>());
 
-        controller = new NearbyPredictionsController(getContext());
-
-        controller.setNetworkErrorListener(new OnNetworkErrorListener() {
-            @Override
-            public void onNetworkError() {
-                onRefreshError(getResources().getString(R.string.no_network_connectivity));
-            }
-        });
-
-        controller.setOnLocationErrorListener(new OnLocationErrorListener() {
-            @Override
-            public void onLocationError() {
-                onRefreshError(getResources().getString(R.string.no_location));
-            }
-        });
-
-        controller.setOnProgressUpdateListener(new OnProgressUpdateListener() {
-            @Override
-            public void onProgressUpdate(int progress) {
-                try {
-                    setRefreshProgress(progress,
-                            getResources().getString(R.string.getting_predictions));
-                } catch (IllegalStateException e) {
-                    Log.e(LOG_TAG, "Pushing progress update to nonexistent view");
-                }
-            }
-        });
-
-        controller.setOnPostExecuteListener(new OnPostExecuteListener() {
-            @Override
-            public void onPostExecute(List<Stop> stops) {
-                try {
-                    publishPredictions(stops);
-                } catch (IllegalStateException e) {
-                    Log.e(LOG_TAG, "Pushing get results to nonexistent view");
-                }
-            }
-        });
+        controller = new NearbyPredictionsController(getContext(),
+                new OnPostExecuteListener() {
+                    public void onPostExecute(List<Stop> stops) {
+                        try {
+                            publishPredictions(stops);
+                        } catch (IllegalStateException e) {
+                            Log.e(LOG_TAG, "Pushing get results to nonexistent view");
+                        }
+                    }
+                },
+                new OnProgressUpdateListener() {
+                    public void onProgressUpdate(int progress) {
+                        try {
+                            setRefreshProgress(getResources().getString(R.string.getting_predictions));
+                        } catch (IllegalStateException e) {
+                            Log.e(LOG_TAG, "Pushing progress update to nonexistent view");
+                        }
+                    }
+                },
+                new OnNetworkErrorListener() {
+                    public void onNetworkError() {
+                        onRefreshError(getResources().getString(R.string.no_network_connectivity));
+                    }
+                },
+                new OnLocationErrorListener() {
+                    public void onLocationError() {
+                        onRefreshError(getResources().getString(R.string.no_location));
+                    }
+                });
     }
 
     @Nullable
@@ -123,7 +114,6 @@ public class PredictionsListFragment extends Fragment {
 
         swipeRefreshLayout = rootView.findViewById(R.id.predictions_swipe_refresh_layout);
         predictionsListView = rootView.findViewById(R.id.predictions_list_view);
-        statusMsgTextView = rootView.findViewById(R.id.status_message_text_view);
         statusTimeTextView = rootView.findViewById(R.id.status_time_text_view);
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
 
@@ -135,7 +125,7 @@ public class PredictionsListFragment extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        forceRefresh();
+                        refresh();
                     }
                 }
         );
@@ -159,8 +149,9 @@ public class PredictionsListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        controller.connectLocationService();
-        controller.getPredictions(false);
+
+        controller.connect();
+        controller.update();
     }
 
     @Override
@@ -180,20 +171,18 @@ public class PredictionsListFragment extends Fragment {
         }
 
         controller.cancel();
-        controller.disconnectLocationService();
 
         super.onStop();
     }
 
     // Call the controller to get the latest MBTA values
-    public void forceRefresh() {
-        controller.getPredictions(true);
+    public void refresh() {
+        controller.forceUpdate();
     }
 
     // Updates the UI to show that values refresh has been canceled
     private void onRefreshCanceled() {
         swipeRefreshLayout.setRefreshing(false);
-        statusMsgTextView.setText(getResources().getString(R.string.refresh_canceled));
     }
 
     // Updates the UI to display an error message if refresh fails
@@ -202,12 +191,9 @@ public class PredictionsListFragment extends Fragment {
     }
 
     // Updates the UI to display values refresh progress
-    private void setRefreshProgress(int percentage, String message) {
+    private void setRefreshProgress(String message) {
         if (!swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(true);
-        }
-        if (!statusMsgTextView.getText().toString().equals(message)) {
-            statusMsgTextView.setText(message);
         }
     }
 
@@ -218,7 +204,6 @@ public class PredictionsListFragment extends Fragment {
         String statusMessage = getResources().getString(R.string.updated) + " " + ft.format(statusTime);
 
         statusTimeTextView.setText(statusMessage);
-        statusMsgTextView.setText("");
         errorTextView.setText(errorMessage);
         swipeRefreshLayout.setRefreshing(showRefreshIcon);
         if (clearList) {
@@ -266,9 +251,11 @@ public class PredictionsListFragment extends Fragment {
                     predictions.add(p);
 
                     // Add the next predictions, too, if same route-direction
-                    for (int j = i + 1; j < s.getPredictions().size() &&
-                            (s.getPredictions().get(j).getRoute().getId().equals(p.getRoute().getId()) &&
-                                    s.getPredictions().get(j).getTrip().getDirection() == p.getTrip().getDirection()); j++) {
+                    for (int j = i + 1;
+                         j < s.getPredictions().size() &&
+                                 (s.getPredictions().get(j).getRoute().getId().equals(p.getRoute().getId()) &&
+                                         s.getPredictions().get(j).getTrip().getDirection() == p.getTrip().getDirection());
+                         j++) {
                         predictions.add(s.getPredictions().get(j));
                         i = j;
                     }
@@ -347,7 +334,7 @@ public class PredictionsListFragment extends Fragment {
         predictionsListView.setSelection(0);
 
         // Set statuses
-        setStatus(controller.getLastRefreshedDate(), "", false, false);
+        setStatus(new Date(), "", false, false);
 
         // If there are no values, show status to user
         if (predictionsListAdapter.getCount() < 1)

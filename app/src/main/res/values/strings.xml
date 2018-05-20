@@ -3,6 +3,11 @@
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
 
+    <!-- Fragment Title -->
+    <string name="nearby_fragment_title">Nearby</string>
+    <string name="map_fragment_title">Map</string>
+    <string name="favorites_fragment_title">Favorites</string>
+
     <!-- Service Alerts -->
     <string name="service_alert_advisory">Advisory</string>
     <string name="service_alert_urgent">Alert</string>
@@ -71,4 +76,8 @@
     <string name="add_to_favorites">Add To Favorites</string>
     <string name="remove_from_favorites">Remove From Favorites</string>
     <string name="route_prefix">Route</string>
+
+    <!-- Miscellaneous -->
+    <string name="Train">Train</string>
+    <string name="min">min</string>
 </resources>

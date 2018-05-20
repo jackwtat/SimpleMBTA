@@ -6,11 +6,15 @@ import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
-import jackwtat.simplembta.fragments.PredictionsListFragment;
+import jackwtat.simplembta.fragments.FavoritesFragment;
+import jackwtat.simplembta.fragments.MapFragment;
+import jackwtat.simplembta.fragments.NearbyFragment;
+import jackwtat.simplembta.fragments.RefreshableFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager());
+        predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager(),
+                new NearbyFragment(), new MapFragment(), new FavoritesFragment());
 
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
@@ -46,17 +51,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("Main Activity","This is fragment "+predictionsPagerAdapter.getItemPosition(getCurrentRefreshableFragment()));
+
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getCurrentFragment().forceRefresh();
+                getCurrentRefreshableFragment().refresh();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private PredictionsListFragment getCurrentFragment() {
-        return (PredictionsListFragment) getSupportFragmentManager()
+    private RefreshableFragment getCurrentRefreshableFragment() {
+        return (RefreshableFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
     }
 }
