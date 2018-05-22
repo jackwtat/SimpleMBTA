@@ -78,6 +78,6 @@
     <string name="route_prefix">Route</string>
 
     <!-- Miscellaneous -->
-    <string name="Train">Train</string>
+    <string name="train">Train</string>
     <string name="min">min</string>
 </resources>
