@@ -23,6 +23,7 @@ import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.views.RouteNameView;
 
 /**
  * Created by jackw on 12/26/2017.
@@ -54,17 +55,12 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
 
         // Initialize all the views
         LinearLayout predictionsLayout = listItemView.findViewById(R.id.predictions_layout);
-        TextView routeNameView = listItemView.findViewById(R.id.route_text_view);
         TextView stopNameView = listItemView.findViewById(R.id.stop_text_view);
         TextView alertIndicatorView = listItemView.findViewById(R.id.alert_indicator_text_view);
+        RouteNameView routeNameView = listItemView.findViewById(R.id.route_text_view);
 
         // Hide the views that have optional values for now
         alertIndicatorView.setVisibility(View.GONE);
-
-        // Clear previous predictions
-        if(predictionsLayout.getChildCount() > 0) {
-            predictionsLayout.removeAllViews();
-        }
 
         // Get the route
         Route route = predictions.get(0).getRoute();
@@ -73,7 +69,7 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         stopNameView.setText(predictions.get(0).getStopName());
 
         // Set the route name
-        setRouteView(route, routeNameView);
+        routeNameView.setRouteName(getContext(), route);
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
@@ -86,6 +82,11 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
                 alertIndicatorView.setText(getContext().getResources().getString(R.string.service_alert_advisory));
                 alertIndicatorView.setTextColor(ContextCompat.getColor(getContext(), R.color.ServiceAlert_Advisory));
             }
+        }
+
+        // Clear previous predictions
+        if (predictionsLayout.getChildCount() > 0) {
+            predictionsLayout.removeAllViews();
         }
 
         // Display the destinations and prediction times using PredictionViews
@@ -123,58 +124,5 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         }
 
         return listItemView;
-    }
-
-    private void setRouteView(Route route, TextView routeView) {
-        Drawable bkgd = getContext().getResources().getDrawable(R.drawable.route_background);
-        DrawableCompat.setTint(bkgd, Color.parseColor(route.getColor()));
-
-        routeView.setBackground(bkgd);
-        routeView.setTextColor(Color.parseColor(route.getTextColor()));
-
-        String routeId = route.getId();
-        Mode mode = route.getMode();
-
-        if (mode == Mode.HEAVY_RAIL) {
-            if (routeId.equals("Red"))
-                routeView.setText(getContext().getResources().getString(R.string.red_line_short_name));
-            else if (routeId.equals("Orange"))
-                routeView.setText(getContext().getResources().getString(R.string.orange_line_short_name));
-            else if (routeId.equals("Blue"))
-                routeView.setText(getContext().getResources().getString(R.string.blue_line_short_name));
-            else
-                routeView.setText(routeId);
-
-        } else if (mode == Mode.LIGHT_RAIL) {
-            if (routeId.equals("Green-B"))
-                routeView.setText(getContext().getResources().getString(R.string.green_line_b_short_name));
-            else if (routeId.equals("Green-C"))
-                routeView.setText(getContext().getResources().getString(R.string.green_line_c_short_name));
-            else if (routeId.equals("Green-D"))
-                routeView.setText(getContext().getResources().getString(R.string.green_line_d_short_name));
-            else if (routeId.equals("Green-E"))
-                routeView.setText(getContext().getResources().getString(R.string.green_line_e_short_name));
-            else if (routeId.equals("Mattapan"))
-                routeView.setText(getContext().getResources().getString(R.string.red_line_mattapan_short_name));
-            else
-                routeView.setText(routeId);
-
-        } else if (mode == Mode.BUS) {
-            if (routeId.equals("746"))
-                routeView.setText(getContext().getResources().getString(R.string.silver_line_waterfront_short_name));
-            else if (!route.getShortName().equals("") && !route.getShortName().equals("null"))
-                routeView.setText(route.getShortName());
-            else
-                routeView.setText(routeId);
-
-        } else if (mode == Mode.COMMUTER_RAIL) {
-            routeView.setText(getContext().getResources().getString(R.string.commuter_rail_short_name));
-
-        } else if (mode == Mode.FERRY) {
-            routeView.setText(getContext().getResources().getString(R.string.ferry_short_name));
-
-        } else {
-            routeView.setText(routeId);
-        }
     }
 }

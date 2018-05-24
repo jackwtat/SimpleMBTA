@@ -15,19 +15,17 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp">
 
-        <TextView
+        <jackwtat.simplembta.views.RouteNameView
             android:id="@+id/route_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/route_background"
             android:gravity="center_horizontal"
             android:minWidth="65dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:textSize="22sp"
-            android:textStyle="bold"
-            tools:text="106" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/alert_indicator_text_view"
