@@ -2,6 +2,7 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,18 @@ public class PredictionView extends LinearLayout {
     TextView trainNumberView;
     TextView firstTimeView;
     TextView secondTimeView;
+
+    public PredictionView(Context context) {
+        super(context);
+    }
+
+    public PredictionView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public PredictionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
 
     public PredictionView(Context context, Prediction prediction) {
         super(context);
