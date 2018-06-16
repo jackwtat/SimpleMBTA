@@ -12,11 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 
 import java.text.DateFormat;
@@ -61,11 +61,11 @@ public class NearbyFragment extends RefreshableFragment {
     private PredictionsController controller;
     private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
 
-    private AlertDialog serviceAlertsDialog;
-    private View serviceAlertsHeader;
-    private View serviceAlertsBody;
-    private ArrayAdapter<ServiceAlert> serviceAlertsArrayAdapter;
-    private ListView serviceAlertsListView;
+    private AlertDialog alertsDialog;
+    private View alertsHeader;
+    private View alertsBody;
+    private ArrayAdapter<ServiceAlert> alertsArrayAdapter;
+    private ListView alertsListView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class NearbyFragment extends RefreshableFragment {
         predictionsListAdapter = new PredictionsListAdapter(
                 getActivity(), new ArrayList<ArrayList<Prediction>>());
 
-        serviceAlertsArrayAdapter = new ServiceAlertsListAdapter(
+        alertsArrayAdapter = new ServiceAlertsListAdapter(
                 getActivity(), new ArrayList<ServiceAlert>());
 
         controller = new NearbyPredictionsController(getContext(),
@@ -160,8 +160,8 @@ public class NearbyFragment extends RefreshableFragment {
         super.onPause();
 
         // Hide alert dialog if user has it open
-        if (serviceAlertsDialog != null) {
-            serviceAlertsDialog.dismiss();
+        if (alertsDialog != null) {
+            alertsDialog.dismiss();
         }
     }
 
@@ -218,8 +218,8 @@ public class NearbyFragment extends RefreshableFragment {
         predictionsListAdapter.clear();
 
         // Hide alerts dialog if user has it open
-        if (serviceAlertsDialog != null) {
-            serviceAlertsDialog.dismiss();
+        if (alertsDialog != null) {
+            alertsDialog.dismiss();
         }
 
         // Initialize the data structure that stores route-direction combos that have been processed
@@ -294,10 +294,10 @@ public class NearbyFragment extends RefreshableFragment {
                     if (rte.getServiceAlerts().size() > 0) {
 
                         // Build Service Alert Route Header
-                        serviceAlertsHeader = getLayoutInflater().inflate(
-                                R.layout.service_alerts_header, null);
-                        TextView serviceAlertsRouteName = serviceAlertsHeader.findViewById(R.id.service_alert_route_name);
-                        View serviceAlertsRouteNameAccent = serviceAlertsHeader.findViewById(R.id.service_alert_route_name_accent);
+                        alertsHeader = getLayoutInflater().inflate(
+                                R.layout.alerts_header, null);
+                        TextView serviceAlertsRouteName = alertsHeader.findViewById(R.id.service_alert_route_name);
+                        View serviceAlertsRouteNameAccent = alertsHeader.findViewById(R.id.service_alert_route_name_accent);
                         serviceAlertsRouteName.setBackgroundColor(Color.parseColor(rte.getColor()));
                         serviceAlertsRouteName.setTextColor(Color.parseColor(rte.getTextColor()));
 
@@ -320,27 +320,50 @@ public class NearbyFragment extends RefreshableFragment {
                         }
 
                         // Build Service Alerts Body
-                        serviceAlertsBody = LayoutInflater.from(getContext()).inflate(
-                                R.layout.service_alerts_body, null);
-                        serviceAlertsArrayAdapter.clear();
-                        serviceAlertsArrayAdapter.addAll(rte.getServiceAlerts());
-                        serviceAlertsListView = serviceAlertsBody.findViewById(R.id.service_alerts_list_view);
-                        serviceAlertsListView.setAdapter(serviceAlertsArrayAdapter);
+                        alertsBody = LayoutInflater.from(getContext()).inflate(
+                                R.layout.alerts_body, null);
+                        alertsArrayAdapter.clear();
+                        alertsArrayAdapter.addAll(rte.getServiceAlerts());
+                        alertsListView = alertsBody.findViewById(R.id.alerts_list_view);
+                        alertsListView.setAdapter(alertsArrayAdapter);
+                        alertsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView view, int firstVisibleItem,
+                                                 int visibleItemCount, int totalItemCount) {
+                                if (alertsListView.getLastVisiblePosition() == alertsListView.getAdapter().getCount() - 1 &&
+                                        alertsListView.getChildAt(alertsListView.getChildCount() - 1).getBottom() <= alertsListView.getHeight()) {
+                                    alertsBody.findViewById(R.id.alerts_list_down_arrow).setVisibility(View.GONE);
+                                } else {
+                                    alertsBody.findViewById(R.id.alerts_list_down_arrow).setVisibility(View.VISIBLE);
+                                }
+
+                                if (alertsListView.getFirstVisiblePosition() == 0) {
+                                    alertsBody.findViewById(R.id.alerts_list_up_arrow).setVisibility(View.GONE);
+                                } else {
+                                    alertsBody.findViewById(R.id.alerts_list_up_arrow).setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
 
 
                         // Create alert dialog builder
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setCustomTitle(serviceAlertsHeader);
-                        builder.setView(serviceAlertsBody);
+                        builder.setCustomTitle(alertsHeader);
+                        builder.setView(alertsBody);
                         builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                serviceAlertsDialog.dismiss();
+                                alertsDialog.dismiss();
                             }
                         });
 
-                        serviceAlertsDialog = builder.create();
-                        serviceAlertsDialog.show();
+                        alertsDialog = builder.create();
+                        alertsDialog.show();
                     }
                 }
             }

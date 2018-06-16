@@ -36,7 +36,7 @@ public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
         // Inflate the listItemView
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.service_alert_list_item, parent, false);
+                    R.layout.alert_list_item, parent, false);
         }
 
         // Check if there are no Predictions

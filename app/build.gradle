@@ -7,7 +7,7 @@ android {
         applicationId "jackwtat.simplembta"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 9
+        versionCode 11
         versionName '2.0.2'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
