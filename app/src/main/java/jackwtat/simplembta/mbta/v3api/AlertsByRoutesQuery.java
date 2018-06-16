@@ -59,7 +59,7 @@ public class AlertsByRoutesQuery extends Query {
                 String id = jAlert.getString("id");
 
                 JSONObject jAttributes = jAlert.getJSONObject("attributes");
-                String header = jAttributes.getString("short_header");
+                String header = jAttributes.getString("header");
                 String effect = jAttributes.getString("effect");
                 int severity = jAttributes.getInt("severity");
                 String lifecycle = jAttributes.getString("lifecycle");
