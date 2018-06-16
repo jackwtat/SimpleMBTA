@@ -32,15 +32,15 @@ public class PredictionView extends LinearLayout {
 
     public PredictionView(Context context, Prediction prediction) {
         super(context);
-        setPrediction(context, prediction, null);
+        init(context, prediction, null);
     }
 
     public PredictionView(Context context, Prediction prediction1, Prediction prediction2) {
         super(context);
-        setPrediction(context, prediction1, prediction2);
+        init(context, prediction1, prediction2);
     }
 
-    private void setPrediction(Context context, Prediction p1, @Nullable Prediction p2) {
+    private void init(Context context, Prediction p1, @Nullable Prediction p2) {
         rootView = inflate(context, R.layout.prediction_view, this);
         destinationView = rootView.findViewById(R.id.destination_text_view);
         trainNumberView = rootView.findViewById(R.id.train_number_text_view);

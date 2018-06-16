@@ -18,10 +18,10 @@ import jackwtat.simplembta.mbta.structure.ServiceAlert;
  * Created by jackw on 3/14/2018.
  */
 
-public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
+public class AlertsListAdapter extends ArrayAdapter<ServiceAlert> {
     final private String LOG_TAG = "ServiceAlertListAdapter";
 
-    public ServiceAlertsListAdapter(
+    public AlertsListAdapter(
             @NonNull Context context, ArrayList<ServiceAlert> alerts) {
         super(context, 0, alerts);
     }

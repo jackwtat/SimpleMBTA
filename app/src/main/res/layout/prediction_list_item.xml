@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp">
 
-        <jackwtat.simplembta.views.RouteNameView
+        <jackwtat.simplembta.views.RouteShortNameView
             android:id="@+id/route_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

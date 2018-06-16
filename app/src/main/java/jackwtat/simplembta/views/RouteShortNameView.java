@@ -12,21 +12,21 @@ import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Route;
 
 
-public class RouteNameView extends AppCompatTextView {
-    public RouteNameView(Context context) {
+public class RouteShortNameView extends AppCompatTextView {
+    public RouteShortNameView(Context context) {
         super(context);
     }
 
-    public RouteNameView(Context context, AttributeSet attrs) {
+    public RouteShortNameView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RouteNameView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RouteShortNameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     public void setRouteName(Context context, Route route) {
-        Drawable background = context.getResources().getDrawable(R.drawable.route_background);
+        Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
         DrawableCompat.setTint(background, Color.parseColor(route.getColor()));
 
         setBackground(background);

@@ -95,7 +95,7 @@ public class PredictionsByRouteAtStopQuery extends Query {
             }
 
             // Add service alerts to their respective routes
-            route.addServiceAlerts(new ServiceAlertsByRoutesQuery(apiKey).get(routeId));
+            route.addServiceAlerts(new AlertsByRoutesQuery(apiKey).get(routeId));
 
             // Parse Prediction data
             if (jRoot.has("data")) {

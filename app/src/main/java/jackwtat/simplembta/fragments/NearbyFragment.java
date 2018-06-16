@@ -2,7 +2,6 @@ package jackwtat.simplembta.fragments;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -29,18 +27,17 @@ import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
-import jackwtat.simplembta.adapters.ServiceAlertsListAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
 import jackwtat.simplembta.controllers.PredictionsController;
 import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
-import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
 import jackwtat.simplembta.mbta.structure.Stop;
+import jackwtat.simplembta.views.AlertsListView;
+import jackwtat.simplembta.views.RouteLongNameView;
 
 
 /**
@@ -62,10 +59,6 @@ public class NearbyFragment extends RefreshableFragment {
     private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
 
     private AlertDialog alertsDialog;
-    private View alertsHeader;
-    private View alertsBody;
-    private ArrayAdapter<ServiceAlert> alertsArrayAdapter;
-    private ListView alertsListView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,9 +66,6 @@ public class NearbyFragment extends RefreshableFragment {
 
         predictionsListAdapter = new PredictionsListAdapter(
                 getActivity(), new ArrayList<ArrayList<Prediction>>());
-
-        alertsArrayAdapter = new ServiceAlertsListAdapter(
-                getActivity(), new ArrayList<ServiceAlert>());
 
         controller = new NearbyPredictionsController(getContext(),
                 new OnPostExecuteListener() {
@@ -288,73 +278,15 @@ public class NearbyFragment extends RefreshableFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (predictionsListAdapter.getItem(position) != null &&
                         predictionsListAdapter.getItem(position).size() > 0) {
-                    Route rte = predictionsListAdapter.getItem(position).get(0).getRoute();
-                    Collections.sort(rte.getServiceAlerts());
+                    Route route = predictionsListAdapter.getItem(position).get(0).getRoute();
+                    Collections.sort(route.getServiceAlerts());
 
-                    if (rte.getServiceAlerts().size() > 0) {
-
-                        // Build Service Alert Route Header
-                        alertsHeader = getLayoutInflater().inflate(
-                                R.layout.alerts_header, null);
-                        TextView serviceAlertsRouteName = alertsHeader.findViewById(R.id.service_alert_route_name);
-                        View serviceAlertsRouteNameAccent = alertsHeader.findViewById(R.id.service_alert_route_name_accent);
-                        serviceAlertsRouteName.setBackgroundColor(Color.parseColor(rte.getColor()));
-                        serviceAlertsRouteName.setTextColor(Color.parseColor(rte.getTextColor()));
-
-                        if (rte.getMode() == Mode.BUS && !rte.getLongName().contains("Silver Line")) {
-
-                            serviceAlertsRouteNameAccent.setVisibility(View.VISIBLE);
-
-                            if (!rte.getShortName().equals("") && !rte.getShortName().equals("null")) {
-                                serviceAlertsRouteName.setText(new StringBuilder()
-                                        .append(getResources().getString(R.string.route_prefix))
-                                        .append(" ")
-                                        .append(rte.getShortName()));
-
-                            } else {
-                                serviceAlertsRouteName.setText(rte.getId());
-                            }
-                        } else {
-                            serviceAlertsRouteName.setText(rte.getLongName());
-                            serviceAlertsRouteNameAccent.setVisibility(View.GONE);
-                        }
-
-                        // Build Service Alerts Body
-                        alertsBody = LayoutInflater.from(getContext()).inflate(
-                                R.layout.alerts_body, null);
-                        alertsArrayAdapter.clear();
-                        alertsArrayAdapter.addAll(rte.getServiceAlerts());
-                        alertsListView = alertsBody.findViewById(R.id.alerts_list_view);
-                        alertsListView.setAdapter(alertsArrayAdapter);
-                        alertsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-                            }
-
-                            @Override
-                            public void onScroll(AbsListView view, int firstVisibleItem,
-                                                 int visibleItemCount, int totalItemCount) {
-                                if (alertsListView.getLastVisiblePosition() == alertsListView.getAdapter().getCount() - 1 &&
-                                        alertsListView.getChildAt(alertsListView.getChildCount() - 1).getBottom() <= alertsListView.getHeight()) {
-                                    alertsBody.findViewById(R.id.alerts_list_down_arrow).setVisibility(View.GONE);
-                                } else {
-                                    alertsBody.findViewById(R.id.alerts_list_down_arrow).setVisibility(View.VISIBLE);
-                                }
-
-                                if (alertsListView.getFirstVisiblePosition() == 0) {
-                                    alertsBody.findViewById(R.id.alerts_list_up_arrow).setVisibility(View.GONE);
-                                } else {
-                                    alertsBody.findViewById(R.id.alerts_list_up_arrow).setVisibility(View.VISIBLE);
-                                }
-                            }
-                        });
-
+                    if (route.getServiceAlerts().size() > 0) {
 
                         // Create alert dialog builder
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setCustomTitle(alertsHeader);
-                        builder.setView(alertsBody);
+                        builder.setCustomTitle(new RouteLongNameView(getActivity(), route));
+                        builder.setView(new AlertsListView(getActivity(), route.getServiceAlerts()));
                         builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

@@ -122,7 +122,7 @@ public class PredictionsByLocationQuery extends Query {
             }
 
             // Add service alerts to their respective routes
-            alerts.addAll(new ServiceAlertsByRoutesQuery(apiKey).get(new ArrayList<>(routes.keySet())));
+            alerts.addAll(new AlertsByRoutesQuery(apiKey).get(new ArrayList<>(routes.keySet())));
             for (ServiceAlert alert : alerts) {
                 for (Route route : routes.values()) {
                     if (alert.getAffectedRoutes().contains(route.getId()) ||
