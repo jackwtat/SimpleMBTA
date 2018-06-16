@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
@@ -46,7 +47,7 @@ import jackwtat.simplembta.mbta.structure.Stop;
  * Created by jackw on 8/21/2017.
  */
 
-public class NearbyFragment extends RefreshableFragment{
+public class NearbyFragment extends RefreshableFragment {
     private final static String LOG_TAG = "NearbyFragment";
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -222,7 +223,10 @@ public class NearbyFragment extends RefreshableFragment{
         }
 
         // Initialize the data structure that stores route-direction combos that have been processed
-        ArrayList<String> displayed = new ArrayList<>();
+        ArrayList<String> processedRDs = new ArrayList<>();
+
+        // Initialize HashMap to track predictions for route-directions that have been processed
+        HashMap<String, ArrayList<Prediction>> toDisplay = new HashMap<>();
 
         // Sort the stops
         Collections.sort(stops);
@@ -241,14 +245,24 @@ public class NearbyFragment extends RefreshableFragment{
                 // the direction ID and the route ID
                 String rd = p.getTrip().getDirection() + ":" + p.getRoute().getId();
 
-                // If we haven't already processed this route-direction combo,
-                // then okay to display
-                if (!displayed.contains(rd)) {
-                    displayed.add(rd);
+                // If this route-direction has been processed with a prediction with null departure
+                // and this prediction does not have a null departure, then we want to remove the
+                // processed prediction and replace it with this one
+                if (processedRDs.contains(rd) &&
+                        toDisplay.get(rd).get(0).getDepartureTime() == null &&
+                        p.getDepartureTime() != null) {
+                    processedRDs.remove(rd);
+                    toDisplay.remove(rd);
+                }
 
-                    ArrayList<Prediction> predictions = new ArrayList<>();
+                // If this route-direction has not processed or has been previously unprocessed,
+                // then okay to process
+                if (!processedRDs.contains(rd)) {
+                    processedRDs.add(rd);
 
-                    predictions.add(p);
+                    toDisplay.put(rd, new ArrayList<Prediction>());
+
+                    toDisplay.get(rd).add(p);
 
                     // Add the next predictions, too, if same route-direction
                     for (int j = i + 1;
@@ -256,14 +270,16 @@ public class NearbyFragment extends RefreshableFragment{
                                  (s.getPredictions().get(j).getRoute().getId().equals(p.getRoute().getId()) &&
                                          s.getPredictions().get(j).getTrip().getDirection() == p.getTrip().getDirection());
                          j++) {
-                        predictions.add(s.getPredictions().get(j));
+                        toDisplay.get(rd).add(s.getPredictions().get(j));
                         i = j;
                     }
-
-                    // Display in the list
-                    predictionsListAdapter.add(predictions);
                 }
             }
+        }
+
+        // Add processed predictions to the prediction list adaptor
+        for (String rd : processedRDs) {
+            predictionsListAdapter.add(toDisplay.get(rd));
         }
 
         // Set the OnItemClickListener for displaying ServiceAlerts
