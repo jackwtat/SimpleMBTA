@@ -1,7 +1,9 @@
 package jackwtat.simplembta.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -278,25 +280,31 @@ public class NearbyFragment extends RefreshableFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (predictionsListAdapter.getItem(position) != null &&
                         predictionsListAdapter.getItem(position).size() > 0) {
-                    Route route = predictionsListAdapter.getItem(position).get(0).getRoute();
+                    final Route route = predictionsListAdapter.getItem(position).get(0).getRoute();
                     Collections.sort(route.getServiceAlerts());
 
-                    if (route.getServiceAlerts().size() > 0) {
+                    // Create alert dialog builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setCustomTitle(new RouteLongNameView(getActivity(), route));
+                    builder.setView(new AlertsListView(getActivity(), route.getServiceAlerts()));
+                    builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            alertsDialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton(getResources().getString(R.string.mbta_com), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String url = "http://mbta.com/schedules/" + route.getId();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        }
+                    });
 
-                        // Create alert dialog builder
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setCustomTitle(new RouteLongNameView(getActivity(), route));
-                        builder.setView(new AlertsListView(getActivity(), route.getServiceAlerts()));
-                        builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                alertsDialog.dismiss();
-                            }
-                        });
-
-                        alertsDialog = builder.create();
-                        alertsDialog.show();
-                    }
+                    alertsDialog = builder.create();
+                    alertsDialog.show();
                 }
             }
         });
