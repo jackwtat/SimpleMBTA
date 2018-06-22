@@ -9,6 +9,30 @@
         android:layout_height="wrap_content"
         android:fadeScrollbars="false" />
 
+    <LinearLayout
+        android:id="@+id/no_alerts_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_service_alerts"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_smiley_face" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/alerts_list_up_arrow"
         android:layout_width="wrap_content"

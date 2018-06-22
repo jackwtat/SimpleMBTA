@@ -280,13 +280,13 @@ public class NearbyFragment extends RefreshableFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (predictionsListAdapter.getItem(position) != null &&
                         predictionsListAdapter.getItem(position).size() > 0) {
-                    final Route route = predictionsListAdapter.getItem(position).get(0).getRoute();
-                    Collections.sort(route.getServiceAlerts());
+                    final Prediction p = predictionsListAdapter.getItem(position).get(0);
+                    Collections.sort(p.getRoute().getServiceAlerts());
 
                     // Create alert dialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setCustomTitle(new RouteLongNameView(getActivity(), route));
-                    builder.setView(new AlertsListView(getActivity(), route.getServiceAlerts()));
+                    builder.setCustomTitle(new RouteLongNameView(getActivity(), p.getRoute()));
+                    builder.setView(new AlertsListView(getActivity(), p.getRoute().getServiceAlerts()));
                     builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -296,7 +296,8 @@ public class NearbyFragment extends RefreshableFragment {
                     builder.setNegativeButton(getResources().getString(R.string.mbta_com), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String url = "http://mbta.com/schedules/" + route.getId();
+                            String url = "http://mbta.com/schedules/" + p.getRoute().getId() +
+                                    "/line?direction_id=" + p.getTrip().getDirection();
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(Uri.parse(url));
                             startActivity(intent);
