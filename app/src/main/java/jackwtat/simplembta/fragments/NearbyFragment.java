@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.activities.MbtaRouteWebPageActivity;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
 import jackwtat.simplembta.controllers.PredictionsController;
@@ -35,6 +36,7 @@ import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
+import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.Stop;
@@ -296,10 +298,15 @@ public class NearbyFragment extends RefreshableFragment {
                     builder.setNegativeButton(getResources().getString(R.string.mbta_com), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String url = "http://mbta.com/schedules/" + p.getRoute().getId() +
-                                    "/line?direction_id=" + p.getTrip().getDirection();
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setData(Uri.parse(url));
+                            Intent intent = new Intent(getActivity(), MbtaRouteWebPageActivity.class);
+                            intent.putExtra("routeId", p.getRoute().getId());
+                            if(p.getRoute().getMode() != Mode.BUS || p.getRoute().getLongName().contains("Silver Line")) {
+                                intent.putExtra("routeName", p.getRoute().getLongName());
+                            } else {
+                                intent.putExtra("routeName", "Route " + p.getRoute().getShortName());
+                            }
+                            intent.putExtra("color", p.getRoute().getColor());
+                            intent.putExtra("direction", p.getTrip().getDirection());
                             startActivity(intent);
                         }
                     });

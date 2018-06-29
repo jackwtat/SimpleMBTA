@@ -73,7 +73,7 @@
 
     <!-- Dialog Box Strings -->
     <string name="dialog_close_button">Close</string>
-    <string name="mbta_com">Go To mbta.com</string>
+    <string name="mbta_com">See Details</string>
     <string name="add_to_favorites">Add To Favorites</string>
     <string name="remove_from_favorites">Remove From Favorites</string>
     <string name="route_prefix">Route</string>

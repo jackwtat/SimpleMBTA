@@ -1,4 +1,4 @@
-package jackwtat.simplembta;
+package jackwtat.simplembta.activities;
 
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
 import jackwtat.simplembta.fragments.FavoritesFragment;
 import jackwtat.simplembta.fragments.MapFragment;
