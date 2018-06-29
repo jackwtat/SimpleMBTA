@@ -1,6 +1,7 @@
 package jackwtat.simplembta.mbta.structure;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -49,6 +50,16 @@ public class Route implements Comparable<Route> {
 
     public String getLongName() {
         return longName;
+    }
+
+    public String getDisplayName() {
+        if (mode == Mode.BUS && !longName.contains("Silver Line")) {
+            return "Route " + shortName;
+        } else if (!shortName.equals("") && !shortName.equals("null")) {
+            return longName;
+        } else {
+            return id;
+        }
     }
 
     public String getColor() {
