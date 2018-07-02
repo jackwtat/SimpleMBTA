@@ -300,12 +300,9 @@ public class NearbyFragment extends RefreshableFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getActivity(), MbtaRouteWebPageActivity.class);
                             intent.putExtra("routeId", p.getRoute().getId());
-                            if(p.getRoute().getMode() != Mode.BUS || p.getRoute().getLongName().contains("Silver Line")) {
-                                intent.putExtra("routeName", p.getRoute().getLongName());
-                            } else {
-                                intent.putExtra("routeName", "Route " + p.getRoute().getShortName());
-                            }
-                            intent.putExtra("color", p.getRoute().getColor());
+                            intent.putExtra("routeName", p.getRoute().getDisplayName());
+                            intent.putExtra("routeColor", p.getRoute().getColor());
+                            intent.putExtra("textColor", p.getRoute().getTextColor());
                             intent.putExtra("direction", p.getTrip().getDirection());
                             startActivity(intent);
                         }

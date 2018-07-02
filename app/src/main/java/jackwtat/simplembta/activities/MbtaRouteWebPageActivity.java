@@ -18,7 +18,8 @@ public class MbtaRouteWebPageActivity extends AppCompatActivity {
     WebView mbtaWebView;
     String routeId;
     String routeName;
-    String color;
+    String routeColor;
+    String textColor;
     int direction;
 
     @Override
@@ -28,7 +29,8 @@ public class MbtaRouteWebPageActivity extends AppCompatActivity {
 
         routeId = getIntent().getStringExtra("routeId");
         routeName = getIntent().getStringExtra("routeName");
-        color = getIntent().getStringExtra("color");
+        routeColor = getIntent().getStringExtra("routeColor");
+        textColor = getIntent().getStringExtra("textColor");
         direction = getIntent().getIntExtra("direction", 0);
         String url = "http://mbta.com/schedules/" + routeId +
                 "/line?direction_id=" + direction;
@@ -36,7 +38,7 @@ public class MbtaRouteWebPageActivity extends AppCompatActivity {
         setTitle(routeName);
         if (Build.VERSION.SDK_INT >= 21) {
             float[] hsv = new float[3];
-            Color.colorToHSV(Color.parseColor(color), hsv);
+            Color.colorToHSV(Color.parseColor(routeColor), hsv);
             hsv[2] *= .8f;
 
             Window window = getWindow();
@@ -44,7 +46,8 @@ public class MbtaRouteWebPageActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(Color.HSVToColor(hsv));
 
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(color)));
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(routeColor)));
         }
 
         mbtaWebView = findViewById(R.id.mbta_webview);
