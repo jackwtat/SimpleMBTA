@@ -25,6 +25,11 @@ public class RouteShortNameView extends AppCompatTextView {
         super(context, attrs, defStyleAttr);
     }
 
+    public RouteShortNameView(Context context, Route route) {
+        super(context);
+        setRouteName(context, route);
+    }
+
     public void setRouteName(Context context, Route route) {
         Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
         DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));

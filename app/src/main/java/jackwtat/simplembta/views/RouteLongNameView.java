@@ -30,10 +30,7 @@ public class RouteLongNameView extends RelativeLayout {
 
     public RouteLongNameView(Context context, Route route) {
         super(context);
-        init(context, route);
-    }
 
-    private void init(Context context, Route route) {
         rootView = inflate(context, R.layout.route_long_name_view, this);
         routeName = rootView.findViewById(R.id.alert_route_name);
         routeNameAccent = rootView.findViewById(R.id.alert_route_name_accent);
