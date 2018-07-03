@@ -1,7 +1,7 @@
 package jackwtat.simplembta.mbta.structure;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,8 @@ public class Route implements Comparable<Route> {
     private Mode mode = Mode.UNKNOWN;
     private String shortName = "";
     private String longName = "";
-    private String color = "FFFFFF";
+    private String primaryColor = "FFFFFF";
+    private String accentColor = "3191E1";
     private String textColor = "000000";
     private int sortOrder = -1;
     private ArrayList<ServiceAlert> alerts = new ArrayList<>();
@@ -25,13 +26,25 @@ public class Route implements Comparable<Route> {
         this.id = id;
     }
 
-    public Route(String id, Mode mode, String shortName, String longName, String color, String textColor,
-                 int sortOrder) {
+    public Route(String id, Mode mode, String shortName, String longName, String primaryColor,
+                 String textColor, int sortOrder) {
         this.id = id;
         this.mode = mode;
         this.shortName = shortName;
         this.longName = longName;
-        this.color = color;
+        this.primaryColor = primaryColor;
+        this.textColor = textColor;
+        this.sortOrder = sortOrder;
+    }
+
+    public Route(String id, Mode mode, String shortName, String longName, String primaryColor,
+                 String accentColor, String textColor, int sortOrder) {
+        this.id = id;
+        this.mode = mode;
+        this.shortName = shortName;
+        this.longName = longName;
+        this.primaryColor = primaryColor;
+        this.accentColor = accentColor;
         this.textColor = textColor;
         this.sortOrder = sortOrder;
     }
@@ -52,9 +65,11 @@ public class Route implements Comparable<Route> {
         return longName;
     }
 
-    public String getDisplayName() {
+    // Returns the language-specific full name of this route
+    // Context is required to get the proper translation
+    public String getDisplayName(Context context) {
         if (mode == Mode.BUS && !longName.contains("Silver Line")) {
-            return "Route " + shortName;
+            return context.getResources().getString(R.string.route_prefix) + " " + shortName;
         } else if (!shortName.equals("") && !shortName.equals("null")) {
             return longName;
         } else {
@@ -62,8 +77,12 @@ public class Route implements Comparable<Route> {
         }
     }
 
-    public String getColor() {
-        return color;
+    public String getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public String getAccentColor() {
+        return accentColor;
     }
 
     public String getTextColor() {

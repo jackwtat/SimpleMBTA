@@ -3,7 +3,6 @@ package jackwtat.simplembta.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -36,9 +35,7 @@ import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
-import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Prediction;
-import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteLongNameView;
@@ -300,8 +297,8 @@ public class NearbyFragment extends RefreshableFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getActivity(), MbtaRouteWebPageActivity.class);
                             intent.putExtra("routeId", p.getRoute().getId());
-                            intent.putExtra("routeName", p.getRoute().getDisplayName());
-                            intent.putExtra("routeColor", p.getRoute().getColor());
+                            intent.putExtra("routeName", p.getRoute().getDisplayName(getContext()));
+                            intent.putExtra("routeColor", p.getRoute().getPrimaryColor());
                             intent.putExtra("textColor", p.getRoute().getTextColor());
                             intent.putExtra("direction", p.getTrip().getDirection());
                             startActivity(intent);

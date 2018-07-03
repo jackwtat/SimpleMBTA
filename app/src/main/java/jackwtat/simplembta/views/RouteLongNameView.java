@@ -38,22 +38,15 @@ public class RouteLongNameView extends RelativeLayout {
         routeName = rootView.findViewById(R.id.alert_route_name);
         routeNameAccent = rootView.findViewById(R.id.alert_route_name_accent);
 
-        routeName.setBackgroundColor(Color.parseColor(route.getColor()));
+        routeName.setBackgroundColor(Color.parseColor(route.getPrimaryColor()));
         routeName.setTextColor(Color.parseColor(route.getTextColor()));
 
-        if (route.getMode() != Mode.BUS || route.getLongName().contains("Silver Line")) {
-            routeName.setText(route.getLongName());
-            routeNameAccent.setVisibility(View.GONE);
-        } else {
-            if (route.getShortName().equals("") || route.getShortName().equals("null")) {
-                routeName.setText(route.getId());
-            } else {
-                routeName.setText(new StringBuilder()
-                        .append(getResources().getString(R.string.route_prefix))
-                        .append(" ")
-                        .append(route.getShortName()));
-            }
+        routeName.setText(route.getDisplayName(context));
+
+        if (route.getMode() == Mode.BUS) {
             routeNameAccent.setVisibility(View.VISIBLE);
+        } else {
+            routeNameAccent.setVisibility(View.GONE);
         }
     }
 }
