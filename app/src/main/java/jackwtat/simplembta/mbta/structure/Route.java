@@ -70,7 +70,7 @@ public class Route implements Comparable<Route> {
     public String getDisplayName(Context context) {
         if (mode == Mode.BUS && !longName.contains("Silver Line")) {
             return context.getResources().getString(R.string.route_prefix) + " " + shortName;
-        } else if (!shortName.equals("") && !shortName.equals("null")) {
+        } else if (!longName.equals("") && !longName.equals("null")) {
             return longName;
         } else {
             return id;
