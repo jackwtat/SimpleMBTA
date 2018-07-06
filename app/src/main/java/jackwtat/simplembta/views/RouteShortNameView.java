@@ -73,7 +73,11 @@ public class RouteShortNameView extends AppCompatTextView {
                 setText(routeId);
 
         } else if (mode == Mode.COMMUTER_RAIL) {
-            setText(context.getResources().getString(R.string.commuter_rail_short_name));
+            if (route.getId().equals("CapeFlyer")){
+                setText(context.getResources().getString(R.string.cape_flyer));
+            } else {
+                setText(context.getResources().getString(R.string.commuter_rail_short_name));
+            }
 
         } else if (mode == Mode.FERRY) {
             setText(context.getResources().getString(R.string.ferry_short_name));
