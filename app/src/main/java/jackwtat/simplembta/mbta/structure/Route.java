@@ -65,9 +65,59 @@ public class Route implements Comparable<Route> {
         return longName;
     }
 
+    // Returns the language-specific short name of this route
+    // Context is required to get the proper translation
+    public String getShortDisplayName(Context context) {
+        if (mode == Mode.HEAVY_RAIL) {
+            if (id.equals("Red"))
+                return context.getResources().getString(R.string.red_line_short_name);
+            else if (id.equals("Orange"))
+                return context.getResources().getString(R.string.orange_line_short_name);
+            else if (id.equals("Blue"))
+                return context.getResources().getString(R.string.blue_line_short_name);
+            else
+                return id;
+
+        } else if (mode == Mode.LIGHT_RAIL) {
+            if (id.equals("Green-B"))
+                return context.getResources().getString(R.string.green_line_b_short_name);
+            else if (id.equals("Green-C"))
+                return context.getResources().getString(R.string.green_line_c_short_name);
+            else if (id.equals("Green-D"))
+                return context.getResources().getString(R.string.green_line_d_short_name);
+            else if (id.equals("Green-E"))
+                return context.getResources().getString(R.string.green_line_e_short_name);
+            else if (id.equals("Mattapan"))
+                return context.getResources().getString(R.string.red_line_mattapan_short_name);
+            else
+                return id;
+
+        } else if (mode == Mode.BUS) {
+            if (id.equals("746"))
+                return context.getResources().getString(R.string.silver_line_waterfront_short_name);
+            else if (!shortName.equals("") && !shortName.equals("null"))
+                return shortName;
+            else
+                return id;
+
+        } else if (mode == Mode.COMMUTER_RAIL) {
+            if (id.equals("CapeFlyer")) {
+                return context.getResources().getString(R.string.cape_flyer);
+            } else {
+                return context.getResources().getString(R.string.commuter_rail_short_name);
+            }
+
+        } else if (mode == Mode.FERRY) {
+            return context.getResources().getString(R.string.ferry_short_name);
+
+        } else {
+            return id;
+        }
+    }
+
     // Returns the language-specific full name of this route
     // Context is required to get the proper translation
-    public String getDisplayName(Context context) {
+    public String getLongDisplayName(Context context) {
         if (mode == Mode.BUS && !longName.contains("Silver Line")) {
             return context.getResources().getString(R.string.route_prefix) + " " + shortName;
         } else if (!longName.equals("") && !longName.equals("null")) {

@@ -38,7 +38,7 @@ import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Stop;
 import jackwtat.simplembta.views.AlertsListView;
-import jackwtat.simplembta.views.RouteLongNameView;
+import jackwtat.simplembta.views.RouteNameView;
 
 
 /**
@@ -283,8 +283,11 @@ public class NearbyFragment extends RefreshableFragment {
                     Collections.sort(p.getRoute().getServiceAlerts());
 
                     // Create alert dialog builder
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setCustomTitle(new RouteLongNameView(getActivity(), p.getRoute()));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    RouteNameView routeNameView = new RouteNameView(getActivity(), p.getRoute(),
+                            RouteNameView.LARGE_TEXT_SIZE, RouteNameView.SQUARE_BACKGROUND,
+                            false, true);
+                    builder.setCustomTitle(routeNameView);
                     builder.setView(new AlertsListView(getActivity(), p.getRoute().getServiceAlerts()));
                     builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                         @Override
@@ -297,7 +300,7 @@ public class NearbyFragment extends RefreshableFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getActivity(), MbtaRouteWebPageActivity.class);
                             intent.putExtra("routeId", p.getRoute().getId());
-                            intent.putExtra("routeName", p.getRoute().getDisplayName(getContext()));
+                            intent.putExtra("routeName", p.getRoute().getLongDisplayName(getContext()));
                             intent.putExtra("routeColor", p.getRoute().getPrimaryColor());
                             intent.putExtra("textColor", p.getRoute().getTextColor());
                             intent.putExtra("direction", p.getTrip().getDirection());

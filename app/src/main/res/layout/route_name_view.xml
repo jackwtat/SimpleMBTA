@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true">
 
     <TextView
-        android:id="@+id/alert_route_name"
-        android:layout_width="match_parent"
+        android:id="@+id/route_name_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:paddingBottom="1dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:paddingTop="1dp"
-        android:textSize="26sp"
         android:textStyle="bold" />
 
     <View
-        android:id="@+id/alert_route_name_accent"
-        android:layout_width="match_parent"
+        android:id="@+id/route_name_accent"
+        android:layout_width="wrap_content"
         android:layout_height="4dp"
-        android:layout_below="@id/alert_route_name"
+        android:layout_below="@id/route_name_text_view"
         android:background="@color/BusAccent"/>
 </RelativeLayout>

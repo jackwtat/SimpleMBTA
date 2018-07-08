@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp">
 
-        <jackwtat.simplembta.views.RouteShortNameView
-            android:id="@+id/route_text_view"
+        <jackwtat.simplembta.views.RouteNameView
+            android:id="@+id/route_name_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -24,14 +24,13 @@
             android:minWidth="65dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
-            android:textSize="22sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/alert_indicator_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/route_text_view"
+            android:layout_below="@id/route_name_view"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:text="@string/service_alert_advisory"

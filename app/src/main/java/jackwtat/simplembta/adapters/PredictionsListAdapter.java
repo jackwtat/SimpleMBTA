@@ -20,7 +20,7 @@ import jackwtat.simplembta.mbta.structure.Mode;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.ServiceAlert;
-import jackwtat.simplembta.views.RouteShortNameView;
+import jackwtat.simplembta.views.RouteNameView;
 
 /**
  * Created by jackw on 12/26/2017.
@@ -54,7 +54,7 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         LinearLayout predictionsLayout = listItemView.findViewById(R.id.predictions_layout);
         TextView stopNameView = listItemView.findViewById(R.id.stop_text_view);
         TextView alertIndicatorView = listItemView.findViewById(R.id.alert_indicator_text_view);
-        RouteShortNameView routeShortNameView = listItemView.findViewById(R.id.route_text_view);
+        RouteNameView routeNameView = listItemView.findViewById(R.id.route_name_view);
 
         // Hide the views that have optional values for now
         alertIndicatorView.setVisibility(View.GONE);
@@ -66,7 +66,10 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         stopNameView.setText(predictions.get(0).getStopName());
 
         // Set the route name
-        routeShortNameView.setRouteName(getContext(), route);
+        routeNameView.setRoute(route, true);
+        routeNameView.setTextSize(RouteNameView.SMALL_TEXT_SIZE);
+        routeNameView.disableColorAccent();
+        routeNameView.setBackground(RouteNameView.ROUNDED_BACKGROUND);
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
