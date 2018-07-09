@@ -35,7 +35,7 @@
     <string name="silver_line_waterfront_short_name">SL-W</string>
     <string name="commuter_rail_short_name">CR</string>
     <string name="cape_flyer">CapeFlyer</string>
-    <string name="ferry_short_name">FERRY</string>
+    <string name="ferry_short_name">Ferry</string>
 
     <!-- Service Alert Headers -->
     <string name="UPCOMING">Upcoming</string>
