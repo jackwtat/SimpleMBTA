@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:visibility="gone"
         android:text="WWWWW"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/route_name_text_view"
@@ -20,6 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
         android:textStyle="bold" />
 
     <View
