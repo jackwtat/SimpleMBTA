@@ -18,7 +18,7 @@ public class RouteNameView extends RelativeLayout {
     final static public int SQUARE_BACKGROUND = 0;
     final static public int ROUNDED_BACKGROUND = 1;
     final static public int SMALL_TEXT_SIZE = 22;
-    final static public int LARGE_TEXT_SIZE = 26;
+    final static public int LARGE_TEXT_SIZE = 28;
 
     Route route;
     View rootView;
@@ -105,7 +105,6 @@ public class RouteNameView extends RelativeLayout {
         rootView = inflate(context, R.layout.route_name_view, this);
         routeNameTextView = rootView.findViewById(R.id.route_name_text_view);
         routeNameAccentView = rootView.findViewById(R.id.route_name_accent);
-
         setBackground(backgroundShape);
     }
 }

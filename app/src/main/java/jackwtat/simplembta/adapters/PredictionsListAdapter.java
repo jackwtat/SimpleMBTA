@@ -68,7 +68,6 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         // Set the route name
         routeNameView.setRoute(route, true);
         routeNameView.setTextSize(RouteNameView.SMALL_TEXT_SIZE);
-        routeNameView.disableColorAccent();
         routeNameView.setBackground(RouteNameView.ROUNDED_BACKGROUND);
 
         // Set the indicator for service alerts
