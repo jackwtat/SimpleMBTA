@@ -34,7 +34,7 @@
     <string name="green_line_e_short_name">GL-E</string>
     <string name="silver_line_waterfront_short_name">SL-W</string>
     <string name="commuter_rail_short_name">CR</string>
-    <string name="cape_flyer">CapeFlyer</string>
+    <string name="cape_flyer_short_name">CapeFlyer</string>
     <string name="ferry_short_name">Ferry</string>
 
     <!-- Service Alert Headers -->

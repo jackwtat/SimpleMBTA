@@ -102,7 +102,7 @@ public class Route implements Comparable<Route> {
 
         } else if (mode == Mode.COMMUTER_RAIL) {
             if (id.equals("CapeFlyer")) {
-                return context.getResources().getString(R.string.cape_flyer);
+                return context.getResources().getString(R.string.cape_flyer_short_name);
             } else {
                 return context.getResources().getString(R.string.commuter_rail_short_name);
             }
