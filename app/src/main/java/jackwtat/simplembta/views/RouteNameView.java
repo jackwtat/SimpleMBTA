@@ -24,6 +24,7 @@ public class RouteNameView extends RelativeLayout {
     View rootView;
     View routeNameAccentView;
     TextView routeNameTextView;
+    TextView spacerTextView;
     Drawable background;
 
     public RouteNameView(Context context) {
@@ -63,8 +64,10 @@ public class RouteNameView extends RelativeLayout {
 
         if (abbreviateName) {
             routeNameTextView.setText(route.getShortDisplayName(getContext()));
+            spacerTextView.setVisibility(INVISIBLE);
         } else {
             routeNameTextView.setText(route.getLongDisplayName(getContext()));
+            spacerTextView.setVisibility(GONE);
         }
 
         routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
@@ -72,7 +75,7 @@ public class RouteNameView extends RelativeLayout {
         DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));
     }
 
-    public void setTextSize(int textSize){
+    public void setTextSize(int textSize) {
         routeNameTextView.setTextSize(textSize);
     }
 
@@ -90,7 +93,7 @@ public class RouteNameView extends RelativeLayout {
         } else {
             background = getContext().getResources().getDrawable(R.drawable.square_background);
         }
-        if (route != null){
+        if (route != null) {
             DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));
         }
 
@@ -103,8 +106,9 @@ public class RouteNameView extends RelativeLayout {
 
     private void initializeViews(Context context, int backgroundShape) {
         rootView = inflate(context, R.layout.route_name_view, this);
-        routeNameTextView = rootView.findViewById(R.id.route_name_text_view);
         routeNameAccentView = rootView.findViewById(R.id.route_name_accent);
+        routeNameTextView = rootView.findViewById(R.id.route_name_text_view);
+        spacerTextView = rootView.findViewById(R.id.spacer_text_view);
         setBackground(backgroundShape);
     }
 }

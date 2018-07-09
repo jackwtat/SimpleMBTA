@@ -5,15 +5,21 @@
     android:layout_centerInParent="true">
 
     <TextView
+        android:id="@+id/spacer_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="WWWWW"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/route_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:paddingBottom="1dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:paddingTop="1dp"
         android:textStyle="bold" />
 
     <View
@@ -21,5 +27,6 @@
         android:layout_width="wrap_content"
         android:layout_height="4dp"
         android:layout_below="@id/route_name_text_view"
-        android:background="@color/BusAccent"/>
+        android:background="@color/BusAccent"
+        android:visibility="gone" />
 </RelativeLayout>

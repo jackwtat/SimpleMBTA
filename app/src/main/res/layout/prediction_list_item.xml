@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
-            android:minWidth="65dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:textStyle="bold" />
