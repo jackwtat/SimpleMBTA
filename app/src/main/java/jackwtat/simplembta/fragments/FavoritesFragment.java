@@ -7,4 +7,14 @@ public class FavoritesFragment extends RefreshableFragment {
     public void refresh() {
 
     }
+
+    @Override
+    public void forceRefresh() {
+
+    }
+
+    @Override
+    public long getTimeSinceLastRefresh() {
+        return 0;
+    }
 }

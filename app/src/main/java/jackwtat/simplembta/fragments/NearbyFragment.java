@@ -117,7 +117,7 @@ public class NearbyFragment extends RefreshableFragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        refresh();
+                        forceRefresh();
                     }
                 }
         );
@@ -167,22 +167,31 @@ public class NearbyFragment extends RefreshableFragment {
         super.onStop();
     }
 
-    // Call the controller to get the latest MBTA values
     public void refresh() {
+        controller.update();
+    }
+
+    // Call the controller to get the latest MBTA values
+    public void forceRefresh() {
         controller.forceUpdate();
     }
 
-    // Updates the UI to show that values refresh has been canceled
+    @Override
+    public long getTimeSinceLastRefresh() {
+        return controller.getTimeSinceLastRefresh();
+    }
+
+    // Updates the UI to show that values forceRefresh has been canceled
     private void onRefreshCanceled() {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    // Updates the UI to display an error message if refresh fails
+    // Updates the UI to display an error message if forceRefresh fails
     private void onRefreshError(String errorMessage) {
         setStatus(new Date(), errorMessage, false, true);
     }
 
-    // Updates the UI to display values refresh progress
+    // Updates the UI to display values forceRefresh progress
     private void setRefreshProgress(String message) {
         if (!swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(true);
