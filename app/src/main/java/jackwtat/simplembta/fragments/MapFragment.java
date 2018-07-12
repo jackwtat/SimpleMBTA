@@ -18,9 +18,4 @@ public class MapFragment extends RefreshableFragment {
     public void forceRefresh() {
 
     }
-
-    @Override
-    public long getTimeSinceLastRefresh() {
-        return 0;
-    }
 }

@@ -16,6 +16,4 @@ public interface PredictionsController {
     void cancel();
 
     boolean isRunning();
-
-    long getTimeSinceLastRefresh();
 }

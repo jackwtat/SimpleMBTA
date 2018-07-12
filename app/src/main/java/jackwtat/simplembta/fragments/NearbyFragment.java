@@ -176,11 +176,6 @@ public class NearbyFragment extends RefreshableFragment {
         controller.forceUpdate();
     }
 
-    @Override
-    public long getTimeSinceLastRefresh() {
-        return controller.getTimeSinceLastRefresh();
-    }
-
     // Updates the UI to show that values forceRefresh has been canceled
     private void onRefreshCanceled() {
         swipeRefreshLayout.setRefreshing(false);

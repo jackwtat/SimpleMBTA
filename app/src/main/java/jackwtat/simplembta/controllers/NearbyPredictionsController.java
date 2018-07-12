@@ -152,11 +152,6 @@ public class NearbyPredictionsController implements PredictionsController {
         return refreshing;
     }
 
-    @Override
-    public long getTimeSinceLastRefresh() {
-        return new Date().getTime() - lastRefreshed.getTime();
-    }
-
     private void getPredictions() {
         refreshing = true;
         onProgressUpdateListener.onProgressUpdate(0);
