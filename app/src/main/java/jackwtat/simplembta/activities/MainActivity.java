@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, AUTO_REFRESH_RATE / 2, AUTO_REFRESH_RATE);
+        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
     }
 
     @Override
