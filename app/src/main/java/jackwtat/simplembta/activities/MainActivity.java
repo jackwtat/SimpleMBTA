@@ -22,7 +22,7 @@ import jackwtat.simplembta.fragments.NearbyFragment;
 import jackwtat.simplembta.fragments.RefreshableFragment;
 
 public class MainActivity extends AppCompatActivity {
-    private final long AUTO_REFRESH_RATE = 120000;
+    private final long AUTO_REFRESH_RATE = 60000;
 
     private PredictionsPagerAdapter predictionsPagerAdapter;
     private ViewPager viewPager;
