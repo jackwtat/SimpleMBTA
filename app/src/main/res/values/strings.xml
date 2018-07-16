@@ -25,14 +25,14 @@
 
     <!-- Route Abbreviations -->
     <string name="red_line_short_name">RL</string>
-    <string name="red_line_mattapan_short_name">RL-M</string>
+    <string name="red_line_mattapan_short_name">RL&#8226;M</string>
     <string name="orange_line_short_name">OL</string>
     <string name="blue_line_short_name">BL</string>
-    <string name="green_line_b_short_name">GL-B</string>
-    <string name="green_line_c_short_name">GL-C</string>
-    <string name="green_line_d_short_name">GL-D</string>
-    <string name="green_line_e_short_name">GL-E</string>
-    <string name="silver_line_waterfront_short_name">SL-W</string>
+    <string name="green_line_b_short_name">GL&#8226;B</string>
+    <string name="green_line_c_short_name">GL&#8226;C</string>
+    <string name="green_line_d_short_name">GL&#8226;D</string>
+    <string name="green_line_e_short_name">GL&#8226;E</string>
+    <string name="silver_line_waterfront_short_name">SL</string>
     <string name="commuter_rail_short_name">CR</string>
     <string name="cape_flyer_short_name">CapeFlyer</string>
     <string name="ferry_short_name">Ferry</string>
