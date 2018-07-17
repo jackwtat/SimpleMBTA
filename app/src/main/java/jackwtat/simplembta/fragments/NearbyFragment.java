@@ -61,6 +61,8 @@ public class NearbyFragment extends RefreshableFragment {
 
     private AlertDialog alertsDialog;
 
+    private boolean resetUI = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,11 +170,13 @@ public class NearbyFragment extends RefreshableFragment {
     }
 
     public void refresh() {
+        resetUI = false;
         controller.update();
     }
 
     // Call the controller to get the latest MBTA values
     public void forceRefresh() {
+        resetUI = true;
         controller.forceUpdate();
     }
 
@@ -211,11 +215,6 @@ public class NearbyFragment extends RefreshableFragment {
     private void publishPredictions(List<Stop> stops) {
         // Clear all previous values from list
         predictionsListAdapter.clear();
-
-        // Hide alerts dialog if user has it open
-        if (alertsDialog != null) {
-            alertsDialog.dismiss();
-        }
 
         // Initialize the data structure that stores route-direction combos that have been processed
         ArrayList<String> processedRDs = new ArrayList<>();
@@ -318,8 +317,15 @@ public class NearbyFragment extends RefreshableFragment {
             }
         });
 
-        // Auto-scroll to the top
-        predictionsListView.setSelection(0);
+        if (resetUI) {
+            // Hide alerts dialog if user has it open
+            if (alertsDialog != null) {
+                alertsDialog.dismiss();
+            }
+
+            // Auto-scroll to the top
+            predictionsListView.setSelection(0);
+        }
 
         // Set statuses
         setStatus(new Date(), "", false, false);
