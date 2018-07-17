@@ -51,10 +51,10 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         }
 
         // Initialize all the views
+        LinearLayout routeLayout = listItemView.findViewById(R.id.route_layout);
         LinearLayout predictionsLayout = listItemView.findViewById(R.id.predictions_layout);
         TextView stopNameView = listItemView.findViewById(R.id.stop_text_view);
         TextView alertIndicatorView = listItemView.findViewById(R.id.alert_indicator_text_view);
-        RouteNameView routeNameView = listItemView.findViewById(R.id.route_name_view);
 
         // Hide the views that have optional values for now
         alertIndicatorView.setVisibility(View.GONE);
@@ -66,9 +66,12 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         stopNameView.setText(predictions.get(0).getStopName());
 
         // Set the route name
-        routeNameView.setRoute(route, true);
-        routeNameView.setTextSize(RouteNameView.SMALL_TEXT_SIZE);
-        routeNameView.setBackground(RouteNameView.ROUNDED_BACKGROUND);
+        if (routeLayout.getChildCount() > 0) {
+            routeLayout.removeAllViews();
+        }
+        routeLayout.addView(new RouteNameView(getContext(), route,
+                RouteNameView.SMALL_TEXT_SIZE, RouteNameView.ROUNDED_BACKGROUND,
+                true, false));
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {

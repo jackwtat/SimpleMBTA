@@ -21,11 +21,14 @@ public class RouteNameView extends RelativeLayout {
     final static public int LARGE_TEXT_SIZE = 28;
 
     Route route;
+    int textSize;
+    int backgroundShape;
+    boolean nameAbbreviated;
+    boolean colorAccentEnabled;
+
     View rootView;
     View routeNameAccentView;
     TextView routeNameTextView;
-    TextView spacerTextView;
-    Drawable background;
 
     public RouteNameView(Context context) {
         super(context);
@@ -47,68 +50,57 @@ public class RouteNameView extends RelativeLayout {
         super(context);
         initializeViews(context, backgroundShape);
 
-        if (enableColorAccent && route.getMode() == Mode.BUS &&
-                !route.getLongName().contains("Silver Line")) {
-            enableColorAccent();
-        } else {
-            disableColorAccent();
-        }
-
-        setTextSize(textSize);
-
-        setRoute(route, abbreviateName);
-    }
-
-    public void setRoute(Route route, boolean abbreviateName) {
         this.route = route;
+        this.textSize = textSize;
+        this.backgroundShape = backgroundShape;
+        nameAbbreviated = abbreviateName;
+        colorAccentEnabled = enableColorAccent;
 
-        if (abbreviateName) {
-            routeNameTextView.setText(route.getShortDisplayName(getContext()));
-            spacerTextView.setVisibility(INVISIBLE);
-        } else {
-            routeNameTextView.setText(route.getLongDisplayName(getContext()));
-            spacerTextView.setVisibility(GONE);
-        }
-
-        routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
-
-        DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));
+        setBackground();
+        setColorAccent();
+        setRouteName();
     }
 
-    public void setTextSize(int textSize) {
-        routeNameTextView.setTextSize(textSize);
-    }
+    private void setBackground() {
+        Drawable background;
 
-    public void enableColorAccent() {
-        routeNameAccentView.setVisibility(View.VISIBLE);
-    }
-
-    public void disableColorAccent() {
-        routeNameAccentView.setVisibility(View.GONE);
-    }
-
-    public void setBackground(int backgroundShape) {
+        // Background shape
         if (backgroundShape == ROUNDED_BACKGROUND) {
             background = getContext().getResources().getDrawable(R.drawable.rounded_background);
         } else {
             background = getContext().getResources().getDrawable(R.drawable.square_background);
         }
-        if (route != null) {
-            DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));
-        }
 
+        // Background color
+        DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));
+
+        // Set background
         setBackground(background);
     }
 
-    public Route getRoute() {
-        return route;
+    private void setColorAccent() {
+        if (colorAccentEnabled && route.getMode() == Mode.BUS &&
+                !route.getLongName().contains("Silver Line")) {
+            routeNameAccentView.setVisibility(View.VISIBLE);
+        } else {
+            routeNameAccentView.setVisibility(View.GONE);
+        }
+    }
+
+    private void setRouteName() {
+        routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
+        routeNameTextView.setTextSize(textSize);
+
+        if (nameAbbreviated) {
+            routeNameTextView.setText(route.getShortDisplayName(getContext()));
+        } else {
+            routeNameTextView.setText(route.getLongDisplayName(getContext()));
+        }
     }
 
     private void initializeViews(Context context, int backgroundShape) {
         rootView = inflate(context, R.layout.route_name_view, this);
         routeNameAccentView = rootView.findViewById(R.id.route_name_accent);
         routeNameTextView = rootView.findViewById(R.id.route_name_text_view);
-        spacerTextView = rootView.findViewById(R.id.spacer_text_view);
-        setBackground(backgroundShape);
     }
 }
