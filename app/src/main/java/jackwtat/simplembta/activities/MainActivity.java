@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.Date;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,7 +22,6 @@ import jackwtat.simplembta.fragments.NearbyFragment;
 import jackwtat.simplembta.fragments.RefreshableFragment;
 
 public class MainActivity extends AppCompatActivity {
-    private final long AUTO_REFRESH_RATE = 90000;
 
     private PredictionsPagerAdapter predictionsPagerAdapter;
     private ViewPager viewPager;
@@ -48,31 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        autoRefreshTimer = new Timer();
-        autoRefreshTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getCurrentRefreshableFragment().refresh();
-                    }
-                });
-            }
-        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        autoRefreshTimer.cancel();
     }
 
     @Override

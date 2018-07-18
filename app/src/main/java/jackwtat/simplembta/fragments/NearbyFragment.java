@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.activities.MbtaRouteWebPageActivity;
@@ -51,17 +53,18 @@ public class NearbyFragment extends RefreshableFragment {
     private final static String LOG_TAG = "NearbyFragment";
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
+    private final long AUTO_REFRESH_RATE = 90000;
 
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView predictionsListView;
     private TextView statusTimeTextView;
     private TextView errorTextView;
+    private AlertDialog alertsDialog;
 
     private PredictionsController controller;
     private ArrayAdapter<ArrayList<Prediction>> predictionsListAdapter;
-
-    private AlertDialog alertsDialog;
+    private Timer autoRefreshTimer;
 
     private boolean resetUI = false;
 
@@ -140,6 +143,19 @@ public class NearbyFragment extends RefreshableFragment {
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_ACCESS_FINE_LOCATION);
         }
+
+        autoRefreshTimer = new Timer();
+        autoRefreshTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh();
+                    }
+                });
+            }
+        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
     }
 
     @Override
@@ -166,6 +182,7 @@ public class NearbyFragment extends RefreshableFragment {
             onRefreshCanceled();
         }
 
+        autoRefreshTimer.cancel();
         controller.cancel();
 
         super.onStop();
