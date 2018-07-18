@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class AlertsListView extends RelativeLayout {
     }
 
     private void init(Context context, List<ServiceAlert> alerts) {
-        rootView = inflate(context, R.layout.alerts_list_view, this);
+        rootView = inflate(context, R.layout.service_alerts_list_view, this);
         alertsListView = rootView.findViewById(R.id.alerts_list_view);
         noAlertsTextView = rootView.findViewById(R.id.no_alerts_text_view);
         listDownArrow = rootView.findViewById(R.id.alerts_list_down_arrow);

@@ -42,7 +42,7 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         // Inflate the listItemView
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.prediction_list_item, parent, false);
+                    R.layout.item_prediction, parent, false);
         }
 
         // Check if there are no Predictions
