@@ -163,7 +163,7 @@ public class NearbyFragment extends RefreshableFragment {
         super.onResume();
 
         controller.connect();
-        controller.update();
+        forceRefresh();
     }
 
     @Override
