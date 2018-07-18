@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private PredictionsPagerAdapter predictionsPagerAdapter;
     private ViewPager viewPager;
 
-    private Timer autoRefreshTimer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
