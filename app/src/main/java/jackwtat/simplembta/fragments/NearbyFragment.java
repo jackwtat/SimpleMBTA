@@ -151,7 +151,7 @@ public class NearbyFragment extends RefreshableFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        refresh();
+                        autoRefresh();
                     }
                 });
             }
@@ -163,7 +163,7 @@ public class NearbyFragment extends RefreshableFragment {
         super.onResume();
 
         controller.connect();
-        forceRefresh();
+        refresh();
     }
 
     @Override
@@ -188,12 +188,19 @@ public class NearbyFragment extends RefreshableFragment {
         super.onStop();
     }
 
+    @Override
     public void refresh() {
+        resetUI = true;
+        controller.update();
+    }
+
+    @Override
+    public void autoRefresh() {
         resetUI = false;
         controller.update();
     }
 
-    // Call the controller to get the latest MBTA values
+    @Override
     public void forceRefresh() {
         resetUI = true;
         controller.forceUpdate();
