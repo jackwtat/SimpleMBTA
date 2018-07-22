@@ -56,8 +56,8 @@ public class PredictionView extends LinearLayout {
 
             // Set train number
             if (!p1.getTrip().getName().equals("")) {
-                String trainNumber = "(" + context.getResources().getString(R.string.train) + " " +
-                        p1.getTrip().getName() + ")";
+                String trainNumber = context.getResources().getString(R.string.train) + " " +
+                        p1.getTrip().getName();
                 trainNumberView.setText(trainNumber);
             } else {
                 trainNumberView.setVisibility(GONE);
