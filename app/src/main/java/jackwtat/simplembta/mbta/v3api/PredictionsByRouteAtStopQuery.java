@@ -111,6 +111,7 @@ public class PredictionsByRouteAtStopQuery extends Query {
 
                         JSONObject jAttributes = jPrediction.getJSONObject("attributes");
 
+                        String trackNumber = jAttributes.getString("track");
                         String departure = jAttributes.getString("departure_time");
                         String arrival = jAttributes.getString("arrival_time");
 
@@ -131,6 +132,7 @@ public class PredictionsByRouteAtStopQuery extends Query {
                                         id,
                                         stopId,
                                         stopName,
+                                        trackNumber,
                                         route,
                                         relatedTrip,
                                         deptTime));

@@ -157,6 +157,7 @@ public class PredictionsByLocationQuery extends Query {
 
                         JSONObject jAttributes = jPrediction.getJSONObject("attributes");
 
+                        String trackNumber = jAttributes.getString("track");
                         String departure = jAttributes.getString("departure_time");
                         String arrival = jAttributes.getString("arrival_time");
 
@@ -190,6 +191,7 @@ public class PredictionsByLocationQuery extends Query {
                                                     id,
                                                     parentStop.getId(),
                                                     parentStop.getName(),
+                                                    trackNumber,
                                                     relatedRoute,
                                                     relatedTrip,
                                                     deptTime));
@@ -198,6 +200,7 @@ public class PredictionsByLocationQuery extends Query {
                                             id,
                                             relatedStop.getId(),
                                             relatedStop.getName(),
+                                            trackNumber,
                                             relatedRoute,
                                             relatedTrip,
                                             deptTime));

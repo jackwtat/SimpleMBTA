@@ -15,6 +15,7 @@ public class PredictionView extends LinearLayout {
     View rootView;
     TextView destinationView;
     TextView trainNumberView;
+    TextView trackNumberView;
     TextView firstTimeView;
     TextView secondTimeView;
 
@@ -44,19 +45,37 @@ public class PredictionView extends LinearLayout {
         rootView = inflate(context, R.layout.prediction_view, this);
         destinationView = rootView.findViewById(R.id.destination_text_view);
         trainNumberView = rootView.findViewById(R.id.train_number_text_view);
+        trackNumberView = rootView.findViewById(R.id.track_number_text_view);
         firstTimeView = rootView.findViewById(R.id.first_time_text_view);
         secondTimeView = rootView.findViewById(R.id.second_time_text_view);
 
         destinationView.setText(p1.getTrip().getDestination());
 
-        if (p1.getRoute().getMode() == Mode.COMMUTER_RAIL && !p1.getTrip().getName().equals("")) {
-            String trainNumber = "(" + context.getResources().getString(R.string.train) + " " +
-                    p1.getTrip().getName() + ")";
-            trainNumberView.setText(trainNumber);
+        // If prediction if for the Commuter Rail, then the set train number and track number
+        if (p1.getRoute().getMode() == Mode.COMMUTER_RAIL) {
+
+            // Set train number
+            if (!p1.getTrip().getName().equals("")) {
+                String trainNumber = "(" + context.getResources().getString(R.string.train) + " " +
+                        p1.getTrip().getName() + ")";
+                trainNumberView.setText(trainNumber);
+            } else {
+                trainNumberView.setVisibility(GONE);
+            }
+
+            // Set track number
+            if (!p1.getTrackNumber().equals("null")) {
+                String trackNumber = "Track " + p1.getTrackNumber();
+                trackNumberView.setText(trackNumber);
+            } else {
+                trackNumberView.setVisibility(GONE);
+            }
         } else {
             trainNumberView.setVisibility(GONE);
+            trackNumberView.setVisibility(GONE);
         }
 
+        // Set departure times
         if (p1.getDepartureTime() != null) {
             String dept_1;
             String dept_2;
