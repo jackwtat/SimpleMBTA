@@ -15,18 +15,19 @@ public class Prediction implements Comparable<Prediction> {
     private String stopName = "";
     private Route route = null;
     private Trip trip = null;
+    private int trackNumber = -1;
     private Date departureTime = null;
     private long timeUntilDeparture = 0;
 
     public Prediction(String id, String stopId, String stopName, Route route, Trip trip,
-                      Date departureTime) {
+                      int trackNumber, Date departureTime) {
         this.id = id;
         this.stopId = stopId;
         this.stopName = stopName;
         this.route = route;
         this.trip = trip;
         this.departureTime = departureTime;
-        if(departureTime != null) {
+        if (departureTime != null) {
             this.timeUntilDeparture = departureTime.getTime() - new Date().getTime();
         }
     }
@@ -51,11 +52,15 @@ public class Prediction implements Comparable<Prediction> {
         return trip;
     }
 
+    public int getTrackNumber() {
+        return trackNumber;
+    }
+
     public Date getDepartureTime() {
         return departureTime;
     }
 
-    public long getTimeUntilDeparture(){
+    public long getTimeUntilDeparture() {
         return timeUntilDeparture;
     }
 
