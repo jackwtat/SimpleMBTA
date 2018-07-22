@@ -11,13 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
-import jackwtat.simplembta.fragments.FavoritesFragment;
-import jackwtat.simplembta.fragments.MapFragment;
+import jackwtat.simplembta.fragments.MapSearchFragment;
 import jackwtat.simplembta.fragments.NearbyFragment;
 import jackwtat.simplembta.fragments.RefreshableFragment;
 
@@ -37,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager(),
-                new NearbyFragment(), new MapFragment(), new FavoritesFragment());
+                new NearbyFragment(), new MapSearchFragment());
 
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
@@ -56,20 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i("Main Activity", "This is fragment " + predictionsPagerAdapter.getItemPosition(getCurrentRefreshableFragment()));
-
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getCurrentRefreshableFragment().forceRefresh();
-
+                for (int i = 0; i < predictionsPagerAdapter.getCount(); i++) {
+                    RefreshableFragment f = (RefreshableFragment) predictionsPagerAdapter.getItem(i);
+                    f.forceRefresh();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private RefreshableFragment getCurrentRefreshableFragment() {
-        return (RefreshableFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container);
     }
 }
