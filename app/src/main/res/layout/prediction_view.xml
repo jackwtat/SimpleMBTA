@@ -43,33 +43,14 @@
             tools:text="100 min" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/commuter_rail_extras_layout"
+    <TextView
+        android:id="@+id/track_number_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/train_number_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Train 295" />
-
-        <TextView
-            android:id="@+id/track_number_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Track 11" />
-
-    </LinearLayout>
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Track 11" />
 </LinearLayout>

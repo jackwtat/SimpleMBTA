@@ -20,8 +20,6 @@ public class PredictionView extends LinearLayout {
     TextView firstTimeView;
     TextView secondTimeView;
 
-    LinearLayout commuterRailExtrasLayout;
-    TextView trainNumberView;
     TextView trackNumberView;
 
     public PredictionView(Context context) {
@@ -53,42 +51,28 @@ public class PredictionView extends LinearLayout {
         firstTimeView = rootView.findViewById(R.id.first_time_text_view);
         secondTimeView = rootView.findViewById(R.id.second_time_text_view);
 
-        commuterRailExtrasLayout = rootView.findViewById(R.id.commuter_rail_extras_layout);
-        trainNumberView = rootView.findViewById(R.id.train_number_text_view);
         trackNumberView = rootView.findViewById(R.id.track_number_text_view);
 
         destinationView.setText(p1.getTrip().getDestination());
 
-        // If prediction if for the Commuter Rail, then the set train number and track number
-        if (p1.getRoute().getMode() == Mode.COMMUTER_RAIL) {
+        // Set track number
+        if (p1.getRoute().getMode() == Mode.COMMUTER_RAIL &&
+                !p1.getTrackNumber().equals("null")) {
+            String trackNumber = context.getResources().getString(R.string.track) + " " +
+                    p1.getTrackNumber();
+            trackNumberView.setText(trackNumber);
 
-            // Set train number
-            if (!p1.getTrip().getName().equals("")) {
-                String trainNumber = context.getResources().getString(R.string.train) + " " +
-                        p1.getTrip().getName();
-                trainNumberView.setText(trainNumber);
-            } else {
-                trainNumberView.setVisibility(GONE);
-            }
-
-            // Set track number
-            if (!p1.getTrackNumber().equals("null")) {
-                String trackNumber = context.getResources().getString(R.string.track) + " " +
-                        p1.getTrackNumber();
-                trackNumberView.setText(trackNumber);
-
-                Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
-                DrawableCompat.setTint(background, context.getResources().getColor(R.color.ApproachingAlert));
-                trackNumberView.setBackground(background);
-            } else {
-                trackNumberView.setVisibility(GONE);
-            }
+            Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
+            DrawableCompat.setTint(background, context.getResources().getColor(R.color.ApproachingAlert));
+            trackNumberView.setBackground(background);
         } else {
-            commuterRailExtrasLayout.setVisibility(GONE);
+            trackNumberView.setVisibility(GONE);
         }
 
         // Set departure times
-        if (p1.getDepartureTime() != null) {
+        if (p1.getDepartureTime() != null)
+
+        {
             String dept_1;
             String dept_2;
 
@@ -111,7 +95,9 @@ public class PredictionView extends LinearLayout {
 
             firstTimeView.setText(dept_1);
             secondTimeView.setText(dept_2);
-        } else {
+        } else
+
+        {
             firstTimeView.setText("---");
             secondTimeView.setVisibility(GONE);
         }
