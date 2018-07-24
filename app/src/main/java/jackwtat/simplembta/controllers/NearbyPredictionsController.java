@@ -28,7 +28,7 @@ public class NearbyPredictionsController implements PredictionsController {
     private final String LOG_TAG = "NPController";
 
     // Time since last refresh before values can automatically refresh onResume, in milliseconds
-    private final long MINIMUM_REFRESH_INTERVAL = 60000;
+    private final long MINIMUM_REFRESH_INTERVAL = 30000;
 
     // Time between location updates, in milliseconds
     private final long LOCATION_UPDATE_INTERVAL = 10000;
