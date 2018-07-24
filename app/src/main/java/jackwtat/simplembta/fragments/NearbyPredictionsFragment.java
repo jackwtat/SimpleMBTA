@@ -83,14 +83,14 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_nearby_predictions, container, false);
 
-        predictionsListView = rootView.findViewById(R.id.mbta_predictions_list_view);
-
+        predictionsListView = rootView.findViewById(R.id.predictions_list_view);
         predictionsListView.setOnSwipeRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 forceRefresh();
             }
         });
+
         return rootView;
     }
 

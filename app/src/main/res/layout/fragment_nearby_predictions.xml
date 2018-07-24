@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <jackwtat.simplembta.views.PredictionsListView
-        android:id="@+id/mbta_predictions_list_view"
+        android:id="@+id/predictions_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
