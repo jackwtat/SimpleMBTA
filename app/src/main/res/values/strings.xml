@@ -83,5 +83,7 @@
 
     <!-- Miscellaneous -->
     <string name="train">Train</string>
+    <string name="track">Track</string>
     <string name="min">min</string>
+    <string name="title_activity_test_maps">Map</string>
 </resources>

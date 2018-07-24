@@ -1,7 +1,9 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,11 +15,14 @@ import jackwtat.simplembta.mbta.structure.Prediction;
 
 public class PredictionView extends LinearLayout {
     View rootView;
+
     TextView destinationView;
-    TextView trainNumberView;
-    TextView trackNumberView;
     TextView firstTimeView;
     TextView secondTimeView;
+
+    LinearLayout commuterRailExtrasLayout;
+    TextView trainNumberView;
+    TextView trackNumberView;
 
     public PredictionView(Context context) {
         super(context);
@@ -43,11 +48,14 @@ public class PredictionView extends LinearLayout {
 
     private void init(Context context, Prediction p1, @Nullable Prediction p2) {
         rootView = inflate(context, R.layout.prediction_view, this);
+
         destinationView = rootView.findViewById(R.id.destination_text_view);
-        trainNumberView = rootView.findViewById(R.id.train_number_text_view);
-        trackNumberView = rootView.findViewById(R.id.track_number_text_view);
         firstTimeView = rootView.findViewById(R.id.first_time_text_view);
         secondTimeView = rootView.findViewById(R.id.second_time_text_view);
+
+        commuterRailExtrasLayout = rootView.findViewById(R.id.commuter_rail_extras_layout);
+        trainNumberView = rootView.findViewById(R.id.train_number_text_view);
+        trackNumberView = rootView.findViewById(R.id.track_number_text_view);
 
         destinationView.setText(p1.getTrip().getDestination());
 
@@ -65,14 +73,18 @@ public class PredictionView extends LinearLayout {
 
             // Set track number
             if (!p1.getTrackNumber().equals("null")) {
-                String trackNumber = "Track " + p1.getTrackNumber();
+                String trackNumber = context.getResources().getString(R.string.track) + " " +
+                        p1.getTrackNumber();
                 trackNumberView.setText(trackNumber);
+
+                Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
+                DrawableCompat.setTint(background, context.getResources().getColor(R.color.ApproachingAlert));
+                trackNumberView.setBackground(background);
             } else {
                 trackNumberView.setVisibility(GONE);
             }
         } else {
-            trainNumberView.setVisibility(GONE);
-            trackNumberView.setVisibility(GONE);
+            commuterRailExtrasLayout.setVisibility(GONE);
         }
 
         // Set departure times

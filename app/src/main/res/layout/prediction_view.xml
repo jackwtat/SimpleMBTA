@@ -1,35 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp">
-
-    <TextView
-        android:id="@+id/destination_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginEnd="12dp"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        tools:text="Malden Center" />
-
-    <TextView
-        android:id="@+id/train_number_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/destination_text_view"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        tools:text="(Train 295)" />
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/predicted_times_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:gravity="bottom">
+
+        <TextView
+            android:id="@+id/destination_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="Malden Center" />
 
         <TextView
             android:id="@+id/first_time_text_view"
@@ -52,14 +43,33 @@
             tools:text="100 min" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/track_number_text_view"
+    <LinearLayout
+        android:id="@+id/commuter_rail_extras_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/predicted_times_layout"
-        android:paddingEnd="4dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        tools:text="Track 11" />
-</RelativeLayout>
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/train_number_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Train 295" />
+
+        <TextView
+            android:id="@+id/track_number_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Track 11" />
+
+    </LinearLayout>
+</LinearLayout>
