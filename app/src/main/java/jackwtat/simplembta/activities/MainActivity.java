@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +13,7 @@ import android.view.MenuItem;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
-import jackwtat.simplembta.fragments.NearbyFragment;
+import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
 import jackwtat.simplembta.fragments.RefreshableFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager(),
-                new NearbyFragment(), new MapSearchFragment());
+                new NearbyPredictionsFragment(), new MapSearchFragment());
 
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
