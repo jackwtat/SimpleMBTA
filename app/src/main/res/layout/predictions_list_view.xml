@@ -19,13 +19,13 @@
         tools:text="Updated 12:00 AM" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/predictions_swipe_refresh_layout"
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/status_time_text_view">
 
         <ListView
-            android:id="@+id/predictions_list_view"
+            android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadeScrollbars="false" />
