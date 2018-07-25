@@ -104,6 +104,14 @@ public class PredictionsListView extends RelativeLayout {
         }
     }
 
+    public void displayStatusTime(boolean display) {
+        if (display) {
+            statusTimeTextView.setVisibility(VISIBLE);
+        } else {
+            statusTimeTextView.setVisibility(GONE);
+        }
+    }
+
     // Display the given list of values
     public void publishPredictions(final Context context, List<Stop> stops, boolean scrollToTop) {
         // Clear all previous values from list
