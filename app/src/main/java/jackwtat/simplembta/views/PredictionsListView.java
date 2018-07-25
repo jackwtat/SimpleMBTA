@@ -104,10 +104,6 @@ public class PredictionsListView extends RelativeLayout {
         }
     }
 
-    public void displayRefreshingIcon(boolean refreshing) {
-        swipeRefreshLayout.setRefreshing(refreshing);
-    }
-
     // Display the given list of values
     public void publishPredictions(final Context context, List<Stop> stops, boolean scrollToTop) {
         // Clear all previous values from list
@@ -239,8 +235,8 @@ public class PredictionsListView extends RelativeLayout {
     private void init(Context context) {
         rootView = inflate(context, R.layout.predictions_list_view, this);
 
-        swipeRefreshLayout = rootView.findViewById(R.id.predictions_swipe_refresh_layout);
-        predictionsListView = rootView.findViewById(R.id.predictions_list_view);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
+        predictionsListView = rootView.findViewById(R.id.list_view);
         statusTimeTextView = rootView.findViewById(R.id.status_time_text_view);
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
 
