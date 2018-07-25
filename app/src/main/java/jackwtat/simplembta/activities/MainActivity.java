@@ -54,11 +54,13 @@ public class MainActivity extends AppCompatActivity {
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                for (int i = 0; i < predictionsPagerAdapter.getCount(); i++) {
-                    RefreshableFragment f = (RefreshableFragment) predictionsPagerAdapter.getItem(i);
+                RefreshableFragment f = (RefreshableFragment) predictionsPagerAdapter.getItem(
+                        viewPager.getCurrentItem());
+                try {
                     f.forceRefresh();
+                } catch (Exception e) {
+
                 }
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
