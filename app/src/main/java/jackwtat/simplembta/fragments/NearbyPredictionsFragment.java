@@ -33,7 +33,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
-    private final long AUTO_REFRESH_RATE = 90000;
+    private final long AUTO_REFRESH_RATE = 60000;
 
     private View rootView;
     private PredictionsListView predictionsListView;
