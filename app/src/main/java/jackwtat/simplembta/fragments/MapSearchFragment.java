@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.controllers.MapSearchController;
@@ -41,6 +42,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     private Timer autoRefreshTimer;
 
     private boolean mapReady = false;
+    private boolean mapCameraMoving = false;
     private boolean resetUI = false;
 
     @Override
@@ -97,27 +99,53 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mapView.onStart();
+
+        autoRefreshTimer = new Timer();
+        autoRefreshTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        autoRefresh();
+                    }
+                });
+            }
+        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+
+        refresh();
     }
 
     @Override
     public void onPause() {
+        mapCameraMoving = false;
+        predictionsListView.hideAlertsDialog();
+
         mapView.onPause();
         super.onPause();
+
+    }
+
+    @Override
+    public void onStop() {
+        if (controller.isRunning()) {
+            predictionsListView.onRefreshCanceled();
+        }
+
+        autoRefreshTimer.cancel();
+        controller.cancel();
+
+        mapView.onStop();
+        super.onStop();
     }
 
     @Override
@@ -137,7 +165,28 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         mapReady = true;
         gMap = googleMap;
 
+        gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int reason) {
+                if (reason == REASON_GESTURE) {
+                    mapCameraMoving = true;
+                }
+            }
+        });
+
+        gMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                if (mapCameraMoving) {
+                    mapCameraMoving = false;
+                    controller.cancel();
+                    forceRefresh();
+                }
+            }
+        });
+
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(42.3604, -71.0580), 15));
+        forceRefresh();
     }
 
 
@@ -150,7 +199,8 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
 
-            controller.forceUpdate(location);
+            resetUI = true;
+            controller.update(location);
         }
     }
 
@@ -163,6 +213,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
 
+            resetUI = false;
             controller.forceUpdate(location);
         }
     }
@@ -176,6 +227,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
             location.setLatitude(latLng.latitude);
             location.setLongitude(latLng.longitude);
 
+            resetUI = true;
             controller.forceUpdate(location);
         }
     }
