@@ -53,19 +53,17 @@ public class MapSearchController {
     }
 
     public void update(Location location) {
-        this.location = location;
-
         if (!refreshing && (lastRefreshed == null ||
                 new Date().getTime() - lastRefreshed.getTime() >= MINIMUM_REFRESH_INTERVAL)) {
 
+            this.location = location;
             getPredictions();
         }
     }
 
     public void forceUpdate(Location location) {
-        this.location = location;
-
         if (!refreshing) {
+            this.location = location;
             getPredictions();
         }
     }
