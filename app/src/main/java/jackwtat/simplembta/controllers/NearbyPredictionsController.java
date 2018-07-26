@@ -24,7 +24,7 @@ import jackwtat.simplembta.services.NetworkConnectivityService;
  * Created by jackw on 12/1/2017.
  */
 
-public class NearbyPredictionsController implements PredictionsController {
+public class NearbyPredictionsController {
     private final String LOG_TAG = "NPController";
 
     // Time since last refresh before values can automatically refresh onResume, in milliseconds
@@ -110,17 +110,14 @@ public class NearbyPredictionsController implements PredictionsController {
         });
     }
 
-    @Override
     public void connect() {
         locationProviderService.connect();
     }
 
-    @Override
     public void disconnect() {
         locationProviderService.disconnect();
     }
 
-    @Override
     public void update() {
         if (!refreshing && (lastRefreshed == null ||
                 new Date().getTime() - lastRefreshed.getTime() >= MINIMUM_REFRESH_INTERVAL)) {
@@ -129,14 +126,12 @@ public class NearbyPredictionsController implements PredictionsController {
         }
     }
 
-    @Override
     public void forceUpdate() {
         if (!refreshing) {
             getPredictions();
         }
     }
 
-    @Override
     public void cancel() {
         refreshing = false;
 
@@ -147,7 +142,6 @@ public class NearbyPredictionsController implements PredictionsController {
         locationProviderService.disconnect();
     }
 
-    @Override
     public boolean isRunning() {
         return refreshing;
     }

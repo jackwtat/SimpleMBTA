@@ -16,7 +16,6 @@ import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
-import jackwtat.simplembta.controllers.PredictionsController;
 import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
@@ -38,7 +37,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     private View rootView;
     private PredictionsListView predictionsListView;
 
-    private PredictionsController controller;
+    private NearbyPredictionsController controller;
     private Timer autoRefreshTimer;
 
     private boolean resetUI = false;

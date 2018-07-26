@@ -10,13 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -24,7 +21,6 @@ import java.util.Timer;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.controllers.MapSearchController;
-import jackwtat.simplembta.controllers.PredictionsController;
 import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
