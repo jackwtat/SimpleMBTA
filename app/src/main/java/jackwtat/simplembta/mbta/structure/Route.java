@@ -155,6 +155,15 @@ public class Route implements Comparable<Route> {
         return alerts;
     }
 
+    public boolean isValidDestination(String destination) {
+        if ((id.equals("741") || id.equals("742") || id.equals("743")) &&
+                destination.equals("Silver Line Way")) {
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public int compareTo(@NonNull Route route) {
         return Integer.compare(this.sortOrder, route.getSortOrder());

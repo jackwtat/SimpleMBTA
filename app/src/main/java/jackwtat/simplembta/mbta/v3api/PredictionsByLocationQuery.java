@@ -181,7 +181,8 @@ public class PredictionsByLocationQuery extends Query {
                                     .getJSONObject("data")
                                     .getString("id"));
 
-                            if (relatedStop != null && relatedRoute != null && relatedTrip != null) {
+                            if (relatedStop != null && relatedRoute != null && relatedTrip != null &&
+                                    relatedRoute.isValidDestination(relatedTrip.getDestination())) {
                                 Date deptTime = Query.parseDate(departure);
 
                                 if (relatedStop.hasParentStop()) {
