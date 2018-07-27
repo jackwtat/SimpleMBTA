@@ -31,7 +31,6 @@ import jackwtat.simplembta.views.PredictionsListView;
 public class NearbyPredictionsFragment extends RefreshableFragment {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
-    private final int REQUEST_ACCESS_FINE_LOCATION = 1;
     private final long AUTO_REFRESH_RATE = 60000;
 
     private View rootView;
@@ -96,14 +95,6 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Get location access permission from user
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_ACCESS_FINE_LOCATION);
-        }
 
         autoRefreshTimer = new Timer();
         autoRefreshTimer.schedule(new TimerTask() {

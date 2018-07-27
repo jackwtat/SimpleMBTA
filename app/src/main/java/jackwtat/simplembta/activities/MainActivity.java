@@ -1,6 +1,8 @@
 package jackwtat.simplembta.activities;
 
+import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,6 +19,8 @@ import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
 import jackwtat.simplembta.fragments.RefreshableFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private PredictionsPagerAdapter predictionsPagerAdapter;
     private ViewPager viewPager;
@@ -40,6 +44,19 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Get location access permission from user
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_ACCESS_FINE_LOCATION);
+        }
     }
 
     @Override
