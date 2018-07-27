@@ -81,6 +81,9 @@
     <string name="crosstown_prefix">Crosstown</string>
     <string name="no_service_alerts">No Service Alerts</string>
 
+    <!-- SharedPreferences Keys -->
+    <string name="saved_map_search_latlon">savedMapSearchLatLon</string>
+
     <!-- Miscellaneous -->
     <string name="train">Train</string>
     <string name="track">Boarding On Track</string>

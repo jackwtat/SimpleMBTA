@@ -1,6 +1,8 @@
 package jackwtat.simplembta.fragments;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
 
     private MapSearchController controller;
     private Timer autoRefreshTimer;
+    private Location lastLocation;
 
     private boolean mapReady = false;
     private boolean mapCameraMoving = false;
@@ -99,6 +102,12 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                 }
         );
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
+        lastLocation = new Location("");
+        lastLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
+        lastLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
+
         return rootView;
     }
 
@@ -133,6 +142,13 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     public void onPause() {
         mapCameraMoving = false;
         predictionsListView.hideAlertsDialog();
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("latitude", (float) lastLocation.getLatitude());
+        editor.putFloat("longitude", (float) lastLocation.getLongitude());
+        editor.apply();
 
         mapView.onPause();
         super.onPause();
@@ -184,6 +200,11 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
             public void onCameraIdle() {
                 if (mapCameraMoving) {
                     mapCameraMoving = false;
+
+                    LatLng latLng = gMap.getCameraPosition().target;
+                    lastLocation.setLatitude(latLng.latitude);
+                    lastLocation.setLongitude(latLng.longitude);
+
                     controller.cancel();
                     forceRefresh();
                 }
@@ -201,7 +222,8 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
             gMap.setMyLocationEnabled(true);
         }
 
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(42.3604, -71.0580), 15));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 15));
         forceRefresh();
     }
 
@@ -209,42 +231,24 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void refresh() {
         if (mapReady) {
-            LatLng latLng = gMap.getCameraPosition().target;
-
-            Location location = new Location("");
-            location.setLatitude(latLng.latitude);
-            location.setLongitude(latLng.longitude);
-
             resetUI = true;
-            controller.update(location);
+            controller.update(lastLocation);
         }
     }
 
     @Override
     public void autoRefresh() {
         if (mapReady) {
-            LatLng latLng = gMap.getCameraPosition().target;
-
-            Location location = new Location("");
-            location.setLatitude(latLng.latitude);
-            location.setLongitude(latLng.longitude);
-
             resetUI = false;
-            controller.forceUpdate(location);
+            controller.forceUpdate(lastLocation);
         }
     }
 
     @Override
     public void forceRefresh() {
         if (mapReady) {
-            LatLng latLng = gMap.getCameraPosition().target;
-
-            Location location = new Location("");
-            location.setLatitude(latLng.latitude);
-            location.setLongitude(latLng.longitude);
-
             resetUI = true;
-            controller.forceUpdate(location);
+            controller.forceUpdate(lastLocation);
         }
     }
 }
