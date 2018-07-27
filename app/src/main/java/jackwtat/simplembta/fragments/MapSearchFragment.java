@@ -1,9 +1,12 @@
 package jackwtat.simplembta.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -184,6 +188,17 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                 }
             }
         });
+
+        UiSettings mapUiSettings = gMap.getUiSettings();
+        mapUiSettings.setRotateGesturesEnabled(false);
+        mapUiSettings.setTiltGesturesEnabled(false);
+        mapUiSettings.setZoomControlsEnabled(true);
+
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mapUiSettings.setMyLocationButtonEnabled(true);
+            gMap.setMyLocationEnabled(true);
+        }
 
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(42.3604, -71.0580), 15));
         forceRefresh();
