@@ -37,7 +37,7 @@ import jackwtat.simplembta.views.PredictionsListView;
 public class MapSearchFragment extends RefreshableFragment implements OnMapReadyCallback {
     private final static String LOG_TAG = "MapSearchFragment";
 
-    private final long AUTO_REFRESH_RATE = 60000;
+    private final long AUTO_REFRESH_RATE = 45000;
 
     private View rootView;
     private MapView mapView;

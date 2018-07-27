@@ -31,7 +31,7 @@ import jackwtat.simplembta.views.PredictionsListView;
 public class NearbyPredictionsFragment extends RefreshableFragment {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
-    private final long AUTO_REFRESH_RATE = 60000;
+    private final long AUTO_REFRESH_RATE = 45000;
 
     private View rootView;
     private PredictionsListView predictionsListView;
