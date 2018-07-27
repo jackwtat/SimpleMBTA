@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,7 +55,7 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         LinearLayout routeLayout = listItemView.findViewById(R.id.route_layout);
         LinearLayout predictionsLayout = listItemView.findViewById(R.id.predictions_layout);
         TextView stopNameView = listItemView.findViewById(R.id.stop_text_view);
-        TextView alertIndicatorView = listItemView.findViewById(R.id.alert_indicator_text_view);
+        ImageView alertIndicatorView = listItemView.findViewById(R.id.service_alert_image_view);
 
         // Hide the views that have optional values for now
         alertIndicatorView.setVisibility(View.GONE);
@@ -75,14 +76,9 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
-            alertIndicatorView.setVisibility(View.VISIBLE);
             if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW || alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
-                alertIndicatorView.setText(getContext().getResources().getString(R.string.service_alert_urgent));
-                alertIndicatorView.setTextColor(ContextCompat.getColor(getContext(), R.color.ServiceAlert_Urgent));
+                alertIndicatorView.setVisibility(View.VISIBLE);
                 break;
-            } else {
-                alertIndicatorView.setText(getContext().getResources().getString(R.string.service_alert_advisory));
-                alertIndicatorView.setTextColor(ContextCompat.getColor(getContext(), R.color.ServiceAlert_Advisory));
             }
         }
 
