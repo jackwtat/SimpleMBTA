@@ -32,6 +32,8 @@
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:divider="@color/Transparent"
+                android:dividerHeight="8dp"
                 android:fadeScrollbars="false" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
