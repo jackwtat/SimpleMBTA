@@ -172,7 +172,8 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
             public void onCameraMoveStarted(int reason) {
-                if (reason == REASON_GESTURE) {
+                if (reason == REASON_GESTURE ||
+                        reason == REASON_API_ANIMATION) {
                     mapCameraMoving = true;
                 }
             }
