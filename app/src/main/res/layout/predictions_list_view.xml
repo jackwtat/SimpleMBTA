@@ -15,7 +15,7 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:paddingTop="4dp"
-        android:textSize="16sp"
+        android:textSize="@dimen/body_text"
         android:textStyle="bold"
         android:visibility="gone"
         tools:text="Updated 12:00 AM" />
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textAlignment="center"
-            android:textSize="24sp"
+            android:textSize="@dimen/large_header"
             android:textStyle="bold"
             tools:text="Unable to connect to network\nUnable to retrieve current location" />
     </RelativeLayout>

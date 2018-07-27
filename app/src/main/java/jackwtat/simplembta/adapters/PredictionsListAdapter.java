@@ -71,7 +71,8 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
             routeLayout.removeAllViews();
         }
         routeLayout.addView(new RouteNameView(getContext(), route,
-                RouteNameView.SMALL_TEXT_SIZE, RouteNameView.ROUNDED_BACKGROUND,
+                getContext().getResources().getDimension(R.dimen.small_route_name),
+                RouteNameView.ROUNDED_BACKGROUND,
                 true, false));
 
         // Set the indicator for service alerts

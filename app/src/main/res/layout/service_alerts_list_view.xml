@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/no_service_alerts"
             android:textAlignment="center"
-            android:textSize="24sp"
+            android:textSize="@dimen/large_header"
             android:textStyle="bold" />
 
         <ImageView

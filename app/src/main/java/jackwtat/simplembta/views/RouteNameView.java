@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,11 +18,9 @@ public class RouteNameView extends RelativeLayout {
 
     final static public int SQUARE_BACKGROUND = 0;
     final static public int ROUNDED_BACKGROUND = 1;
-    final static public int SMALL_TEXT_SIZE = 22;
-    final static public int LARGE_TEXT_SIZE = 28;
 
     Route route;
-    int textSize;
+    float textSize;
     int backgroundShape;
     boolean nameAbbreviated;
     boolean colorAccentEnabled;
@@ -45,7 +44,7 @@ public class RouteNameView extends RelativeLayout {
         initializeViews(context, SQUARE_BACKGROUND);
     }
 
-    public RouteNameView(Context context, Route route, int textSize, int backgroundShape,
+    public RouteNameView(Context context, Route route, float textSize, int backgroundShape,
                          boolean abbreviateName, boolean enableColorAccent) {
         super(context);
         initializeViews(context, backgroundShape);
@@ -89,7 +88,7 @@ public class RouteNameView extends RelativeLayout {
 
     private void setRouteName() {
         routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
-        routeNameTextView.setTextSize(textSize);
+        routeNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
 
         if (nameAbbreviated) {
             routeNameTextView.setText(route.getShortDisplayName(getContext()));

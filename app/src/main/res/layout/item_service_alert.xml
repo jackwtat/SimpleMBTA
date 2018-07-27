@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="4dp"
-        android:textSize="24sp"
+        android:textSize="@dimen/small_header"
         android:textStyle="bold"
         tools:text="Header" />
 
@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/alert_header_text_view"
-        android:textSize="16sp"
+        android:textSize="@dimen/body_text"
         tools:text="Body" />
 </RelativeLayout>

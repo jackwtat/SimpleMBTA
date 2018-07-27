@@ -181,7 +181,7 @@ public class PredictionsListView extends RelativeLayout {
                     // Create alert dialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     RouteNameView routeNameView = new RouteNameView(context, p.getRoute(),
-                            RouteNameView.LARGE_TEXT_SIZE, RouteNameView.SQUARE_BACKGROUND,
+                            context.getResources().getDimension(R.dimen.large_route_name), RouteNameView.SQUARE_BACKGROUND,
                             false, true);
                     routeNameView.setGravity(Gravity.CENTER);
                     builder.setCustomTitle(routeNameView);
