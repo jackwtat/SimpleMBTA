@@ -17,6 +17,7 @@
         android:paddingTop="4dp"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:visibility="gone"
         tools:text="Updated 12:00 AM" />
 
     <RelativeLayout

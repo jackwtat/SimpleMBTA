@@ -92,7 +92,6 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         mapView.getMapAsync(this);
 
         predictionsListView = rootView.findViewById(R.id.predictions_list_view);
-        predictionsListView.displayStatusTime(false);
         predictionsListView.setOnSwipeRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
