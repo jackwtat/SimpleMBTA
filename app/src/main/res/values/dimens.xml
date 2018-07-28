@@ -7,6 +7,7 @@
 
     <!-- Custom dimensions -->
     <dimen name="fragment_pager_spacing">8dp</dimen>
+    <dimen name="small_route_name_width">60sp</dimen>
 
     <!-- Text Sizes -->
     <dimen name="large_header">24sp</dimen>
