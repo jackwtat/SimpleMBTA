@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_weight="1"
-            android:textSize="@dimen/small_header"
+            android:textSize="@dimen/small_header_text_size"
             android:textStyle="bold"
             tools:text="Malden Center" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:paddingEnd="4dp"
             android:paddingStart="4dp"
-            android:textSize="@dimen/small_header"
+            android:textSize="@dimen/small_header_text_size"
             android:textStyle="bold"
             tools:text="50," />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:paddingEnd="4dp"
             android:text="@string/min"
-            android:textSize="@dimen/body_text"
+            android:textSize="@dimen/body_text_size"
             android:textStyle="bold"
             tools:text="100 min" />
     </LinearLayout>
@@ -50,7 +50,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textColor="#FFFFFF"
-        android:textSize="@dimen/body_text"
+        android:textSize="@dimen/body_text_size"
         android:textStyle="bold"
         tools:text="Track 11" />
 </LinearLayout>

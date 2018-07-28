@@ -3,7 +3,6 @@ package jackwtat.simplembta.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +70,7 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
             routeLayout.removeAllViews();
         }
         routeLayout.addView(new RouteNameView(getContext(), route,
-                getContext().getResources().getDimension(R.dimen.small_route_name),
+                getContext().getResources().getDimension(R.dimen.small_route_name_text_size),
                 RouteNameView.ROUNDED_BACKGROUND,
                 true, false));
 

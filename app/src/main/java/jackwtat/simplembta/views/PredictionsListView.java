@@ -2,7 +2,6 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.activities.MbtaRouteWebPageActivity;
 import jackwtat.simplembta.adapters.PredictionsListAdapter;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Stop;
@@ -181,7 +179,7 @@ public class PredictionsListView extends RelativeLayout {
                     // Create alert dialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     RouteNameView routeNameView = new RouteNameView(context, p.getRoute(),
-                            context.getResources().getDimension(R.dimen.large_route_name), RouteNameView.SQUARE_BACKGROUND,
+                            context.getResources().getDimension(R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
                             false, true);
                     routeNameView.setGravity(Gravity.CENTER);
                     builder.setCustomTitle(routeNameView);
