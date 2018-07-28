@@ -36,7 +36,7 @@
                 android:clipToPadding="false"
                 android:divider="@color/Transparent"
                 android:dividerHeight="8dp"
-                android:fadeScrollbars="false"
+                android:scrollbars="none"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp" />
 
