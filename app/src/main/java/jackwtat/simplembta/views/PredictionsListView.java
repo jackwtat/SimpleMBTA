@@ -192,6 +192,8 @@ public class PredictionsListView extends RelativeLayout {
                             alertsDialog.dismiss();
                         }
                     });
+
+                    /*
                     builder.setNegativeButton(getResources().getString(R.string.mbta_com), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -204,6 +206,7 @@ public class PredictionsListView extends RelativeLayout {
                             context.startActivity(intent);
                         }
                     });
+                    */
 
                     alertsDialog = builder.create();
                     alertsDialog.show();
