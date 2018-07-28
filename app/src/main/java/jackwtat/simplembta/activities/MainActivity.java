@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
         viewPager.setAdapter(predictionsPagerAdapter);
+        viewPager.setPageMargin((int) (8 * getResources().getDisplayMetrics().density));
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
