@@ -33,7 +33,6 @@ public class PredictionsListView extends RelativeLayout {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView predictionsListView;
-    private TextView statusTimeTextView;
     private TextView errorTextView;
     private AlertDialog alertsDialog;
 
@@ -72,7 +71,7 @@ public class PredictionsListView extends RelativeLayout {
 
     // Updates the UI to display an error message if forceRefresh fails
     public void onRefreshError(String errorMessage) {
-        setStatus(new Date(), errorMessage, false, true);
+        setStatus(errorMessage, false, true);
     }
 
     // Updates the UI to display values forceRefresh progress
@@ -83,12 +82,7 @@ public class PredictionsListView extends RelativeLayout {
     }
 
     // Update the UI to display a given timestamped status message
-    public void setStatus(Date statusTime, String errorMessage, boolean showRefreshIcon,
-                          boolean clearList) {
-        DateFormat ft = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        String statusMessage = getResources().getString(R.string.updated) + " " + ft.format(statusTime);
-
-        statusTimeTextView.setText(statusMessage);
+    public void setStatus(String errorMessage, boolean showRefreshIcon, boolean clearList) {
         errorTextView.setText(errorMessage);
         swipeRefreshLayout.setRefreshing(showRefreshIcon);
         if (clearList) {
@@ -107,64 +101,9 @@ public class PredictionsListView extends RelativeLayout {
         // Clear all previous values from list
         predictionsListAdapter.clear();
 
-        // Initialize the data structure that stores route-direction combos that have been processed
-        ArrayList<String> processedRDs = new ArrayList<>();
-
-        // Initialize HashMap to track predictions for route-directions that have been processed
-        HashMap<String, ArrayList<Prediction>> toDisplay = new HashMap<>();
-
-        // Sort the stops
-        Collections.sort(stops);
-
-        // Loop through each stop
-        for (Stop s : stops) {
-
-            // Sort the predictions
-            Collections.sort(s.getPredictions());
-
-            // Loop through each prediction
-            for (int i = 0; i < s.getPredictions().size(); i++) {
-                Prediction p = s.getPredictions().get(i);
-
-                // Create a unique identifier for the route-direction combo by concatenating
-                // the direction ID and the route ID
-                String rd = p.getTrip().getDirection() + ":" + p.getRoute().getId();
-
-                // If this route-direction has been processed with a prediction with null departure
-                // and this prediction does not have a null departure, then we want to remove the
-                // processed prediction and replace it with this one
-                if (processedRDs.contains(rd) &&
-                        toDisplay.get(rd).get(0).getDepartureTime() == null &&
-                        p.getDepartureTime() != null) {
-                    processedRDs.remove(rd);
-                    toDisplay.remove(rd);
-                }
-
-                // If this route-direction has not processed or has been previously unprocessed,
-                // then okay to process
-                if (!processedRDs.contains(rd)) {
-                    processedRDs.add(rd);
-
-                    toDisplay.put(rd, new ArrayList<Prediction>());
-
-                    toDisplay.get(rd).add(p);
-
-                    // Add the next predictions, too, if same route-direction
-                    for (int j = i + 1;
-                         j < s.getPredictions().size() &&
-                                 (s.getPredictions().get(j).getRoute().getId().equals(p.getRoute().getId()) &&
-                                         s.getPredictions().get(j).getTrip().getDirection() == p.getTrip().getDirection());
-                         j++) {
-                        toDisplay.get(rd).add(s.getPredictions().get(j));
-                        i = j;
-                    }
-                }
-            }
-        }
-
-        // Add processed predictions to the prediction list adaptor
-        for (String rd : processedRDs) {
-            predictionsListAdapter.add(toDisplay.get(rd));
+        // Get unique sorted predictions from stops
+        for (ArrayList<Prediction> arrP : Prediction.getUniqueSortedPredictions(stops)) {
+            predictionsListAdapter.add(arrP);
         }
 
         // Set the OnItemClickListener for displaying ServiceAlerts
@@ -224,12 +163,12 @@ public class PredictionsListView extends RelativeLayout {
         }
 
         // Set statuses
-        setStatus(new Date(), "", false, false);
+        setStatus("", false, false);
 
         // If there are no values, show status to user
         if (predictionsListAdapter.getCount() < 1)
 
-            setStatus(new Date(), getResources().
+            setStatus(getResources().
 
                     getString(R.string.no_predictions), false, false);
     }
@@ -239,7 +178,6 @@ public class PredictionsListView extends RelativeLayout {
 
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
         predictionsListView = rootView.findViewById(R.id.list_view);
-        statusTimeTextView = rootView.findViewById(R.id.status_time_text_view);
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
 
         predictionsListAdapter = new PredictionsListAdapter(context,
