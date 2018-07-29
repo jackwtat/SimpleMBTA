@@ -172,7 +172,8 @@ public class PredictionsListView extends RelativeLayout {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (predictionsListAdapter.getItem(position) != null &&
-                        predictionsListAdapter.getItem(position).size() > 0) {
+                        predictionsListAdapter.getItem(position).size() > 0 &&
+                        predictionsListAdapter.getItem(position).get(0).getRoute().hasServiceAlerts()) {
                     final Prediction p = predictionsListAdapter.getItem(position).get(0);
                     Collections.sort(p.getRoute().getServiceAlerts());
 

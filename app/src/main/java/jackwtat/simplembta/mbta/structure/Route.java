@@ -155,6 +155,10 @@ public class Route implements Comparable<Route> {
         return alerts;
     }
 
+    public boolean hasServiceAlerts() {
+        return alerts != null && alerts.size() > 0;
+    }
+
     public boolean isValidDestination(String destination) {
         if ((id.equals("741") || id.equals("742") || id.equals("743")) &&
                 destination.equals("Silver Line Way")) {
