@@ -164,9 +164,49 @@ public class Route implements Comparable<Route> {
         return true;
     }
 
+    public boolean hasSameRouteFamily(Route otherRoute) {
+        if (id.equals(otherRoute.getId())) {
+            return true;
+        }
+
+        if ((id.equals("741") || id.equals("742") || id.equals("743") || id.equals("746")) &&
+                (otherRoute.getId().equals("741") || otherRoute.getId().equals("742") ||
+                        otherRoute.getId().equals("743") || otherRoute.getId().equals("746"))) {
+            return true;
+        }
+
+        if ((id.equals("749") || id.equals("751")) &&
+                (otherRoute.getId().equals("749") || otherRoute.getId().equals("751"))) {
+            return true;
+        }
+
+        if ((id.equals("34") || id.equals("34E")) &&
+                (otherRoute.getId().equals("34") || otherRoute.getId().equals("34E"))) {
+            return true;
+        }
+
+        if ((id.equals("57") || id.equals("57A")) &&
+                (otherRoute.getId().equals("57") || otherRoute.getId().equals("57A"))) {
+            return true;
+        }
+
+        if ((id.equals("70") || id.equals("70A")) &&
+                (otherRoute.getId().equals("70") || otherRoute.getId().equals("70A"))) {
+            return true;
+        }
+
+        if (id.substring(0, 5).equals("Green") &&
+                otherRoute.getId().substring(0, 5).equals("Green")) {
+            return true;
+        }
+
+
+        return false;
+    }
+
     @Override
-    public int compareTo(@NonNull Route route) {
-        return Integer.compare(this.sortOrder, route.getSortOrder());
+    public int compareTo(@NonNull Route otherRoute) {
+        return Integer.compare(this.sortOrder, otherRoute.getSortOrder());
     }
 
     @Override
