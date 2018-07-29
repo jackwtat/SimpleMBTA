@@ -80,6 +80,12 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                         predictionsListView.onRefreshError(getResources().getString(R.string.no_network_connectivity));
                     }
                 });
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
+        lastLocation = new Location("");
+        lastLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
+        lastLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
     }
 
     @Nullable
@@ -100,12 +106,6 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                     }
                 }
         );
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
-        lastLocation = new Location("");
-        lastLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
-        lastLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
 
         return rootView;
     }
