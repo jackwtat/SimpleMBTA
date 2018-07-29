@@ -78,14 +78,12 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
-            if (alert.isActive()) {
-                if (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW || alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN) {
-                    alertIndicatorView.setVisibility(View.VISIBLE);
-                    advisoryIndicatorView.setVisibility(View.GONE);
-                    break;
-                } else {
-                    advisoryIndicatorView.setVisibility(View.VISIBLE);
-                }
+            advisoryIndicatorView.setVisibility(View.VISIBLE);
+            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                alertIndicatorView.setVisibility(View.VISIBLE);
+                advisoryIndicatorView.setVisibility(View.GONE);
+                break;
             }
         }
 
