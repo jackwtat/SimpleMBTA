@@ -55,9 +55,11 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
         LinearLayout predictionsLayout = listItemView.findViewById(R.id.predictions_layout);
         TextView stopNameView = listItemView.findViewById(R.id.stop_text_view);
         ImageView alertIndicatorView = listItemView.findViewById(R.id.service_alert_image_view);
+        ImageView advisoryIndicatorView = listItemView.findViewById(R.id.service_advisory_image_view);
 
         // Hide the views that have optional values for now
         alertIndicatorView.setVisibility(View.GONE);
+        advisoryIndicatorView.setVisibility(View.GONE);
 
         // Get the route
         Route route = predictions.get(0).getRoute();
@@ -76,9 +78,14 @@ public class PredictionsListAdapter extends ArrayAdapter<ArrayList<Prediction>> 
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
-            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW || alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
-                alertIndicatorView.setVisibility(View.VISIBLE);
-                break;
+            if (alert.isActive()) {
+                if (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW || alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN) {
+                    alertIndicatorView.setVisibility(View.VISIBLE);
+                    advisoryIndicatorView.setVisibility(View.GONE);
+                    break;
+                } else {
+                    advisoryIndicatorView.setVisibility(View.VISIBLE);
+                }
             }
         }
 

@@ -31,6 +31,15 @@
                 android:minWidth="@dimen/small_route_name_width"
                 android:orientation="vertical" />
 
+            <ImageView
+                android:id="@+id/service_advisory_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/route_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="14dp"
+                android:src="@drawable/ic_service_advisory"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/service_alert_image_view"
@@ -41,6 +50,7 @@
                 android:layout_marginTop="14dp"
                 android:src="@drawable/ic_service_alert"
                 android:visibility="gone" />
+
         </RelativeLayout>
 
 
