@@ -36,7 +36,6 @@
             android:id="@+id/second_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="4dp"
             android:text="@string/min"
             android:textSize="@dimen/body_text_size"
             android:textStyle="bold"
