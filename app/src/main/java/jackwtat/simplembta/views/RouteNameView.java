@@ -31,24 +31,28 @@ public class RouteNameView extends RelativeLayout {
 
     public RouteNameView(Context context) {
         super(context);
-        initializeViews(context, SQUARE_BACKGROUND);
+        initializeViews(context);
     }
 
     public RouteNameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initializeViews(context, SQUARE_BACKGROUND);
+        initializeViews(context);
     }
 
     public RouteNameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initializeViews(context, SQUARE_BACKGROUND);
+        initializeViews(context);
     }
 
     public RouteNameView(Context context, Route route, float textSize, int backgroundShape,
                          boolean abbreviateName, boolean enableColorAccent) {
         super(context);
-        initializeViews(context, backgroundShape);
+        initializeViews(context);
+        setRouteNameView(route, textSize, backgroundShape, abbreviateName, enableColorAccent);
+    }
 
+    public void setRouteNameView(Route route, float textSize, int backgroundShape,
+                                 boolean abbreviateName, boolean enableColorAccent) {
         this.route = route;
         this.textSize = textSize;
         this.backgroundShape = backgroundShape;
@@ -88,7 +92,7 @@ public class RouteNameView extends RelativeLayout {
 
     private void setRouteName() {
         routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
-        routeNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
+        routeNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
         if (nameAbbreviated) {
             routeNameTextView.setText(route.getShortDisplayName(getContext()));
@@ -97,7 +101,7 @@ public class RouteNameView extends RelativeLayout {
         }
     }
 
-    private void initializeViews(Context context, int backgroundShape) {
+    private void initializeViews(Context context) {
         rootView = inflate(context, R.layout.route_name_view, this);
         routeNameAccentView = rootView.findViewById(R.id.route_name_accent);
         routeNameTextView = rootView.findViewById(R.id.route_name_text_view);
