@@ -8,8 +8,15 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +34,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.MapSearchController;
 import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
+import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Stop;
 import jackwtat.simplembta.views.PredictionsListView;
 
@@ -40,11 +49,14 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     private final long AUTO_REFRESH_RATE = 45000;
 
     private View rootView;
+    private AppBarLayout appBarLayout;
     private MapView mapView;
     private GoogleMap gMap;
-    private PredictionsListView predictionsListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
 
     private MapSearchController controller;
+    private PredictionsAdapter predictionsAdapter;
     private Timer autoRefreshTimer;
     private Location lastLocation;
 
@@ -59,25 +71,22 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         controller = new MapSearchController(getContext(),
                 new OnPostExecuteListener() {
                     public void onPostExecute(List<Stop> stops) {
-                        try {
-                            predictionsListView.publishPredictions(getContext(), stops, resetUI);
-                        } catch (IllegalStateException e) {
-                            Log.e(LOG_TAG, "Pushing get results to nonexistent view");
+                        predictionsAdapter.addAll(Prediction.getUniqueSortedPredictions(stops));
+
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (resetUI) {
+                            recyclerView.scrollToPosition(0);
                         }
                     }
                 },
                 new OnProgressUpdateListener() {
                     public void onProgressUpdate(int progress) {
-                        try {
-                            predictionsListView.setRefreshProgress();
-                        } catch (IllegalStateException e) {
-                            Log.e(LOG_TAG, "Pushing progress update to nonexistent view");
-                        }
+                        swipeRefreshLayout.setRefreshing(true);
                     }
                 },
                 new OnNetworkErrorListener() {
                     public void onNetworkError() {
-                        predictionsListView.onRefreshError(getResources().getString(R.string.no_network_connectivity));
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
 
@@ -93,19 +102,33 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map_search, container, false);
 
+        appBarLayout = rootView.findViewById(R.id.app_bar_layout);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
+        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(AppBarLayout appBarLayout) {
+                return false;
+            }
+        });
+        params.setBehavior(behavior);
+
         mapView = rootView.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        predictionsListView = rootView.findViewById(R.id.predictions_list_view);
-        predictionsListView.setOnSwipeRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        forceRefresh();
-                    }
-                }
-        );
+        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
+                R.color.colorAccent));
+        swipeRefreshLayout.setEnabled(false);
+
+        recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
+
+        GridLayoutManager glm = new GridLayoutManager(getContext(), 1);
+        recyclerView.setLayoutManager(glm);
+
+        predictionsAdapter = new PredictionsAdapter();
+        recyclerView.setAdapter(predictionsAdapter);
 
         return rootView;
     }
@@ -140,7 +163,6 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void onPause() {
         mapCameraMoving = false;
-        predictionsListView.hideAlertsDialog();
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(
                 getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
@@ -157,7 +179,6 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void onStop() {
         if (controller.isRunning()) {
-            predictionsListView.onRefreshCanceled();
         }
 
         autoRefreshTimer.cancel();
