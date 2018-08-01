@@ -20,7 +20,7 @@ import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.ServiceAlert;
 
-public class PredictionsCardView extends CardView {
+public class PredictionsCardView extends LinearLayout{
     View rootView;
     LinearLayout routeLayout;
     LinearLayout predictionsLayout;
