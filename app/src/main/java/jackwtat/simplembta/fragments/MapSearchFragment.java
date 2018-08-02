@@ -201,6 +201,8 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
 
     @Override
     public void onPause() {
+        alertDialog.hide();
+
         mapCameraMoving = false;
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(
