@@ -201,7 +201,13 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
 
     @Override
     public void onPause() {
-        alertDialog.hide();
+        super.onPause();
+
+        if (alertDialog != null) {
+            alertDialog.hide();
+        }
+
+        mapView.onPause();
 
         mapCameraMoving = false;
 
@@ -211,29 +217,24 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         editor.putFloat("latitude", (float) lastLocation.getLatitude());
         editor.putFloat("longitude", (float) lastLocation.getLongitude());
         editor.apply();
-
-        mapView.onPause();
-        super.onPause();
-
     }
 
     @Override
     public void onStop() {
-        if (controller.isRunning()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
+        super.onStop();
+        mapView.onStop();
 
-        autoRefreshTimer.cancel();
         controller.cancel();
 
-        mapView.onStop();
-        super.onStop();
+        autoRefreshTimer.cancel();
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onDestroy() {
-        mapView.onDestroy();
         super.onDestroy();
+        mapView.onDestroy();
     }
 
     @Override
