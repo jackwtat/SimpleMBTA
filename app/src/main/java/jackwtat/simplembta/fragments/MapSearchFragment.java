@@ -196,6 +196,10 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         super.onResume();
         mapView.onResume();
 
+        recyclerView.scrollToPosition(0);
+
+        appBarLayout.setExpanded(true);
+
         refresh();
     }
 
