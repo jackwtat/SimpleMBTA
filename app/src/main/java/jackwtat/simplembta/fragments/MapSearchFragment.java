@@ -2,6 +2,7 @@ package jackwtat.simplembta.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,15 +10,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +40,10 @@ import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
 import jackwtat.simplembta.mbta.structure.Prediction;
+import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.Stop;
-import jackwtat.simplembta.views.PredictionsListView;
+import jackwtat.simplembta.views.AlertsListView;
+import jackwtat.simplembta.views.RouteNameView;
 
 public class MapSearchFragment extends RefreshableFragment implements OnMapReadyCallback {
     private final static String LOG_TAG = "MapSearchFragment";
@@ -54,6 +56,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private AlertDialog alertDialog;
 
     private MapSearchController controller;
     private PredictionsAdapter predictionsAdapter;
@@ -71,11 +74,17 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         controller = new MapSearchController(getContext(),
                 new OnPostExecuteListener() {
                     public void onPostExecute(List<Stop> stops) {
-                        predictionsAdapter.addAll(Prediction.getUniqueSortedPredictions(stops));
+                        predictionsAdapter.setPredictions(Prediction.getUniqueSortedPredictions(stops));
 
                         swipeRefreshLayout.setRefreshing(false);
+
                         if (resetUI) {
                             recyclerView.scrollToPosition(0);
+                            appBarLayout.setExpanded(true);
+
+                            if (alertDialog != null) {
+                                alertDialog.dismiss();
+                            }
                         }
                     }
                 },
@@ -128,6 +137,36 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         recyclerView.setLayoutManager(glm);
 
         predictionsAdapter = new PredictionsAdapter();
+        predictionsAdapter.setOnItemClickListener(new PredictionsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int i) {
+                Route route = predictionsAdapter.getRoute(i);
+
+                if (route.hasServiceAlerts()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                    RouteNameView routeNameView = new RouteNameView(getContext(), route,
+                            getContext().getResources().getDimension(R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
+                            false, true);
+                    routeNameView.setGravity(Gravity.CENTER);
+
+                    builder.setCustomTitle(routeNameView);
+
+                    builder.setView(new AlertsListView(getContext(), route.getServiceAlerts()));
+
+                    builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            }
+        });
+
         recyclerView.setAdapter(predictionsAdapter);
 
         return rootView;

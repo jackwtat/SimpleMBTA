@@ -2,18 +2,19 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.structure.Prediction;
+import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.views.PredictionsCardView;
 
 public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.ViewHolder> {
     private ArrayList<ArrayList<Prediction>> predictionGroups;
+
+    private OnItemClickListener onItemClickListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public PredictionsCardView predictionsCardView;
@@ -24,12 +25,8 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         }
     }
 
-    public PredictionsAdapter(){
+    public PredictionsAdapter() {
         predictionGroups = new ArrayList<>();
-    }
-
-    public PredictionsAdapter(ArrayList<ArrayList<Prediction>> predictionGroups){
-        this.predictionGroups = predictionGroups;
     }
 
     @NonNull
@@ -45,6 +42,17 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
     public void onBindViewHolder(PredictionsAdapter.ViewHolder holder, int position) {
         holder.predictionsCardView.clear();
         holder.predictionsCardView.setPredictions(predictionGroups.get(position));
+
+        final int i = position;
+
+        holder.predictionsCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(i);
+                }
+            }
+        });
     }
 
     @Override
@@ -52,9 +60,21 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         return predictionGroups.size();
     }
 
-    public void addAll(ArrayList<ArrayList<Prediction>> predictionGroups){
+    public Route getRoute(int position) {
+        return predictionGroups.get(position).get(0).getRoute();
+    }
+
+    public void setPredictions(ArrayList<ArrayList<Prediction>> predictionGroups) {
         this.predictionGroups.clear();
         this.predictionGroups.addAll(predictionGroups);
         notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int i);
     }
 }
