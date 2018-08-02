@@ -220,6 +220,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void onStop() {
         if (controller.isRunning()) {
+            swipeRefreshLayout.setRefreshing(false);
         }
 
         autoRefreshTimer.cancel();
