@@ -11,10 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.controllers.listeners.OnLocationErrorListener;
-import jackwtat.simplembta.controllers.listeners.OnNetworkErrorListener;
-import jackwtat.simplembta.controllers.listeners.OnPostExecuteListener;
-import jackwtat.simplembta.controllers.listeners.OnProgressUpdateListener;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
 import jackwtat.simplembta.mbta.structure.*;
 import jackwtat.simplembta.services.LocationProviderService;
@@ -184,5 +180,21 @@ public class NearbyPredictionsController {
             lastRefreshed = new Date();
             onPostExecuteListener.onPostExecute(stops);
         }
+    }
+
+    public interface OnProgressUpdateListener {
+        void onProgressUpdate(int progress);
+    }
+
+    public interface OnPostExecuteListener {
+        void onPostExecute(List<Stop> stops);
+    }
+
+    public interface OnNetworkErrorListener {
+        void onNetworkError();
+    }
+
+    public interface OnLocationErrorListener {
+        void onLocationError();
     }
 }
