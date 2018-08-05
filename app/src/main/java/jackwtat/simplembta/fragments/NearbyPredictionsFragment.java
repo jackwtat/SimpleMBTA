@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jackwtat.simplembta.ErrorMessageHandler;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
@@ -44,6 +45,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
 
     private NearbyPredictionsController controller;
     private PredictionsAdapter predictionsAdapter;
+    private ErrorMessageHandler errorMessageHandler;
     private Timer autoRefreshTimer;
 
     private boolean resetUI = false;
@@ -51,6 +53,8 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        errorMessageHandler = ErrorMessageHandler.getErrorMessageHandler();
 
         controller = new NearbyPredictionsController(getContext(),
                 new OnPostExecuteListener() {
@@ -66,6 +70,10 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                                 alertDialog.dismiss();
                             }
                         }
+
+                        errorMessageHandler.setNetworkError(false);
+                        errorMessageHandler.setLocationError(false);
+                        errorMessageHandler.setLocationPermissionDenied(false);
                     }
                 },
                 new OnProgressUpdateListener() {
@@ -77,14 +85,14 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
-                        Log.e(LOG_TAG, "Network error");
+                        errorMessageHandler.setNetworkError(true);
                     }
                 },
                 new OnLocationErrorListener() {
                     public void onLocationError() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
-                        Log.e(LOG_TAG, "Location Error");
+                        errorMessageHandler.setLocationError(true);
                     }
                 },
                 new OnLocationPermissionDeniedListener() {
@@ -92,7 +100,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                     public void OnLocationPermissionDenied() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
-                        Log.e(LOG_TAG, "Location permission denied");
+                        errorMessageHandler.setLocationPermissionDenied(true);
                     }
                 });
     }

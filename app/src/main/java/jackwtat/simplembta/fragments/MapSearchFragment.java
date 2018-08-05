@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jackwtat.simplembta.ErrorMessageHandler;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.MapSearchController;
@@ -61,16 +62,20 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
 
     private MapSearchController controller;
     private PredictionsAdapter predictionsAdapter;
+    private ErrorMessageHandler errorMessageHandler;
     private Timer autoRefreshTimer;
-    private Location lastLocation;
 
     private boolean mapReady = false;
     private boolean mapCameraMoving = false;
+    private Location lastLocation;
+
     private boolean resetUI = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        errorMessageHandler = ErrorMessageHandler.getErrorMessageHandler();
 
         controller = new MapSearchController(getContext(),
                 new OnPostExecuteListener() {
@@ -87,6 +92,8 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                                 alertDialog.dismiss();
                             }
                         }
+
+                        errorMessageHandler.setNetworkError(false);
                     }
                 },
                 new OnProgressUpdateListener() {
@@ -98,7 +105,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
-                        Log.e(LOG_TAG, "Network error");
+                        errorMessageHandler.setNetworkError(true);
                     }
                 });
 

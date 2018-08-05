@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#F44336</color>
     <color name="list_view_background">#EEEEEE</color>
+    <color name="error_message_background">#323232</color>
 
     <!-- Font Colors -->
     <color name="PrimaryText">#606060</color>

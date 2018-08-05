@@ -19,8 +19,9 @@
     <string name="updated">Last Updated</string>
 
     <!-- Error Messages -->
-    <string name="no_location">Unable To Get Current Location</string>
-    <string name="no_network_connectivity">Unable To Connect To Internet</string>
+    <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>
+    <string name="location_error_text">Unable to get your current location</string>
+    <string name="network_error_text">Unable to connect to the internet</string>
     <string name="no_predictions">No Predictions To Show</string>
 
     <!-- Route Abbreviations -->
