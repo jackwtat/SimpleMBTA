@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements ErrorMessageHandl
 
     @Override
     public void onErrorChanged() {
+        errorTextView.setOnClickListener(null);
+        
         if (errorMessageHandler.hasNetworkError()) {
             errorTextView.setText(R.string.network_error_text);
             errorTextView.setVisibility(View.VISIBLE);
@@ -113,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements ErrorMessageHandl
 
         } else {
             errorTextView.setVisibility(View.GONE);
-            errorTextView.setOnClickListener(null);
         }
     }
 
