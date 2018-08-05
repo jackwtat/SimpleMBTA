@@ -114,8 +114,15 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map_search, container, false);
 
+        // Get app bar and app bar params
         appBarLayout = rootView.findViewById(R.id.app_bar_layout);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+
+        // Set app bar height
+        double height = getResources().getDisplayMetrics().heightPixels * .5;
+        params.height = (int) height;
+
+        // Disable scrolling inside app bar
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
         behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
             @Override
@@ -125,20 +132,25 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         });
         params.setBehavior(behavior);
 
+        // Initialize map view
         mapView = rootView.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+        // Initialize swipe refresh layout
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
                 R.color.colorAccent));
         swipeRefreshLayout.setEnabled(false);
 
+        // Get recycler view
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
 
+        // Set recycler view layout
         GridLayoutManager glm = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(glm);
 
+        // Set recycler view predictions adapter
         predictionsAdapter = new PredictionsAdapter();
         predictionsAdapter.setOnItemClickListener(new PredictionsAdapter.OnItemClickListener() {
             @Override
@@ -169,7 +181,6 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                 }
             }
         });
-
         recyclerView.setAdapter(predictionsAdapter);
 
         return rootView;
