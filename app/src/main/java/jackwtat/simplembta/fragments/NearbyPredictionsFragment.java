@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 import java.util.Timer;
@@ -41,6 +42,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private AlertDialog alertDialog;
+    private TextView noPredictionsTextView;
 
     private NearbyPredictionsController controller;
     private PredictionsAdapter predictionsAdapter;
@@ -59,6 +61,12 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                 new OnPostExecuteListener() {
                     public void onPostExecute(List<Stop> stops) {
                         predictionsAdapter.setPredictions(Prediction.getUniqueSortedPredictions(stops));
+
+                        if(predictionsAdapter.getItemCount() == 0){
+                            noPredictionsTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            noPredictionsTextView.setVisibility(View.GONE);
+                        }
 
                         swipeRefreshLayout.setRefreshing(false);
 
@@ -118,6 +126,8 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                 forceRefresh();
             }
         });
+
+        noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
 
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
 

@@ -22,7 +22,7 @@
     <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>
     <string name="location_error_text">Unable to get your current location</string>
     <string name="network_error_text">Unable to connect to the internet</string>
-    <string name="no_predictions">No Predictions To Show</string>
+    <string name="no_nearby_predictions">No nearby predictions to show</string>
 
     <!-- Route Abbreviations -->
     <string name="red_line_short_name">RL</string>
