@@ -76,12 +76,14 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                 new OnNetworkErrorListener() {
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
+                        predictionsAdapter.clear();
                         Log.e(LOG_TAG, "Network error");
                     }
                 },
                 new OnLocationErrorListener() {
                     public void onLocationError() {
                         swipeRefreshLayout.setRefreshing(false);
+                        predictionsAdapter.clear();
                         Log.e(LOG_TAG, "Location Error");
                     }
                 },
@@ -89,6 +91,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                     @Override
                     public void OnLocationPermissionDenied() {
                         swipeRefreshLayout.setRefreshing(false);
+                        predictionsAdapter.clear();
                         Log.e(LOG_TAG, "Location permission denied");
                     }
                 });

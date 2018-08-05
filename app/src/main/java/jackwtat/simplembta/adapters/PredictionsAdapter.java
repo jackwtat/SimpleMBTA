@@ -70,6 +70,11 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         notifyDataSetChanged();
     }
 
+    public void clear(){
+        predictionGroups.clear();
+        notifyDataSetChanged();
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }

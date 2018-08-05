@@ -97,6 +97,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                 new OnNetworkErrorListener() {
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
+                        predictionsAdapter.clear();
                         Log.e(LOG_TAG, "Network error");
                     }
                 });
