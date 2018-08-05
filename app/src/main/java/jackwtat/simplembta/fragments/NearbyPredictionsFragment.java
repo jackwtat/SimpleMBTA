@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpd
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
+import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationPermissionDeniedListener;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.Stop;
@@ -74,11 +76,20 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                 new OnNetworkErrorListener() {
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
+                        Log.e(LOG_TAG, "Network error");
                     }
                 },
                 new OnLocationErrorListener() {
                     public void onLocationError() {
                         swipeRefreshLayout.setRefreshing(false);
+                        Log.e(LOG_TAG, "Location Error");
+                    }
+                },
+                new OnLocationPermissionDeniedListener() {
+                    @Override
+                    public void OnLocationPermissionDenied() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.e(LOG_TAG, "Location permission denied");
                     }
                 });
     }

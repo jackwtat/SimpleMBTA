@@ -14,6 +14,9 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
 import jackwtat.simplembta.mbta.structure.*;
 import jackwtat.simplembta.services.LocationProviderService;
+import jackwtat.simplembta.services.LocationProviderService.OnUpdateSuccessListener;
+import jackwtat.simplembta.services.LocationProviderService.OnUpdateFailedListener;
+import jackwtat.simplembta.services.LocationProviderService.OnPermissionDeniedListener;
 import jackwtat.simplembta.services.NetworkConnectivityService;
 
 /**
@@ -52,6 +55,7 @@ public class NearbyPredictionsController {
 
     private OnNetworkErrorListener onNetworkErrorListener;
     private OnLocationErrorListener onLocationErrorListener;
+    private OnLocationPermissionDeniedListener onLocationPermissionDeniedListener;
     private OnProgressUpdateListener onProgressUpdateListener;
     private OnPostExecuteListener onPostExecuteListener;
 
@@ -59,20 +63,22 @@ public class NearbyPredictionsController {
                                        OnPostExecuteListener onPostExecuteListener,
                                        OnProgressUpdateListener onProgressUpdateListener,
                                        OnNetworkErrorListener onNetworkErrorListener,
-                                       OnLocationErrorListener onLocationErrorListener) {
+                                       OnLocationErrorListener onLocationErrorListener,
+                                       final OnLocationPermissionDeniedListener onLocationPermissionDeniedListener) {
         realTimeApiKey = context.getString(R.string.v3_mbta_realtime_api_key);
 
         this.onPostExecuteListener = onPostExecuteListener;
         this.onProgressUpdateListener = onProgressUpdateListener;
         this.onNetworkErrorListener = onNetworkErrorListener;
         this.onLocationErrorListener = onLocationErrorListener;
+        this.onLocationPermissionDeniedListener = onLocationPermissionDeniedListener;
 
         networkConnectivityService = new NetworkConnectivityService(context);
 
         locationProviderService = new LocationProviderService(context, LOCATION_UPDATE_INTERVAL,
                 FASTEST_LOCATION_INTERVAL);
 
-        locationProviderService.setOnUpdateSuccessListener(new LocationProviderService.OnUpdateSuccessListener() {
+        locationProviderService.setOnUpdateSuccessListener(new OnUpdateSuccessListener() {
             @Override
             public void onUpdateSuccess(Location location) {
                 if (new Date().getTime() - location.getTime() < MAXIMUM_LOCATION_AGE) {
@@ -98,10 +104,16 @@ public class NearbyPredictionsController {
             }
         });
 
-        locationProviderService.setOnUpdateFailedListener(new LocationProviderService.OnUpdateFailedListener() {
+        locationProviderService.setOnUpdateFailedListener(new OnUpdateFailedListener() {
             @Override
             public void onUpdateFailed() {
                 onLocationUpdateFailed();
+            }
+        });
+        locationProviderService.setOnPermissionDeniedListener(new OnPermissionDeniedListener() {
+            @Override
+            public void onPermissionDenied() {
+                onLocationPermissionDenied();
             }
         });
     }
@@ -160,6 +172,11 @@ public class NearbyPredictionsController {
         onLocationErrorListener.onLocationError();
     }
 
+    private void onLocationPermissionDenied() {
+        refreshing = false;
+        onLocationPermissionDeniedListener.OnLocationPermissionDenied();
+    }
+
     private class PredictionsAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
         @Override
         protected void onPreExecute() {
@@ -196,5 +213,9 @@ public class NearbyPredictionsController {
 
     public interface OnLocationErrorListener {
         void onLocationError();
+    }
+
+    public interface OnLocationPermissionDeniedListener {
+        void OnLocationPermissionDenied();
     }
 }

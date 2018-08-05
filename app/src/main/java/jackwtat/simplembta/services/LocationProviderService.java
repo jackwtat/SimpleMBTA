@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -34,6 +33,7 @@ public class LocationProviderService {
 
     private OnUpdateSuccessListener onUpdateSuccessListener;
     private OnUpdateFailedListener onUpdateFailedListener;
+    private OnPermissionDeniedListener onPermissionDeniedListener;
 
     @SuppressLint("RestrictedApi")
     public LocationProviderService(Context context, long updateInterval, long fastestInterval) {
@@ -82,7 +82,7 @@ public class LocationProviderService {
                         }
                     });
         } else {
-            onUpdateFailedListener.onUpdateFailed();
+            onPermissionDeniedListener.onPermissionDenied();
         }
     }
 
@@ -110,11 +110,20 @@ public class LocationProviderService {
         onUpdateFailedListener = listener;
     }
 
+    // Register OnLocationPermissionListener with this service
+    public void setOnPermissionDeniedListener(OnPermissionDeniedListener listener) {
+        onPermissionDeniedListener = listener;
+    }
+
     public interface OnUpdateSuccessListener {
         void onUpdateSuccess(Location location);
     }
 
     public interface OnUpdateFailedListener {
         void onUpdateFailed();
+    }
+
+    public interface OnPermissionDeniedListener {
+        void onPermissionDenied();
     }
 }
