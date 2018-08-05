@@ -20,16 +20,6 @@ public class ErrorMessageHandler {
         return errorMessageHandler;
     }
 
-    public void registerOnErrorChangeListener(OnErrorChangedListener listener) {
-        onErrorChangedListeners.add(listener);
-    }
-
-    private void notifyErrorChanged() {
-        for (OnErrorChangedListener listener : onErrorChangedListeners) {
-            listener.onErrorChanged();
-        }
-    }
-
     public void setNetworkError(boolean error) {
         networkError = error;
         notifyErrorChanged();
@@ -55,6 +45,16 @@ public class ErrorMessageHandler {
 
     public boolean hasLocationPermissionDenied() {
         return locationPermissionDenied;
+    }
+
+    public void registerOnErrorChangeListener(OnErrorChangedListener listener) {
+        onErrorChangedListeners.add(listener);
+    }
+
+    private void notifyErrorChanged() {
+        for (OnErrorChangedListener listener : onErrorChangedListeners) {
+            listener.onErrorChanged();
+        }
     }
 
     public interface OnErrorChangedListener {
