@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import jackwtat.simplembta.ErrorMessageHandler;
+import jackwtat.simplembta.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
@@ -21,13 +21,13 @@ import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
 import jackwtat.simplembta.fragments.RefreshableFragment;
 
 
-public class MainActivity extends AppCompatActivity implements ErrorMessageHandler.OnErrorChangedListener {
+public class MainActivity extends AppCompatActivity implements ErrorManager.OnErrorChangedListener {
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private PredictionsPagerAdapter predictionsPagerAdapter;
     private ViewPager viewPager;
-    private ErrorMessageHandler errorMessageHandler;
+    private ErrorManager errorManager;
     private TextView errorTextView;
 
     @Override
@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements ErrorMessageHandl
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        errorMessageHandler = ErrorMessageHandler.getErrorMessageHandler();
-        errorMessageHandler.registerOnErrorChangeListener(this);
+        errorManager = ErrorManager.getErrorManager();
+        errorManager.registerOnErrorChangeListener(this);
         errorTextView = findViewById(R.id.error_message_text_view);
     }
 
@@ -94,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements ErrorMessageHandl
     @Override
     public void onErrorChanged() {
         errorTextView.setOnClickListener(null);
-        
-        if (errorMessageHandler.hasNetworkError()) {
+
+        if (errorManager.hasNetworkError()) {
             errorTextView.setText(R.string.network_error_text);
             errorTextView.setVisibility(View.VISIBLE);
 
-        } else if (errorMessageHandler.hasLocationPermissionDenied()) {
+        } else if (errorManager.hasLocationPermissionDenied()) {
             errorTextView.setText(R.string.location_permission_denied_text);
             errorTextView.setVisibility(View.VISIBLE);
             errorTextView.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements ErrorMessageHandl
                 }
             });
 
-        } else if (errorMessageHandler.hasLocationError()) {
+        } else if (errorManager.hasLocationError()) {
             errorTextView.setText(R.string.location_error_text);
             errorTextView.setVisibility(View.VISIBLE);
 

@@ -2,22 +2,22 @@ package jackwtat.simplembta;
 
 import java.util.ArrayList;
 
-public class ErrorMessageHandler {
-    private static ErrorMessageHandler errorMessageHandler;
+public class ErrorManager {
+    private static ErrorManager errorManager;
 
     private static ArrayList<OnErrorChangedListener> onErrorChangedListeners = new ArrayList<>();
     private static boolean networkError = false;
     private static boolean locationError = false;
     private static boolean locationPermissionDenied = false;
 
-    private ErrorMessageHandler() {
+    private ErrorManager() {
     }
 
-    public static synchronized ErrorMessageHandler getErrorMessageHandler() {
-        if (errorMessageHandler == null) {
-            errorMessageHandler = new ErrorMessageHandler();
+    public static synchronized ErrorManager getErrorManager() {
+        if (errorManager == null) {
+            errorManager = new ErrorManager();
         }
-        return errorMessageHandler;
+        return errorManager;
     }
 
     public void setNetworkError(boolean error) {
