@@ -9,9 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:maxLines="1"
         android:minWidth="@dimen/small_route_name_width"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:textStyle="bold" />
 
     <View

@@ -20,7 +20,7 @@ import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
 import jackwtat.simplembta.mbta.structure.ServiceAlert;
 
-public class PredictionsCardView extends LinearLayout{
+public class PredictionsCardView extends LinearLayout {
     View rootView;
     LinearLayout routeLayout;
     LinearLayout predictionsLayout;
@@ -50,17 +50,23 @@ public class PredictionsCardView extends LinearLayout{
     }
 
     public void setPredictions(List<Prediction> predictions) {
-        // Get the route
-        Route route = predictions.get(0).getRoute();
-
         // Set the stop name
         stopNameView.setText(predictions.get(0).getStopName());
 
+        // Get the route
+        Route route = predictions.get(0).getRoute();
+
         // Set the route name
+        boolean abbreviate;
+        if (route.getMode() == Mode.BUS) {
+            abbreviate = true;
+        } else {
+            abbreviate = false;
+        }
         routeLayout.addView(new RouteNameView(getContext(), route,
                 getContext().getResources().getDimension(R.dimen.small_route_name_text_size),
                 RouteNameView.ROUNDED_BACKGROUND,
-                true, false));
+                abbreviate, false));
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
