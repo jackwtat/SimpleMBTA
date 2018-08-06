@@ -10,8 +10,8 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:minWidth="@dimen/small_route_name_width"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:textStyle="bold" />
 
     <View
