@@ -5,7 +5,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "jackwtat.simplembta"
-        minSdkVersion 19
+        minSdkVersion 14
         targetSdkVersion 27
         versionCode 14
         versionName '2.0.4'
