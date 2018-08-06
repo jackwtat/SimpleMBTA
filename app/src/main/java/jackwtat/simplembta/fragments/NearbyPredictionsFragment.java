@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,6 +31,7 @@ import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErr
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationPermissionDeniedListener;
 import jackwtat.simplembta.mbta.structure.Prediction;
 import jackwtat.simplembta.mbta.structure.Route;
+import jackwtat.simplembta.mbta.structure.ServiceAlert;
 import jackwtat.simplembta.mbta.structure.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
@@ -62,7 +65,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                     public void onPostExecute(List<Stop> stops) {
                         predictionsAdapter.setPredictions(Prediction.getUniqueSortedPredictions(stops));
 
-                        if(predictionsAdapter.getItemCount() == 0){
+                        if (predictionsAdapter.getItemCount() == 0) {
                             noPredictionsTextView.setVisibility(View.VISIBLE);
                         } else {
                             noPredictionsTextView.setVisibility(View.GONE);
@@ -143,6 +146,9 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
                 if (route.hasServiceAlerts()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
+                    ArrayList<ServiceAlert> alerts = route.getServiceAlerts();
+                    Collections.sort(alerts);
+
                     RouteNameView routeNameView = new RouteNameView(getContext(), route,
                             getContext().getResources().getDimension(R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
                             false, true);
@@ -150,7 +156,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
 
                     builder.setCustomTitle(routeNameView);
 
-                    builder.setView(new AlertsListView(getContext(), route.getServiceAlerts()));
+                    builder.setView(new AlertsListView(getContext(), alerts));
 
                     builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                         @Override
