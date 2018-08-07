@@ -16,7 +16,7 @@
             android:id="@+id/destination_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:textSize="@dimen/small_header_text_size"
             android:textStyle="bold"
