@@ -14,15 +14,16 @@
     <color name="TabSelectedText">#ffffff</color>
 
     <!-- Line Colors -->
-    <color name="RedLine">#da291c</color>
-    <color name="OrangeLine">#ed8b00</color>
-    <color name="BlueLine">#003da5</color>
-    <color name="GreenLine">#00843d</color>
-    <color name="SilverLine">#7c878e</color>
-    <color name="Bus">#ffc72c</color>
-    <color name="BusAccent">#3191e1</color>
-    <color name="CommuterRail">#80276c</color>
-    <color name="Boat">#008eaa</color>
+    <color name="red_line">#da291c</color>
+    <color name="orange_line">#ed8b00</color>
+    <color name="blue_line">#003da5</color>
+    <color name="green_line">#00843d</color>
+    <color name="silver_line">#7c878e</color>
+    <color name="bus">#ffc72c</color>
+    <color name="bus_alt">#323232</color>
+    <color name="bus_accent">#3191e1</color>
+    <color name="commuter_rail">#80276c</color>
+    <color name="ferry">#008eaa</color>
 
     <!-- Other Colors -->
     <color name="ApproachingAlert">#D32F2F</color>

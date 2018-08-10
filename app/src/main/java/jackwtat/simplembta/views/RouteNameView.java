@@ -83,7 +83,7 @@ public class RouteNameView extends RelativeLayout {
 
     private void setColorAccent() {
         if (colorAccentEnabled && route.getMode() == Mode.BUS &&
-                !route.getLongName().contains("Silver Line")) {
+                !route.getLongName().contains("Silver Line") && !route.getShortName().contains("SL")) {
             routeNameAccentView.setVisibility(View.VISIBLE);
         } else {
             routeNameAccentView.setVisibility(View.GONE);

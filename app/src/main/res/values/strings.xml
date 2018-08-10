@@ -24,6 +24,13 @@
     <string name="network_error_text">Unable to connect to the internet</string>
     <string name="no_nearby_predictions">No nearby predictions to show</string>
 
+    <!-- Route Names -->
+    <string name="red_line_long_name">Red Line</string>
+    <string name="orange_line_long_name">Orange Line</string>
+    <string name="blue_line_long_name">Blue Line</string>
+    <string name="green_line_long_name">Green Line</string>
+    <string name="silver_line_long_name">Silver Line</string>
+
     <!-- Route Abbreviations -->
     <string name="red_line_short_name">RL</string>
     <string name="red_line_mattapan_short_name">RL&#8226;M</string>

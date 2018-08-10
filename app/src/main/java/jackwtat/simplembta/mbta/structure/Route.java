@@ -16,9 +16,9 @@ public class Route implements Comparable<Route> {
     private Mode mode = Mode.UNKNOWN;
     private String shortName = "";
     private String longName = "";
-    private String primaryColor = "FFFFFF";
-    private String accentColor = "3191E1";
-    private String textColor = "000000";
+    private String primaryColor = "#FFFFFF";
+    private String accentColor = "#3191E1";
+    private String textColor = "#000000";
     private int sortOrder = -1;
     private ArrayList<ServiceAlert> alerts = new ArrayList<>();
 
@@ -35,6 +35,9 @@ public class Route implements Comparable<Route> {
         this.primaryColor = primaryColor;
         this.textColor = textColor;
         this.sortOrder = sortOrder;
+
+        correctPrimaryColor();
+        ;
     }
 
     public Route(String id, Mode mode, String shortName, String longName, String primaryColor,
@@ -47,6 +50,8 @@ public class Route implements Comparable<Route> {
         this.accentColor = accentColor;
         this.textColor = textColor;
         this.sortOrder = sortOrder;
+
+        correctPrimaryColor();
     }
 
     public String getId() {
@@ -118,8 +123,14 @@ public class Route implements Comparable<Route> {
     // Returns the language-specific full name of this route
     // Context is required to get the proper translation
     public String getLongDisplayName(Context context) {
-        if (mode == Mode.BUS && !longName.contains("Silver Line")) {
-            return context.getResources().getString(R.string.route_prefix) + " " + shortName;
+        if (mode == Mode.BUS) {
+            if (longName.contains("Silver Line") || shortName.contains("SL")) {
+                return context.getResources().getString((R.string.silver_line_long_name)) +
+                        " " + shortName;
+            } else {
+                return context.getResources().getString(R.string.route_prefix) +
+                        " " + shortName;
+            }
         } else if (!longName.equals("") && !longName.equals("null")) {
             return longName;
         } else {
@@ -129,6 +140,12 @@ public class Route implements Comparable<Route> {
 
     public String getPrimaryColor() {
         return primaryColor;
+    }
+
+    private void correctPrimaryColor() {
+        if (mode == Mode.BUS && !longName.contains("Silver Line") && !shortName.contains("SL")) {
+            primaryColor = "#ffc72c";
+        }
     }
 
     public String getAccentColor() {
