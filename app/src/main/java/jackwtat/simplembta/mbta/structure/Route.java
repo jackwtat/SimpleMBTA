@@ -210,7 +210,7 @@ public class Route implements Comparable<Route> {
 
     @Override
     public int compareTo(@NonNull Route otherRoute) {
-        return Integer.compare(this.sortOrder, otherRoute.getSortOrder());
+        return this.sortOrder - otherRoute.getSortOrder();
     }
 
     @Override
