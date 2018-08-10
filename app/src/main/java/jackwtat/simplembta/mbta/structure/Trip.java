@@ -31,16 +31,12 @@ public class Trip implements Comparable<Trip> {
         return destination;
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     @Override
     public int compareTo(@NonNull Trip trip) {
-        if (this.direction > trip.getDirection()) {
-            return -1;
-        } else if (this.direction < trip.getDirection()) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return trip.getDirection() - getDirection();
     }
 }
