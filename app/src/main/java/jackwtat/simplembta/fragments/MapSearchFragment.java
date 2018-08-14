@@ -71,7 +71,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     private boolean mapCameraMoving = false;
     private Location lastLocation;
 
-    private boolean resetUI = false;
+    private boolean autoScrollToTop = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,13 +86,9 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
 
                         swipeRefreshLayout.setRefreshing(false);
 
-                        if (resetUI) {
+                        if (autoScrollToTop) {
                             recyclerView.scrollToPosition(0);
                             appBarLayout.setExpanded(true);
-
-                            if (alertDialog != null) {
-                                alertDialog.dismiss();
-                            }
                         }
 
                         errorManager.setNetworkError(false);
@@ -324,7 +320,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void refresh() {
         if (mapReady) {
-            resetUI = true;
+            autoScrollToTop = true;
             controller.update(lastLocation);
         }
     }
@@ -332,7 +328,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void autoRefresh() {
         if (mapReady) {
-            resetUI = false;
+            autoScrollToTop = false;
             controller.forceUpdate(lastLocation);
         }
     }
@@ -340,7 +336,7 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
     @Override
     public void forceRefresh() {
         if (mapReady) {
-            resetUI = true;
+            autoScrollToTop = true;
             controller.forceUpdate(lastLocation);
         }
     }

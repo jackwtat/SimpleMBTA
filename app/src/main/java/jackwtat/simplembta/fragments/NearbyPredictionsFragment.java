@@ -52,7 +52,7 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
 
-    private boolean resetUI = false;
+    private boolean autoScrollToTop = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,12 +73,8 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
 
                         swipeRefreshLayout.setRefreshing(false);
 
-                        if (resetUI) {
+                        if (autoScrollToTop) {
                             recyclerView.scrollToPosition(0);
-
-                            if (alertDialog != null) {
-                                alertDialog.dismiss();
-                            }
                         }
 
                         errorManager.setNetworkError(false);
@@ -225,19 +221,19 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
 
     @Override
     public void refresh() {
-        resetUI = true;
+        autoScrollToTop = true;
         controller.update();
     }
 
     @Override
     public void autoRefresh() {
-        resetUI = false;
+        autoScrollToTop = false;
         controller.update();
     }
 
     @Override
     public void forceRefresh() {
-        resetUI = true;
+        autoScrollToTop = true;
         controller.forceUpdate();
     }
 }
