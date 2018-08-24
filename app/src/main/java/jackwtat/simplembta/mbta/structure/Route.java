@@ -35,9 +35,6 @@ public class Route implements Comparable<Route> {
         this.primaryColor = primaryColor;
         this.textColor = textColor;
         this.sortOrder = sortOrder;
-
-        correctPrimaryColor();
-        ;
     }
 
     public Route(String id, Mode mode, String shortName, String longName, String primaryColor,
@@ -50,8 +47,6 @@ public class Route implements Comparable<Route> {
         this.accentColor = accentColor;
         this.textColor = textColor;
         this.sortOrder = sortOrder;
-
-        correctPrimaryColor();
     }
 
     public String getId() {
@@ -140,12 +135,6 @@ public class Route implements Comparable<Route> {
 
     public String getPrimaryColor() {
         return primaryColor;
-    }
-
-    private void correctPrimaryColor() {
-        if (mode == Mode.BUS && !longName.contains("Silver Line") && !shortName.contains("SL")) {
-            primaryColor = "#ffc72c";
-        }
     }
 
     public String getAccentColor() {

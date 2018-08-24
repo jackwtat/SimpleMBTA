@@ -106,10 +106,10 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
             return -1;
         } else if (!this.isActive() && serviceAlert.isActive()) {
             return 1;
-        } else if (this.lifecycleStage != serviceAlert.lifecycleStage){
-            return Integer.compare(this.lifecycleStage, serviceAlert.lifecycleStage);
+        } else if (this.lifecycleStage != serviceAlert.lifecycleStage) {
+            return this.lifecycleStage - serviceAlert.lifecycleStage;
         } else if (this.severity != serviceAlert.getSeverity()) {
-            return Integer.compare(serviceAlert.getSeverity(), this.severity);
+            return serviceAlert.getSeverity() - this.severity;
         } else {
             return serviceAlert.getId().compareTo(this.id);
         }
