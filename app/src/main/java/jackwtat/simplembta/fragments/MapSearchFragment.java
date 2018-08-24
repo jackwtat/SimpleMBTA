@@ -28,9 +28,13 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -222,6 +226,11 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
 
         appBarLayout.setExpanded(true);
 
+        if (new Date().getTime() - controller.getTimeOfLastRefresh() >
+                controller.MAXIMUM_PREDICTION_AGE) {
+            predictionsAdapter.clear();
+        }
+
         refresh();
     }
 
@@ -299,6 +308,45 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
                 }
             }
         });
+
+        PolylineOptions orangeLineOptions = new PolylineOptions();
+        orangeLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.orange_polyline)));
+        gMap.addPolyline(orangeLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.orange_line));
+
+        PolylineOptions redLineAshmontOptions = new PolylineOptions();
+        redLineAshmontOptions.addAll(PolyUtil.decode(getContext().getString(R.string.red_ashmont_polyline)));
+        gMap.addPolyline(redLineAshmontOptions).setColor(ContextCompat.getColor(getContext(), R.color.red_line));
+
+        PolylineOptions redLineBraintreeOptions = new PolylineOptions();
+        redLineBraintreeOptions.addAll(PolyUtil.decode(getContext().getString(R.string.red_braintree_polyline)));
+        gMap.addPolyline(redLineBraintreeOptions).setColor(ContextCompat.getColor(getContext(), R.color.red_line));
+
+        PolylineOptions mattapanLineOptions = new PolylineOptions();
+        mattapanLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.mattapan_polyline)));
+        gMap.addPolyline(mattapanLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.red_line));
+
+        PolylineOptions blueLineOptions = new PolylineOptions();
+        blueLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.blue_polyline)));
+        gMap.addPolyline(blueLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.blue_line));
+
+        PolylineOptions greenBLineOptions = new PolylineOptions();
+        greenBLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_b_polyline)));
+        gMap.addPolyline(greenBLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
+
+        PolylineOptions greenCLineOptions = new PolylineOptions();
+        greenCLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_c_polyline)));
+        gMap.addPolyline(greenCLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
+
+        PolylineOptions greenDLineOptions = new PolylineOptions();
+        greenDLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_d_polyline)));
+        gMap.addPolyline(greenDLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
+
+        PolylineOptions greenELineOptions = new PolylineOptions();
+        greenELineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_e_polyline)));
+        gMap.addPolyline(greenELineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
+
+
+
 
         UiSettings mapUiSettings = gMap.getUiSettings();
         mapUiSettings.setRotateGesturesEnabled(false);

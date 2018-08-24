@@ -17,7 +17,10 @@ public class MapSearchController {
     private final String LOG_TAG = "MSController";
 
     // Time since last refresh before values can automatically refresh onResume, in milliseconds
-    private final long MINIMUM_REFRESH_INTERVAL = 30000;
+    public final long MINIMUM_REFRESH_INTERVAL = 30000;
+
+    // Maximum age of prediction, in milliseconds
+    public final long MAXIMUM_PREDICTION_AGE = 180000;
 
     private String realTimeApiKey;
     private NetworkConnectivityService networkConnectivityService;
@@ -71,6 +74,14 @@ public class MapSearchController {
 
     public boolean isRunning() {
         return refreshing;
+    }
+
+    public long getTimeOfLastRefresh() {
+        if (lastRefreshed != null) {
+            return lastRefreshed.getTime();
+        } else {
+            return 0;
+        }
     }
 
     private void getPredictions() {

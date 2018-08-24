@@ -3,9 +3,13 @@ package jackwtat.simplembta.controllers;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,6 +17,10 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
 import jackwtat.simplembta.mbta.structure.*;
+import jackwtat.simplembta.mbta.v3api.PredictionsJsonParser;
+import jackwtat.simplembta.mbta.v3api.Query;
+import jackwtat.simplembta.mbta.v3api.RoutesJsonParser;
+import jackwtat.simplembta.mbta.v3api.StopsJsonParser;
 import jackwtat.simplembta.services.LocationProviderService;
 import jackwtat.simplembta.services.LocationProviderService.OnUpdateSuccessListener;
 import jackwtat.simplembta.services.LocationProviderService.OnUpdateFailedListener;
@@ -27,22 +35,25 @@ public class NearbyPredictionsController {
     private final String LOG_TAG = "NPController";
 
     // Time since last refresh before values can automatically refresh onResume, in milliseconds
-    private final long MINIMUM_REFRESH_INTERVAL = 30000;
+    public final long MINIMUM_REFRESH_INTERVAL = 30000;
 
     // Time between location updates, in milliseconds
-    private final long LOCATION_UPDATE_INTERVAL = 10000;
+    public final long LOCATION_UPDATE_INTERVAL = 10000;
 
     // Fastest time between location updates, in milliseconds
-    private final long FASTEST_LOCATION_INTERVAL = 2000;
+    public final long FASTEST_LOCATION_INTERVAL = 2000;
+
+    // Maximum age of prediction, in milliseconds
+    public final long MAXIMUM_PREDICTION_AGE = 180000;
 
     // Maximum age of location data, in milliseconds
-    private final long MAXIMUM_LOCATION_AGE = 15000;
+    public final long MAXIMUM_LOCATION_AGE = 15000;
 
     // Time to wait between attempts to get recent location, in milliseconds
-    private final int LOCATION_ATTEMPT_WAIT_TIME = 500;
+    public final int LOCATION_ATTEMPT_WAIT_TIME = 500;
 
     // Maximum number of attempts to get recent location
-    private final int MAXIMUM_LOCATION_ATTEMPTS = 10;
+    public final int MAXIMUM_LOCATION_ATTEMPTS = 10;
 
     private String realTimeApiKey;
     private NetworkConnectivityService networkConnectivityService;
@@ -154,6 +165,14 @@ public class NearbyPredictionsController {
         return refreshing;
     }
 
+    public long getTimeOfLastRefresh() {
+        if (lastRefreshed != null) {
+            return lastRefreshed.getTime();
+        } else {
+            return 0;
+        }
+    }
+
     private void getPredictions() {
         refreshing = true;
         onProgressUpdateListener.onProgressUpdate(0);
@@ -185,6 +204,75 @@ public class NearbyPredictionsController {
 
         @Override
         protected List<Stop> doInBackground(Location... locations) {
+            /*
+            // Get the user's current latitude and longitude
+            Double lat = locations[0].getLatitude();
+            Double lon = locations[0].getLongitude();
+
+            Query query = new Query(realTimeApiKey);
+
+            // Get the stops near the user
+            String[] stopArgs = {
+                    "filter[latitude]=" + Double.toString(lat),
+                    "filter[longitude]=" + Double.toString(lon),
+                    "include=child_stops"
+            };
+            String stopsJsonResponse = query.get("stops", stopArgs);
+            ArrayList<MbtaStop> stops =
+                    new ArrayList<>(Arrays.asList(StopsJsonParser.parse(stopsJsonResponse)));
+
+
+            if (stops.size() > 0) {
+                // Get all the routes at these stops
+                StringBuilder routesArgBuilder = new StringBuilder(stops.get(0).getId());
+                for (int i = 1; i < stops.size(); i++) {
+                    routesArgBuilder.append(",").append(stops.get(i).getId());
+                }
+                String[] routesArgs = {"filter[stop]" + routesArgBuilder.toString()};
+                String routesJsonResponse = query.get("routes", routesArgs);
+                MbtaRoute[] routes = RoutesJsonParser.parse(routesJsonResponse);
+
+                // Get all alerts for these routes
+                if (routes.length > 0) {
+                    StringBuilder alertsArgBuilder = new StringBuilder(routes[0].getId());
+                    for (int i = 1; i < routes.length; i++) {
+                        alertsArgBuilder.append(",").append(routes[i].getId());
+                    }
+                    String[] alertsArgs = {"filter[route]=" + alertsArgBuilder.toString()};
+                    String alertsJsonResponse = query.get("alerts", alertsArgs);
+                }
+
+                // Get the predictions near the user
+                String[] predictionArgs = {
+                        "filter[latitude]=" + Double.toString(lat),
+                        "filter[longitude]=" + Double.toString(lon),
+                        "include=route,trip"
+                };
+                String predictionsJsonResponse = query.get("predictions", predictionArgs);
+                MbtaPrediction[] predictions = PredictionsJsonParser.parse(predictionsJsonResponse);
+
+                // Add predictions to their respective stops
+                for (MbtaPrediction prediction : predictions) {
+                    for (MbtaStop stop : stops) {
+                        if (stop.isParentOf(prediction.getStopId())) {
+                            prediction.setStopId(stop.getId());
+                            prediction.setStopName(stop.getName());
+
+                            stop.addPrediction(prediction);
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (MbtaStop stop : stops) {
+                stop.setDistance(lat, lon);
+            }
+
+            Collections.sort(stops);
+            */
+
             return new ArrayList<>(
                     new PredictionsByLocationQuery(realTimeApiKey)
                             .get(locations[0].getLatitude(), locations[0].getLongitude())

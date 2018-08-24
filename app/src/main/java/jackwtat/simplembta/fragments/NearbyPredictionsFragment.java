@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -195,6 +196,11 @@ public class NearbyPredictionsFragment extends RefreshableFragment {
         super.onResume();
 
         controller.connect();
+
+        if (new Date().getTime() - controller.getTimeOfLastRefresh() >
+                controller.MAXIMUM_PREDICTION_AGE) {
+            predictionsAdapter.clear();
+        }
 
         refresh();
     }
