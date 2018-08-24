@@ -33,12 +33,14 @@ public class AlertsByRoutesQuery extends Query {
 
     public ArrayList<ServiceAlert> get(List<String> routeIds) {
         StringBuilder arg = new StringBuilder();
-        for (String id : routeIds) {
-            arg.append(id).append(",");
+        for (int i = 0; i < routeIds.size(); i++) {
+            arg.append(routeIds.get(i));
+            if (i < routeIds.size() - 1) {
+                arg.append(",");
+            }
         }
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put("filter[route]", arg.toString());
+        String[] params = {"filter[route]=" + arg.toString()};
 
         String jsonResponse = super.get("alerts", params);
 

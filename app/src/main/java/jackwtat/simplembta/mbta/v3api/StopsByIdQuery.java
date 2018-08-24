@@ -25,12 +25,14 @@ public class StopsByIdQuery extends Query {
 
     public HashMap<String, Stop> get(List<String> stopIds) {
         StringBuilder arg = new StringBuilder();
-        for (String id : stopIds) {
-            arg.append(id).append(",");
+        for (int i = 0; i < stopIds.size(); i++) {
+            arg.append(stopIds.get(i));
+            if (i < stopIds.size() - 1) {
+                arg.append(",");
+            }
         }
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put("filter[id]", arg.toString());
+        String[] params = {"filter[id]=" + arg.toString()};
 
         String jsonResponse = super.get("stops", params);
 

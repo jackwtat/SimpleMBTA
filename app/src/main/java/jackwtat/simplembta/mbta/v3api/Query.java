@@ -32,14 +32,13 @@ public class Query {
     }
 
     // Queries the MBTA API and returns the response as a string representation of a JSON object
-    public String get(String query, HashMap<String, String> params) {
+    public String get(String query, String[] args) {
         // Build get URL as String
         StringBuilder requestUrl = new StringBuilder(MBTA_URL + query + "?api_key=" + apiKey);
 
         // Append the parameters and respective arguments to the get URL
-        for (String param : params.keySet()) {
-            String arg = params.get(param);
-            requestUrl.append("&").append(param).append("=").append(arg);
+        for (String arg : args) {
+            requestUrl.append("&").append(arg);
         }
 
         URL url = createUrl(requestUrl.toString());

@@ -36,11 +36,11 @@ public class PredictionsByLocationQuery extends Query {
         ArrayList<ServiceAlert> alerts = new ArrayList<>();
         ArrayList<String> parentStopIds = new ArrayList<>();
 
-        HashMap<String, String> params = new HashMap<>();
-
-        params.put("filter[latitude]", Double.toString(latitude));
-        params.put("filter[longitude]", Double.toString(longitude));
-        params.put("include", "stop,route,trip");
+        String[] params = {
+                "filter[latitude]=" + Double.toString(latitude),
+                "filter[longitude]=" + Double.toString(longitude),
+                "include=stop,route,trip"
+        };
 
         String jsonResponse = super.get("predictions", params);
 
@@ -143,7 +143,7 @@ public class PredictionsByLocationQuery extends Query {
                 stops.putAll(parentStops);
             }
 
-            // Parse Prediction data
+            // Parse MbtaPrediction data
             if (jRoot.has("data")) {
                 JSONArray jData = jRoot.getJSONArray("data");
 
@@ -151,7 +151,7 @@ public class PredictionsByLocationQuery extends Query {
                 for (int i = 0; i < jData.length(); i++) {
                     JSONObject jPrediction = jData.getJSONObject(i);
 
-                    // Parse Prediction object
+                    // Parse MbtaPrediction object
                     try {
                         String id = jPrediction.getString("id");
 
@@ -209,12 +209,12 @@ public class PredictionsByLocationQuery extends Query {
                             }
                         }
                     } catch (JSONException e) {
-                        Log.e(LOG_TAG, "Unable to parse Prediction:\n" +
+                        Log.e(LOG_TAG, "Unable to parse MbtaPrediction:\n" +
                                 jPrediction.toString());
                     }
                 }
             } else {
-                Log.i(LOG_TAG, "No Prediction data returned");
+                Log.i(LOG_TAG, "No MbtaPrediction data returned");
             }
 
         } catch (JSONException e) {
