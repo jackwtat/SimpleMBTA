@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +29,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +49,7 @@ import java.util.TimerTask;
 
 import jackwtat.simplembta.ErrorManager;
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.RawResourceReader;
 import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.MapSearchController;
 import jackwtat.simplembta.controllers.MapSearchController.OnProgressUpdateListener;
@@ -309,49 +318,46 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
             }
         });
 
-        PolylineOptions orangeLineOptions = new PolylineOptions();
-        orangeLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.orange_polyline)));
-        gMap.addPolyline(orangeLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.orange_line));
+        try {
+            JSONObject jRouteShapes = new JSONObject(
+                    RawResourceReader.toString(getResources().openRawResource(R.raw.route_shapes)));
 
-        PolylineOptions redLineAshmontOptions = new PolylineOptions();
-        redLineAshmontOptions.addAll(PolyUtil.decode(getContext().getString(R.string.red_ashmont_polyline)));
-        gMap.addPolyline(redLineAshmontOptions).setColor(ContextCompat.getColor(getContext(), R.color.red_line));
+            JSONArray jData = jRouteShapes.getJSONArray("data");
 
-        PolylineOptions redLineBraintreeOptions = new PolylineOptions();
-        redLineBraintreeOptions.addAll(PolyUtil.decode(getContext().getString(R.string.red_braintree_polyline)));
-        gMap.addPolyline(redLineBraintreeOptions).setColor(ContextCompat.getColor(getContext(), R.color.red_line));
+            for (int i = 0; i < jData.length(); i++) {
+                try {
+                    JSONObject jRoute = jData.getJSONObject(i);
+                    gMap.addPolyline(new PolylineOptions()
+                            .addAll(PolyUtil.decode(jRoute.getString("shape")))
+                            .color(Color.parseColor("#FFFFFF"))
+                            .zIndex(0)
+                            .jointType(JointType.ROUND)
+                            .startCap(new RoundCap())
+                            .endCap(new RoundCap())
+                            .width(14));
+                    gMap.addPolyline(new PolylineOptions()
+                            .addAll(PolyUtil.decode(jRoute.getString("shape")))
+                            .color(Color.parseColor(jRoute.getString("color")))
+                            .zIndex(jRoute.getInt("z-index"))
+                            .jointType(JointType.ROUND)
+                            .startCap(new RoundCap())
+                            .endCap(new RoundCap())
+                            .width(7));
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, "Unable to parse route shape at index " + i);
+                }
+            }
 
-        PolylineOptions mattapanLineOptions = new PolylineOptions();
-        mattapanLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.mattapan_polyline)));
-        gMap.addPolyline(mattapanLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.red_line));
-
-        PolylineOptions blueLineOptions = new PolylineOptions();
-        blueLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.blue_polyline)));
-        gMap.addPolyline(blueLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.blue_line));
-
-        PolylineOptions greenBLineOptions = new PolylineOptions();
-        greenBLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_b_polyline)));
-        gMap.addPolyline(greenBLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
-
-        PolylineOptions greenCLineOptions = new PolylineOptions();
-        greenCLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_c_polyline)));
-        gMap.addPolyline(greenCLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
-
-        PolylineOptions greenDLineOptions = new PolylineOptions();
-        greenDLineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_d_polyline)));
-        gMap.addPolyline(greenDLineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
-
-        PolylineOptions greenELineOptions = new PolylineOptions();
-        greenELineOptions.addAll(PolyUtil.decode(getContext().getString(R.string.green_e_polyline)));
-        gMap.addPolyline(greenELineOptions).setColor(ContextCompat.getColor(getContext(), R.color.green_line));
-
-
-
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Unable to parse route shapes JSON");
+        }
 
         UiSettings mapUiSettings = gMap.getUiSettings();
         mapUiSettings.setRotateGesturesEnabled(false);
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setZoomControlsEnabled(true);
+
+        gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
 
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -360,10 +366,9 @@ public class MapSearchFragment extends RefreshableFragment implements OnMapReady
         }
 
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 15));
+                new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 13));
         forceRefresh();
     }
-
 
     @Override
     public void refresh() {
