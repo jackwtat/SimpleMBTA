@@ -9,8 +9,8 @@
     <string name="favorites_fragment_title">Favorites</string>
 
     <!-- Service Alerts -->
-    <string name="service_alert_advisory">Advisory</string>
-    <string name="service_alert_urgent">Alert</string>
+    <string name="service_advisory">Service Advisory</string>
+    <string name="service_alert">Service Alert</string>
 
     <!-- Status Messages -->
     <string name="getting_location">Getting Location&#8230;</string>
