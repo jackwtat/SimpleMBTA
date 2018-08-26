@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +19,11 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
 import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
-import jackwtat.simplembta.fragments.RefreshableFragment;
+import jackwtat.simplembta.fragments.Refreshable;
 
 
 public class MainActivity extends AppCompatActivity implements ErrorManager.OnErrorChangedListener {
+    public final static String LOG_TAG = "MainActivity";
 
     private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -80,12 +82,12 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                RefreshableFragment f = (RefreshableFragment) predictionsPagerAdapter.getItem(
+                Refreshable f = (Refreshable) predictionsPagerAdapter.getItem(
                         viewPager.getCurrentItem());
                 try {
                     f.forceRefresh();
                 } catch (Exception e) {
-
+                    Log.e(LOG_TAG, "Unable to refresh fragment " + item.getItemId());
                 }
         }
         return super.onOptionsItemSelected(item);
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         }
     }
 
-    private void requestLocationPermission(){
+    private void requestLocationPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 REQUEST_ACCESS_FINE_LOCATION);

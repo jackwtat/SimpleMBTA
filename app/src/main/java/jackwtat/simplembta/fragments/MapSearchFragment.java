@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -62,7 +63,7 @@ import jackwtat.simplembta.mbta.structure.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 
-public class MapSearchFragment extends RefreshableFragment implements OnMapReadyCallback {
+public class MapSearchFragment extends Fragment implements Refreshable, OnMapReadyCallback {
     private final static String LOG_TAG = "MapSearchFragment";
 
     private final long AUTO_REFRESH_RATE = 45000;

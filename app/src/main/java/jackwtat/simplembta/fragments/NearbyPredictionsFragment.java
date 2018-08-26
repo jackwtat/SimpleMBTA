@@ -3,6 +3,7 @@ package jackwtat.simplembta.fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -37,7 +38,7 @@ import jackwtat.simplembta.mbta.structure.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 
-public class NearbyPredictionsFragment extends RefreshableFragment {
+public class NearbyPredictionsFragment extends Fragment implements Refreshable {
     private final static String LOG_TAG = "NearbyPredsFragment";
 
     private final long AUTO_REFRESH_RATE = 45000;
