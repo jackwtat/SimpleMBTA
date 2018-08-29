@@ -53,7 +53,7 @@ import java.util.TimerTask;
 
 import jackwtat.simplembta.ErrorManager;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.RawResourceReader;
+import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.MapSearchController;
 import jackwtat.simplembta.controllers.MapSearchController.OnProgressUpdateListener;

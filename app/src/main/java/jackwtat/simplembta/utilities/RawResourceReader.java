@@ -1,4 +1,4 @@
-package jackwtat.simplembta;
+package jackwtat.simplembta.utilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
