@@ -10,8 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Created by jackw on 1/16/2018.
@@ -127,22 +125,5 @@ public class MbtaApiClient {
         return output.toString();
     }
 
-    /**
-     * Convert Date/Time from MBTA's string format to Java's Data object
-     */
 
-    public static Date parseDate(String date) {
-        try {
-            int year = Integer.parseInt(date.substring(0, 4));
-            int month = Integer.parseInt(date.substring(5, 7)) - 1;
-            int day = Integer.parseInt(date.substring(8, 10));
-            int hour = Integer.parseInt(date.substring(11, 13));
-            int minute = Integer.parseInt(date.substring(14, 16));
-            int second = Integer.parseInt(date.substring(17, 19));
-
-            return new GregorianCalendar(year, month, day, hour, minute, second).getTime();
-        } catch (Exception e) {
-            return null;
-        }
-    }
 }

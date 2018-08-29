@@ -13,6 +13,7 @@ import java.util.List;
 import jackwtat.simplembta.clients.MbtaApiClient;
 import jackwtat.simplembta.model.Mode;
 import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.utilities.DateUtil;
 
 /**
  * Created by jackw on 3/11/2018.
@@ -93,8 +94,8 @@ public class AlertsByRoutesQuery extends MbtaApiClient {
                     String endTime = jActiveTimes.getString("end");
 
                     alert.addActivePeriod(
-                            MbtaApiClient.parseDate(startTime),
-                            MbtaApiClient.parseDate(endTime));
+                            DateUtil.parse(startTime),
+                            DateUtil.parse(endTime));
                 }
 
                 alerts.add(alert);

@@ -18,6 +18,7 @@ import jackwtat.simplembta.model.Mode;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Trip;
+import jackwtat.simplembta.utilities.DateUtil;
 
 /**
  * Created by jackw on 1/18/2018.
@@ -184,7 +185,7 @@ public class PredictionsByLocationQuery extends MbtaApiClient {
 
                             if (relatedStop != null && relatedRoute != null && relatedTrip != null &&
                                     relatedRoute.isValidDestination(relatedTrip.getDestination())) {
-                                Date deptTime = MbtaApiClient.parseDate(departure);
+                                Date deptTime = DateUtil.parse(departure);
 
                                 if (relatedStop.hasParentStop()) {
                                     Stop parentStop = stops.get(relatedStop.getParentStopId());
