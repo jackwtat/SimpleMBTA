@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.model.ServiceAlert;
 
 /**
  * Created by jackw on 3/14/2018.

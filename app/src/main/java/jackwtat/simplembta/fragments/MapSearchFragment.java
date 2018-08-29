@@ -27,7 +27,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,10 +59,10 @@ import jackwtat.simplembta.controllers.MapSearchController;
 import jackwtat.simplembta.controllers.MapSearchController.OnProgressUpdateListener;
 import jackwtat.simplembta.controllers.MapSearchController.OnPostExecuteListener;
 import jackwtat.simplembta.controllers.MapSearchController.OnNetworkErrorListener;
-import jackwtat.simplembta.mbta.structure.Prediction;
-import jackwtat.simplembta.mbta.structure.Route;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
-import jackwtat.simplembta.mbta.structure.Stop;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 

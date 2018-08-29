@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import jackwtat.simplembta.mbta.structure.Prediction;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
-import jackwtat.simplembta.mbta.structure.Mode;
-import jackwtat.simplembta.mbta.structure.Route;
-import jackwtat.simplembta.mbta.structure.Stop;
-import jackwtat.simplembta.mbta.structure.Trip;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.model.Mode;
+import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.Trip;
 
 /**
  * Created by jackw on 1/18/2018.

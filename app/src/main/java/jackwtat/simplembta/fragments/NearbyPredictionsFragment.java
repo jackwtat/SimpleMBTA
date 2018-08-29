@@ -31,10 +31,10 @@ import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecute
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
 import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationPermissionDeniedListener;
-import jackwtat.simplembta.mbta.structure.Prediction;
-import jackwtat.simplembta.mbta.structure.Route;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
-import jackwtat.simplembta.mbta.structure.Stop;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 

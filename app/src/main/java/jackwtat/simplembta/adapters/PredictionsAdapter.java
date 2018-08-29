@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import jackwtat.simplembta.mbta.structure.Prediction;
-import jackwtat.simplembta.mbta.structure.Route;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.views.PredictionsCardView;
 
 public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.ViewHolder> {

@@ -3,24 +3,16 @@ package jackwtat.simplembta.controllers;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
-import jackwtat.simplembta.mbta.structure.*;
-import jackwtat.simplembta.mbta.v3api.PredictionsJsonParser;
-import jackwtat.simplembta.mbta.v3api.Query;
-import jackwtat.simplembta.mbta.v3api.RoutesJsonParser;
-import jackwtat.simplembta.mbta.v3api.StopsJsonParser;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.services.LocationProviderService;
 import jackwtat.simplembta.services.LocationProviderService.OnUpdateSuccessListener;
 import jackwtat.simplembta.services.LocationProviderService.OnUpdateFailedListener;

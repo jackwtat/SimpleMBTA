@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.structure.Mode;
-import jackwtat.simplembta.mbta.structure.Prediction;
+import jackwtat.simplembta.model.Mode;
+import jackwtat.simplembta.model.Prediction;
 
 public class PredictionView extends LinearLayout {
     View rootView;

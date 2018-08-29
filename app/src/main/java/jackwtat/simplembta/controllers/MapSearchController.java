@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.structure.Stop;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
 import jackwtat.simplembta.services.NetworkConnectivityService;
 

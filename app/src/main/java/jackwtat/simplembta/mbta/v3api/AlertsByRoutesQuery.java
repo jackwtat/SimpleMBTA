@@ -8,11 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import jackwtat.simplembta.mbta.structure.Mode;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.model.Mode;
+import jackwtat.simplembta.model.ServiceAlert;
 
 /**
  * Created by jackw on 3/11/2018.

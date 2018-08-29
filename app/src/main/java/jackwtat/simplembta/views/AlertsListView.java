@@ -15,7 +15,7 @@ import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.AlertsListAdapter;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.model.ServiceAlert;
 
 public class AlertsListView extends RelativeLayout {
     View rootView;

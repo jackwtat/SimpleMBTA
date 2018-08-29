@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.structure.Mode;
-import jackwtat.simplembta.mbta.structure.Route;
+import jackwtat.simplembta.model.Mode;
+import jackwtat.simplembta.model.Route;
 
 public class RouteNameView extends RelativeLayout {
 

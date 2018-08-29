@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import jackwtat.simplembta.mbta.structure.Stop;
+import jackwtat.simplembta.model.Stop;
 
 /**
  * Created by jackw on 3/2/2018.

@@ -3,7 +3,6 @@ package jackwtat.simplembta.views;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,10 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.mbta.structure.Mode;
-import jackwtat.simplembta.mbta.structure.Prediction;
-import jackwtat.simplembta.mbta.structure.Route;
-import jackwtat.simplembta.mbta.structure.ServiceAlert;
+import jackwtat.simplembta.model.Mode;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.ServiceAlert;
 
 public class PredictionsCardView extends LinearLayout {
     View rootView;
