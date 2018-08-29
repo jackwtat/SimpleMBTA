@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jackwtat.simplembta.ErrorManager;
+import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.adapters.PredictionsAdapter;

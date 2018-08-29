@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import jackwtat.simplembta.ErrorManager;
+import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
