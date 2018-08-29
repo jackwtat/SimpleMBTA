@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import jackwtat.simplembta.clients.MbtaApiClient;
 import jackwtat.simplembta.model.Mode;
 import jackwtat.simplembta.model.ServiceAlert;
 
@@ -17,7 +18,7 @@ import jackwtat.simplembta.model.ServiceAlert;
  * Created by jackw on 3/11/2018.
  */
 
-public class AlertsByRoutesQuery extends Query {
+public class AlertsByRoutesQuery extends MbtaApiClient {
     final private String LOG_TAG = "AlertsByRouteQuery";
 
     public AlertsByRoutesQuery(String apiKey) {
@@ -92,8 +93,8 @@ public class AlertsByRoutesQuery extends Query {
                     String endTime = jActiveTimes.getString("end");
 
                     alert.addActivePeriod(
-                            Query.parseDate(startTime),
-                            Query.parseDate(endTime));
+                            MbtaApiClient.parseDate(startTime),
+                            MbtaApiClient.parseDate(endTime));
                 }
 
                 alerts.add(alert);

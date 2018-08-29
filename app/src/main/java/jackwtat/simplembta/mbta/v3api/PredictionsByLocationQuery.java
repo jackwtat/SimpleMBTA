@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import jackwtat.simplembta.clients.MbtaApiClient;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Mode;
@@ -22,7 +23,7 @@ import jackwtat.simplembta.model.Trip;
  * Created by jackw on 1/18/2018.
  */
 
-public class PredictionsByLocationQuery extends Query {
+public class PredictionsByLocationQuery extends MbtaApiClient {
     private static final String LOG_TAG = "PredByLocationQuery";
 
     public PredictionsByLocationQuery(String apiKey) {
@@ -183,7 +184,7 @@ public class PredictionsByLocationQuery extends Query {
 
                             if (relatedStop != null && relatedRoute != null && relatedTrip != null &&
                                     relatedRoute.isValidDestination(relatedTrip.getDestination())) {
-                                Date deptTime = Query.parseDate(departure);
+                                Date deptTime = MbtaApiClient.parseDate(departure);
 
                                 if (relatedStop.hasParentStop()) {
                                     Stop parentStop = stops.get(relatedStop.getParentStopId());

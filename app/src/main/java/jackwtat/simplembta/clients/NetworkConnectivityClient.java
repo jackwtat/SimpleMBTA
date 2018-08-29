@@ -1,4 +1,4 @@
-package jackwtat.simplembta.services;
+package jackwtat.simplembta.clients;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -8,11 +8,11 @@ import android.net.NetworkInfo;
  * Created by jackw on 11/27/2017.
  */
 
-public class NetworkConnectivityService {
+public class NetworkConnectivityClient {
 
     private ConnectivityManager connectivityManager;
 
-    public NetworkConnectivityService(Context context) {
+    public NetworkConnectivityClient(Context context) {
         connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }

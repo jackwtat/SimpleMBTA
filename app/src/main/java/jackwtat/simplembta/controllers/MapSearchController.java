@@ -11,7 +11,7 @@ import java.util.List;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
-import jackwtat.simplembta.services.NetworkConnectivityService;
+import jackwtat.simplembta.clients.NetworkConnectivityClient;
 
 public class MapSearchController {
     private final String LOG_TAG = "MSController";
@@ -23,7 +23,7 @@ public class MapSearchController {
     public final long MAXIMUM_PREDICTION_AGE = 180000;
 
     private String realTimeApiKey;
-    private NetworkConnectivityService networkConnectivityService;
+    private NetworkConnectivityClient networkConnectivityClient;
     private PredictionsAsyncTask predictionsAsyncTask;
 
     private Location location;
@@ -45,7 +45,7 @@ public class MapSearchController {
         this.onProgressUpdateListener = onProgressUpdateListener;
         this.onNetworkErrorListener = onNetworkErrorListener;
 
-        networkConnectivityService = new NetworkConnectivityService(context);
+        networkConnectivityClient = new NetworkConnectivityClient(context);
     }
 
     public void update(Location location) {
@@ -89,7 +89,7 @@ public class MapSearchController {
         refreshing = true;
         onProgressUpdateListener.onProgressUpdate(0);
 
-        if (!networkConnectivityService.isConnected()) {
+        if (!networkConnectivityClient.isConnected()) {
             refreshing = false;
             onNetworkErrorListener.onNetworkError();
         } else {

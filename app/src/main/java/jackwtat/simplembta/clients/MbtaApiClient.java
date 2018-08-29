@@ -1,4 +1,4 @@
-package jackwtat.simplembta.mbta.v3api;
+package jackwtat.simplembta.clients;
 
 import android.util.Log;
 
@@ -12,13 +12,12 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 /**
  * Created by jackw on 1/16/2018.
  */
 
-public class Query {
+public class MbtaApiClient {
     private static final String LOG_TAG = "V3RealTimeAPIQuery";
 
     // URL for querying the MBTA realTime API
@@ -27,7 +26,7 @@ public class Query {
     // The API key
     protected String apiKey;
 
-    public Query(String apiKey) {
+    public MbtaApiClient(String apiKey) {
         this.apiKey = apiKey;
     }
 

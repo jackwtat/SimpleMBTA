@@ -13,11 +13,11 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.services.LocationProviderService;
-import jackwtat.simplembta.services.LocationProviderService.OnUpdateSuccessListener;
-import jackwtat.simplembta.services.LocationProviderService.OnUpdateFailedListener;
-import jackwtat.simplembta.services.LocationProviderService.OnPermissionDeniedListener;
-import jackwtat.simplembta.services.NetworkConnectivityService;
+import jackwtat.simplembta.clients.LocationClient;
+import jackwtat.simplembta.clients.LocationClient.OnUpdateSuccessListener;
+import jackwtat.simplembta.clients.LocationClient.OnUpdateFailedListener;
+import jackwtat.simplembta.clients.LocationClient.OnPermissionDeniedListener;
+import jackwtat.simplembta.clients.NetworkConnectivityClient;
 
 /**
  * Created by jackw on 12/1/2017.
@@ -48,8 +48,8 @@ public class NearbyPredictionsController {
     public final int MAXIMUM_LOCATION_ATTEMPTS = 10;
 
     private String realTimeApiKey;
-    private NetworkConnectivityService networkConnectivityService;
-    private LocationProviderService locationProviderService;
+    private NetworkConnectivityClient networkConnectivityClient;
+    private LocationClient locationClient;
     private PredictionsAsyncTask predictionsAsyncTask;
 
     private boolean refreshing;
@@ -76,12 +76,12 @@ public class NearbyPredictionsController {
         this.onLocationErrorListener = onLocationErrorListener;
         this.onLocationPermissionDeniedListener = onLocationPermissionDeniedListener;
 
-        networkConnectivityService = new NetworkConnectivityService(context);
+        networkConnectivityClient = new NetworkConnectivityClient(context);
 
-        locationProviderService = new LocationProviderService(context, LOCATION_UPDATE_INTERVAL,
+        locationClient = new LocationClient(context, LOCATION_UPDATE_INTERVAL,
                 FASTEST_LOCATION_INTERVAL);
 
-        locationProviderService.setOnUpdateSuccessListener(new OnUpdateSuccessListener() {
+        locationClient.setOnUpdateSuccessListener(new OnUpdateSuccessListener() {
             @Override
             public void onUpdateSuccess(Location location) {
                 if (new Date().getTime() - location.getTime() < MAXIMUM_LOCATION_AGE) {
@@ -95,7 +95,7 @@ public class NearbyPredictionsController {
                         @Override
                         public void run() {
                             locationAttempts++;
-                            locationProviderService.getLastLocation();
+                            locationClient.getLastLocation();
                         }
                     }, LOCATION_ATTEMPT_WAIT_TIME);
 
@@ -107,13 +107,13 @@ public class NearbyPredictionsController {
             }
         });
 
-        locationProviderService.setOnUpdateFailedListener(new OnUpdateFailedListener() {
+        locationClient.setOnUpdateFailedListener(new OnUpdateFailedListener() {
             @Override
             public void onUpdateFailed() {
                 onLocationUpdateFailed();
             }
         });
-        locationProviderService.setOnPermissionDeniedListener(new OnPermissionDeniedListener() {
+        locationClient.setOnPermissionDeniedListener(new OnPermissionDeniedListener() {
             @Override
             public void onPermissionDenied() {
                 onLocationPermissionDenied();
@@ -122,11 +122,11 @@ public class NearbyPredictionsController {
     }
 
     public void connect() {
-        locationProviderService.connect();
+        locationClient.connect();
     }
 
     public void disconnect() {
-        locationProviderService.disconnect();
+        locationClient.disconnect();
     }
 
     public void update() {
@@ -150,7 +150,7 @@ public class NearbyPredictionsController {
             predictionsAsyncTask.cancel(true);
         }
 
-        locationProviderService.disconnect();
+        locationClient.disconnect();
     }
 
     public boolean isRunning() {
@@ -169,12 +169,12 @@ public class NearbyPredictionsController {
         refreshing = true;
         onProgressUpdateListener.onProgressUpdate(0);
 
-        if (!networkConnectivityService.isConnected()) {
+        if (!networkConnectivityClient.isConnected()) {
             refreshing = false;
             onNetworkErrorListener.onNetworkError();
         } else {
             locationAttempts = 0;
-            locationProviderService.getLastLocation();
+            locationClient.getLastLocation();
         }
     }
 
@@ -201,7 +201,7 @@ public class NearbyPredictionsController {
             Double lat = locations[0].getLatitude();
             Double lon = locations[0].getLongitude();
 
-            Query query = new Query(realTimeApiKey);
+            MbtaApiClient query = new MbtaApiClient(realTimeApiKey);
 
             // Get the stops near the user
             String[] stopArgs = {

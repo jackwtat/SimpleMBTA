@@ -1,4 +1,4 @@
-package jackwtat.simplembta.services;
+package jackwtat.simplembta.clients;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,8 +23,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
  * Created by jackw on 12/4/2017.
  */
 
-public class LocationProviderService {
-    private final String LOG_TAG = "LocationProviderService";
+public class LocationClient {
+    private final String LOG_TAG = "LocationClient";
 
     private Context context;
     private FusedLocationProviderClient locationClient;
@@ -36,7 +36,7 @@ public class LocationProviderService {
     private OnPermissionDeniedListener onPermissionDeniedListener;
 
     @SuppressLint("RestrictedApi")
-    public LocationProviderService(Context context, long updateInterval, long fastestInterval) {
+    public LocationClient(Context context, long updateInterval, long fastestInterval) {
         this.context = context;
 
         locationClient = LocationServices.getFusedLocationProviderClient(context);
