@@ -88,6 +88,7 @@
     <string name="route_prefix">Route</string>
     <string name="crosstown_prefix">Crosstown</string>
     <string name="no_service_alerts">No Service Alerts</string>
+    <string name="return_to_map">Return to map</string>
 
     <!-- SharedPreferences Keys -->
     <string name="saved_map_search_latlon">savedMapSearchLatLon</string>
@@ -96,5 +97,4 @@
     <string name="train">Train</string>
     <string name="track">Boarding On Track</string>
     <string name="min">min</string>
-    <string name="title_activity_test_maps">Map</string>
 </resources>
