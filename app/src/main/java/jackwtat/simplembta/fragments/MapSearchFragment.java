@@ -393,7 +393,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         }
 
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 13));
+                new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 15));
         forceRefresh();
     }
 
