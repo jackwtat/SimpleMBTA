@@ -2,15 +2,12 @@ package jackwtat.simplembta.controllers;
 
 import android.content.Context;
 import android.location.Location;
-import android.os.AsyncTask;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.mbta.v3api.PredictionsByLocationQuery;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 
 public class MapSearchController {
@@ -24,26 +21,32 @@ public class MapSearchController {
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
-    private PredictionsAsyncTask predictionsAsyncTask;
+    private Callbacks callbacks;
+    private PredictionsByLocationAsyncTask asyncTask;
+    private PredictionsByLocationAsyncTask.Callbacks asyncTaskCallbacks;
 
     private Location location;
     private boolean refreshing;
     private Date lastRefreshed;
 
-    private OnNetworkErrorListener onNetworkErrorListener;
-    private OnProgressUpdateListener onProgressUpdateListener;
-    private OnPostExecuteListener onPostExecuteListener;
-
-
-    public MapSearchController(Context context,
-                               OnPostExecuteListener onPostExecuteListener,
-                               OnProgressUpdateListener onProgressUpdateListener,
-                               OnNetworkErrorListener onNetworkErrorListener) {
+    public MapSearchController(Context context, Callbacks controllerCallbacks) {
         realTimeApiKey = context.getString(R.string.v3_mbta_realtime_api_key);
 
-        this.onPostExecuteListener = onPostExecuteListener;
-        this.onProgressUpdateListener = onProgressUpdateListener;
-        this.onNetworkErrorListener = onNetworkErrorListener;
+        this.callbacks = controllerCallbacks;
+
+        asyncTaskCallbacks = new PredictionsByLocationAsyncTask.Callbacks() {
+            @Override
+            public void onPreExecute() {
+                callbacks.onProgressUpdate();
+            }
+
+            @Override
+            public void onPostExecute(List<Route> routes) {
+                refreshing = false;
+                lastRefreshed = new Date();
+                callbacks.onPostExecute(routes);
+            }
+        };
 
         networkConnectivityClient = new NetworkConnectivityClient(context);
     }
@@ -67,8 +70,8 @@ public class MapSearchController {
     public void cancel() {
         refreshing = false;
 
-        if (predictionsAsyncTask != null) {
-            predictionsAsyncTask.cancel(true);
+        if (asyncTask != null) {
+            asyncTask.cancel(true);
         }
     }
 
@@ -85,52 +88,26 @@ public class MapSearchController {
     }
 
     private void getPredictions() {
-
         refreshing = true;
-        onProgressUpdateListener.onProgressUpdate(0);
+
+        callbacks.onProgressUpdate();
 
         if (!networkConnectivityClient.isConnected()) {
             refreshing = false;
-            onNetworkErrorListener.onNetworkError();
+            callbacks.onNetworkError();
         } else {
-            predictionsAsyncTask = new PredictionsAsyncTask();
-            predictionsAsyncTask.execute(location);
+            asyncTask = new PredictionsByLocationAsyncTask(
+                    realTimeApiKey, location, asyncTaskCallbacks);
+            asyncTask.execute();
         }
 
     }
 
+    public interface Callbacks {
+        void onProgressUpdate();
 
-    private class PredictionsAsyncTask extends AsyncTask<Location, Integer, List<Stop>> {
-        @Override
-        protected void onPreExecute() {
-            onProgressUpdateListener.onProgressUpdate(0);
-        }
+        void onPostExecute(List<Route> routes);
 
-        @Override
-        protected List<Stop> doInBackground(Location... locations) {
-            return new ArrayList<>(
-                    new PredictionsByLocationQuery(realTimeApiKey)
-                            .get(locations[0].getLatitude(), locations[0].getLongitude())
-                            .values());
-        }
-
-        @Override
-        protected void onPostExecute(List<Stop> stops) {
-            refreshing = false;
-            lastRefreshed = new Date();
-            onPostExecuteListener.onPostExecute(stops);
-        }
-    }
-
-    public interface OnProgressUpdateListener {
-        void onProgressUpdate(int progress);
-    }
-
-    public interface OnPostExecuteListener {
-        void onPostExecute(List<Stop> stops);
-    }
-
-    public interface OnNetworkErrorListener {
         void onNetworkError();
     }
 }

@@ -22,19 +22,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jackwtat.simplembta.adapters.MbtaPredictionsAdapter;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.NearbyPredictionsController;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnProgressUpdateListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnPostExecuteListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnNetworkErrorListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationErrorListener;
-import jackwtat.simplembta.controllers.NearbyPredictionsController.OnLocationPermissionDeniedListener;
-import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.ServiceAlert;
-import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 
@@ -50,7 +43,7 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
     private TextView noPredictionsTextView;
 
     private NearbyPredictionsController controller;
-    private PredictionsAdapter predictionsAdapter;
+    private MbtaPredictionsAdapter predictionsAdapter;
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
 
@@ -63,9 +56,9 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
         errorManager = ErrorManager.getErrorManager();
 
         controller = new NearbyPredictionsController(getContext(),
-                new OnPostExecuteListener() {
-                    public void onPostExecute(List<Stop> stops) {
-                        predictionsAdapter.setPredictions(Prediction.getUniqueSortedPredictions(stops));
+                new NearbyPredictionsController.Callbacks() {
+                    public void onPostExecute(List<Route> routes) {
+                        predictionsAdapter.setRoutes(routes);
 
                         if (predictionsAdapter.getItemCount() == 0) {
                             noPredictionsTextView.setVisibility(View.VISIBLE);
@@ -83,28 +76,23 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
                         errorManager.setLocationError(false);
                         errorManager.setLocationPermissionDenied(false);
                     }
-                },
-                new OnProgressUpdateListener() {
-                    public void onProgressUpdate(int progress) {
+
+                    public void onProgressUpdate() {
                         swipeRefreshLayout.setRefreshing(true);
                     }
-                },
-                new OnNetworkErrorListener() {
+
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
                         errorManager.setNetworkError(true);
                     }
-                },
-                new OnLocationErrorListener() {
+
                     public void onLocationError() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
                         errorManager.setLocationError(true);
                     }
-                },
-                new OnLocationPermissionDeniedListener() {
-                    @Override
+
                     public void OnLocationPermissionDenied() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
@@ -132,20 +120,20 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
 
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
 
-        GridLayoutManager glm = new GridLayoutManager(getContext(), 1);
-        recyclerView.setLayoutManager(glm);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        predictionsAdapter = new PredictionsAdapter();
-        predictionsAdapter.setOnItemClickListener(new PredictionsAdapter.OnItemClickListener() {
+        predictionsAdapter = new MbtaPredictionsAdapter();
+        predictionsAdapter.setOnItemClickListener(new MbtaPredictionsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
                 Route route = predictionsAdapter.getRoute(i);
 
-                if (route.hasServiceAlerts()) {
+                ArrayList<ServiceAlert> serviceAlerts = route.getServiceAlerts();
+
+                if (serviceAlerts.size() > 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                    ArrayList<ServiceAlert> alerts = route.getServiceAlerts();
-                    Collections.sort(alerts);
+                    Collections.sort(serviceAlerts);
 
                     RouteNameView routeNameView = new RouteNameView(getContext(), route,
                             getContext().getResources().getDimension(R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
@@ -154,7 +142,7 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
 
                     builder.setCustomTitle(routeNameView);
 
-                    builder.setView(new AlertsListView(getContext(), alerts));
+                    builder.setView(new AlertsListView(getContext(), serviceAlerts));
 
                     builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                         @Override

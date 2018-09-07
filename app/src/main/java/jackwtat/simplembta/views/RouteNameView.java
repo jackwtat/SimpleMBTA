@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.Mode;
 import jackwtat.simplembta.model.Route;
 
 public class RouteNameView extends RelativeLayout {
@@ -82,7 +81,7 @@ public class RouteNameView extends RelativeLayout {
     }
 
     private void setColorAccent() {
-        if (colorAccentEnabled && route.getMode() == Mode.BUS &&
+        if (colorAccentEnabled && route.getMode() == Route.BUS &&
                 !route.getLongName().contains("Silver Line") && !route.getShortName().contains("SL")) {
             routeNameAccentView.setVisibility(View.VISIBLE);
         } else {

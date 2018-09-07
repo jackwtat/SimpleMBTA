@@ -2,90 +2,21 @@ package jackwtat.simplembta.model;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by jackw on 12/12/2017.
- */
-
 public class Stop implements Comparable<Stop> {
+    private String id;
+    private String name;
+    private String[] childIds;
+    private double latitude;
+    private double longitude;
+    private double distance;
 
-    private String id = "";
-    private String name = "";
-    private String parentStopId = "";
-    private boolean hasParentStop = false;
-    private double latitude = 0.0;
-    private double longitude = 0.0;
-    private double distance = 0.0;
-    private ArrayList<Prediction> predictions = new ArrayList<>();
-
-    public Stop(String id, String name, String parentStopId, double latitude, double longitude,
-                double distance) {
+    public Stop(String id) {
         this.id = id;
-        this.name = name;
-        this.parentStopId = parentStopId;
-        this.hasParentStop = true;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.distance = distance;
-        this.predictions = new ArrayList<>();
-    }
-
-    public Stop(String id, String name, String parentStopId, double stopLatitude,
-                double stopLongitude, double userLatitude, double userLongitude) {
-        this.id = id;
-        this.name = name;
-        this.parentStopId = parentStopId;
-        this.hasParentStop = true;
-        this.latitude = stopLatitude;
-        this.longitude = stopLongitude;
-        this.distance = calculateDistance(userLatitude, userLongitude);
-    }
-
-    public Stop(String id, String name, double latitude, double longitude, double distance) {
-        this.id = id;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.distance = distance;
-    }
-
-    public Stop(String id, String name, double latitude, double longitude,
-                double userLatitude, double userLongitude) {
-        this.id = id;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.distance = calculateDistance(userLatitude, userLongitude);
-    }
-
-    public Stop(String id, String name, String parentStopId, double latitude, double longitude) {
-        this.id = id;
-        this.name = name;
-        this.parentStopId = parentStopId;
-        this.hasParentStop = true;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public Stop(String id, String name, double latitude, double longitude) {
-        this.id = id;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public Stop(String id, String name, String parentStopId) {
-        this.id = id;
-        this.name = name;
-        this.parentStopId = parentStopId;
-        this.hasParentStop = true;
-    }
-
-    public Stop(String id, String name) {
-        this.id = id;
-        this.name = name;
+        name = "null";
+        childIds = new String[0];
+        latitude = 0.0;
+        longitude = 0.0;
+        distance = 0.0;
     }
 
     public String getId() {
@@ -96,18 +27,6 @@ public class Stop implements Comparable<Stop> {
         return name;
     }
 
-    public boolean hasParentStop() {
-        return hasParentStop;
-    }
-
-    public String getParentStopId() {
-        return parentStopId;
-    }
-
-    public void setParentStopId(String parentStopId) {
-        this.parentStopId = parentStopId;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -116,56 +35,64 @@ public class Stop implements Comparable<Stop> {
         return longitude;
     }
 
-    public void setCoordinates(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     public double getDistance() {
         return distance;
     }
 
-    public void setDistance(double userLatitude, double userLongitude) {
-        this.distance = calculateDistance(userLatitude, userLongitude);
+    public String[] getChildIds() {
+        return childIds;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public ArrayList<Prediction> getPredictions() {
-        return predictions;
+    public void setChildIds(String[] childIds) {
+        this.childIds = childIds;
     }
 
-
-    public void addPrediction(Prediction prediction) {
-        predictions.add(prediction);
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public void addPredictions(List<Prediction> predictions) {
-        this.predictions.addAll(predictions);
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    private double calculateDistance(double originLat, double originLon) {
+    public boolean isParentOf(String id) {
+        for (String childId : childIds) {
+            if (childId.equals(id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void setDistance(double originLat, double originLon) {
         final double MILES_PER_LAT = 69;
         final double MILES_PER_LON = 69.172;
 
-        return Math.sqrt(Math.pow((this.latitude - originLat) * MILES_PER_LAT, 2) +
-                Math.pow((this.longitude - originLon) * MILES_PER_LON, 2));
+        distance = Math.sqrt(Math.pow((latitude - originLat) * MILES_PER_LAT, 2) +
+                Math.pow((longitude - originLon) * MILES_PER_LON, 2));
+    }
+
+    @Override
+    public int compareTo(@NonNull Stop otherStop) {
+        if (this.distance == otherStop.getDistance()) {
+            return this.id.compareTo(otherStop.getId());
+        } else {
+            return Double.compare(this.distance, otherStop.getDistance());
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Stop) {
-            Stop stop = (Stop) obj;
-            return this.id.equals(stop.getId());
+            Stop otherStop = (Stop) obj;
+            return id.equals(otherStop.getId());
         } else {
             return false;
         }
-    }
-
-    @Override
-    public int compareTo(@NonNull Stop stop) {
-        return Double.compare(this.distance, stop.getDistance());
     }
 }

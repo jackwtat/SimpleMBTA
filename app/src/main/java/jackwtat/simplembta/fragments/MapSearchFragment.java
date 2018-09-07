@@ -51,18 +51,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jackwtat.simplembta.adapters.MbtaPredictionsAdapter;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
-import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.controllers.MapSearchController;
-import jackwtat.simplembta.controllers.MapSearchController.OnProgressUpdateListener;
-import jackwtat.simplembta.controllers.MapSearchController.OnPostExecuteListener;
-import jackwtat.simplembta.controllers.MapSearchController.OnNetworkErrorListener;
-import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.ServiceAlert;
-import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.AlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 
@@ -81,7 +76,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
     private View mapReturnView;
 
     private MapSearchController controller;
-    private PredictionsAdapter predictionsAdapter;
+    private MbtaPredictionsAdapter predictionsAdapter;
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
 
@@ -98,9 +93,15 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         errorManager = ErrorManager.getErrorManager();
 
         controller = new MapSearchController(getContext(),
-                new OnPostExecuteListener() {
-                    public void onPostExecute(List<Stop> stops) {
-                        predictionsAdapter.setPredictions(Prediction.getUniqueSortedPredictions(stops));
+                new MapSearchController.Callbacks() {
+                    @Override
+                    public void onProgressUpdate() {
+                        swipeRefreshLayout.setRefreshing(true);
+                    }
+
+                    @Override
+                    public void onPostExecute(List<Route> routes) {
+                        predictionsAdapter.setRoutes(routes);
 
                         swipeRefreshLayout.setRefreshing(false);
 
@@ -111,13 +112,8 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
 
                         errorManager.setNetworkError(false);
                     }
-                },
-                new OnProgressUpdateListener() {
-                    public void onProgressUpdate(int progress) {
-                        swipeRefreshLayout.setRefreshing(true);
-                    }
-                },
-                new OnNetworkErrorListener() {
+
+                    @Override
                     public void onNetworkError() {
                         swipeRefreshLayout.setRefreshing(false);
                         predictionsAdapter.clear();
@@ -142,8 +138,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
 
         // Set app bar height
-        double height = getResources().getDisplayMetrics().heightPixels * .5;
-        params.height = (int) height;
+        params.height = (int) (getResources().getDisplayMetrics().heightPixels * .5);
 
         // Disable scrolling inside app bar
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -170,21 +165,21 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
 
         // Set recycler view layout
-        GridLayoutManager glm = new GridLayoutManager(getContext(), 1);
-        recyclerView.setLayoutManager(glm);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         // Set recycler view predictions adapter
-        predictionsAdapter = new PredictionsAdapter();
-        predictionsAdapter.setOnItemClickListener(new PredictionsAdapter.OnItemClickListener() {
+        predictionsAdapter = new MbtaPredictionsAdapter();
+        predictionsAdapter.setOnItemClickListener(new MbtaPredictionsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
                 Route route = predictionsAdapter.getRoute(i);
 
-                if (route.hasServiceAlerts()) {
+                ArrayList<ServiceAlert> serviceAlerts = route.getServiceAlerts();
+
+                if (serviceAlerts.size() > 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                    ArrayList<ServiceAlert> alerts = route.getServiceAlerts();
-                    Collections.sort(alerts);
+                    Collections.sort(serviceAlerts);
 
                     RouteNameView routeNameView = new RouteNameView(getContext(), route,
                             getContext().getResources().getDimension(R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
@@ -193,7 +188,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
 
                     builder.setCustomTitle(routeNameView);
 
-                    builder.setView(new AlertsListView(getContext(), alerts));
+                    builder.setView(new AlertsListView(getContext(), serviceAlerts));
 
                     builder.setPositiveButton(getResources().getString(R.string.dialog_close_button), new DialogInterface.OnClickListener() {
                         @Override

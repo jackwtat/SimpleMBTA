@@ -11,18 +11,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.Mode;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.ServiceAlert;
 
 public class PredictionsCardView extends LinearLayout {
     View rootView;
     LinearLayout routeLayout;
-    LinearLayout predictionsLayout;
+    LinearLayout predictionsListLayout;
+    TextView noPredictionsView;
     TextView stopNameView;
     ImageView serviceAlertIndicatorView;
     ImageView serviceAdvisoryIndicatorView;
@@ -42,30 +42,12 @@ public class PredictionsCardView extends LinearLayout {
         init(context);
     }
 
-    public PredictionsCardView(Context context, List<Prediction> predictions) {
-        super(context);
-        init(context);
-        setPredictions(predictions);
-    }
-
-    public void setPredictions(List<Prediction> predictions) {
+    public void setPredictions(Route route, Stop stop, Prediction[] predictions) {
         // Set the stop name
-        stopNameView.setText(predictions.get(0).getStopName());
-
-        // Get the route
-        Route route = predictions.get(0).getRoute();
-
-        // Set the route name
-        boolean abbreviate;
-        if (route.getMode() == Mode.BUS) {
-            abbreviate = true;
-        } else {
-            abbreviate = false;
+        if (stop != null) {
+            stopNameView.setText(stop.getName());
+            stopNameView.setVisibility(VISIBLE);
         }
-        routeLayout.addView(new RouteNameView(getContext(), route,
-                getContext().getResources().getDimension(R.dimen.small_route_name_text_size),
-                RouteNameView.ROUNDED_BACKGROUND,
-                abbreviate, false));
 
         // Set the indicator for service alerts
         for (ServiceAlert alert : route.getServiceAlerts()) {
@@ -78,45 +60,69 @@ public class PredictionsCardView extends LinearLayout {
             }
         }
 
-        // Display the destinations and prediction times using PredictionViews
-        if (route.getMode() != Mode.COMMUTER_RAIL) {
-            // Group predictions by destination in a HashMap
-            // Maintain the order of the destinations in an ArrayList
-            HashMap<String, ArrayList<Prediction>> pMap = new HashMap<>();
-            ArrayList<String> dList = new ArrayList<>();
+        // Set the route name
+        boolean abbreviate;
+        if (route.getMode() == Route.BUS) {
+            abbreviate = true;
+        } else {
+            abbreviate = false;
+        }
+        routeLayout.addView(new RouteNameView(getContext(), route,
+                getContext().getResources().getDimension(R.dimen.small_route_name_text_size),
+                RouteNameView.ROUNDED_BACKGROUND,
+                abbreviate, false));
 
-            // Add the predictions to the HashMap and destinations to the ArrayList
-            for (Prediction p : predictions) {
-                String dest = p.getTrip().getDestination();
-                if (!dList.contains(dest)) {
-                    dList.add(dest);
-                    pMap.put(dest, new ArrayList<Prediction>());
+        if (predictions.length > 0) {
+            // Display the destinations and prediction times using PredictionViews
+            if (route.getMode() != Route.COMMUTER_RAIL) {
+                // Group predictions by destination in a HashMap
+                // Maintain the order of the destinations in an ArrayList
+                HashMap<String, ArrayList<Prediction>> pMap = new HashMap<>();
+                ArrayList<String> destList = new ArrayList<>();
+
+                // Add the predictions to the HashMap and destinations to the ArrayList
+                for (Prediction p : predictions) {
+                    String dest = p.getDestination();
+                    if (!destList.contains(dest)) {
+                        destList.add(dest);
+                        pMap.put(dest, new ArrayList<Prediction>());
+                    }
+                    pMap.get(dest).add(p);
                 }
-                pMap.get(dest).add(p);
-            }
 
-            // Create a new PredictionView for each group of predictions
-            for (String dest : dList) {
-                ArrayList<Prediction> pList = pMap.get(dest);
-                if (pList.size() > 1) {
-                    predictionsLayout.addView(new PredictionView(getContext(), pList.get(0), pList.get(1)));
-                } else {
-                    predictionsLayout.addView(new PredictionView(getContext(), pList.get(0)));
+                // Create a new PredictionView for each group of predictions
+                for (String dest : destList) {
+                    ArrayList<Prediction> pList = pMap.get(dest);
+                    if (pList.size() > 1) {
+                        predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0), pList.get(1)));
+                    } else {
+                        predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0)));
+                    }
+                }
+
+            } else {
+                // Create the PredictionViews for the Commuter Rail
+                // Maximum 3 predictions to minimize scrolling
+                for (int i = 0; i < 3 && i < predictions.length; i++) {
+                    predictionsListLayout.addView(new PredictionView(getContext(), predictions[i]));
                 }
             }
         } else {
-            // Create the PredictionViews for the Commuter Rail
-            // Maximum 3 predictions to minimize scrolling
-            for (int i = 0; i < 3 && i < predictions.size(); i++) {
-                predictionsLayout.addView(new PredictionView(getContext(), predictions.get(i)));
+            if (stop != null) {
+                noPredictionsView.setText(getContext().getResources().getString(R.string.no_current_predictions));
+            } else {
+                noPredictionsView.setText(getContext().getResources().getString(R.string.no_nearby_predictions));
             }
+            noPredictionsView.setVisibility(VISIBLE);
         }
     }
 
     public void clear() {
         routeLayout.removeAllViews();
-        predictionsLayout.removeAllViews();
+        predictionsListLayout.removeAllViews();
+        noPredictionsView.setVisibility(GONE);
         stopNameView.setText("");
+        stopNameView.setVisibility(GONE);
         serviceAlertIndicatorView.setVisibility(GONE);
         serviceAdvisoryIndicatorView.setVisibility(GONE);
     }
@@ -125,7 +131,8 @@ public class PredictionsCardView extends LinearLayout {
         rootView = inflate(context, R.layout.predictions_card_view, this);
 
         routeLayout = rootView.findViewById(R.id.route_layout);
-        predictionsLayout = rootView.findViewById(R.id.predictions_layout);
+        predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
+        noPredictionsView = rootView.findViewById(R.id.no_predictions_text_view);
         stopNameView = rootView.findViewById(R.id.stop_text_view);
         serviceAlertIndicatorView = rootView.findViewById(R.id.service_alert_image_view);
         serviceAdvisoryIndicatorView = rootView.findViewById(R.id.service_advisory_image_view);

@@ -1,16 +1,13 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.Mode;
 import jackwtat.simplembta.model.Prediction;
 
 public class PredictionView extends LinearLayout {
@@ -53,10 +50,10 @@ public class PredictionView extends LinearLayout {
 
         trackNumberView = rootView.findViewById(R.id.track_number_text_view);
 
-        destinationView.setText(p1.getTrip().getDestination());
-
+        destinationView.setText(p1.getDestination());
+/*
         // Set track number
-        if (p1.getRoute().getMode() == Mode.COMMUTER_RAIL &&
+        if (p1.getRoute().getMode() == Route.COMMUTER_RAIL &&
                 !p1.getTrackNumber().equals("null")) {
             String trackNumber = context.getResources().getString(R.string.track) + " " +
                     p1.getTrackNumber();
@@ -68,6 +65,8 @@ public class PredictionView extends LinearLayout {
         } else {
             trackNumberView.setVisibility(GONE);
         }
+*/
+        trackNumberView.setVisibility(GONE);
 
         // Set departure times
         if (p1.getDepartureTime() != null)

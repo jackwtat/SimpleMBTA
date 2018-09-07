@@ -11,40 +11,35 @@ import java.util.Date;
 
 public class ServiceAlert implements Comparable<ServiceAlert> {
 
-    public enum Lifecycle {NEW, ONGOING, UPCOMING, ONGOING_UPCOMING, UNKNOWN}
+    public enum Lifecycle {
+        NEW(0),
+        ONGOING(1),
+        UPCOMING(2),
+        ONGOING_UPCOMING(3),
+        UNKNOWN(4);
 
-    private String id = "";
+        private int stage;
+
+        Lifecycle(int stage) {
+            this.stage = stage;
+        }
+
+        public int getStage() {
+            return stage;
+        }
+    }
+
+    private String id;
     private String header = "";
     private String effect = "";
     private int severity = 0;
-    private int lifecycleStage = -1;
     private Lifecycle lifecycle = Lifecycle.UNKNOWN;
+    private boolean[] affectedModes = {false, false, false, false, false};
     private ArrayList<String> affectedRoutes = new ArrayList<>();
-    private ArrayList<Mode> blanketModes = new ArrayList<>();
     private ArrayList<ActivePeriod> activePeriods = new ArrayList<>();
 
-    public ServiceAlert(String id, String header, String effect, int severity, String lifecycle) {
+    public ServiceAlert(String id) {
         this.id = id;
-        this.header = header;
-        this.effect = effect;
-        this.severity = severity;
-
-        if (lifecycle.toUpperCase().equals("NEW")) {
-            this.lifecycle = Lifecycle.NEW;
-            this.lifecycleStage = 0;
-        } else if (lifecycle.toUpperCase().equals("ONGOING")) {
-            this.lifecycleStage = 1;
-            this.lifecycle = Lifecycle.ONGOING;
-        } else if (lifecycle.toUpperCase().equals("UPCOMING")) {
-            this.lifecycleStage = 2;
-            this.lifecycle = Lifecycle.UPCOMING;
-        } else if (lifecycle.toUpperCase().equals("ONGOING_UPCOMING")) {
-            this.lifecycleStage = 3;
-            this.lifecycle = Lifecycle.ONGOING_UPCOMING;
-        } else {
-            this.lifecycleStage = 4;
-            this.lifecycle = Lifecycle.UNKNOWN;
-        }
     }
 
     public String getId() {
@@ -67,6 +62,32 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
         return lifecycle;
     }
 
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public void setEffect(String effect) {
+        this.effect = effect;
+    }
+
+    public void setSeverity(int severity) {
+        this.severity = severity;
+    }
+
+    public void setLifecycle(String lifecycle) {
+        if (lifecycle.equals("NEW")) {
+            this.lifecycle = Lifecycle.NEW;
+        } else if (lifecycle.equals("ONGOING")) {
+            this.lifecycle = Lifecycle.ONGOING;
+        } else if (lifecycle.equals("UPCOMING")) {
+            this.lifecycle = Lifecycle.UPCOMING;
+        } else if (lifecycle.equals("ONGOING_UPCOMING")) {
+            this.lifecycle = Lifecycle.ONGOING_UPCOMING;
+        } else {
+            this.lifecycle = Lifecycle.UNKNOWN;
+        }
+    }
+
     public ArrayList<String> getAffectedRoutes() {
         return affectedRoutes;
     }
@@ -75,12 +96,16 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
         affectedRoutes.add(routeId);
     }
 
-    public ArrayList<Mode> getBlanketModes() {
-        return blanketModes;
+    public void addAffectedMode(int mode) {
+        affectedModes[mode] = true;
     }
 
-    public void addBlanketMode(Mode mode) {
-        blanketModes.add(mode);
+    public boolean isAffectedMode(int mode) {
+        try {
+            return affectedModes[mode];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     public void addActivePeriod(Date startTime, Date endTime) {
@@ -106,8 +131,8 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
             return -1;
         } else if (!this.isActive() && serviceAlert.isActive()) {
             return 1;
-        } else if (this.lifecycleStage != serviceAlert.lifecycleStage) {
-            return this.lifecycleStage - serviceAlert.lifecycleStage;
+        } else if (this.lifecycle.getStage() != serviceAlert.getLifecycle().getStage()) {
+            return this.lifecycle.getStage() - serviceAlert.getLifecycle().getStage();
         } else if (this.severity != serviceAlert.getSeverity()) {
             return serviceAlert.getSeverity() - this.severity;
         } else {
