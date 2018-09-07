@@ -2,6 +2,7 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +16,8 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.PredictionsCardView;
 
 public class MbtaPredictionsAdapter extends RecyclerView.Adapter<MbtaPredictionsAdapter.ViewHolder> {
+    public static final String LOG_TAG = "PredictionsAdapter";
+
     private ArrayList<DataHolder> dataHolders;
 
     private OnItemClickListener onItemClickListener;
@@ -140,7 +143,7 @@ public class MbtaPredictionsAdapter extends RecyclerView.Adapter<MbtaPredictions
                 Stop inboundStop = route.getNearestStop(Route.INBOUND);
                 Stop outboundStop = route.getNearestStop(Route.OUTBOUND);
 
-                if (inboundStop.equals(outboundStop)) {
+                if (inboundStop != null && outboundStop != null && inboundStop.equals(outboundStop)) {
                     dataHolders.add(new DataHolder(route, Route.INBOUND));
                 } else {
                     if (route.getNearestStop(Route.INBOUND) != null) {
