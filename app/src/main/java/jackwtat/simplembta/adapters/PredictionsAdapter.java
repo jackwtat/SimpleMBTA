@@ -2,7 +2,6 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,7 +14,7 @@ import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.PredictionsCardView;
 
-public class MbtaPredictionsAdapter extends RecyclerView.Adapter<MbtaPredictionsAdapter.ViewHolder> {
+public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.ViewHolder> {
     public static final String LOG_TAG = "PredictionsAdapter";
 
     private ArrayList<DataHolder> dataHolders;
@@ -40,7 +39,6 @@ public class MbtaPredictionsAdapter extends RecyclerView.Adapter<MbtaPredictions
         DataHolder(Route route, int direction) {
             this.route = route;
             this.direction = direction;
-
             this.stop = route.getNearestStop(direction);
             this.predictions = route.getPredictions(direction)
                     .toArray(new Prediction[route.getPredictions(direction).size()]);
@@ -76,21 +74,22 @@ public class MbtaPredictionsAdapter extends RecyclerView.Adapter<MbtaPredictions
         }
     }
 
-    public MbtaPredictionsAdapter() {
+    public PredictionsAdapter() {
         dataHolders = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public MbtaPredictionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PredictionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         PredictionsCardView v = new PredictionsCardView(parent.getContext());
 
         ViewHolder vh = new ViewHolder(v);
+
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MbtaPredictionsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PredictionsAdapter.ViewHolder holder, int position) {
         final int i = position;
 
         holder.predictionsCardView.clear();
@@ -168,7 +167,7 @@ public class MbtaPredictionsAdapter extends RecyclerView.Adapter<MbtaPredictions
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(MbtaPredictionsAdapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(PredictionsAdapter.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

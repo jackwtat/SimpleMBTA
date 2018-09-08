@@ -21,6 +21,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -51,7 +52,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jackwtat.simplembta.adapters.MbtaPredictionsAdapter;
+import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
@@ -76,7 +77,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
     private View mapReturnView;
 
     private MapSearchController controller;
-    private MbtaPredictionsAdapter predictionsAdapter;
+    private PredictionsAdapter predictionsAdapter;
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
 
@@ -108,6 +109,12 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
                         if (autoScrollToTop) {
                             recyclerView.scrollToPosition(0);
                             appBarLayout.setExpanded(true);
+                        }
+
+                        if (predictionsAdapter.getItemCount() == 0) {
+                            recyclerView.setNestedScrollingEnabled(false);
+                        } else {
+                            recyclerView.setNestedScrollingEnabled(true);
                         }
 
                         errorManager.setNetworkError(false);
@@ -173,8 +180,8 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         // Set recycler view predictions adapter
-        predictionsAdapter = new MbtaPredictionsAdapter();
-        predictionsAdapter.setOnItemClickListener(new MbtaPredictionsAdapter.OnItemClickListener() {
+        predictionsAdapter = new PredictionsAdapter();
+        predictionsAdapter.setOnItemClickListener(new PredictionsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
                 Route route = predictionsAdapter.getRoute(i);

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jackwtat.simplembta.adapters.MbtaPredictionsAdapter;
+import jackwtat.simplembta.adapters.PredictionsAdapter;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
@@ -43,7 +43,7 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
     private TextView noPredictionsTextView;
 
     private NearbyPredictionsController controller;
-    private MbtaPredictionsAdapter predictionsAdapter;
+    private PredictionsAdapter predictionsAdapter;
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
 
@@ -122,8 +122,8 @@ public class NearbyPredictionsFragment extends Fragment implements Refreshable {
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        predictionsAdapter = new MbtaPredictionsAdapter();
-        predictionsAdapter.setOnItemClickListener(new MbtaPredictionsAdapter.OnItemClickListener() {
+        predictionsAdapter = new PredictionsAdapter();
+        predictionsAdapter.setOnItemClickListener(new PredictionsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
                 Route route = predictionsAdapter.getRoute(i);
