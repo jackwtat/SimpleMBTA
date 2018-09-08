@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import jackwtat.simplembta.clients.MbtaApiClient;
+import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
@@ -39,23 +39,22 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
 
     @Override
     protected List<Route> doInBackground(Void... voids) {
-
         HashMap<String, Stop> stops = new HashMap<>();
         HashMap<String, Route> routes = new HashMap<>();
 
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
 
-        MbtaApiClient query = new MbtaApiClient(realTimeApiKey);
+        RealTimeApiClient realTimeClient = new RealTimeApiClient(realTimeApiKey);
 
         // Get the stops near the user
-        String[] stopArgs = {
+        String[] stopByLocationArgs = {
                 "filter[latitude]=" + Double.toString(lat),
                 "filter[longitude]=" + Double.toString(lon),
                 "include=child_stops"
         };
-        String stopsJsonResponse = query.get("stops", stopArgs);
-        for (Stop stop : StopsJsonParser.parse(stopsJsonResponse)) {
+
+        for (Stop stop : StopsJsonParser.parse(realTimeClient.get("stops", stopByLocationArgs))) {
             stop.setDistance(lat, lon);
             stops.put(stop.getId(), stop);
         }
@@ -65,13 +64,13 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         }
 
         // Get all the routes at these stops
-        StringBuilder routesArgBuilder = new StringBuilder();
+        StringBuilder routesByStopArgBuilder = new StringBuilder();
         for (Stop stop : stops.values()) {
-            routesArgBuilder.append(stop.getId()).append(",");
+            routesByStopArgBuilder.append(stop.getId()).append(",");
         }
-        String[] routesArgs = {"filter[stop]=" + routesArgBuilder.toString()};
-        String routesJsonResponse = query.get("routes", routesArgs);
-        for (Route route : RoutesJsonParser.parse(routesJsonResponse)) {
+        String[] routesByStopArgs = {"filter[stop]=" + routesByStopArgBuilder.toString()};
+
+        for (Route route : RoutesJsonParser.parse(realTimeClient.get("routes", routesByStopArgs))) {
             routes.put(route.getId(), route);
         }
 
@@ -79,36 +78,42 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
             return new ArrayList<>(routes.values());
         }
 
-        // Get all alerts for these routes
-        StringBuilder alertsArgBuilder = new StringBuilder();
-        for (Route route : routes.values()) {
-            alertsArgBuilder.append(route.getId()).append(",");
-        }
-        String[] alertsArgs = {"filter[route]=" + alertsArgBuilder.toString()};
-        String alertsJsonResponse = query.get("alerts", alertsArgs);
-
-        ServiceAlert[] alerts = ServiceAlertsJsonParser.parse(alertsJsonResponse);
-        for (ServiceAlert alert : alerts) {
-            for (Route route : routes.values()) {
-                if (alert.getAffectedRoutes().contains(route.getId()) ||
-                        alert.isAffectedMode(route.getMode())) {
-                    route.addServiceAlert(alert);
-                }
-            }
-        }
-
         // Get the predictions near the user
-        String[] predictionArgs = {
+        String[] predictionByLocationArgs = {
                 "filter[latitude]=" + Double.toString(lat),
                 "filter[longitude]=" + Double.toString(lon),
                 "include=route,trip"
         };
-        String predictionsJsonResponse = query.get("predictions", predictionArgs);
+        String predictionsJsonResponse = realTimeClient.get("predictions", predictionByLocationArgs);
 
         ArrayList<Prediction> predictions = new ArrayList<>(
                 Arrays.asList(PredictionsJsonParser.parse(predictionsJsonResponse)));
 
         Collections.sort(predictions);
+
+        // Query route and stop data in predictions that were not included in initial queries
+        StringBuilder routesByIdArgBuilder = new StringBuilder();
+        StringBuilder stopsByIdArgBuilder = new StringBuilder();
+        for (Prediction prediction : predictions) {
+            if (!routes.containsKey(prediction.getRouteId())) {
+                routesByIdArgBuilder.append(prediction.getRouteId()).append(",");
+            }
+            if (!stops.containsKey(prediction.getStopId())) {
+                stopsByIdArgBuilder.append(prediction.getStopId()).append(",");
+            }
+        }
+        String[] routesByIdArgs = {"filter[id]=" + routesByIdArgBuilder.toString()};
+        String[] stopsByIdArgs = {
+                "filter[id]=" + stopsByIdArgBuilder.toString(),
+                "include=child_stops"
+        };
+
+        for (Route route : RoutesJsonParser.parse(realTimeClient.get("routes", routesByIdArgs))) {
+            routes.put(route.getId(), route);
+        }
+        for (Stop stop : StopsJsonParser.parse(realTimeClient.get("stops", stopsByIdArgs))) {
+            stops.put(stop.getId(), stop);
+        }
 
         for (Prediction prediction : predictions) {
             // Replace prediction's stop ID with its parent stop ID
@@ -139,6 +144,24 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                                     routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
                         routes.get(routeId).setNearestStop(direction, stop);
                     }
+                }
+            }
+        }
+
+        // Get all alerts for these routes
+        StringBuilder alertsByRouteArgBuilder = new StringBuilder();
+        for (Route route : routes.values()) {
+            alertsByRouteArgBuilder.append(route.getId()).append(",");
+        }
+        String[] alertsByRouteArgs = {"filter[route]=" + alertsByRouteArgBuilder.toString()};
+
+        ServiceAlert[] alerts = ServiceAlertsJsonParser.parse(realTimeClient.get("alerts", alertsByRouteArgs));
+
+        for (ServiceAlert alert : alerts) {
+            for (Route route : routes.values()) {
+                if (alert.getAffectedRoutes().contains(route.getId()) ||
+                        alert.isAffectedMode(route.getMode())) {
+                    route.addServiceAlert(alert);
                 }
             }
         }
