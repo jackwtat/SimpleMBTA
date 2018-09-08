@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Route;
 
 public class PredictionsJsonParser {
     public static final String LOG_TAG = "PredictionsJsonParser";
@@ -21,7 +22,7 @@ public class PredictionsJsonParser {
             return new Prediction[0];
         }
 
-        Prediction[] predictions;
+        HashMap<String, Prediction> predictions = new HashMap<>();
 
         try {
             JSONObject jRoot = new JSONObject(jsonResponse);
@@ -37,9 +38,7 @@ public class PredictionsJsonParser {
             // Get array of prediction data
             JSONArray jData = jRoot.getJSONArray("data");
 
-            predictions = new Prediction[jData.length()];
-
-            for (int i = 0; i < predictions.length; i++) {
+            for (int i = 0; i < jData.length(); i++) {
                 try {
                     JSONObject jPrediction = jData.getJSONObject(i);
 
@@ -51,21 +50,12 @@ public class PredictionsJsonParser {
 
                     // Get prediction attributes
                     JSONObject jAttributes = jPrediction.getJSONObject("attributes");
-                    Date departureTime = parseMbtaDate(jAttributes.getString("departure_time"));
-                    Date arrivalTime = parseMbtaDate(jAttributes.getString("arrival_time"));
 
-                    prediction.setArrivalTime(arrivalTime);
-                    prediction.setDepartureTime(departureTime);
+                    prediction.setArrivalTime(parseMbtaDate(jAttributes.getString("arrival_time")));
+                    prediction.setDepartureTime(parseMbtaDate(jAttributes.getString("departure_time")));
 
                     // Get IDs of related objects
                     JSONObject jRelationships = jPrediction.getJSONObject("relationships");
-
-                    // Retrieve route data
-                    String routeId = jRelationships
-                            .getJSONObject("route")
-                            .getJSONObject("data")
-                            .getString("id");
-                    prediction.setRouteId(routeId);
 
                     // Retrieve stop data
                     String stopId = jRelationships
@@ -73,6 +63,26 @@ public class PredictionsJsonParser {
                             .getJSONObject("data")
                             .getString("id");
                     prediction.setStopId(stopId);
+
+                    // Retrieve route data
+                    String routeId = jRelationships
+                            .getJSONObject("route")
+                            .getJSONObject("data")
+                            .getString("id");
+                    Route route = new Route(routeId);
+
+                    JSONObject jRoute = includedData.get("route" + routeId);
+                    if (jRoute != null) {
+                        JSONObject jRouteAttr = jRoute.getJSONObject("attributes");
+
+                        route.setMode(jRouteAttr.getInt("type"));
+                        route.setSortOrder(jRouteAttr.getInt("sort_order"));
+                        route.setShortName(jRouteAttr.getString("short_name"));
+                        route.setLongName(jRouteAttr.getString("long_name"));
+                        route.setPrimaryColor(jRouteAttr.getString("color"));
+                        route.setTextColor(jRouteAttr.getString("text_color"));
+                    }
+                    prediction.setRoute(route);
 
                     // Retrieve trip data
                     String tripId = jRelationships
@@ -85,31 +95,25 @@ public class PredictionsJsonParser {
                     if (jTrip != null) {
                         JSONObject jTripAttr = jTrip.getJSONObject("attributes");
 
-                        int direction = jTripAttr.getInt("direction_id");
-                        String destination = jTripAttr.getString("headsign");
-                        String tripName = jTripAttr.getString("name");
-
-                        prediction.setDirection(direction);
-                        prediction.setDestination(destination);
-                        prediction.setTripName(tripName);
+                        prediction.setDirection(jTripAttr.getInt("direction_id"));
+                        prediction.setDestination(jTripAttr.getString("headsign"));
+                        prediction.setTripName(jTripAttr.getString("name"));
                     }
 
-                    predictions[i] = prediction;
-
+                    if (!predictions.containsKey(id)) {
+                        predictions.put(id, prediction);
+                    } else if (prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
+                        predictions.put(id, prediction);
+                    }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Unable to parse Stop at position " + i);
-
-                    predictions[i] = null;
                 }
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Unable to parse Predictions JSON response");
-
-            predictions = new Prediction[0];
         }
 
-
-        return predictions;
+        return predictions.values().toArray(new Prediction[predictions.size()]);
     }
 
     private static HashMap<String, JSONObject> jsonArrayToHashMap(JSONArray jRelated) {

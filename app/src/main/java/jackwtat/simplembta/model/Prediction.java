@@ -12,7 +12,7 @@ public class Prediction implements Comparable<Prediction> {
     private Date departureTime = null;
 
     // Route data
-    private String routeId = "null";
+    private Route route = null;
 
     // Stop data
     private String stopId = "null";
@@ -61,7 +61,11 @@ public class Prediction implements Comparable<Prediction> {
     }
 
     public String getRouteId() {
-        return routeId;
+        return route.getId();
+    }
+
+    public Route getRoute() {
+        return route;
     }
 
     // Stop data getters
@@ -99,8 +103,8 @@ public class Prediction implements Comparable<Prediction> {
         this.departureTime = departureTime;
     }
 
-    public void setRouteId(String routeId) {
-        this.routeId = routeId;
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
     // Stop data setters

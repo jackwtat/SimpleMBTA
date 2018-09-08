@@ -230,6 +230,10 @@ public class Route implements Comparable<Route> {
     }
 
     public void addPrediction(Prediction prediction) {
+        if (prediction.getDestination().equals("Silver Line Way") && !id.equals("746")) {
+            return;
+        }
+
         if (prediction.getDirection() == 1) {
             inboundPredictions.add(prediction);
         } else {
@@ -237,20 +241,32 @@ public class Route implements Comparable<Route> {
         }
     }
 
-    public void addPredictions(List<Prediction> predictions) {
-        if (predictions.get(0).getDirection() == 1) {
-            inboundPredictions.addAll(predictions);
-        } else {
-            outboundPredictions.addAll(predictions);
-        }
-    }
-
     public void addServiceAlert(ServiceAlert serviceAlert) {
         serviceAlerts.add(serviceAlert);
     }
 
-    public void addServiceAlerts(List<ServiceAlert> serviceAlerts) {
-        this.serviceAlerts.addAll(serviceAlerts);
+    public boolean isParentOf(String otherRouteId) {
+        if (id.equals("2427") && (otherRouteId.equals("24") || otherRouteId.equals("27")))
+            return true;
+        else if (id.equals("3233") && (otherRouteId.equals("32") || otherRouteId.equals("33")))
+            return true;
+        else if (id.equals("3738") && (otherRouteId.equals("37") || otherRouteId.equals("38")))
+            return true;
+        else if (id.equals("4050") && (otherRouteId.equals("40") || otherRouteId.equals("50")))
+            return true;
+        else if (id.equals("627") && (otherRouteId.equals("62") || otherRouteId.equals("76")))
+            return true;
+        else if (id.equals("725") && (otherRouteId.equals("72") || otherRouteId.equals("75")))
+            return true;
+        else if (id.equals("8993") && (otherRouteId.equals("89") || otherRouteId.equals("93")))
+            return true;
+        else if (id.equals("116117") && (otherRouteId.equals("116") || otherRouteId.equals("117")))
+            return true;
+        else if (id.equals("214216") && (otherRouteId.equals("214") || otherRouteId.equals("216")))
+            return true;
+        else if (id.equals("441442") && (otherRouteId.equals("441") || otherRouteId.equals("442")))
+            return true;
+        else return false;
     }
 
     @Override

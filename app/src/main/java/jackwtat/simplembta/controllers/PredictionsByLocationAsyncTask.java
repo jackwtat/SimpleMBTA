@@ -91,30 +91,6 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
 
         Collections.sort(predictions);
 
-        // Query route and stop data in predictions that were not included in initial queries
-        StringBuilder routesByIdArgBuilder = new StringBuilder();
-        StringBuilder stopsByIdArgBuilder = new StringBuilder();
-        for (Prediction prediction : predictions) {
-            if (!routes.containsKey(prediction.getRouteId())) {
-                routesByIdArgBuilder.append(prediction.getRouteId()).append(",");
-            }
-            if (!stops.containsKey(prediction.getStopId())) {
-                stopsByIdArgBuilder.append(prediction.getStopId()).append(",");
-            }
-        }
-        String[] routesByIdArgs = {"filter[id]=" + routesByIdArgBuilder.toString()};
-        String[] stopsByIdArgs = {
-                "filter[id]=" + stopsByIdArgBuilder.toString(),
-                "include=child_stops"
-        };
-
-        for (Route route : RoutesJsonParser.parse(realTimeClient.get("routes", routesByIdArgs))) {
-            routes.put(route.getId(), route);
-        }
-        for (Stop stop : StopsJsonParser.parse(realTimeClient.get("stops", stopsByIdArgs))) {
-            stops.put(stop.getId(), stop);
-        }
-
         for (Prediction prediction : predictions) {
             // Replace prediction's stop ID with its parent stop ID
             for (Stop stop : stops.values()) {
@@ -145,6 +121,12 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                         routes.get(routeId).setNearestStop(direction, stop);
                     }
                 }
+            } else if (prediction.getRoute() != null) {
+                String routeId = prediction.getRouteId();
+                Route route = prediction.getRoute();
+
+                route.addPrediction(prediction);
+                routes.put(routeId, route);
             }
         }
 
