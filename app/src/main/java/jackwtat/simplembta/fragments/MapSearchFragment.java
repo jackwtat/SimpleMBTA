@@ -159,7 +159,12 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
                 R.color.colorAccent));
-        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                forceRefresh();
+            }
+        });
 
         // Get recycler view
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
