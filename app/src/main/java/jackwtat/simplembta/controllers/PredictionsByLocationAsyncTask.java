@@ -100,8 +100,12 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                 }
             }
 
+            if (!routes.containsKey(prediction.getRouteId())) {
+                routes.put(prediction.getRouteId(), prediction.getRoute());
+            }
+
             // Add prediction to its respective route
-            if (stops.containsKey(prediction.getStopId()) && routes.containsKey(prediction.getRouteId())) {
+            if (stops.containsKey(prediction.getStopId())) {
                 int direction = prediction.getDirection();
                 String routeId = prediction.getRouteId();
                 Stop stop = stops.get(prediction.getStopId());
@@ -121,12 +125,6 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                         routes.get(routeId).setNearestStop(direction, stop);
                     }
                 }
-            } else if (prediction.getRoute() != null) {
-                String routeId = prediction.getRouteId();
-                Route route = prediction.getRoute();
-
-                route.addPrediction(prediction);
-                routes.put(routeId, route);
             }
         }
 
