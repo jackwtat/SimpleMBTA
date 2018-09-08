@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
  * Created by jackw on 1/16/2018.
  */
 
-public class MbtaApiClient {
+public class RealTimeApiClient {
     private static final String LOG_TAG = "V3RealTimeAPIQuery";
 
     // URL for querying the MBTA realTime API
@@ -24,7 +24,7 @@ public class MbtaApiClient {
     // The API key
     protected String apiKey;
 
-    public MbtaApiClient(String apiKey) {
+    public RealTimeApiClient(String apiKey) {
         this.apiKey = apiKey;
     }
 
