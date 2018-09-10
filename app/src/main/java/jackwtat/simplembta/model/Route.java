@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jackwtat.simplembta.R;
 
@@ -141,9 +140,9 @@ public class Route implements Comparable<Route> {
     }
 
     public Stop getNearestStop(int direction) {
-        if (direction == 1) {
+        if (direction == INBOUND) {
             return nearestInboundStop;
-        } else if (direction == 0) {
+        } else if (direction == OUTBOUND) {
             return nearestOutboundStop;
         } else {
             return null;
@@ -151,9 +150,9 @@ public class Route implements Comparable<Route> {
     }
 
     public ArrayList<Prediction> getPredictions(int direction) {
-        if (direction == 1) {
+        if (direction == INBOUND) {
             return inboundPredictions;
-        } else if (direction == 0) {
+        } else if (direction == OUTBOUND) {
             return outboundPredictions;
         } else {
             return new ArrayList<>();
@@ -225,6 +224,16 @@ public class Route implements Comparable<Route> {
         return inboundPredictions.size() > 0 || outboundPredictions.size() > 0;
     }
 
+    public boolean hasPredictions(int direction) {
+        if (direction == INBOUND) {
+            return inboundPredictions.size() > 0;
+        } else if (direction == OUTBOUND) {
+            return outboundPredictions.size() > 0;
+        } else {
+            return false;
+        }
+    }
+
     public boolean hasNearbyStops() {
         return nearestInboundStop != null || nearestOutboundStop != null;
     }
@@ -234,9 +243,9 @@ public class Route implements Comparable<Route> {
             return;
         }
 
-        if (prediction.getDirection() == 1) {
+        if (prediction.getDirection() == INBOUND) {
             inboundPredictions.add(prediction);
-        } else {
+        } else if (prediction.getDirection() == OUTBOUND) {
             outboundPredictions.add(prediction);
         }
     }

@@ -10,12 +10,13 @@ public class Prediction implements Comparable<Prediction> {
     private String trackNumber = "null";
     private Date arrivalTime = null;
     private Date departureTime = null;
+    private boolean isLive = false;
 
     // Route data
     private Route route = null;
 
     // Stop data
-    private String stopId = "null";
+    private Stop stop = null;
 
     // Trip data
     private String tripId = "null";
@@ -68,9 +69,17 @@ public class Prediction implements Comparable<Prediction> {
         return route;
     }
 
+    public boolean isLive() {
+        return isLive;
+    }
+
     // Stop data getters
     public String getStopId() {
-        return stopId;
+        return stop.getId();
+    }
+
+    public Stop getStop() {
+        return stop;
     }
 
     // Trip data getters
@@ -107,9 +116,13 @@ public class Prediction implements Comparable<Prediction> {
         this.route = route;
     }
 
+    public void setIsLive(boolean isLive) {
+        this.isLive = isLive;
+    }
+
     // Stop data setters
-    public void setStopId(String stopId) {
-        this.stopId = stopId;
+    public void setStop(Stop stop) {
+        this.stop = stop;
     }
 
     // Trip data setters

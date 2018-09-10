@@ -13,15 +13,15 @@ import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
 
-public class PredictionsJsonParser {
-    public static final String LOG_TAG = "PredictionsJsonParser";
+public class SchedulesJsonParser {
+    public static final String LOG_TAG = "SchedulesJsonParser";
 
     public static Prediction[] parse(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
             return new Prediction[0];
         }
 
-        HashMap<String, Prediction> predictions = new HashMap<>();
+        HashMap<String, Prediction> schedules = new HashMap<>();
 
         try {
             JSONObject jRoot = new JSONObject(jsonResponse);
@@ -39,23 +39,23 @@ public class PredictionsJsonParser {
 
             for (int i = 0; i < jData.length(); i++) {
                 try {
-                    JSONObject jPrediction = jData.getJSONObject(i);
+                    JSONObject jSchedule = jData.getJSONObject(i);
 
-                    // Get prediction ID
-                    String id = jPrediction.getString("id");
+                    // Get schedule ID
+                    String id = jSchedule.getString("id");
 
                     // Create new instance of Prediction
-                    Prediction prediction = new Prediction(id);
+                    Prediction schedule = new Prediction(id);
 
-                    // Get prediction attributes
-                    JSONObject jAttributes = jPrediction.getJSONObject("attributes");
+                    // Get schedule attributes
+                    JSONObject jAttributes = jSchedule.getJSONObject("attributes");
 
-                    prediction.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
-                    prediction.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
-                    prediction.setIsLive(true);
+                    schedule.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
+                    schedule.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
+                    schedule.setIsLive(false);
 
                     // Get IDs of related objects
-                    JSONObject jRelationships = jPrediction.getJSONObject("relationships");
+                    JSONObject jRelationships = jSchedule.getJSONObject("relationships");
 
                     // Retrieve stop data
                     String stopId = jRelationships
@@ -72,7 +72,7 @@ public class PredictionsJsonParser {
                         stop.setLatitude(jStopAttr.getDouble("latitude"));
                         stop.setLongitude(jStopAttr.getDouble("longitude"));
                     }
-                    prediction.setStop(stop);
+                    schedule.setStop(stop);
 
                     // Retrieve route data
                     String routeId = jRelationships
@@ -92,38 +92,40 @@ public class PredictionsJsonParser {
                         route.setPrimaryColor(jRouteAttr.getString("color"));
                         route.setTextColor(jRouteAttr.getString("text_color"));
                     }
-                    prediction.setRoute(route);
+                    schedule.setRoute(route);
 
                     // Retrieve trip data
                     String tripId = jRelationships
                             .getJSONObject("trip")
                             .getJSONObject("data")
                             .getString("id");
-                    prediction.setTripId(tripId);
+                    schedule.setTripId(tripId);
 
                     JSONObject jTrip = includedData.get("trip" + tripId);
                     if (jTrip != null) {
                         JSONObject jTripAttr = jTrip.getJSONObject("attributes");
 
-                        prediction.setDirection(jTripAttr.getInt("direction_id"));
-                        prediction.setDestination(jTripAttr.getString("headsign"));
-                        prediction.setTripName(jTripAttr.getString("name"));
+                        schedule.setDirection(jTripAttr.getInt("direction_id"));
+                        schedule.setDestination(jTripAttr.getString("headsign"));
+                        schedule.setTripName(jTripAttr.getString("name"));
                     }
 
-                    if (!predictions.containsKey(id)) {
-                        predictions.put(id, prediction);
-                    } else if (prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
-                        predictions.put(id, prediction);
+                    if (jRelationships.getJSONObject("prediction").getString("data").equals("null")) {
+                        if (!schedules.containsKey(id)) {
+                            schedules.put(id, schedule);
+                        } else if (schedule.getRoute().isParentOf(schedules.get(id).getRouteId())) {
+                            schedules.put(id, schedule);
+                        }
                     }
                 } catch (JSONException e) {
-                    Log.e(LOG_TAG, "Unable to parse Prediction at position " + i);
+                    Log.e(LOG_TAG, "Unable to parse Schedule at position " + i);
                 }
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to parse Predictions JSON response");
+            Log.e(LOG_TAG, "Unable to parse Schedules JSON response");
         }
 
-        return predictions.values().toArray(new Prediction[predictions.size()]);
+        return schedules.values().toArray(new Prediction[schedules.size()]);
     }
 
     private static HashMap<String, JSONObject> jsonArrayToHashMap(JSONArray jRelated) {

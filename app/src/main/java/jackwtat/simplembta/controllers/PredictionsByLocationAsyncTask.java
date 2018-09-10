@@ -14,8 +14,10 @@ import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.PredictionsJsonParser;
 import jackwtat.simplembta.utilities.RoutesJsonParser;
+import jackwtat.simplembta.utilities.SchedulesJsonParser;
 import jackwtat.simplembta.utilities.ServiceAlertsJsonParser;
 import jackwtat.simplembta.utilities.StopsJsonParser;
 
@@ -48,13 +50,13 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         RealTimeApiClient realTimeClient = new RealTimeApiClient(realTimeApiKey);
 
         // Get the stops near the user
-        String[] stopByLocationArgs = {
+        String[] stopArgs = {
                 "filter[latitude]=" + Double.toString(lat),
                 "filter[longitude]=" + Double.toString(lon),
                 "include=child_stops"
         };
 
-        for (Stop stop : StopsJsonParser.parse(realTimeClient.get("stops", stopByLocationArgs))) {
+        for (Stop stop : StopsJsonParser.parse(realTimeClient.get("stops", stopArgs))) {
             stop.setDistance(lat, lon);
             stops.put(stop.getId(), stop);
         }
@@ -64,13 +66,13 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         }
 
         // Get all the routes at these stops
-        StringBuilder routesByStopArgBuilder = new StringBuilder();
+        StringBuilder stopArgBuilder = new StringBuilder();
         for (Stop stop : stops.values()) {
-            routesByStopArgBuilder.append(stop.getId()).append(",");
+            stopArgBuilder.append(stop.getId()).append(",");
         }
-        String[] routesByStopArgs = {"filter[stop]=" + routesByStopArgBuilder.toString()};
+        String[] routesArgs = {"filter[stop]=" + stopArgBuilder.toString()};
 
-        for (Route route : RoutesJsonParser.parse(realTimeClient.get("routes", routesByStopArgs))) {
+        for (Route route : RoutesJsonParser.parse(realTimeClient.get("routes", routesArgs))) {
             routes.put(route.getId(), route);
         }
 
@@ -78,64 +80,87 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
             return new ArrayList<>(routes.values());
         }
 
-        // Get the predictions near the user
-        String[] predictionByLocationArgs = {
+        // Get live predictions near the user
+        String[] predictionsArgs = {
                 "filter[latitude]=" + Double.toString(lat),
                 "filter[longitude]=" + Double.toString(lon),
-                "include=route,trip"
+                "include=route,trip,stop"
         };
-        String predictionsJsonResponse = realTimeClient.get("predictions", predictionByLocationArgs);
 
-        ArrayList<Prediction> predictions = new ArrayList<>(
-                Arrays.asList(PredictionsJsonParser.parse(predictionsJsonResponse)));
+        ArrayList<Prediction> predictions = new ArrayList<>(Arrays.asList(
+                PredictionsJsonParser.parse(realTimeClient.get("predictions", predictionsArgs))));
+
+        // Get non-live schedule data
+        StringBuilder routeArgBuilder = new StringBuilder();
+        for (Route route : routes.values()) {
+            if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
+                routeArgBuilder.append(route.getId()).append(",");
+            }
+        }
+
+        String[] scheduleArgs = {
+                "filter[route]=" + routeArgBuilder.toString(),
+                "filter[stop]=" + stopArgBuilder.toString(),
+                "filter[date]=" + DateUtil.getCurrentMbtaDate(),
+                "filter[min_time]=" + DateUtil.getMbtaTime(0),
+                "filter[max_time]=" + DateUtil.getMbtaTime(2),
+                "include=route,trip,stop,prediction"
+        };
+
+        predictions.addAll(new ArrayList<>(Arrays.asList(
+                SchedulesJsonParser.parse(realTimeClient.get("schedules", scheduleArgs)))));
 
         Collections.sort(predictions);
 
         for (Prediction prediction : predictions) {
-            // Replace prediction's stop ID with its parent stop ID
-            for (Stop stop : stops.values()) {
-                if (stop.isParentOf(prediction.getStopId())) {
-                    prediction.setStopId(stop.getId());
-                    break;
-                }
-            }
-
             if (!routes.containsKey(prediction.getRouteId())) {
                 routes.put(prediction.getRouteId(), prediction.getRoute());
             }
 
-            // Add prediction to its respective route
-            if (stops.containsKey(prediction.getStopId())) {
-                int direction = prediction.getDirection();
-                String routeId = prediction.getRouteId();
-                Stop stop = stops.get(prediction.getStopId());
+            if (!stops.containsKey(prediction.getStopId())) {
+                prediction.getStop().setDistance(lat, lon);
+                stops.put(prediction.getStopId(), prediction.getStop());
+            }
 
-                if (prediction.getDepartureTime() != null) {
-                    if (stop.equals(routes.get(routeId).getNearestStop(direction))) {
-                        routes.get(routeId).addPrediction(prediction);
-                    } else if (routes.get(routeId).getNearestStop(direction) == null ||
-                            stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0) {
-                        routes.get(routeId).setNearestStop(direction, stop);
-                        routes.get(routeId).addPrediction(prediction);
-                    }
-                } else if (prediction.getArrivalTime() == null) {
-                    if (routes.get(routeId).getNearestStop(direction) == null ||
-                            (routes.get(routeId).getPredictions(direction).size() == 0 &&
-                                    routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
-                        routes.get(routeId).setNearestStop(direction, stop);
-                    }
+            // Replace prediction's stop ID with its parent stop ID
+            for (Stop stop : stops.values()) {
+                if (stop.isParentOf(prediction.getStopId())) {
+                    prediction.setStop(stop);
+                    break;
+                }
+            }
+
+            // Add prediction to its respective route
+            int direction = prediction.getDirection();
+            String routeId = prediction.getRouteId();
+            Stop stop = stops.get(prediction.getStopId());
+
+            if (prediction.getDepartureTime() != null) {
+                if (stop.equals(routes.get(routeId).getNearestStop(direction))) {
+                    routes.get(routeId).addPrediction(prediction);
+                } else if (!routes.get(routeId).hasPredictions(direction) ||
+                        (prediction.isLive() && stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0)) {
+                    routes.get(routeId).setNearestStop(direction, stop);
+                    routes.get(routeId).addPrediction(prediction);
+                }
+            } else if (prediction.getArrivalTime() == null) {
+                if (routes.get(routeId).getNearestStop(direction) == null ||
+                        (!routes.get(routeId).hasPredictions(direction) &&
+                                routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
+                    routes.get(routeId).setNearestStop(direction, stop);
                 }
             }
         }
 
         // Get all alerts for these routes
-        StringBuilder alertsByRouteArgBuilder = new StringBuilder();
+        routeArgBuilder = new StringBuilder();
         for (Route route : routes.values()) {
-            alertsByRouteArgBuilder.append(route.getId()).append(",");
+            routeArgBuilder.append(route.getId()).append(",");
         }
-        String[] alertsByRouteArgs = {"filter[route]=" + alertsByRouteArgBuilder.toString()};
 
-        ServiceAlert[] alerts = ServiceAlertsJsonParser.parse(realTimeClient.get("alerts", alertsByRouteArgs));
+        String[] alertsArgs = {"filter[route]=" + routeArgBuilder.toString()};
+
+        ServiceAlert[] alerts = ServiceAlertsJsonParser.parse(realTimeClient.get("alerts", alertsArgs));
 
         for (ServiceAlert alert : alerts) {
             for (Route route : routes.values()) {
