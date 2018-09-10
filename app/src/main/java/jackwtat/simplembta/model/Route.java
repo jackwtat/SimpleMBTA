@@ -204,14 +204,14 @@ public class Route implements Comparable<Route> {
     }
 
     public void setNearestStop(int direction, Stop stop) {
-        if (direction == 1) {
+        if (direction == INBOUND) {
             if (nearestInboundStop == null || !nearestInboundStop.equals(stop)) {
                 inboundPredictions.clear();
             }
 
             nearestInboundStop = stop;
 
-        } else {
+        } else if (direction == OUTBOUND) {
             if (nearestOutboundStop == null || !nearestOutboundStop.equals(stop)) {
                 outboundPredictions.clear();
             }
