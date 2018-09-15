@@ -32,6 +32,8 @@ public class Route implements Comparable<Route> {
 
     private Stop nearestInboundStop = null;
     private Stop nearestOutboundStop = null;
+    private boolean hasLiveInboundPredictions = false;
+    private boolean hasLiveOutboundPredictions = false;
     private ArrayList<Prediction> inboundPredictions = new ArrayList<>();
     private ArrayList<Prediction> outboundPredictions = new ArrayList<>();
 
@@ -207,6 +209,7 @@ public class Route implements Comparable<Route> {
         if (direction == INBOUND) {
             if (nearestInboundStop == null || !nearestInboundStop.equals(stop)) {
                 inboundPredictions.clear();
+                hasLiveInboundPredictions = false;
             }
 
             nearestInboundStop = stop;
@@ -217,6 +220,7 @@ public class Route implements Comparable<Route> {
             }
 
             nearestOutboundStop = stop;
+            hasLiveOutboundPredictions = false;
         }
     }
 
@@ -234,6 +238,16 @@ public class Route implements Comparable<Route> {
         }
     }
 
+    public boolean hasLivePredictions(int direction) {
+        if (direction == INBOUND) {
+            return hasLiveInboundPredictions;
+        } else if (direction == OUTBOUND) {
+            return hasLiveOutboundPredictions;
+        } else {
+            return false;
+        }
+    }
+
     public boolean hasNearbyStops() {
         return nearestInboundStop != null || nearestOutboundStop != null;
     }
@@ -245,8 +259,16 @@ public class Route implements Comparable<Route> {
 
         if (prediction.getDirection() == INBOUND) {
             inboundPredictions.add(prediction);
+
+            if (prediction.isLive()) {
+                hasLiveInboundPredictions = true;
+            }
         } else if (prediction.getDirection() == OUTBOUND) {
             outboundPredictions.add(prediction);
+
+            if (prediction.isLive()) {
+                hasLiveOutboundPredictions = true;
+            }
         }
     }
 

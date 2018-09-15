@@ -138,10 +138,14 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
             if (prediction.getDepartureTime() != null) {
                 if (stop.equals(routes.get(routeId).getNearestStop(direction))) {
                     routes.get(routeId).addPrediction(prediction);
-                } else if (!routes.get(routeId).hasPredictions(direction) ||
-                        (prediction.isLive() && stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0)) {
+                } else if (!routes.get(routeId).hasPredictions(direction)) {
                     routes.get(routeId).setNearestStop(direction, stop);
                     routes.get(routeId).addPrediction(prediction);
+                } else if (stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0) {
+                    if (prediction.isLive() || (!prediction.isLive() && !routes.get(routeId).hasLivePredictions(direction))) {
+                        routes.get(routeId).setNearestStop(direction, stop);
+                        routes.get(routeId).addPrediction(prediction);
+                    }
                 }
             } else if (prediction.getArrivalTime() == null) {
                 if (routes.get(routeId).getNearestStop(direction) == null ||
