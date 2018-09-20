@@ -84,7 +84,7 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         String[] predictionsArgs = {
                 "filter[latitude]=" + Double.toString(lat),
                 "filter[longitude]=" + Double.toString(lon),
-                "include=route,trip,stop"
+                "include=route,trip,stop,schedule"
         };
 
         ArrayList<Prediction> predictions = new ArrayList<>(Arrays.asList(
@@ -135,7 +135,7 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
             String routeId = prediction.getRouteId();
             Stop stop = stops.get(prediction.getStopId());
 
-            if (prediction.getDepartureTime() != null) {
+            if (prediction.willPickUpPassengers()) {
                 if (stop.equals(routes.get(routeId).getNearestStop(direction))) {
                     routes.get(routeId).addPrediction(prediction);
                 } else if (!routes.get(routeId).hasPredictions(direction)) {
@@ -147,12 +147,10 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                         routes.get(routeId).addPrediction(prediction);
                     }
                 }
-            } else if (prediction.getArrivalTime() == null) {
-                if (routes.get(routeId).getNearestStop(direction) == null ||
-                        (!routes.get(routeId).hasPredictions(direction) &&
-                                routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
-                    routes.get(routeId).setNearestStop(direction, stop);
-                }
+            } else if (routes.get(routeId).getNearestStop(direction) == null ||
+                    (!routes.get(routeId).hasPredictions(direction) &&
+                            routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
+                routes.get(routeId).setNearestStop(direction, stop);
             }
         }
 

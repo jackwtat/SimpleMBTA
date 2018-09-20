@@ -53,6 +53,7 @@ public class SchedulesJsonParser {
                     schedule.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
                     schedule.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
                     schedule.setIsLive(false);
+                    schedule.setPickUpType(jAttributes.getInt("pickup_type"));
 
                     // Get IDs of related objects
                     JSONObject jRelationships = jSchedule.getJSONObject("relationships");

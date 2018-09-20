@@ -5,12 +5,18 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 
 public class Prediction implements Comparable<Prediction> {
+    public static final int SCHEDULED_PICK_UP = 0;
+    public static final int NO_PICK_UP = 1;
+    public static final int PHONE_PICK_UP = 2;
+    public static final int FLAG_PICK_UP = 3;
+
     // Prediction data
     private String id;
     private String trackNumber = "null";
     private Date arrivalTime = null;
     private Date departureTime = null;
     private boolean isLive = false;
+    private int pickUpType = SCHEDULED_PICK_UP;
 
     // Route data
     private Route route = null;
@@ -20,7 +26,7 @@ public class Prediction implements Comparable<Prediction> {
 
     // Trip data
     private String tripId = "null";
-    private int direction = 0;
+    private int direction = Route.NULL_DIRECTION;
     private String destination = "null";
     private String tripName = "null";
 
@@ -69,8 +75,16 @@ public class Prediction implements Comparable<Prediction> {
         return route;
     }
 
+    public int getPickUpType() {
+        return pickUpType;
+    }
+
     public boolean isLive() {
         return isLive;
+    }
+
+    public boolean willPickUpPassengers() {
+        return pickUpType != NO_PICK_UP && (arrivalTime != null || departureTime != null);
     }
 
     // Stop data getters
@@ -118,6 +132,10 @@ public class Prediction implements Comparable<Prediction> {
 
     public void setIsLive(boolean isLive) {
         this.isLive = isLive;
+    }
+
+    public void setPickUpType(int pickUpType) {
+        this.pickUpType = pickUpType;
     }
 
     // Stop data setters

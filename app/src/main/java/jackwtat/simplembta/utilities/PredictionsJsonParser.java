@@ -74,6 +74,19 @@ public class PredictionsJsonParser {
                     }
                     prediction.setStop(stop);
 
+                    // Retrieve schedule data
+                    String scheduleId = jRelationships
+                            .getJSONObject("schedule")
+                            .getJSONObject("data")
+                            .getString("id");
+
+                    JSONObject jSchedule = includedData.get("schedule" + scheduleId);
+                    if (jSchedule != null) {
+                        JSONObject jScheduleAttr = jSchedule.getJSONObject("attributes");
+
+                        prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
+                    }
+
                     // Retrieve route data
                     String routeId = jRelationships
                             .getJSONObject("route")
