@@ -93,11 +93,7 @@ public class PredictionsCardView extends LinearLayout {
                 // Create a new PredictionView for each group of predictions
                 for (String dest : destList) {
                     ArrayList<Prediction> pList = pMap.get(dest);
-                    if (pList.size() > 1) {
-                        predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0), pList.get(1)));
-                    } else {
-                        predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0)));
-                    }
+                    predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0)));
                 }
 
             } else {

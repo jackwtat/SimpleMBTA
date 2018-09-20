@@ -13,10 +13,9 @@ import jackwtat.simplembta.model.Prediction;
 public class PredictionView extends LinearLayout {
     View rootView;
 
-    TextView destinationView;
-    TextView firstTimeView;
-    TextView secondTimeView;
-
+    TextView destinationTextView;
+    TextView timeTextView;
+    TextView minuteTextView;
     TextView trackNumberView;
 
     public PredictionView(Context context) {
@@ -33,30 +32,24 @@ public class PredictionView extends LinearLayout {
 
     public PredictionView(Context context, Prediction prediction) {
         super(context);
-        init(context, prediction, null);
+        init(context, prediction);
     }
 
-    public PredictionView(Context context, Prediction prediction1, Prediction prediction2) {
-        super(context);
-        init(context, prediction1, prediction2);
-    }
-
-    private void init(Context context, Prediction p1, @Nullable Prediction p2) {
+    private void init(Context context, Prediction prediction) {
         rootView = inflate(context, R.layout.prediction_view, this);
 
-        destinationView = rootView.findViewById(R.id.destination_text_view);
-        firstTimeView = rootView.findViewById(R.id.first_time_text_view);
-        secondTimeView = rootView.findViewById(R.id.second_time_text_view);
-
+        destinationTextView = rootView.findViewById(R.id.destination_text_view);
+        timeTextView = rootView.findViewById(R.id.time_text_view);
+        minuteTextView = rootView.findViewById(R.id.minute_text_view);
         trackNumberView = rootView.findViewById(R.id.track_number_text_view);
 
-        destinationView.setText(p1.getDestination());
+        destinationTextView.setText(prediction.getDestination());
 /*
         // Set track number
-        if (p1.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                !p1.getTrackNumber().equals("null")) {
+        if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                !prediction.getTrackNumber().equals("null")) {
             String trackNumber = context.getResources().getString(R.string.track) + " " +
-                    p1.getTrackNumber();
+                    prediction.getTrackNumber();
             trackNumberView.setText(trackNumber);
 
             Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
@@ -69,36 +62,26 @@ public class PredictionView extends LinearLayout {
         trackNumberView.setVisibility(GONE);
 
         // Set departure times
-        if (p1.getDepartureTime() != null)
+        if (prediction.willPickUpPassengers()) {
+            long predictedTime;
+            String timeText;
 
-        {
-            String dept_1;
-            String dept_2;
-
-            if (p1.getTimeUntilDeparture() > 0) {
-                dept_1 = (p1.getTimeUntilDeparture() / 60000) + "";
+            if (prediction.getArrivalTime() != null) {
+                predictedTime = prediction.getTimeUntilArrival();
             } else {
-                dept_1 = "0";
+                predictedTime = prediction.getTimeUntilDeparture();
             }
 
-            if (p2 != null && p2.getDepartureTime() != null) {
-                dept_1 = dept_1 + ",";
-                if (p2.getTimeUntilDeparture() > 0) {
-                    dept_2 = (p2.getTimeUntilDeparture() / 60000) + " min";
-                } else {
-                    dept_2 = "0 min";
-                }
+            if (predictedTime > 0) {
+                timeText = (predictedTime / 60000) + "";
             } else {
-                dept_2 = "min";
+                timeText = "0";
             }
 
-            firstTimeView.setText(dept_1);
-            secondTimeView.setText(dept_2);
-        } else
-
-        {
-            firstTimeView.setText("---");
-            secondTimeView.setVisibility(GONE);
+            timeTextView.setText(timeText);
+        } else {
+            timeTextView.setText("---");
+            minuteTextView.setVisibility(GONE);
         }
     }
 }
