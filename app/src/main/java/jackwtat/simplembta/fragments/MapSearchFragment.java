@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -73,6 +74,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private TextView noPredictionsTextView;
     private AlertDialog alertDialog;
     private View mapReturnView;
 
@@ -113,8 +115,10 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
 
                         if (predictionsAdapter.getItemCount() == 0) {
                             recyclerView.setNestedScrollingEnabled(false);
+                            noPredictionsTextView.setVisibility(View.VISIBLE);
                         } else {
                             recyclerView.setNestedScrollingEnabled(true);
+                            noPredictionsTextView.setVisibility(View.GONE);
                         }
 
                         errorManager.setNetworkError(false);
@@ -237,6 +241,9 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
                 }
             }
         });
+
+        noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
+        noPredictionsTextView.setVisibility(View.GONE);
 
         return rootView;
     }
