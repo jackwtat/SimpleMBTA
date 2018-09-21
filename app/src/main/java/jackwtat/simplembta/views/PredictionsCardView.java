@@ -74,34 +74,25 @@ public class PredictionsCardView extends LinearLayout {
 
         if (predictions.length > 0) {
             // Display the destinations and prediction times using PredictionViews
-            if (route.getMode() != Route.COMMUTER_RAIL) {
-                // Group predictions by destination in a HashMap
-                // Maintain the order of the destinations in an ArrayList
-                HashMap<String, ArrayList<Prediction>> pMap = new HashMap<>();
-                ArrayList<String> destList = new ArrayList<>();
+            // Group predictions by destination in a HashMap
+            // Maintain the order of the destinations in an ArrayList
+            HashMap<String, ArrayList<Prediction>> pMap = new HashMap<>();
+            ArrayList<String> destList = new ArrayList<>();
 
-                // Add the predictions to the HashMap and destinations to the ArrayList
-                for (Prediction p : predictions) {
-                    String dest = p.getDestination();
-                    if (!destList.contains(dest)) {
-                        destList.add(dest);
-                        pMap.put(dest, new ArrayList<Prediction>());
-                    }
-                    pMap.get(dest).add(p);
+            // Add the predictions to the HashMap and destinations to the ArrayList
+            for (Prediction p : predictions) {
+                String dest = p.getDestination();
+                if (!destList.contains(dest)) {
+                    destList.add(dest);
+                    pMap.put(dest, new ArrayList<Prediction>());
                 }
+                pMap.get(dest).add(p);
+            }
 
-                // Create a new PredictionView for each group of predictions
-                for (String dest : destList) {
-                    ArrayList<Prediction> pList = pMap.get(dest);
-                    predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0)));
-                }
-
-            } else {
-                // Create the PredictionViews for the Commuter Rail
-                // Maximum 3 predictions to minimize scrolling
-                for (int i = 0; i < 3 && i < predictions.length; i++) {
-                    predictionsListLayout.addView(new PredictionView(getContext(), predictions[i]));
-                }
+            // Create a new PredictionView for each group of predictions
+            for (String dest : destList) {
+                ArrayList<Prediction> pList = pMap.get(dest);
+                predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0)));
             }
         } else {
             if (stop != null) {
