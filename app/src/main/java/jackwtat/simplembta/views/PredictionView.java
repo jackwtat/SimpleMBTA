@@ -83,7 +83,7 @@ public class PredictionView extends LinearLayout {
                 countdownTime = prediction.getTimeUntilDeparture();
             }
 
-            if (countdownTime < 60 * 60000) {
+            if (countdownTime < 90 * 60000) {
                 if (countdownTime > 0) {
                     timeText = (countdownTime / 60000) + "";
                 } else {
@@ -92,24 +92,24 @@ public class PredictionView extends LinearLayout {
 
                 timeTextView.setText(timeText);
                 minuteTextView.setText(context.getResources().getString(R.string.min));
+
+                if (prediction.isLive()) {
+                    Drawable border = context.getResources().getDrawable(R.drawable.rounded_border);
+                    DrawableCompat.setTint(border, context.getResources().getColor(R.color.livePrediction));
+                    statusTextView.setBackground(border);
+
+                    String statusText = context.getResources().getString(R.string.live);
+                    statusTextView.setText(statusText);
+                    statusTextView.setTextColor(context.getResources().getColor(R.color.livePrediction));
+
+                    statusTextView.setVisibility(VISIBLE);
+                }
             } else {
                 timeText = new SimpleDateFormat("h:mm").format(predictionTime);
                 minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
 
                 timeTextView.setText(timeText);
                 minuteTextView.setText(minuteText);
-            }
-
-            if (prediction.isLive() && countdownTime < 60 * 60000) {
-                Drawable border = context.getResources().getDrawable(R.drawable.rounded_border);
-                DrawableCompat.setTint(border, context.getResources().getColor(R.color.livePrediction));
-                statusTextView.setBackground(border);
-
-                String statusText = context.getResources().getString(R.string.live);
-                statusTextView.setText(statusText);
-                statusTextView.setTextColor(context.getResources().getColor(R.color.livePrediction));
-
-                statusTextView.setVisibility(VISIBLE);
             }
         } else {
             timeTextView.setText("---");
