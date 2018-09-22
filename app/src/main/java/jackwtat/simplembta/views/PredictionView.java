@@ -100,7 +100,7 @@ public class PredictionView extends LinearLayout {
                 minuteTextView.setText(minuteText);
             }
 
-            if (prediction.isLive()) {
+            if (prediction.isLive() && countdownTime < 60 * 60000) {
                 Drawable border = context.getResources().getDrawable(R.drawable.rounded_border);
                 DrawableCompat.setTint(border, context.getResources().getColor(R.color.livePrediction));
                 statusTextView.setBackground(border);
