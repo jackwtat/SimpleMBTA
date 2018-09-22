@@ -16,9 +16,9 @@ import jackwtat.simplembta.model.Stop;
 public class SchedulesJsonParser {
     public static final String LOG_TAG = "SchedulesJsonParser";
 
-    public static Prediction[] parse(String jsonResponse) {
+    public static HashMap<String, Prediction> parse(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
-            return new Prediction[0];
+            return new HashMap<>();
         }
 
         HashMap<String, Prediction> schedules = new HashMap<>();
@@ -126,7 +126,7 @@ public class SchedulesJsonParser {
             Log.e(LOG_TAG, "Unable to parse Schedules JSON response");
         }
 
-        return schedules.values().toArray(new Prediction[schedules.size()]);
+        return schedules;
     }
 
     private static HashMap<String, JSONObject> jsonArrayToHashMap(JSONArray jRelated) {

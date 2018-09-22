@@ -5,10 +5,21 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 
 public class Prediction implements Comparable<Prediction> {
+
+    // Pick up types
+    public static final int UNKNOWN_PICK_UP = -1;
     public static final int SCHEDULED_PICK_UP = 0;
     public static final int NO_PICK_UP = 1;
     public static final int PHONE_PICK_UP = 2;
     public static final int FLAG_PICK_UP = 3;
+
+    // Status types
+    public static final String UNKNOWN_STATUS = "UNKNOWN_STATUS";
+    public static final String ADDED = "ADDED";
+    public static final String CANCELLED = "CANCELLED";
+    public static final String NO_DATA = "NO_DATA";
+    public static final String SKIPPED = "SKIPPED";
+    public static final String UNSCHEDULED = "UNSCHEDULED";
 
     // Prediction data
     private String id;
@@ -16,7 +27,8 @@ public class Prediction implements Comparable<Prediction> {
     private Date arrivalTime = null;
     private Date departureTime = null;
     private boolean isLive = false;
-    private int pickUpType = SCHEDULED_PICK_UP;
+    private int pickUpType = UNKNOWN_PICK_UP;
+    private String status = UNKNOWN_STATUS;
 
     // Route data
     private Route route = null;
@@ -79,6 +91,10 @@ public class Prediction implements Comparable<Prediction> {
         return pickUpType;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public boolean isLive() {
         return isLive;
     }
@@ -114,6 +130,10 @@ public class Prediction implements Comparable<Prediction> {
     }
 
     // Prediction data setters
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setTrackNumber(String trackNumber) {
         this.trackNumber = trackNumber;
     }
@@ -136,6 +156,10 @@ public class Prediction implements Comparable<Prediction> {
 
     public void setPickUpType(int pickUpType) {
         this.pickUpType = pickUpType;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // Stop data setters

@@ -16,9 +16,9 @@ import jackwtat.simplembta.model.Stop;
 public class PredictionsJsonParser {
     public static final String LOG_TAG = "PredictionsJsonParser";
 
-    public static Prediction[] parse(String jsonResponse) {
+    public static HashMap<String, Prediction> parse(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
-            return new Prediction[0];
+            return new HashMap<>();
         }
 
         HashMap<String, Prediction> predictions = new HashMap<>();
@@ -44,89 +44,97 @@ public class PredictionsJsonParser {
                     // Get prediction ID
                     String id = jPrediction.getString("id");
 
-                    // Create new instance of Prediction
-                    Prediction prediction = new Prediction(id);
+                    try {
 
-                    // Get prediction attributes
-                    JSONObject jAttributes = jPrediction.getJSONObject("attributes");
+                        // Create new instance of Prediction
+                        Prediction prediction = new Prediction(id);
 
-                    prediction.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
-                    prediction.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
-                    prediction.setIsLive(true);
+                        // Get prediction attributes
+                        JSONObject jAttributes = jPrediction.getJSONObject("attributes");
 
-                    // Get IDs of related objects
-                    JSONObject jRelationships = jPrediction.getJSONObject("relationships");
+                        prediction.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
+                        prediction.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
+                        prediction.setIsLive(true);
 
-                    // Retrieve stop data
-                    String stopId = jRelationships
-                            .getJSONObject("stop")
-                            .getJSONObject("data")
-                            .getString("id");
-                    Stop stop = new Stop(stopId);
+                        // Get IDs of related objects
+                        JSONObject jRelationships = jPrediction.getJSONObject("relationships");
 
-                    JSONObject jStop = includedData.get("stop" + stopId);
-                    if (jStop != null) {
-                        JSONObject jStopAttr = jStop.getJSONObject("attributes");
+                        // Retrieve stop data
+                        String stopId = jRelationships
+                                .getJSONObject("stop")
+                                .getJSONObject("data")
+                                .getString("id");
+                        Stop stop = new Stop(stopId);
 
-                        stop.setName(jStopAttr.getString("name"));
-                        stop.setLatitude(jStopAttr.getDouble("latitude"));
-                        stop.setLongitude(jStopAttr.getDouble("longitude"));
-                    }
-                    prediction.setStop(stop);
+                        JSONObject jStop = includedData.get("stop" + stopId);
+                        if (jStop != null) {
+                            JSONObject jStopAttr = jStop.getJSONObject("attributes");
 
-                    // Retrieve schedule data
-                    String scheduleId = jRelationships
-                            .getJSONObject("schedule")
-                            .getJSONObject("data")
-                            .getString("id");
+                            stop.setName(jStopAttr.getString("name"));
+                            stop.setLatitude(jStopAttr.getDouble("latitude"));
+                            stop.setLongitude(jStopAttr.getDouble("longitude"));
+                        }
+                        prediction.setStop(stop);
 
-                    JSONObject jSchedule = includedData.get("schedule" + scheduleId);
-                    if (jSchedule != null) {
-                        JSONObject jScheduleAttr = jSchedule.getJSONObject("attributes");
+                        try {
+                            // Retrieve schedule data
+                            String scheduleId = jRelationships
+                                    .getJSONObject("schedule")
+                                    .getJSONObject("data")
+                                    .getString("id");
 
-                        prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
-                    }
+                            JSONObject jSchedule = includedData.get("schedule" + scheduleId);
+                            if (jSchedule != null) {
+                                JSONObject jScheduleAttr = jSchedule.getJSONObject("attributes");
 
-                    // Retrieve route data
-                    String routeId = jRelationships
-                            .getJSONObject("route")
-                            .getJSONObject("data")
-                            .getString("id");
-                    Route route = new Route(routeId);
+                                prediction.setId(scheduleId);
+                                prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
+                            }
+                        } catch (JSONException e) {
+                            Log.e(LOG_TAG, "Unable to parse schedule for prediction " + id);
+                        }
 
-                    JSONObject jRoute = includedData.get("route" + routeId);
-                    if (jRoute != null) {
-                        JSONObject jRouteAttr = jRoute.getJSONObject("attributes");
+                        // Retrieve route data
+                        String routeId = jRelationships
+                                .getJSONObject("route")
+                                .getJSONObject("data")
+                                .getString("id");
+                        Route route = new Route(routeId);
 
-                        route.setMode(jRouteAttr.getInt("type"));
-                        route.setSortOrder(jRouteAttr.getInt("sort_order"));
-                        route.setShortName(jRouteAttr.getString("short_name"));
-                        route.setLongName(jRouteAttr.getString("long_name"));
-                        route.setPrimaryColor(jRouteAttr.getString("color"));
-                        route.setTextColor(jRouteAttr.getString("text_color"));
-                    }
-                    prediction.setRoute(route);
+                        JSONObject jRoute = includedData.get("route" + routeId);
+                        if (jRoute != null) {
+                            JSONObject jRouteAttr = jRoute.getJSONObject("attributes");
 
-                    // Retrieve trip data
-                    String tripId = jRelationships
-                            .getJSONObject("trip")
-                            .getJSONObject("data")
-                            .getString("id");
-                    prediction.setTripId(tripId);
+                            route.setMode(jRouteAttr.getInt("type"));
+                            route.setSortOrder(jRouteAttr.getInt("sort_order"));
+                            route.setShortName(jRouteAttr.getString("short_name"));
+                            route.setLongName(jRouteAttr.getString("long_name"));
+                            route.setPrimaryColor(jRouteAttr.getString("color"));
+                            route.setTextColor(jRouteAttr.getString("text_color"));
+                        }
+                        prediction.setRoute(route);
 
-                    JSONObject jTrip = includedData.get("trip" + tripId);
-                    if (jTrip != null) {
-                        JSONObject jTripAttr = jTrip.getJSONObject("attributes");
+                        // Retrieve trip data
+                        String tripId = jRelationships
+                                .getJSONObject("trip")
+                                .getJSONObject("data")
+                                .getString("id");
+                        prediction.setTripId(tripId);
 
-                        prediction.setDirection(jTripAttr.getInt("direction_id"));
-                        prediction.setDestination(jTripAttr.getString("headsign"));
-                        prediction.setTripName(jTripAttr.getString("name"));
-                    }
+                        JSONObject jTrip = includedData.get("trip" + tripId);
+                        if (jTrip != null) {
+                            JSONObject jTripAttr = jTrip.getJSONObject("attributes");
 
-                    if (!predictions.containsKey(id)) {
-                        predictions.put(id, prediction);
-                    } else if (prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
-                        predictions.put(id, prediction);
+                            prediction.setDirection(jTripAttr.getInt("direction_id"));
+                            prediction.setDestination(jTripAttr.getString("headsign"));
+                            prediction.setTripName(jTripAttr.getString("name"));
+                        }
+
+                        if (!predictions.containsKey(id) || prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
+                            predictions.put(id, prediction);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(LOG_TAG, "Unable to parse Prediction " + id);
                     }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Unable to parse Prediction at position " + i);
@@ -136,7 +144,7 @@ public class PredictionsJsonParser {
             Log.e(LOG_TAG, "Unable to parse Predictions JSON response");
         }
 
-        return predictions.values().toArray(new Prediction[predictions.size()]);
+        return predictions;
     }
 
     private static HashMap<String, JSONObject> jsonArrayToHashMap(JSONArray jRelated) {

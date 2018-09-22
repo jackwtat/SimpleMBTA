@@ -32,8 +32,8 @@ public class Route implements Comparable<Route> {
 
     private Stop nearestInboundStop = null;
     private Stop nearestOutboundStop = null;
-    private boolean hasLiveInboundPredictions = false;
-    private boolean hasLiveOutboundPredictions = false;
+    private boolean hasLiveInboundPickUps = false;
+    private boolean hasLiveOutboundPickUps = false;
     private ArrayList<Prediction> inboundPredictions = new ArrayList<>();
     private ArrayList<Prediction> outboundPredictions = new ArrayList<>();
 
@@ -209,7 +209,7 @@ public class Route implements Comparable<Route> {
         if (direction == INBOUND) {
             if (nearestInboundStop == null || !nearestInboundStop.equals(stop)) {
                 inboundPredictions.clear();
-                hasLiveInboundPredictions = false;
+                hasLiveInboundPickUps = false;
             }
 
             nearestInboundStop = stop;
@@ -220,7 +220,7 @@ public class Route implements Comparable<Route> {
             }
 
             nearestOutboundStop = stop;
-            hasLiveOutboundPredictions = false;
+            hasLiveOutboundPickUps = false;
         }
     }
 
@@ -238,11 +238,11 @@ public class Route implements Comparable<Route> {
         }
     }
 
-    public boolean hasLivePredictions(int direction) {
+    public boolean hasLivePickUps(int direction) {
         if (direction == INBOUND) {
-            return hasLiveInboundPredictions;
+            return hasLiveInboundPickUps;
         } else if (direction == OUTBOUND) {
-            return hasLiveOutboundPredictions;
+            return hasLiveOutboundPickUps;
         } else {
             return false;
         }
@@ -259,16 +259,10 @@ public class Route implements Comparable<Route> {
 
         if (prediction.getDirection() == INBOUND) {
             inboundPredictions.add(prediction);
-
-            if (prediction.isLive()) {
-                hasLiveInboundPredictions = true;
-            }
+            hasLiveInboundPickUps = prediction.isLive() && prediction.willPickUpPassengers();
         } else if (prediction.getDirection() == OUTBOUND) {
             outboundPredictions.add(prediction);
-
-            if (prediction.isLive()) {
-                hasLiveOutboundPredictions = true;
-            }
+            hasLiveOutboundPickUps = prediction.isLive() && prediction.willPickUpPassengers();
         }
     }
 
