@@ -21,7 +21,6 @@ public class PredictionView extends LinearLayout {
     TextView destinationTextView;
     TextView timeTextView;
     TextView minuteTextView;
-    TextView trackNumberTextView;
     TextView statusTextView;
 
     public PredictionView(Context context) {
@@ -47,25 +46,9 @@ public class PredictionView extends LinearLayout {
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
-        trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
         statusTextView = rootView.findViewById(R.id.status_text_view);
 
         destinationTextView.setText(prediction.getDestination());
-/*
-        // Set track number
-        if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                !prediction.getTrackNumber().equals("null")) {
-            String trackNumber = context.getResources().getString(R.string.track) + " " +
-                    prediction.getTrackNumber();
-            trackNumberTextView.setText(trackNumber);
-
-            Drawable background = context.getResources().getDrawable(R.drawable.rounded_background);
-            DrawableCompat.setTint(background, context.getResources().getColor(R.color.ApproachingAlert));
-            trackNumberTextView.setBackground(background);
-        } else {
-            trackNumberTextView.setVisibility(GONE);
-        }
-*/
 
         // Set departure times
         if (prediction.willPickUpPassengers()) {
@@ -94,13 +77,12 @@ public class PredictionView extends LinearLayout {
                 minuteTextView.setText(context.getResources().getString(R.string.min));
 
                 if (prediction.isLive()) {
-                    Drawable border = context.getResources().getDrawable(R.drawable.rounded_border);
-                    DrawableCompat.setTint(border, context.getResources().getColor(R.color.livePrediction));
-                    statusTextView.setBackground(border);
-
                     String statusText = context.getResources().getString(R.string.live);
+                    int statusColor = context.getResources().getColor(R.color.livePrediction);
+
                     statusTextView.setText(statusText);
-                    statusTextView.setTextColor(context.getResources().getColor(R.color.livePrediction));
+                    statusTextView.setTextColor(statusColor);
+                    DrawableCompat.setTint(statusTextView.getBackground(), statusColor);
 
                     statusTextView.setVisibility(VISIBLE);
                 }

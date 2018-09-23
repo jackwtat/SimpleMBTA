@@ -10,7 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
@@ -42,7 +45,7 @@ public class PredictionsCardView extends LinearLayout {
         init(context);
     }
 
-    public void setPredictions(Route route, Stop stop, Prediction[] predictions) {
+    public void setPredictions(Route route, Stop stop, List<Prediction> predictions) {
         // Set the stop name
         if (stop != null) {
             stopNameView.setText(stop.getName());
@@ -72,9 +75,11 @@ public class PredictionsCardView extends LinearLayout {
                 RouteNameView.ROUNDED_BACKGROUND,
                 abbreviate, false));
 
-        if (predictions.length > 0) {
-            for(int i = 0; i < 2 && i < predictions.length; i++){
-                predictionsListLayout.addView(new PredictionView(getContext(), predictions[i]));
+        Collections.sort(predictions);
+
+        if (predictions.size() > 0) {
+            for(int i = 0; i < 2 && i < predictions.size(); i++){
+                predictionsListLayout.addView(new PredictionView(getContext(), predictions.get(i)));
             }
         } else {
             if (stop != null) {

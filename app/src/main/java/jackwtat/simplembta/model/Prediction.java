@@ -63,6 +63,14 @@ public class Prediction implements Comparable<Prediction> {
         return departureTime;
     }
 
+    public Date getPredictionTime() {
+        if (arrivalTime != null) {
+            return arrivalTime;
+        } else {
+            return departureTime;
+        }
+    }
+
     public long getTimeUntilArrival() {
         if (arrivalTime != null) {
             return arrivalTime.getTime() - new Date().getTime();
@@ -73,6 +81,16 @@ public class Prediction implements Comparable<Prediction> {
 
     public long getTimeUntilDeparture() {
         if (departureTime != null) {
+            return departureTime.getTime() - new Date().getTime();
+        } else {
+            return -1;
+        }
+    }
+
+    public long getCountdownTime() {
+        if (arrivalTime != null) {
+            return arrivalTime.getTime() - new Date().getTime();
+        } else if (departureTime != null) {
             return departureTime.getTime() - new Date().getTime();
         } else {
             return -1;
@@ -186,15 +204,16 @@ public class Prediction implements Comparable<Prediction> {
 
     @Override
     public int compareTo(@NonNull Prediction otherPred) {
-        Date otherDeparture = otherPred.getDepartureTime();
-        if (departureTime == null && otherDeparture == null) {
+        Date otherTime = otherPred.getPredictionTime();
+
+        if (getPredictionTime() == null && otherTime == null) {
             return 0;
-        } else if (departureTime == null) {
+        } else if (getPredictionTime() == null) {
             return 1;
-        } else if (otherDeparture == null) {
+        } else if (otherTime == null) {
             return -1;
         } else {
-            return this.departureTime.compareTo(otherDeparture);
+            return getPredictionTime().compareTo(otherTime);
         }
     }
 }

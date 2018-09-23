@@ -33,15 +33,14 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
     class DataHolder implements Comparable<DataHolder> {
         Route route;
         Stop stop;
-        Prediction[] predictions;
+        List<Prediction> predictions;
         int direction;
 
         DataHolder(Route route, int direction) {
             this.route = route;
             this.direction = direction;
             this.stop = route.getNearestStop(direction);
-            this.predictions = route.getPredictions(direction)
-                    .toArray(new Prediction[route.getPredictions(direction).size()]);
+            this.predictions = route.getPredictions(direction);
         }
 
         @Override
@@ -69,7 +68,7 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
             return stop;
         }
 
-        public Prediction[] getPredictions() {
+        public List<Prediction> getPredictions() {
             return predictions;
         }
     }

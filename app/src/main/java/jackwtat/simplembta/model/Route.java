@@ -256,10 +256,10 @@ public class Route implements Comparable<Route> {
 
         if (prediction.getDirection() == INBOUND) {
             inboundPredictions.add(prediction);
-            hasLiveInboundPickUps = prediction.isLive() && prediction.willPickUpPassengers();
+            hasLiveInboundPickUps = hasLiveInboundPickUps || (prediction.isLive() && prediction.willPickUpPassengers());
         } else if (prediction.getDirection() == OUTBOUND) {
             outboundPredictions.add(prediction);
-            hasLiveOutboundPickUps = prediction.isLive() && prediction.willPickUpPassengers();
+            hasLiveOutboundPickUps = hasLiveOutboundPickUps || (prediction.isLive() && prediction.willPickUpPassengers());
         }
     }
 

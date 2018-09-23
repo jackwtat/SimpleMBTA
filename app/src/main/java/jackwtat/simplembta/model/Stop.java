@@ -66,6 +66,10 @@ public class Stop implements Comparable<Stop> {
             }
         }
 
+        if (this.id.equals("64") && id.equals("64000")) {
+            return true;
+        }
+
         return false;
     }
 

@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
 
     private HashMap<String, Route> routes;
     private HashMap<String, Stop> stops;
-    private HashMap<String, Prediction> predictions;
+    HashMap<String, Prediction> predictions;
 
     public PredictionsByLocationAsyncTask(String realTimeApiKey,
                                           Location location,
@@ -83,7 +84,9 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                 "include=route,trip,stop,schedule"
         };
 
-        predictions = PredictionsJsonParser.parse(realTimeClient.get("predictions", predictionsArgs));
+        predictions = PredictionsJsonParser
+                .parse(realTimeClient.get("predictions", predictionsArgs));
+        processLivePredictions(predictions.values());
 
         // Get non-live schedule data
         StringBuilder routeArgBuilder = new StringBuilder();
@@ -98,18 +101,11 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                 "filter[stop]=" + stopArgBuilder.toString(),
                 "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                 "filter[min_time]=" + DateUtil.getMbtaTime(0),
-                "filter[max_time]=" + DateUtil.getMbtaTime(2),
                 "include=route,trip,stop,prediction"
         };
 
-        for (Prediction schedule : SchedulesJsonParser.parse(
-                realTimeClient.get("schedules", scheduleArgs)).values()) {
-            if (!predictions.containsKey(schedule.getId())) {
-                predictions.put(schedule.getId(), schedule);
-            }
-        }
-
-        processPredictions();
+        processScheduledPredictions(SchedulesJsonParser
+                .parse(realTimeClient.get("schedules", scheduleArgs)).values());
 
         // Get all alerts for these routes
         for (Route route : routes.values()) {
@@ -143,11 +139,8 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         void onPostExecute(List<Route> routes);
     }
 
-    private void processPredictions() {
-        ArrayList<Prediction> sortedPredictions = new ArrayList<>(predictions.values());
-        Collections.sort(sortedPredictions);
-
-        for (Prediction prediction : sortedPredictions) {
+    private void processLivePredictions(Collection<Prediction> predictions) {
+        for (Prediction prediction : predictions) {
             if (!routes.containsKey(prediction.getRouteId())) {
                 routes.put(prediction.getRouteId(), prediction.getRoute());
             }
@@ -180,31 +173,68 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                     routes.get(routeId).setNearestStop(direction, stop);
                     routes.get(routeId).addPrediction(prediction);
 
-                    // If route does not have live pick-ups and this prediction is a live pick up
-                } else if (prediction.isLive() && prediction.willPickUpPassengers() &&
-                        !routes.get(routeId).hasLivePickUps(direction)) {
-                    routes.get(routeId).setNearestStop(direction, stop);
-                    routes.get(routeId).addPrediction(prediction);
-
                     // If this prediction's stop is closer than route's current nearest stop
                 } else if (stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0) {
-                    // And this prediction is live
-                    if (prediction.isLive() && prediction.willPickUpPassengers()) {
-                        routes.get(routeId).setNearestStop(direction, stop);
-                        routes.get(routeId).addPrediction(prediction);
-
-                        // Or this prediction is a pick-up and route does not have live pick ups
-                    }
-                    /*
-                    else if (prediction.willPickUpPassengers() && !routes.get(routeId).hasLivePickUps(direction)) {
-                        routes.get(routeId).setNearestStop(direction, stop);
-                        routes.get(routeId).addPrediction(prediction);
-                    }*/
+                    routes.get(routeId).setNearestStop(direction, stop);
+                    routes.get(routeId).addPrediction(prediction);
                 }
             } else if (routes.get(routeId).getNearestStop(direction) == null ||
                     (!routes.get(routeId).hasPredictions(direction) &&
                             routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
                 routes.get(routeId).setNearestStop(direction, stop);
+            }
+        }
+    }
+
+    private void processScheduledPredictions(Collection<Prediction> scheduledPredictions) {
+        for (Prediction prediction : scheduledPredictions) {
+            if (!predictions.containsKey(prediction.getId())) {
+                predictions.put(prediction.getId(), prediction);
+
+                if (!routes.containsKey(prediction.getRouteId())) {
+                    routes.put(prediction.getRouteId(), prediction.getRoute());
+                }
+
+                if (!stops.containsKey(prediction.getStopId())) {
+                    prediction.getStop().setDistance(location.getLatitude(), location.getLongitude());
+                    stops.put(prediction.getStopId(), prediction.getStop());
+                }
+
+                // Replace prediction's stop ID with its parent stop ID
+                for (Stop stop : stops.values()) {
+                    if (stop.isParentOf(prediction.getStopId())) {
+                        prediction.setStop(stop);
+                        break;
+                    }
+                }
+
+                // Add prediction to its respective route
+                int direction = prediction.getDirection();
+                String routeId = prediction.getRouteId();
+                Stop stop = stops.get(prediction.getStopId());
+
+                if (prediction.willPickUpPassengers()) {
+                    // If this prediction's stop is the route's nearest stop
+                    if (stop.equals(routes.get(routeId).getNearestStop(direction))) {
+                        routes.get(routeId).addPrediction(prediction);
+
+                        // If route does not have predictions in this prediction's direction
+                    } else if (!routes.get(routeId).hasPredictions(direction)) {
+                        routes.get(routeId).setNearestStop(direction, stop);
+                        routes.get(routeId).addPrediction(prediction);
+
+                        // If this prediction's stop is closer than route's current nearest stop
+                        // and the route doesn't already have live pick-ups in this direction
+                    } else if (stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0
+                            && !routes.get(routeId).hasLivePickUps(direction)) {
+                        routes.get(routeId).setNearestStop(direction, stop);
+                        routes.get(routeId).addPrediction(prediction);
+                    }
+                } else if (routes.get(routeId).getNearestStop(direction) == null ||
+                        (!routes.get(routeId).hasPredictions(direction) &&
+                                routes.get(routeId).getNearestStop(direction).compareTo(stop) > 0)) {
+                    routes.get(routeId).setNearestStop(direction, stop);
+                }
             }
         }
     }
