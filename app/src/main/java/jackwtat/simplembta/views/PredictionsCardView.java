@@ -73,26 +73,8 @@ public class PredictionsCardView extends LinearLayout {
                 abbreviate, false));
 
         if (predictions.length > 0) {
-            // Display the destinations and prediction times using PredictionViews
-            // Group predictions by destination in a HashMap
-            // Maintain the order of the destinations in an ArrayList
-            HashMap<String, ArrayList<Prediction>> pMap = new HashMap<>();
-            ArrayList<String> destList = new ArrayList<>();
-
-            // Add the predictions to the HashMap and destinations to the ArrayList
-            for (Prediction p : predictions) {
-                String dest = p.getDestination();
-                if (!destList.contains(dest)) {
-                    destList.add(dest);
-                    pMap.put(dest, new ArrayList<Prediction>());
-                }
-                pMap.get(dest).add(p);
-            }
-
-            // Create a new PredictionView for each group of predictions
-            for (String dest : destList) {
-                ArrayList<Prediction> pList = pMap.get(dest);
-                predictionsListLayout.addView(new PredictionView(getContext(), pList.get(0)));
+            for(int i = 0; i < 2 && i < predictions.length; i++){
+                predictionsListLayout.addView(new PredictionView(getContext(), predictions[i]));
             }
         } else {
             if (stop != null) {
