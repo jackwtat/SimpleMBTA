@@ -27,6 +27,7 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
 
     private HashMap<String, Route> routes;
     private HashMap<String, Stop> stops;
+    private HashMap<String, Prediction> predictions;
 
     public PredictionsByLocationAsyncTask(String realTimeApiKey,
                                           Location location,
@@ -82,14 +83,12 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                 "include=route,trip,stop,schedule"
         };
 
-        HashMap<String, Prediction> predictions = PredictionsJsonParser.parse(realTimeClient.get("predictions", predictionsArgs));
-        processPredictions(new ArrayList<>(predictions.values()));
+        predictions = PredictionsJsonParser.parse(realTimeClient.get("predictions", predictionsArgs));
 
         // Get non-live schedule data
         StringBuilder routeArgBuilder = new StringBuilder();
         for (Route route : routes.values()) {
-            if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL &&
-                    (!route.hasPredictions(Route.INBOUND) || !route.hasPredictions(Route.OUTBOUND))) {
+            if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
                 routeArgBuilder.append(route.getId()).append(",");
             }
         }
@@ -103,15 +102,14 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                 "include=route,trip,stop,prediction"
         };
 
-        HashMap<String, Prediction> schedules = SchedulesJsonParser.parse(realTimeClient.get("schedules", scheduleArgs));
-
-        for (String id : schedules.keySet()) {
-            if (predictions.containsKey(id)) {
-                schedules.remove(id);
+        for (Prediction schedule : SchedulesJsonParser.parse(
+                realTimeClient.get("schedules", scheduleArgs)).values()) {
+            if (!predictions.containsKey(schedule.getId())) {
+                predictions.put(schedule.getId(), schedule);
             }
         }
 
-        processPredictions(new ArrayList<>(schedules.values()));
+        processPredictions();
 
         // Get all alerts for these routes
         for (Route route : routes.values()) {
@@ -145,10 +143,11 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         void onPostExecute(List<Route> routes);
     }
 
-    private void processPredictions(ArrayList<Prediction> predictions) {
-        Collections.sort(predictions);
+    private void processPredictions() {
+        ArrayList<Prediction> sortedPredictions = new ArrayList<>(predictions.values());
+        Collections.sort(sortedPredictions);
 
-        for (Prediction prediction : predictions) {
+        for (Prediction prediction : sortedPredictions) {
             if (!routes.containsKey(prediction.getRouteId())) {
                 routes.put(prediction.getRouteId(), prediction.getRoute());
             }
@@ -195,10 +194,12 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                         routes.get(routeId).addPrediction(prediction);
 
                         // Or this prediction is a pick-up and route does not have live pick ups
-                    } else if (prediction.willPickUpPassengers() && !routes.get(routeId).hasLivePickUps(direction)) {
+                    }
+                    /*
+                    else if (prediction.willPickUpPassengers() && !routes.get(routeId).hasLivePickUps(direction)) {
                         routes.get(routeId).setNearestStop(direction, stop);
                         routes.get(routeId).addPrediction(prediction);
-                    }
+                    }*/
                 }
             } else if (routes.get(routeId).getNearestStop(direction) == null ||
                     (!routes.get(routeId).hasPredictions(direction) &&

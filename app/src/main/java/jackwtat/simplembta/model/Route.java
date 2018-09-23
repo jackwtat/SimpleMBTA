@@ -210,17 +210,14 @@ public class Route implements Comparable<Route> {
             if (nearestInboundStop == null || !nearestInboundStop.equals(stop)) {
                 inboundPredictions.clear();
                 hasLiveInboundPickUps = false;
+                nearestInboundStop = stop;
             }
-
-            nearestInboundStop = stop;
-
         } else if (direction == OUTBOUND) {
             if (nearestOutboundStop == null || !nearestOutboundStop.equals(stop)) {
                 outboundPredictions.clear();
+                hasLiveOutboundPickUps = false;
+                nearestOutboundStop = stop;
             }
-
-            nearestOutboundStop = stop;
-            hasLiveOutboundPickUps = false;
         }
     }
 
