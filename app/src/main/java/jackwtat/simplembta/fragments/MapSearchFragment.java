@@ -54,6 +54,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.adapters.PredictionsAdapter;
+import jackwtat.simplembta.clients.LocationClient;
+import jackwtat.simplembta.controllers.PredictionsByLocationAsyncTask;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
@@ -66,7 +68,23 @@ import jackwtat.simplembta.views.RouteNameView;
 public class MapSearchFragment extends Fragment implements Refreshable, OnMapReadyCallback {
     private final static String LOG_TAG = "MapSearchFragment";
 
+    // Time since last refresh before values can automatically refresh onResume, in milliseconds
     private final long AUTO_REFRESH_RATE = 45000;
+
+    // Time between location updates, in milliseconds
+    public final long LOCATION_UPDATE_INTERVAL = 500;
+
+    // Fastest time between location updates, in milliseconds
+    public final long FASTEST_LOCATION_INTERVAL = 250;
+
+    // Maximum age of location data, in milliseconds
+    public final long MAXIMUM_LOCATION_AGE = 15000;
+
+    // Time to wait between attempts to get recent location, in milliseconds
+    public final int LOCATION_ATTEMPT_WAIT_TIME = 250;
+
+    // Maximum number of attempts to get recent location
+    public final int MAXIMUM_LOCATION_ATTEMPTS = 10;
 
     private View rootView;
     private AppBarLayout appBarLayout;
@@ -82,12 +100,16 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
     private PredictionsAdapter predictionsAdapter;
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
+    private LocationClient locationClient;
 
     private boolean mapReady = false;
     private boolean mapCameraMoving = false;
     private Location lastLocation;
 
     private boolean autoScrollToTop = false;
+
+    private int locationAttempts;
+    private boolean userHasMovedMap;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -137,6 +159,69 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         lastLocation = new Location("");
         lastLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
         lastLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
+
+        locationClient = new LocationClient(getContext(), LOCATION_UPDATE_INTERVAL,
+                FASTEST_LOCATION_INTERVAL, new LocationClient.OnUpdateCompleteListener() {
+            @Override
+            public void onComplete(int result) {
+                switch (result) {
+                    case LocationClient.SUCCESS:
+                        lastLocation = locationClient.getLastLocation();
+
+                        if (new Date().getTime() - lastLocation.getTime() < MAXIMUM_LOCATION_AGE) {
+                            // If the location is new enough, okay to recenter map
+                            if (mapReady && !userHasMovedMap) {
+                                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(lastLocation.getLatitude(),
+                                                lastLocation.getLongitude()), 14));
+                            }
+
+                        } else if (locationAttempts < MAXIMUM_LOCATION_ATTEMPTS) {
+                            // If location is too old, wait and then try again
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    locationAttempts++;
+                                    locationClient.updateLocation();
+                                }
+                            }, LOCATION_ATTEMPT_WAIT_TIME);
+
+                        } else {
+                            // If location is still too old after many attempts, recenter map anyway
+                            if (mapReady && !userHasMovedMap) {
+                                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(lastLocation.getLatitude(),
+                                                lastLocation.getLongitude()), 14));
+                            }
+                        }
+                        locationClient.disconnect();
+
+                        errorManager.setNetworkError(false);
+                        errorManager.setLocationError(false);
+                        errorManager.setLocationPermissionDenied(false);
+
+                        break;
+
+                    case LocationClient.FAILURE:
+                        locationClient.disconnect();
+
+                        errorManager.setLocationError(true);
+
+                        refresh();
+
+                        break;
+
+                    case LocationClient.NO_PERMISSION:
+                        errorManager.setLocationPermissionDenied(true);
+
+                        locationClient.disconnect();
+
+                        refresh();
+
+                        break;
+                }
+            }
+        });
     }
 
     @Nullable
@@ -182,6 +267,9 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
 
         // Set recycler view layout
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+
+        // Disable scrolling while fragment is still initializing
+        recyclerView.setNestedScrollingEnabled(false);
 
         // Set recycler view predictions adapter
         predictionsAdapter = new PredictionsAdapter();
@@ -265,6 +353,9 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
                 });
             }
         }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
+
+        locationClient.connect();
+        locationClient.updateLocation();
     }
 
     @Override
@@ -279,6 +370,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         if (new Date().getTime() - controller.getTimeOfLastRefresh() >
                 controller.MAXIMUM_PREDICTION_AGE) {
             predictionsAdapter.clear();
+            recyclerView.setNestedScrollingEnabled(false);
         }
 
         refresh();
@@ -336,10 +428,7 @@ public class MapSearchFragment extends Fragment implements Refreshable, OnMapRea
         gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
             public void onCameraMoveStarted(int reason) {
-                if (reason == REASON_GESTURE ||
-                        reason == REASON_API_ANIMATION) {
-                    mapCameraMoving = true;
-                }
+                mapCameraMoving = true;
             }
         });
 

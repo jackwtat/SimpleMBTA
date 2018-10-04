@@ -2,6 +2,7 @@ package jackwtat.simplembta.controllers;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.List;
@@ -11,9 +12,6 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.clients.LocationClient;
-import jackwtat.simplembta.clients.LocationClient.OnUpdateSuccessListener;
-import jackwtat.simplembta.clients.LocationClient.OnUpdateFailedListener;
-import jackwtat.simplembta.clients.LocationClient.OnPermissionDeniedListener;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 
 /**
@@ -27,16 +25,16 @@ public class NearbyPredictionsController {
     public final long MINIMUM_REFRESH_INTERVAL = 30000;
 
     // Time between location updates, in milliseconds
-    public final long LOCATION_UPDATE_INTERVAL = 10000;
+    public final long LOCATION_UPDATE_INTERVAL = 1000;
 
     // Fastest time between location updates, in milliseconds
-    public final long FASTEST_LOCATION_INTERVAL = 2000;
-
-    // Maximum age of prediction, in milliseconds
-    public final long MAXIMUM_PREDICTION_AGE = 180000;
+    public final long FASTEST_LOCATION_INTERVAL = 500;
 
     // Maximum age of location data, in milliseconds
     public final long MAXIMUM_LOCATION_AGE = 15000;
+
+    // Maximum age of prediction, in milliseconds
+    public final long MAXIMUM_PREDICTION_AGE = 180000;
 
     // Time to wait between attempts to get recent location, in milliseconds
     public final int LOCATION_ATTEMPT_WAIT_TIME = 500;
@@ -77,46 +75,45 @@ public class NearbyPredictionsController {
         networkConnectivityClient = new NetworkConnectivityClient(context);
 
         locationClient = new LocationClient(context, LOCATION_UPDATE_INTERVAL,
-                FASTEST_LOCATION_INTERVAL);
-
-        locationClient.setOnUpdateSuccessListener(new OnUpdateSuccessListener() {
+                FASTEST_LOCATION_INTERVAL, new LocationClient.OnUpdateCompleteListener() {
             @Override
-            public void onUpdateSuccess(Location location) {
-                if (new Date().getTime() - location.getTime() < MAXIMUM_LOCATION_AGE) {
-                    // If the location is new enough, okay to query predictions
-                    asyncTask = new PredictionsByLocationAsyncTask(
-                            realTimeApiKey, location, asyncTaskCallbacks);
-                    asyncTask.execute();
+            public void onComplete(int result) {
+                switch (result) {
+                    case LocationClient.SUCCESS:
+                        Location location = locationClient.getLastLocation();
 
-                } else if (locationAttempts < MAXIMUM_LOCATION_ATTEMPTS) {
-                    // If location is too old, wait and then try again
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            locationAttempts++;
-                            locationClient.getLastLocation();
+                        if (new Date().getTime() - location.getTime() < MAXIMUM_LOCATION_AGE) {
+                            // If the location is new enough, okay to query predictions
+                            asyncTask = new PredictionsByLocationAsyncTask(
+                                    realTimeApiKey, location, asyncTaskCallbacks);
+                            asyncTask.execute();
+
+                        } else if (locationAttempts < MAXIMUM_LOCATION_ATTEMPTS) {
+                            // If location is too old, wait and then try again
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    locationAttempts++;
+                                    locationClient.updateLocation();
+                                }
+                            }, LOCATION_ATTEMPT_WAIT_TIME);
+
+                        } else {
+                            // If location is still too old after many attempts, query predictions anyway
+                            asyncTask = new PredictionsByLocationAsyncTask(
+                                    realTimeApiKey, location, asyncTaskCallbacks);
+                            asyncTask.execute();
                         }
-                    }, LOCATION_ATTEMPT_WAIT_TIME);
+                        break;
 
-                } else {
-                    // If location is still too old after many attempts, query predictions anyway
-                    asyncTask = new PredictionsByLocationAsyncTask(
-                            realTimeApiKey, location, asyncTaskCallbacks);
-                    asyncTask.execute();
+                    case LocationClient.FAILURE:
+                        onLocationUpdateFailed();
+                        break;
+
+                    case LocationClient.NO_PERMISSION:
+                        onLocationPermissionDenied();
+                        break;
                 }
-            }
-        });
-
-        locationClient.setOnUpdateFailedListener(new OnUpdateFailedListener() {
-            @Override
-            public void onUpdateFailed() {
-                onLocationUpdateFailed();
-            }
-        });
-        locationClient.setOnPermissionDeniedListener(new OnPermissionDeniedListener() {
-            @Override
-            public void onPermissionDenied() {
-                onLocationPermissionDenied();
             }
         });
     }
@@ -174,7 +171,7 @@ public class NearbyPredictionsController {
             callbacks.onNetworkError();
         } else {
             locationAttempts = 0;
-            locationClient.getLastLocation();
+            locationClient.updateLocation();
         }
     }
 

@@ -12,17 +12,14 @@ import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
  */
 
 public class PredictionsPagerAdapter extends FragmentPagerAdapter {
-    final private int PAGE_COUNT = 2;
-    final private String[] TAB_TITLES = {"Nearby", "Map"};
+    final private int PAGE_COUNT = 1;
+    final private String[] TAB_TITLES = {"Map"};
 
     private Fragment[] fragments = new Fragment[2];
 
-    public PredictionsPagerAdapter(FragmentManager fm,
-                                   NearbyPredictionsFragment nearbyPredictionsFragment,
-                                   MapSearchFragment mapSearchFragment) {
+    public PredictionsPagerAdapter(FragmentManager fm, MapSearchFragment mapSearchFragment) {
         super(fm);
-        fragments[0] = nearbyPredictionsFragment;
-        fragments[1] = mapSearchFragment;
+        fragments[0] = mapSearchFragment;
     }
 
     @Override

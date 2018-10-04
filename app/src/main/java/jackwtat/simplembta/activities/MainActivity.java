@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager(),
-                new NearbyPredictionsFragment(), new MapSearchFragment());
+                new MapSearchFragment());
 
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
