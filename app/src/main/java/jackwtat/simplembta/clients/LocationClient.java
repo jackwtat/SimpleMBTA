@@ -26,17 +26,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class LocationClient {
     private final String LOG_TAG = "LocationClient";
 
+    public final static int SUCCESS = 0;
+    public final static int FAILURE = 1;
+    public final static int NO_PERMISSION = 2;
+
     private Context context;
     private FusedLocationProviderClient locationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-
-    private OnUpdateSuccessListener onUpdateSuccessListener;
-    private OnUpdateFailedListener onUpdateFailedListener;
-    private OnPermissionDeniedListener onPermissionDeniedListener;
+    private Location lastLocation;
+    private OnUpdateCompleteListener onUpdateCompleteListener;
 
     @SuppressLint("RestrictedApi")
-    public LocationClient(Context context, long updateInterval, long fastestInterval) {
+    public LocationClient(Context context, long updateInterval, long fastestUpdateInterval,
+                          OnUpdateCompleteListener onUpdateCompleteListener) {
         this.context = context;
 
         locationClient = LocationServices.getFusedLocationProviderClient(context);
@@ -44,7 +47,7 @@ public class LocationClient {
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(updateInterval);
-        locationRequest.setFastestInterval(fastestInterval);
+        locationRequest.setFastestInterval(fastestUpdateInterval);
 
         locationCallback = new LocationCallback() {
             @Override
@@ -59,9 +62,13 @@ public class LocationClient {
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(context);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        this.onUpdateCompleteListener = onUpdateCompleteListener;
+
+        lastLocation = null;
     }
 
-    public void getLastLocation() {
+    public void updateLocation() {
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationClient.getLastLocation()
@@ -69,21 +76,28 @@ public class LocationClient {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                onUpdateSuccessListener.onUpdateSuccess(location);
+                                lastLocation = location;
+                                onUpdateCompleteListener.onComplete(SUCCESS);
                             } else {
-                                onUpdateFailedListener.onUpdateFailed();
+                                lastLocation = null;
+                                onUpdateCompleteListener.onComplete(FAILURE);
                             }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            onUpdateFailedListener.onUpdateFailed();
+                            lastLocation = null;
+                            onUpdateCompleteListener.onComplete(FAILURE);
                         }
                     });
         } else {
-            onPermissionDeniedListener.onPermissionDenied();
+            onUpdateCompleteListener.onComplete(NO_PERMISSION);
         }
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
     }
 
     public void connect() {
@@ -100,30 +114,7 @@ public class LocationClient {
         locationClient.removeLocationUpdates(locationCallback);
     }
 
-    // Register OnUpdateSuccessListener with this service
-    public void setOnUpdateSuccessListener(OnUpdateSuccessListener listener) {
-        onUpdateSuccessListener = listener;
-    }
-
-    // Register OnLocationErrorListener with this service
-    public void setOnUpdateFailedListener(OnUpdateFailedListener listener) {
-        onUpdateFailedListener = listener;
-    }
-
-    // Register OnLocationPermissionListener with this service
-    public void setOnPermissionDeniedListener(OnPermissionDeniedListener listener) {
-        onPermissionDeniedListener = listener;
-    }
-
-    public interface OnUpdateSuccessListener {
-        void onUpdateSuccess(Location location);
-    }
-
-    public interface OnUpdateFailedListener {
-        void onUpdateFailed();
-    }
-
-    public interface OnPermissionDeniedListener {
-        void onPermissionDenied();
+    public interface OnUpdateCompleteListener {
+        void onComplete(int result);
     }
 }
