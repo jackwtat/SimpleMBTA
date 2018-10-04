@@ -101,6 +101,7 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
                 "filter[stop]=" + stopArgBuilder.toString(),
                 "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                 "filter[min_time]=" + DateUtil.getMbtaTime(0),
+                "filter[max_time]=" + DateUtil.getMbtaTime(4),
                 "include=route,trip,stop,prediction"
         };
 
