@@ -91,6 +91,8 @@ public class PredictionsByLocationAsyncTask extends AsyncTask<Void, Void, List<R
         // Get non-live schedule data
         StringBuilder routeArgBuilder = new StringBuilder();
         for (Route route : routes.values()) {
+            // Light rail and heavy rail (Green, Red, Blue, and Orange Lines) on-time performances
+            // are too erratic and unreliable for scheduled predictions to be reliable'
             if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
                 routeArgBuilder.append(route.getId()).append(",");
             }
