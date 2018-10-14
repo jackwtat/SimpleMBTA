@@ -1,22 +1,20 @@
 package jackwtat.simplembta.model;
 
+import android.location.Location;
 import android.support.annotation.NonNull;
 
-public class Stop implements Comparable<Stop> {
-    private String id;
-    private String name;
-    private String[] childIds;
-    private double latitude;
-    private double longitude;
-    private double distance;
+import java.io.Serializable;
+
+public class Stop implements Comparable<Stop>, Serializable {
+    String id;
+    String name = "null";
+    String[] childIds = new String[0];
+    double latitude = 0.0;
+    double longitude = 0.0;
+    double distanceFromOrigin = 0.0;
 
     public Stop(String id) {
         this.id = id;
-        name = "null";
-        childIds = new String[0];
-        latitude = 0.0;
-        longitude = 0.0;
-        distance = 0.0;
     }
 
     public String getId() {
@@ -27,16 +25,15 @@ public class Stop implements Comparable<Stop> {
         return name;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public Location getLocation() {
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return location;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public double getDistance() {
-        return distance;
+    public double getDistanceFromOrigin() {
+        return distanceFromOrigin;
     }
 
     public String[] getChildIds() {
@@ -51,12 +48,13 @@ public class Stop implements Comparable<Stop> {
         this.childIds = childIds;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setLocation(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setDistanceFromOrigin(Location origin) {
+        distanceFromOrigin = getLocation().distanceTo(origin);
     }
 
     public boolean isParentOf(String id) {
@@ -73,20 +71,12 @@ public class Stop implements Comparable<Stop> {
         return false;
     }
 
-    public void setDistance(double originLat, double originLon) {
-        final double MILES_PER_LAT = 69;
-        final double MILES_PER_LON = 69.172;
-
-        distance = Math.sqrt(Math.pow((latitude - originLat) * MILES_PER_LAT, 2) +
-                Math.pow((longitude - originLon) * MILES_PER_LON, 2));
-    }
-
     @Override
     public int compareTo(@NonNull Stop otherStop) {
-        if (this.distance == otherStop.getDistance()) {
-            return this.id.compareTo(otherStop.getId());
+        if (distanceFromOrigin == otherStop.getDistanceFromOrigin()) {
+            return id.compareTo(otherStop.getId());
         } else {
-            return Double.compare(this.distance, otherStop.getDistance());
+            return Double.compare(distanceFromOrigin, otherStop.getDistanceFromOrigin());
         }
     }
 

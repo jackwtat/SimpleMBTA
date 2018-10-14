@@ -7,23 +7,19 @@ import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.asyncTasks.MapSearchPredictionsAsyncTask;
+import jackwtat.simplembta.fragments.MapSearchFragment;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 
 public class MapSearchController {
     private final String LOG_TAG = "MSController";
 
-    // Time since last refresh before values can automatically refresh onResume, in milliseconds
-    public final long MINIMUM_REFRESH_INTERVAL = 30000;
-
-    // Maximum age of prediction, in milliseconds
-    public final long MAXIMUM_PREDICTION_AGE = 180000;
-
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
     private Callbacks callbacks;
-    private PredictionsByLocationAsyncTask asyncTask;
-    private PredictionsByLocationAsyncTask.Callbacks asyncTaskCallbacks;
+    private MapSearchPredictionsAsyncTask asyncTask;
+    private MapSearchPredictionsAsyncTask.Callbacks asyncTaskCallbacks;
 
     private Location location;
     private boolean refreshing;
@@ -34,7 +30,7 @@ public class MapSearchController {
 
         this.callbacks = controllerCallbacks;
 
-        asyncTaskCallbacks = new PredictionsByLocationAsyncTask.Callbacks() {
+        asyncTaskCallbacks = new MapSearchPredictionsAsyncTask.Callbacks() {
             @Override
             public void onPreExecute() {
                 callbacks.onProgressUpdate();
@@ -53,7 +49,11 @@ public class MapSearchController {
 
     public void update(Location location) {
         if (!refreshing && (lastRefreshed == null ||
-                new Date().getTime() - lastRefreshed.getTime() >= MINIMUM_REFRESH_INTERVAL)) {
+                new Date().getTime() - lastRefreshed.getTime() >
+                        MapSearchFragment.MINIMUM_REFRESH_INTERVAL)) {
+            if (asyncTask != null) {
+                asyncTask.cancel(true);
+            }
 
             this.location = location;
             getPredictions();
@@ -61,10 +61,12 @@ public class MapSearchController {
     }
 
     public void forceUpdate(Location location) {
-        if (!refreshing) {
-            this.location = location;
-            getPredictions();
+        if (asyncTask != null) {
+            asyncTask.cancel(true);
         }
+
+        this.location = location;
+        getPredictions();
     }
 
     public void cancel() {
@@ -96,7 +98,11 @@ public class MapSearchController {
             refreshing = false;
             callbacks.onNetworkError();
         } else {
-            asyncTask = new PredictionsByLocationAsyncTask(
+            if (asyncTask != null) {
+                asyncTask.cancel(true);
+            }
+
+            asyncTask = new MapSearchPredictionsAsyncTask(
                     realTimeApiKey, location, asyncTaskCallbacks);
             asyncTask.execute();
         }

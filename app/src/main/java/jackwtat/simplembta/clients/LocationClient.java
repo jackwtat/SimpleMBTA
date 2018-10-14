@@ -35,11 +35,11 @@ public class LocationClient {
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private Location lastLocation;
-    private OnUpdateCompleteListener onUpdateCompleteListener;
+    private OnLocationUpdateCompleteListener onLocationUpdateCompleteListener;
 
     @SuppressLint("RestrictedApi")
     public LocationClient(Context context, long updateInterval, long fastestUpdateInterval,
-                          OnUpdateCompleteListener onUpdateCompleteListener) {
+                          OnLocationUpdateCompleteListener onLocationUpdateCompleteListener) {
         this.context = context;
 
         locationClient = LocationServices.getFusedLocationProviderClient(context);
@@ -63,7 +63,7 @@ public class LocationClient {
         SettingsClient settingsClient = LocationServices.getSettingsClient(context);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        this.onUpdateCompleteListener = onUpdateCompleteListener;
+        this.onLocationUpdateCompleteListener = onLocationUpdateCompleteListener;
 
         lastLocation = null;
     }
@@ -77,10 +77,10 @@ public class LocationClient {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 lastLocation = location;
-                                onUpdateCompleteListener.onComplete(SUCCESS);
+                                onLocationUpdateCompleteListener.onLocationUpdateComplete(SUCCESS);
                             } else {
                                 lastLocation = null;
-                                onUpdateCompleteListener.onComplete(FAILURE);
+                                onLocationUpdateCompleteListener.onLocationUpdateComplete(FAILURE);
                             }
                         }
                     })
@@ -88,11 +88,11 @@ public class LocationClient {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             lastLocation = null;
-                            onUpdateCompleteListener.onComplete(FAILURE);
+                            onLocationUpdateCompleteListener.onLocationUpdateComplete(FAILURE);
                         }
                     });
         } else {
-            onUpdateCompleteListener.onComplete(NO_PERMISSION);
+            onLocationUpdateCompleteListener.onLocationUpdateComplete(NO_PERMISSION);
         }
     }
 
@@ -114,7 +114,7 @@ public class LocationClient {
         locationClient.removeLocationUpdates(locationCallback);
     }
 
-    public interface OnUpdateCompleteListener {
-        void onComplete(int result);
+    public interface OnLocationUpdateCompleteListener {
+        void onLocationUpdateComplete(int result);
     }
 }

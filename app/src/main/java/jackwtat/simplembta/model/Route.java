@@ -3,14 +3,15 @@ package jackwtat.simplembta.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import jackwtat.simplembta.R;
 
-public class Route implements Comparable<Route> {
+public class Route implements Comparable<Route>, Serializable {
     public static final int INBOUND = 1;
     public static final int OUTBOUND = 0;
-    public static final int NULL_DIRECTION = -1;
+    public static final int NULL_DIRECTION = 1;
 
     public static final int LIGHT_RAIL = 0;
     public static final int HEAVY_RAIL = 1;
@@ -235,6 +236,26 @@ public class Route implements Comparable<Route> {
         }
     }
 
+    public boolean hasPickUps(int direction) {
+        if (direction == INBOUND) {
+            for (Prediction p : inboundPredictions) {
+                if (p.willPickUpPassengers()) {
+                    return true;
+                }
+            }
+            return false;
+        } else if (direction == OUTBOUND) {
+            for (Prediction p : outboundPredictions) {
+                if (p.willPickUpPassengers()) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     public boolean hasLivePickUps(int direction) {
         if (direction == INBOUND) {
             return hasLiveInboundPickUps;
@@ -289,6 +310,27 @@ public class Route implements Comparable<Route> {
         else if (id.equals("441442") && (otherRouteId.equals("441") || otherRouteId.equals("442")))
             return true;
         else return false;
+    }
+
+    public boolean hasUrgentServiceAlerts() {
+        for (ServiceAlert serviceAlert : serviceAlerts) {
+            if (serviceAlert.isActive() &&
+                    (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isSilverLine(String routeId) {
+        return routeId.equals("741") ||
+                routeId.equals("742") ||
+                routeId.equals("743") ||
+                routeId.equals("746") ||
+                routeId.equals("749") ||
+                routeId.equals("751");
     }
 
     @Override

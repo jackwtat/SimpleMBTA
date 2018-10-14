@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import jackwtat.simplembta.fragments.MapSearchFragment;
-import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
 
 /**
  * Created by jackw on 8/21/2017.

@@ -1,0 +1,65 @@
+package jackwtat.simplembta.model;
+
+import android.support.annotation.NonNull;
+
+public class Shape implements Comparable<Shape> {
+    String id;
+    String polyline = "";
+    String routeId = "";
+    int direction = 1;
+    int priority = -1;
+    Stop[] stops = new Stop[0];
+
+    public Shape(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getPolyline() {
+        return polyline;
+    }
+
+    public String getRouteId() {
+        return routeId;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public Stop[] getStops() {
+        return stops;
+    }
+
+    public void setPolyline(String polyline) {
+        this.polyline = polyline;
+    }
+
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public void setStops(Stop[] stops) {
+        this.stops = stops;
+    }
+
+    @Override
+    public int compareTo(@NonNull Shape shape) {
+        return this.priority - shape.getPriority();
+    }
+}

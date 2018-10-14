@@ -11,6 +11,10 @@
     <!-- Service Alerts -->
     <string name="service_advisory">Service Advisory</string>
     <string name="service_alert">Service Alert</string>
+    <string name="alert">Alert</string>
+    <string name="alerts">Alerts</string>
+    <string name="advisory">Advisory</string>
+    <string name="advisories">Advisories</string>
 
     <!-- Status Messages -->
     <string name="getting_location">Getting Location&#8230;</string>
@@ -24,6 +28,7 @@
     <string name="network_error_text">Unable to connect to the internet</string>
     <string name="no_nearby_services">No MBTA services near this location</string>
     <string name="no_nearby_predictions">No current predictions near this location</string>
+    <string name="no_predictions_this_stop">No current predictions at this stop</string>
     <string name="no_current_predictions">No current predictions</string>
 
     <!-- Route Names -->
@@ -100,4 +105,5 @@
     <string name="track">Boarding On Track</string>
     <string name="min">min</string>
     <string name="live">LIVE</string>
+    <string name="drop_off">DROP-OFF ONLY</string>
 </resources>

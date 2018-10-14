@@ -2,6 +2,7 @@ package jackwtat.simplembta.model;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * Created by jackw on 12/21/2017.
  */
 
-public class ServiceAlert implements Comparable<ServiceAlert> {
+public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
 
     public enum Lifecycle {
         NEW(0),
@@ -140,7 +141,7 @@ public class ServiceAlert implements Comparable<ServiceAlert> {
         }
     }
 
-    private class ActivePeriod {
+    private class ActivePeriod implements Serializable {
         private Date startTime;
         private Date endTime;
 

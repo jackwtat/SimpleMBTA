@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,10 +19,10 @@ import jackwtat.simplembta.model.ServiceAlert;
  * Created by jackw on 3/14/2018.
  */
 
-public class AlertsListAdapter extends ArrayAdapter<ServiceAlert> {
+public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
     final private String LOG_TAG = "ServiceAlertListAdapter";
 
-    public AlertsListAdapter(
+    public ServiceAlertsListAdapter(
             @NonNull Context context, ArrayList<ServiceAlert> alerts) {
         super(context, 0, alerts);
     }
@@ -46,6 +47,8 @@ public class AlertsListAdapter extends ArrayAdapter<ServiceAlert> {
 
         TextView header = listItemView.findViewById(R.id.alert_header_text_view);
         TextView body = listItemView.findViewById(R.id.alert_body_text_view);
+        ImageView alertIcon = listItemView.findViewById(R.id.service_alert_icon);
+        ImageView advisoryIcon = listItemView.findViewById(R.id.service_advisory_icon);
 
         String headerText = getContext().getResources().getString(
                 getContext().getResources().getIdentifier(
@@ -61,6 +64,15 @@ public class AlertsListAdapter extends ArrayAdapter<ServiceAlert> {
 
         header.setText(headerBuilder.toString());
         body.setText(alert.getHeader());
+
+        if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+            alertIcon.setVisibility(View.VISIBLE);
+            advisoryIcon.setVisibility(View.GONE);
+        } else {
+            alertIcon.setVisibility(View.GONE);
+            advisoryIcon.setVisibility(View.VISIBLE);
+        }
 
         return listItemView;
     }

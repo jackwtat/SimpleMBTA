@@ -30,5 +30,6 @@
     <color name="ServiceAlert_Urgent">#da291c</color>
     <color name="ServiceAlert_Advisory">#da291c</color>
     <color name="livePrediction">#3F51B5</color>
+    <color name="dropOffPrediction">#da291c</color>
     <color name="Transparent">#00FFFFFF</color>
 </resources>

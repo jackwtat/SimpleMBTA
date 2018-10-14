@@ -1,5 +1,6 @@
 package jackwtat.simplembta.utilities;
 
+import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,9 +17,9 @@ import jackwtat.simplembta.model.Stop;
 public class PredictionsJsonParser {
     public static final String LOG_TAG = "PredictionsJsonParser";
 
-    public static HashMap<String, Prediction> parse(String jsonResponse) {
+    public static Prediction[] parse(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
-            return new HashMap<>();
+            return new Prediction[0];
         }
 
         HashMap<String, Prediction> predictions = new HashMap<>();
@@ -68,11 +69,17 @@ public class PredictionsJsonParser {
 
                         JSONObject jStop = includedData.get("stop" + stopId);
                         if (jStop != null) {
+                            // Get stop attributes
                             JSONObject jStopAttr = jStop.getJSONObject("attributes");
 
+                            // Get stop name
                             stop.setName(jStopAttr.getString("name"));
-                            stop.setLatitude(jStopAttr.getDouble("latitude"));
-                            stop.setLongitude(jStopAttr.getDouble("longitude"));
+
+                            // Get stop location
+                            Location location = new Location("");
+                            location.setLatitude(jStopAttr.getDouble("latitude"));
+                            location.setLongitude(jStopAttr.getDouble("longitude"));
+                            stop.setLocation(location);
                         }
                         prediction.setStop(stop);
 
@@ -130,7 +137,8 @@ public class PredictionsJsonParser {
                             prediction.setTripName(jTripAttr.getString("name"));
                         }
 
-                        if (!predictions.containsKey(id) || prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
+                        if (!predictions.containsKey(id) ||
+                                prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
                             predictions.put(id, prediction);
                         }
                     } catch (JSONException e) {
@@ -144,7 +152,7 @@ public class PredictionsJsonParser {
             Log.e(LOG_TAG, "Unable to parse Predictions JSON response");
         }
 
-        return predictions;
+        return predictions.values().toArray(new Prediction[predictions.size()]);
     }
 
     private static HashMap<String, JSONObject> jsonArrayToHashMap(JSONArray jRelated) {

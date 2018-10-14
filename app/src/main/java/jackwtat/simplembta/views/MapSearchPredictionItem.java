@@ -10,18 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.ServiceAlert;
 
-public class PredictionsCardView extends LinearLayout {
+public class MapSearchPredictionItem extends LinearLayout {
     View rootView;
     LinearLayout routeLayout;
     LinearLayout predictionsListLayout;
@@ -30,22 +27,35 @@ public class PredictionsCardView extends LinearLayout {
     ImageView serviceAlertIndicatorView;
     ImageView serviceAdvisoryIndicatorView;
 
-    public PredictionsCardView(@NonNull Context context) {
+    public MapSearchPredictionItem(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public PredictionsCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MapSearchPredictionItem(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public PredictionsCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MapSearchPredictionItem(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    public void setPredictions(Route route, Stop stop, List<Prediction> predictions) {
+    public void setPredictions(Route route, Stop stop, List<Prediction> predictions, long maxTime) {
+        ArrayList<Prediction> pickUps = new ArrayList<>();
+
+        // Find only predictions that pick up passengers
+        for (Prediction p : predictions) {
+            if (p.getPredictionTime() != null &&
+                    p.willPickUpPassengers() &&
+                    p.getCountdownTime() <= maxTime) {
+                pickUps.add(p);
+            }
+        }
+
+        Collections.sort(pickUps);
+
         // Set the stop name
         if (stop != null) {
             stopNameView.setText(stop.getName());
@@ -53,13 +63,13 @@ public class PredictionsCardView extends LinearLayout {
         }
 
         // Set the indicator for service alerts
-        for (ServiceAlert alert : route.getServiceAlerts()) {
-            serviceAdvisoryIndicatorView.setVisibility(View.VISIBLE);
-            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+        if (route.getServiceAlerts().size() > 0) {
+            if (route.hasUrgentServiceAlerts()) {
                 serviceAlertIndicatorView.setVisibility(View.VISIBLE);
                 serviceAdvisoryIndicatorView.setVisibility(View.GONE);
-                break;
+            } else {
+                serviceAlertIndicatorView.setVisibility(View.GONE);
+                serviceAdvisoryIndicatorView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -75,11 +85,35 @@ public class PredictionsCardView extends LinearLayout {
                 RouteNameView.ROUNDED_BACKGROUND,
                 abbreviate, false));
 
-        Collections.sort(predictions);
+        if (pickUps.size() > 0) {
+            int direction = pickUps.get(0).getDirection();
 
-        if (predictions.size() > 0) {
-            for(int i = 0; i < 2 && i < predictions.size(); i++){
-                predictionsListLayout.addView(new PredictionView(getContext(), predictions.get(i)));
+            // For Red Line, add first prediction for each destination
+            if (route.getId().equals("Red")) {
+                ArrayList<String> destinations = new ArrayList<>();
+                for (Prediction p : pickUps) {
+                    if (!destinations.contains(p.getDestination())) {
+                        predictionsListLayout.addView(new IndividualPredictionItem(getContext(), p));
+                        destinations.add(p.getDestination());
+                    }
+                }
+
+                // For buses, add first live prediction or scheduled prediction if there are no live predictions
+            } else if (route.getMode() == Route.BUS) {
+                if (route.hasLivePickUps(direction)) {
+                    for (Prediction p : pickUps) {
+                        if (p.isLive()) {
+                            predictionsListLayout.addView(new IndividualPredictionItem(getContext(), p));
+                            break;
+                        }
+                    }
+                } else {
+                    predictionsListLayout.addView(new IndividualPredictionItem(getContext(), pickUps.get(0)));
+                }
+
+                // For all other routes, add first prediction
+            } else {
+                predictionsListLayout.addView(new IndividualPredictionItem(getContext(), pickUps.get(0)));
             }
         } else {
             if (stop != null) {
@@ -102,7 +136,7 @@ public class PredictionsCardView extends LinearLayout {
     }
 
     private void init(Context context) {
-        rootView = inflate(context, R.layout.predictions_card_view, this);
+        rootView = inflate(context, R.layout.item_map_search_prediction, this);
 
         routeLayout = rootView.findViewById(R.id.route_layout);
         predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
@@ -110,6 +144,5 @@ public class PredictionsCardView extends LinearLayout {
         stopNameView = rootView.findViewById(R.id.stop_text_view);
         serviceAlertIndicatorView = rootView.findViewById(R.id.service_alert_image_view);
         serviceAdvisoryIndicatorView = rootView.findViewById(R.id.service_advisory_image_view);
-
     }
 }

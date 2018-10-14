@@ -57,42 +57,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="50dp"
                 android:gravity="center"
                 android:text="@string/no_nearby_services"
                 android:textSize="@dimen/small_header_text_size"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/map_return_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="20dp"
-                android:clipToPadding="false"
-                android:elevation="2dp"
-                android:orientation="horizontal"
-                android:paddingBottom="4dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="4dp"
-                android:paddingTop="4dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/return_to_map"
-                    android:textColor="@color/HighlightedText"
-                    android:textSize="@dimen/body_text_size" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_return_to_top_arrow" />
-            </LinearLayout>
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

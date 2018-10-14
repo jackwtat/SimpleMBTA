@@ -1,16 +1,13 @@
 package jackwtat.simplembta.activities;
 
 import android.content.pm.PackageManager;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,8 +15,6 @@ import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
-import jackwtat.simplembta.fragments.NearbyPredictionsFragment;
-import jackwtat.simplembta.fragments.Refreshable;
 
 
 public class MainActivity extends AppCompatActivity implements ErrorManager.OnErrorChangedListener {
@@ -51,8 +46,10 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         viewPager.setPageMargin((int) (getResources().getDimension(R.dimen.fragment_pager_spacing) *
                 getResources().getDisplayMetrics().density));
 
+        /*
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        */
 
         errorManager = ErrorManager.getErrorManager();
         errorManager.registerOnErrorChangeListener(this);
@@ -75,22 +72,6 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                Refreshable f = (Refreshable) predictionsPagerAdapter.getItem(
-                        viewPager.getCurrentItem());
-                try {
-                    f.forceRefresh();
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, "Unable to refresh fragment " + item.getItemId());
-                }
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

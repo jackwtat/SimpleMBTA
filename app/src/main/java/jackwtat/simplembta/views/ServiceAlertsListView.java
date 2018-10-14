@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.AlertsListAdapter;
+import jackwtat.simplembta.adapters.ServiceAlertsListAdapter;
 import jackwtat.simplembta.model.ServiceAlert;
 
-public class AlertsListView extends RelativeLayout {
+public class ServiceAlertsListView extends RelativeLayout {
     View rootView;
     ListView alertsListView;
     LinearLayout noAlertsTextView;
@@ -25,19 +25,19 @@ public class AlertsListView extends RelativeLayout {
     ImageView listUpArrow;
     ArrayAdapter<ServiceAlert> alertsArrayAdapter;
 
-    public AlertsListView(Context context) {
+    public ServiceAlertsListView(Context context) {
         super(context);
     }
 
-    public AlertsListView(Context context, AttributeSet attrs) {
+    public ServiceAlertsListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AlertsListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ServiceAlertsListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public AlertsListView(Context context, List<ServiceAlert> alerts) {
+    public ServiceAlertsListView(Context context, List<ServiceAlert> alerts) {
         super(context);
         init(context, alerts);
     }
@@ -50,7 +50,7 @@ public class AlertsListView extends RelativeLayout {
         listUpArrow = rootView.findViewById(R.id.alerts_list_up_arrow);
 
         if (alerts.size() > 0) {
-            alertsArrayAdapter = new AlertsListAdapter(context, new ArrayList<ServiceAlert>());
+            alertsArrayAdapter = new ServiceAlertsListAdapter(context, new ArrayList<ServiceAlert>());
             alertsArrayAdapter.addAll(alerts);
             alertsListView.setAdapter(alertsArrayAdapter);
 

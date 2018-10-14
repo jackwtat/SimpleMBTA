@@ -12,25 +12,26 @@ import java.util.List;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.views.PredictionsCardView;
+import jackwtat.simplembta.views.MapSearchPredictionItem;
 
-public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.ViewHolder> {
-    public static final String LOG_TAG = "PredictionsAdapter";
+public class MapSearchRecyclerViewAdapter
+        extends RecyclerView.Adapter<MapSearchRecyclerViewAdapter.ViewHolder> {
+    public static final String LOG_TAG = "MapSearchRecyclerViewAdapter";
 
     private ArrayList<DataHolder> dataHolders;
 
     private OnItemClickListener onItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        PredictionsCardView predictionsCardView;
+        MapSearchPredictionItem predictionView;
 
-        ViewHolder(PredictionsCardView v) {
+        ViewHolder(MapSearchPredictionItem v) {
             super(v);
-            predictionsCardView = v;
+            predictionView = v;
         }
     }
 
-    class DataHolder implements Comparable<DataHolder> {
+    public class DataHolder implements Comparable<DataHolder> {
         Route route;
         Stop stop;
         List<Prediction> predictions;
@@ -71,33 +72,34 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         public List<Prediction> getPredictions() {
             return predictions;
         }
+
+        public int getDirection() {
+            return direction;
+        }
     }
 
-    public PredictionsAdapter() {
+    public MapSearchRecyclerViewAdapter() {
         dataHolders = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public PredictionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        PredictionsCardView v = new PredictionsCardView(parent.getContext());
-
-        ViewHolder vh = new ViewHolder(v);
-
-        return vh;
+    public MapSearchRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolder(new MapSearchPredictionItem(parent.getContext()));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PredictionsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MapSearchRecyclerViewAdapter.ViewHolder holder, int position) {
         final int i = position;
 
-        holder.predictionsCardView.clear();
-        holder.predictionsCardView.setPredictions(
+        holder.predictionView.clear();
+        holder.predictionView.setPredictions(
                 dataHolders.get(i).route,
                 dataHolders.get(i).stop,
-                dataHolders.get(i).predictions);
+                dataHolders.get(i).predictions,
+                180 * 60000);
 
-        holder.predictionsCardView.setOnClickListener(new View.OnClickListener() {
+        holder.predictionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
@@ -116,10 +118,6 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         return dataHolders.get(position);
     }
 
-    public Route getRoute(int position) {
-        return dataHolders.get(position).getRoute();
-    }
-
     public void setData(List<DataHolder> dataHolders) {
         this.dataHolders.clear();
         this.dataHolders.addAll(dataHolders);
@@ -130,18 +128,18 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         dataHolders.clear();
 
         for (Route route : routes) {
-            if (route.hasPredictions()) {
-                if (route.getPredictions(Route.INBOUND).size() > 0) {
+            if (route.hasPickUps(Route.INBOUND) || route.hasPickUps(Route.OUTBOUND)) {
+                if (route.hasPickUps(Route.INBOUND)) {
                     dataHolders.add(new DataHolder(route, Route.INBOUND));
                 }
-                if (route.getPredictions(Route.OUTBOUND).size() > 0) {
+                if (route.hasPickUps(Route.OUTBOUND)) {
                     dataHolders.add(new DataHolder(route, Route.OUTBOUND));
                 }
             } else if (route.hasNearbyStops()) {
                 Stop inboundStop = route.getNearestStop(Route.INBOUND);
                 Stop outboundStop = route.getNearestStop(Route.OUTBOUND);
 
-                if (inboundStop != null && outboundStop != null && inboundStop.equals(outboundStop)) {
+                if (inboundStop != null && inboundStop.equals(outboundStop)) {
                     dataHolders.add(new DataHolder(route, Route.INBOUND));
                 } else {
                     if (route.getNearestStop(Route.INBOUND) != null) {
@@ -166,7 +164,7 @@ public class PredictionsAdapter extends RecyclerView.Adapter<PredictionsAdapter.
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(PredictionsAdapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

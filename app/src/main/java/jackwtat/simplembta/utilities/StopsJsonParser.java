@@ -1,5 +1,6 @@
 package jackwtat.simplembta.utilities;
 
+import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -47,10 +48,7 @@ public class StopsJsonParser {
                     if (parentId.equals("")) {
 
                         // Get stop ID
-                        String id = jStop.getString("id");
-
-                        Stop stop = new Stop(id);
-
+                        Stop stop = new Stop(jStop.getString("id"));
 
                         // Get child stop IDs
                         JSONArray jChildStops = jRelationships
@@ -68,15 +66,16 @@ public class StopsJsonParser {
                         // Get stop attributes
                         JSONObject jAttributes = jStop.getJSONObject("attributes");
 
-                        String name = jAttributes.getString("name");
-                        double latitude = jAttributes.getDouble("latitude");
-                        double longitude = jAttributes.getDouble("longitude");
+                        // Get stop name
+                        stop.setName(jAttributes.getString("name"));
 
-                        stop.setName(name);
-                        stop.setLatitude(latitude);
-                        stop.setLongitude(longitude);
+                        // Get stop location
+                        Location location = new Location("");
+                        location.setLatitude(jAttributes.getDouble("latitude"));
+                        location.setLongitude(jAttributes.getDouble("longitude"));
+                        stop.setLocation(location);
 
-                        stops.put(id, stop);
+                        stops.put(stop.getId(), stop);
                     }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Unable to parse Stop at position " + i);

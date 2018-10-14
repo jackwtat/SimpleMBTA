@@ -2,9 +2,10 @@ package jackwtat.simplembta.model;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Prediction implements Comparable<Prediction> {
+public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Pick up types
     public static final int UNKNOWN_PICK_UP = -1;
@@ -55,35 +56,11 @@ public class Prediction implements Comparable<Prediction> {
         return trackNumber;
     }
 
-    public Date getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public Date getDepartureTime() {
-        return departureTime;
-    }
-
     public Date getPredictionTime() {
         if (arrivalTime != null) {
             return arrivalTime;
         } else {
             return departureTime;
-        }
-    }
-
-    public long getTimeUntilArrival() {
-        if (arrivalTime != null) {
-            return arrivalTime.getTime() - new Date().getTime();
-        } else {
-            return -1;
-        }
-    }
-
-    public long getTimeUntilDeparture() {
-        if (departureTime != null) {
-            return departureTime.getTime() - new Date().getTime();
-        } else {
-            return -1;
         }
     }
 
