@@ -46,39 +46,26 @@ public class IndividualPredictionItem extends LinearLayout {
         destinationTextView.setText(prediction.getDestination());
 
         // Set departure times
-        if (prediction.willPickUpPassengers()) {
-            String timeText;
-            String minuteText;
+        String timeText;
+        String minuteText;
 
-            Date predictionTime;
-            long countdownTime;
+        long countdownTime = prediction.getCountdownTime();
 
-            predictionTime = prediction.getPredictionTime();
-            countdownTime = prediction.getCountdownTime();
-
-            if (countdownTime < 90 * 60000) {
-                if (countdownTime > 0) {
-                    timeText = (countdownTime / 60000) + "";
-                } else {
-                    timeText = "0";
-                }
-
-                minuteText = min;
-            } else {
-                timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-            }
-
-            if (!prediction.isLive()) {
-                minuteText += "*";
-            }
-
-            timeTextView.setText(timeText);
-            minuteTextView.setText(minuteText);
+        if (countdownTime < 90 * 60000) {
+            timeText = (countdownTime / 60000) + "";
+            minuteText = min;
         } else {
-            timeTextView.setText("---");
-            minuteTextView.setVisibility(GONE);
+            Date predictionTime = prediction.getPredictionTime();
+            timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+            minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
         }
+
+        if (!prediction.isLive()) {
+            minuteText += "*";
+        }
+
+        timeTextView.setText(timeText);
+        minuteTextView.setText(minuteText);
     }
 
     private void init(Context context) {

@@ -6,12 +6,12 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 
 public class Stop implements Comparable<Stop>, Serializable {
-    String id;
-    String name = "null";
-    String[] childIds = new String[0];
-    double latitude = 0.0;
-    double longitude = 0.0;
-    double distanceFromOrigin = 0.0;
+    private String id;
+    private String name = "null";
+    private String[] childIds = new String[0];
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private double distanceFromOrigin = 0.0;
 
     public Stop(String id) {
         this.id = id;

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import jackwtat.simplembta.R;
 
@@ -281,6 +282,20 @@ public class Route implements Comparable<Route>, Serializable {
         } else if (prediction.getDirection() == OUTBOUND) {
             outboundPredictions.add(prediction);
             hasLiveOutboundPickUps = hasLiveOutboundPickUps || (prediction.isLive() && prediction.willPickUpPassengers());
+        }
+    }
+
+    public void addPredictions(List<Prediction> predictions) {
+        for (Prediction p : predictions) {
+            addPrediction(p);
+        }
+    }
+
+    public void clearPredictions(int direction){
+        if(direction==INBOUND){
+            inboundPredictions.clear();
+        } if (direction == OUTBOUND){
+            outboundPredictions.clear();
         }
     }
 

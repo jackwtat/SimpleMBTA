@@ -34,7 +34,7 @@ public class MapSearchRecyclerViewAdapter
     public class DataHolder implements Comparable<DataHolder> {
         Route route;
         Stop stop;
-        List<Prediction> predictions;
+        ArrayList<Prediction> predictions;
         int direction;
 
         DataHolder(Route route, int direction) {
@@ -116,12 +116,6 @@ public class MapSearchRecyclerViewAdapter
 
     public DataHolder getData(int position) {
         return dataHolders.get(position);
-    }
-
-    public void setData(List<DataHolder> dataHolders) {
-        this.dataHolders.clear();
-        this.dataHolders.addAll(dataHolders);
-        notifyDataSetChanged();
     }
 
     public void setRoutes(List<Route> routes) {

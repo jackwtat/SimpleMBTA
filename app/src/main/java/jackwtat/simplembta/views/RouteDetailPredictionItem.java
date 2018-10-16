@@ -40,36 +40,22 @@ public class RouteDetailPredictionItem extends LinearLayout {
     }
 
     public void setPrediction(Prediction prediction) {
-        Date predictionTime = prediction.getPredictionTime();
+        String timeText;
+        String minuteText;
 
-        if (predictionTime != null) {
-            String timeText;
-            String minuteText;
-            long countdownTime;
+        long countdownTime = prediction.getCountdownTime();
 
-            countdownTime = prediction.getCountdownTime();
-
-            if (countdownTime < 90 * 60000) {
-                if (countdownTime > 0) {
-                    timeText = (countdownTime / 60000) + "";
-                } else {
-                    timeText = "0";
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(min);
-            } else {
-                timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(minuteText);
-                minuteTextView.setVisibility(VISIBLE);
-            }
+        if (countdownTime < 90 * 60000) {
+            timeText = (countdownTime / 60000) + "";
+            minuteText = min;
         } else {
-            timeTextView.setText("---");
-            minuteTextView.setVisibility(GONE);
+            Date predictionTime = prediction.getPredictionTime();
+            timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+            minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
         }
+
+        timeTextView.setText(timeText);
+        minuteTextView.setText(minuteText);
 
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {

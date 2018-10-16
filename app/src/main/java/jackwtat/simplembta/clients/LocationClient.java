@@ -26,20 +26,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class LocationClient {
     private final String LOG_TAG = "LocationClient";
 
-    public final static int SUCCESS = 0;
-    public final static int FAILURE = 1;
-    public final static int NO_PERMISSION = 2;
-
     private Context context;
     private FusedLocationProviderClient locationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private Location lastLocation;
-    private OnLocationUpdateCompleteListener onLocationUpdateCompleteListener;
 
     @SuppressLint("RestrictedApi")
-    public LocationClient(Context context, long updateInterval, long fastestUpdateInterval,
-                          OnLocationUpdateCompleteListener onLocationUpdateCompleteListener) {
+    public LocationClient(Context context, long updateInterval, long fastestUpdateInterval) {
         this.context = context;
 
         locationClient = LocationServices.getFusedLocationProviderClient(context);
@@ -63,12 +57,10 @@ public class LocationClient {
         SettingsClient settingsClient = LocationServices.getSettingsClient(context);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        this.onLocationUpdateCompleteListener = onLocationUpdateCompleteListener;
-
         lastLocation = null;
     }
 
-    public void updateLocation() {
+    public void updateLocation(final LocationClientCallbacks callbacks) {
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationClient.getLastLocation()
@@ -77,10 +69,10 @@ public class LocationClient {
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 lastLocation = location;
-                                onLocationUpdateCompleteListener.onLocationUpdateComplete(SUCCESS);
+                                callbacks.onSuccess();
                             } else {
                                 lastLocation = null;
-                                onLocationUpdateCompleteListener.onLocationUpdateComplete(FAILURE);
+                                callbacks.onSuccess();
                             }
                         }
                     })
@@ -88,11 +80,11 @@ public class LocationClient {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             lastLocation = null;
-                            onLocationUpdateCompleteListener.onLocationUpdateComplete(FAILURE);
+                            callbacks.onFailure();
                         }
                     });
         } else {
-            onLocationUpdateCompleteListener.onLocationUpdateComplete(NO_PERMISSION);
+            callbacks.onNoPermission();
         }
     }
 
@@ -114,7 +106,11 @@ public class LocationClient {
         locationClient.removeLocationUpdates(locationCallback);
     }
 
-    public interface OnLocationUpdateCompleteListener {
-        void onLocationUpdateComplete(int result);
+    public interface LocationClientCallbacks {
+        void onSuccess();
+
+        void onFailure();
+
+        void onNoPermission();
     }
 }

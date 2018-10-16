@@ -4,7 +4,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,11 +85,14 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
         processLivePredictions(PredictionsJsonParser
                 .parse(realTimeApiClient.get("predictions", predictionsArgs)));
 
-        // Get non-live schedule data
-        StringBuilder routeArgBuilder = new StringBuilder();
+        // Get non-live schedule data for inbound routes
+        StringBuilder routeArgBuilder;
+        routeArgBuilder = new StringBuilder();
+
         for (Route route : routes.values()) {
+            // We'll only query routes that don't already have live pick-ups in this direction
             // Light rail and heavy rail (Green, Red, Blue, and Orange Lines) on-time performances
-            // are too erratic and unreliable for scheduled predictions to be reliable'
+            // are too erratic and unreliable for scheduled predictions to be reliable
             if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
                 routeArgBuilder.append(route.getId()).append(",");
             }
@@ -108,13 +110,15 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 .parse(realTimeApiClient.get("schedules", scheduleArgs)));
 
         // Get all alerts for these routes
+        routeArgBuilder = new StringBuilder();
         for (Route route : routes.values()) {
             routeArgBuilder.append(route.getId()).append(",");
         }
 
         String[] alertsArgs = {"filter[route]=" + routeArgBuilder.toString()};
 
-        ServiceAlert[] alerts = ServiceAlertsJsonParser.parse(realTimeApiClient.get("alerts", alertsArgs));
+        ServiceAlert[] alerts = ServiceAlertsJsonParser
+                .parse(realTimeApiClient.get("alerts", alertsArgs));
 
         for (ServiceAlert alert : alerts) {
             for (Route route : routes.values()) {

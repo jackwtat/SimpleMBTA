@@ -3,7 +3,6 @@ package jackwtat.simplembta.asyncTasks;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,18 +18,15 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
     private Callbacks callbacks;
 
     private Route route;
-    private String stopId;
     private int direction;
     private HashMap<String, Prediction> predictions = new HashMap<>();
 
     public RouteDetailPredictionsAsyncTask(String realTimeApiKey,
                                            Route route,
-                                           String stopId,
                                            int direction,
                                            Callbacks callbacks) {
         this.realTimeApiKey = realTimeApiKey;
         this.route = route;
-        this.stopId = stopId;
         this.direction = direction;
         this.callbacks = callbacks;
     }
@@ -47,7 +43,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         // Get live predictions
         String[] predictionsArgs = {
                 "filter[route]=" + route.getId(),
-                "filter[stop]=" + stopId,
+                "filter[stop]=" + route.getNearestStop(direction).getId(),
                 "filter[direction_id]=" + direction,
                 "include=route,trip,stop,schedule"
         };
@@ -61,7 +57,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
             // Get non-live scheduled predictions
             String[] scheduleArgs = {
                     "filter[route]=" + route.getId(),
-                    "filter[stop]=" + stopId,
+                    "filter[stop]=" + route.getNearestStop(direction).getId(),
                     "filter[direction_id]=" + direction,
                     "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                     "filter[min_time]=" + DateUtil.getMbtaTime(0),

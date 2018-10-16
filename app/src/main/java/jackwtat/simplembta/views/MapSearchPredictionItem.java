@@ -49,7 +49,8 @@ public class MapSearchPredictionItem extends LinearLayout {
         for (Prediction p : predictions) {
             if (p.getPredictionTime() != null &&
                     p.willPickUpPassengers() &&
-                    p.getCountdownTime() <= maxTime) {
+                    p.getCountdownTime() <= maxTime &&
+                    p.getCountdownTime() >= 0) {
                 pickUps.add(p);
             }
         }
@@ -74,16 +75,10 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
 
         // Set the route name
-        boolean abbreviate;
-        if (route.getMode() == Route.BUS) {
-            abbreviate = true;
-        } else {
-            abbreviate = false;
-        }
         routeLayout.addView(new RouteNameView(getContext(), route,
                 getContext().getResources().getDimension(R.dimen.small_route_name_text_size),
                 RouteNameView.ROUNDED_BACKGROUND,
-                abbreviate, false));
+                route.getMode() == Route.BUS, false));
 
         if (pickUps.size() > 0) {
             int direction = pickUps.get(0).getDirection();

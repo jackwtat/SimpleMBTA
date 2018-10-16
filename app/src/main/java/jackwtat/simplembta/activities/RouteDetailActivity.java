@@ -43,6 +43,7 @@ import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -62,7 +63,10 @@ import jackwtat.simplembta.views.RouteNameView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     // Time since last refresh before values can automatically refresh onResume, in milliseconds
-    private final long AUTO_REFRESH_RATE = 30000;
+    private final long AUTO_REFRESH_RATE = 15000;
+
+    // Maximum age of prediction
+    public static final long MAXIMUM_PREDICTION_AGE = 90000;
 
     private String realTimeApiKey;
     private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
@@ -77,17 +81,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
 
-    private LinearLayout serviceAlertsLayout;
-    private ImageView serviceAlertIcon;
-    private ImageView serviceAdvisoryIcon;
-    private TextView serviceAlertsTextView;
-
     private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer autoRefreshTimer;
+    private long refreshTime;
+    private boolean refreshing;
 
-    private Route currentRoute;
-    private Stop currentStop;
-    private int currentDirection;
+    private Route route;
+    private int direction;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,26 +96,29 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         setContentView(R.layout.activity_route_detail);
 
         Intent intent = getIntent();
-        currentRoute = (Route) intent.getSerializableExtra("route");
-        currentStop = (Stop) intent.getSerializableExtra("stop");
-        currentDirection = intent.getIntExtra("direction", Route.NULL_DIRECTION);
+        route = (Route) intent.getSerializableExtra("route");
+        direction = intent.getIntExtra("direction", Route.NULL_DIRECTION);
+        refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
 
         realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
         // Set action bar
-        setTitle(currentRoute.getLongDisplayName(this));
+        setTitle(route.getLongDisplayName(this));
         if (Build.VERSION.SDK_INT >= 21) {
+            // Create color for status bar
             float[] hsv = new float[3];
-            Color.colorToHSV(Color.parseColor(currentRoute.getPrimaryColor()), hsv);
+            Color.colorToHSV(Color.parseColor(route.getPrimaryColor()), hsv);
             hsv[2] *= .8f;
 
+            // Set status bar color
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(Color.HSVToColor(hsv));
 
+            // Set action bar background color
             ActionBar actionBar = getSupportActionBar();
-            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(currentRoute.getPrimaryColor())));
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
         }
 
         // Get app bar and app bar params
@@ -131,8 +135,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
         params.setBehavior(behavior);
 
-        // Initialize no predictions indicator
+        // Get the no predictions indicator
         noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
+
+        // Initialize service alerts
+        initializeServiceAlerts();
 
         // Initialize map view
         mapView = findViewById(R.id.map_view);
@@ -152,9 +159,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Set recycler view layout
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
+        // Disable recycler view scrolling until predictions loaded;
+        recyclerView.setNestedScrollingEnabled(false);
+
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Load predictions from the current route
+        loadPredictions(route.getPredictions(direction));
 
         // Create the predictions async task callbacks
         predictionsCallbacks = new RouteDetailPredictionsAsyncTask.Callbacks() {
@@ -165,6 +178,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onPostExecute(List<Prediction> predictions) {
                 swipeRefreshLayout.setRefreshing(false);
+
+                refreshTime = new Date().getTime();
+
+                refreshing = false;
+
+                route.clearPredictions(direction);
+
+                route.addPredictions(predictions);
+
                 loadPredictions(predictions);
             }
         };
@@ -180,9 +202,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 HashMap<String, Stop> distinctStops = new HashMap<>();
 
                 for (Shape shape : shapes) {
-                    if (shape.getDirection() == currentDirection && shape.getPriority() > -1 &&
+                    if (shape.getDirection() == direction && shape.getPriority() > -1 &&
                             shape.getStops().length > 1) {
-                        drawShape(currentRoute, shape);
+                        drawRouteShape(route, shape);
 
                         for (Stop stop : shape.getStops()) {
                             if (!distinctStops.containsKey(stop.getId())) {
@@ -195,15 +217,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 Marker selectedStopMarker = null;
                 LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
 
-                for (Stop stop : distinctStops.values()) {
-                    Marker currentMarker = drawStop(stop);
-                    boundsBuilder.include(new LatLng(
-                            stop.getLocation().getLatitude(), stop.getLocation().getLongitude()));
+                Stop currentStop = route.getNearestStop(direction);
 
-                    if (currentStop != null &&
-                            (currentStop.equals(stop) ||
-                                    currentStop.isParentOf(stop.getId()) ||
-                                    stop.isParentOf(currentStop.getId()))) {
+                for (Stop s : distinctStops.values()) {
+                    Marker currentMarker = drawStopMarker(s);
+                    boundsBuilder.include(new LatLng(
+                            s.getLocation().getLatitude(), s.getLocation().getLongitude()));
+
+                    if (currentStop != null && (currentStop.equals(s) || currentStop.isParentOf(s.getId()) ||
+                            s.isParentOf(currentStop.getId()))) {
                         selectedStopMarker = currentMarker;
                     }
                 }
@@ -213,16 +235,43 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 } else if (distinctStops.size() > 0) {
                     gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
                 } else if (currentStop != null) {
-                    drawStop(currentStop).showInfoWindow();
+                    drawStopMarker(currentStop).showInfoWindow();
                 }
             }
         };
+    }
 
-        // Load predictions from route
-        loadPredictions(currentRoute.getPredictions(currentDirection));
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
 
-        // Initialize service alerts
-        initializeServiceAlerts();
+        // Set the action listener
+        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                route.setNearestStop(direction, (Stop) marker.getTag());
+
+                clearPredictions();
+
+                swipeRefreshLayout.setRefreshing(true);
+
+                forceUpdate();
+
+                return false;
+            }
+        });
+
+        // Set the map style
+        gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+        // Set the map UI settings
+        UiSettings mapUiSettings = gMap.getUiSettings();
+        mapUiSettings.setRotateGesturesEnabled(false);
+        mapUiSettings.setTiltGesturesEnabled(false);
+        mapUiSettings.setZoomControlsEnabled(true);
+
+        // Load the route outline and stop markers
+        getRouteShapes();
     }
 
     @Override
@@ -237,22 +286,39 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getPredictions(
-                                realTimeApiKey,
-                                currentRoute,
-                                currentStop,
-                                currentDirection,
-                                predictionsCallbacks);
+                        backgroundUpdate();
                     }
                 });
             }
-        }, 0, AUTO_REFRESH_RATE);
+        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+
+        // Force recycler view to update UI so that the minutes are accurate
+        if (route != null) {
+            recyclerViewAdapter.setPredictions(route.getPredictions(direction));
+        }
+
+        if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
+            clearPredictions();
+
+            swipeRefreshLayout.setRefreshing(true);
+
+            forceUpdate();
+
+            // If there are no predictions displayed in the recycler view, then force a refresh
+        } else if (recyclerViewAdapter.getItemCount() < 1) {
+            swipeRefreshLayout.setRefreshing(true);
+
+            forceUpdate();
+
+        } else {
+            backgroundUpdate();
+        }
     }
 
     @Override
@@ -289,50 +355,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         mapView.onLowMemory();
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        LatLng latLng;
-
-        if (currentStop == null) {
-            latLng = new LatLng(42.3604, -71.0580);
-        } else {
-            latLng = new LatLng(
-                    currentStop.getLocation().getLatitude(),
-                    currentStop.getLocation().getLongitude());
-        }
-
-        gMap = googleMap;
-
-        UiSettings mapUiSettings = gMap.getUiSettings();
-        mapUiSettings.setRotateGesturesEnabled(false);
-        mapUiSettings.setTiltGesturesEnabled(false);
-        mapUiSettings.setZoomControlsEnabled(true);
-
-        gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
-
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
-
-        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Stop markerStop = (Stop) marker.getTag();
-
-                getPredictions(realTimeApiKey, currentRoute, markerStop, currentDirection, predictionsCallbacks);
-
-                return false;
-            }
-        });
-
-        getShapes();
-    }
-
     private void initializeServiceAlerts() {
-        serviceAlertsLayout = findViewById(R.id.service_alerts_layout);
-        serviceAlertIcon = findViewById(R.id.service_alert_icon);
-        serviceAdvisoryIcon = findViewById(R.id.service_advisory_icon);
-        serviceAlertsTextView = findViewById(R.id.service_alerts_text_view);
+        LinearLayout serviceAlertsLayout = findViewById(R.id.service_alerts_layout);
+        ImageView serviceAlertIcon = findViewById(R.id.service_alert_icon);
+        ImageView serviceAdvisoryIcon = findViewById(R.id.service_advisory_icon);
+        TextView serviceAlertsTextView = findViewById(R.id.service_alerts_text_view);
 
-        final ArrayList<ServiceAlert> serviceAlerts = currentRoute.getServiceAlerts();
+        final ArrayList<ServiceAlert> serviceAlerts = route.getServiceAlerts();
         String alertsText = "";
         int alertsCount = 0;
         int advisoriesCount = 0;
@@ -390,7 +419,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         AlertDialog serviceAlertDialog = new AlertDialog.Builder(context).create();
 
-        RouteNameView routeNameView = new RouteNameView(context, currentRoute,
+        RouteNameView routeNameView = new RouteNameView(context, route,
                 context.getResources().getDimension(
                         R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
                 false, true);
@@ -411,45 +440,62 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         return serviceAlertDialog;
     }
 
-    private void getPredictions(String realTimeApiKey,
-                                Route route,
-                                Stop stop,
-                                int direction,
-                                RouteDetailPredictionsAsyncTask.Callbacks callbacks) {
-        if (route != null && stop != null) {
-            if (predictionsAsyncTask != null) {
-                predictionsAsyncTask.cancel(true);
-            }
-
-            currentRoute = route;
-            currentStop = stop;
-            currentDirection = direction;
-
-            swipeRefreshLayout.setRefreshing(true);
-
-            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(
-                    realTimeApiKey,
-                    route,
-                    stop.getId(),
-                    direction,
-                    callbacks);
-            predictionsAsyncTask.execute();
+    private void backgroundUpdate() {
+        if (route != null && route.getNearestStop(direction) != null && !refreshing) {
+            getPredictions();
         }
     }
 
-    private void getShapes() {
+    private void forceUpdate() {
+        if (route != null && route.getNearestStop(direction) != null) {
+            getPredictions();
+        }
+    }
+
+    private void getPredictions() {
+        refreshing = true;
+
+        if (predictionsAsyncTask != null) {
+            predictionsAsyncTask.cancel(true);
+        }
+
+        predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route, direction,
+                predictionsCallbacks);
+        predictionsAsyncTask.execute();
+    }
+
+    private void loadPredictions(List<Prediction> predictions) {
+        recyclerViewAdapter.setPredictions(predictions);
+
+        if (recyclerViewAdapter.getItemCount() == 0) {
+            recyclerView.setNestedScrollingEnabled(false);
+            noPredictionsTextView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setNestedScrollingEnabled(true);
+            noPredictionsTextView.setVisibility(View.GONE);
+        }
+    }
+
+    private void clearPredictions() {
+        recyclerViewAdapter.clear();
+        noPredictionsTextView.setVisibility(View.GONE);
+        appBarLayout.setExpanded(true);
+        recyclerView.setNestedScrollingEnabled(false);
+    }
+
+    private void getRouteShapes() {
         if (shapesAsyncTask != null) {
             shapesAsyncTask.cancel(true);
         }
 
         shapesAsyncTask = new ShapesAsyncTask(
                 realTimeApiKey,
-                currentRoute.getId(),
+                route.getId(),
                 shapesCallbacks);
         shapesAsyncTask.execute();
     }
 
-    private void drawShape(Route route, Shape shape) {
+    private void drawRouteShape(Route route, Shape shape) {
         List<LatLng> shapeCoordinates = PolyUtil.decode(shape.getPolyline());
 
         int lineColor;
@@ -479,7 +525,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     }
 
-    private Marker drawStop(Stop stop) {
+    private Marker drawStopMarker(Stop stop) {
         Marker stopMarker = gMap.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
@@ -491,17 +537,5 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         stopMarker.setTag(stop);
 
         return stopMarker;
-    }
-
-    private void loadPredictions(List<Prediction> predictions) {
-        recyclerViewAdapter.setPredictions(predictions);
-
-        if (recyclerViewAdapter.getItemCount() == 0) {
-            recyclerView.setNestedScrollingEnabled(false);
-            noPredictionsTextView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setNestedScrollingEnabled(true);
-            noPredictionsTextView.setVisibility(View.GONE);
-        }
     }
 }

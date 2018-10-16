@@ -50,7 +50,7 @@ public class RouteDetailRecyclerViewAdapter
         this.predictions.clear();
 
         for (Prediction prediction : predictions) {
-            if (prediction.getPredictionTime() != null) {
+            if (prediction.getPredictionTime() != null && prediction.getCountdownTime() >= 0) {
                 this.predictions.add(prediction);
             }
         }

@@ -98,7 +98,6 @@ public class PredictionsJsonParser {
                                 prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
                             }
                         } catch (JSONException e) {
-                            Log.e(LOG_TAG, "Unable to parse schedule for prediction " + id);
                         }
 
                         // Retrieve route data

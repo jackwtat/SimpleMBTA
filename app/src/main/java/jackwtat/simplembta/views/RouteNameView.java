@@ -14,15 +14,8 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 
 public class RouteNameView extends RelativeLayout {
-
     final static public int SQUARE_BACKGROUND = 0;
     final static public int ROUNDED_BACKGROUND = 1;
-
-    Route route;
-    float textSize;
-    int backgroundShape;
-    boolean nameAbbreviated;
-    boolean colorAccentEnabled;
 
     View rootView;
     View routeNameAccentView;
@@ -52,18 +45,12 @@ public class RouteNameView extends RelativeLayout {
 
     public void setRouteNameView(Route route, float textSize, int backgroundShape,
                                  boolean abbreviateName, boolean enableColorAccent) {
-        this.route = route;
-        this.textSize = textSize;
-        this.backgroundShape = backgroundShape;
-        nameAbbreviated = abbreviateName;
-        colorAccentEnabled = enableColorAccent;
-
-        setBackground();
-        setColorAccent();
-        setRouteName();
+        setBackground(route, backgroundShape);
+        setColorAccent(route, enableColorAccent);
+        setRouteName(route, abbreviateName, textSize);
     }
 
-    private void setBackground() {
+    private void setBackground(Route route, int backgroundShape) {
         Drawable background;
 
         // Background shape
@@ -80,8 +67,8 @@ public class RouteNameView extends RelativeLayout {
         setBackground(background);
     }
 
-    private void setColorAccent() {
-        if (colorAccentEnabled && route.getMode() == Route.BUS &&
+    private void setColorAccent(Route route, boolean enableColorAccent) {
+        if (enableColorAccent && route.getMode() == Route.BUS &&
                 !route.getLongName().contains("Silver Line") && !route.getShortName().contains("SL")) {
             routeNameAccentView.setVisibility(View.VISIBLE);
         } else {
@@ -89,11 +76,11 @@ public class RouteNameView extends RelativeLayout {
         }
     }
 
-    private void setRouteName() {
+    private void setRouteName(Route route, boolean abbreviateName, float textSize) {
         routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
         routeNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
-        if (nameAbbreviated) {
+        if (abbreviateName) {
             routeNameTextView.setText(route.getShortDisplayName(getContext()));
         } else {
             routeNameTextView.setText(route.getLongDisplayName(getContext()));
