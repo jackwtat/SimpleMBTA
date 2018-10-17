@@ -22,7 +22,7 @@ import jackwtat.simplembta.utilities.StopsJsonParser;
 public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Route>> {
     private String realTimeApiKey;
     private Location location;
-    private Callbacks callbacks;
+    private onPostExecuteListener onPostExecuteListener;
 
     private HashMap<String, Route> routes;
     private HashMap<String, Stop> stops;
@@ -30,15 +30,10 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     public MapSearchPredictionsAsyncTask(String realTimeApiKey,
                                          Location location,
-                                         Callbacks callbacks) {
+                                         onPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.location = location;
-        this.callbacks = callbacks;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        callbacks.onPreExecute();
+        this.onPostExecuteListener = onPostExecuteListener;
     }
 
     @Override
@@ -134,13 +129,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     @Override
     protected void onPostExecute(List<Route> routes) {
-        callbacks.onPostExecute(routes);
-    }
-
-    public interface Callbacks {
-        void onPreExecute();
-
-        void onPostExecute(List<Route> routes);
+        onPostExecuteListener.onPostExecute(routes);
     }
 
     private void processLivePredictions(Prediction[] livePredictions) {
@@ -237,5 +226,9 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 }
             }
         }
+    }
+
+    public interface onPostExecuteListener {
+        void onPostExecute(List<Route> routes);
     }
 }

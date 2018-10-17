@@ -1,0 +1,1594 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Downtown",
+        "polyline": "qpjaGfqzpLJyB{@Mi@Ge@I]Gc@Oo@u@}@eAkAwAe@i@aA}@a@_@MKYOc@UOG[S??uAy@o@i@[a@s@cA}AaBGGeAsA??MQ_EkFkAcB??OUKOwA{BaBeCQ]??iAgBcBiCmAqB??KQsC_FwAgCaBsCq@kAiA_CUo@Oe@K_@??q@kCK]Qi@MYYg@U_@iCkDi@q@c@m@e@m@SSo@_@[O??OIuCaBs@_@cCkA??WK]Oq@Ow@Oe@GqCe@_BUsB]gCe@iA[oBy@??sAi@g@Yy@]g@OiAYSG_AOaBUMC??UC{AAKAc@Ca@KYMo@_@GG}@y@a@a@A???uA}AiBlE",
+        "priority": 3
+      },
+      "id": "7490023",
+      "links": {
+        "self": "/shapes/7490023"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "749",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "64",
+              "type": "stop"
+            },
+            {
+              "id": "3",
+              "type": "stop"
+            },
+            {
+              "id": "4",
+              "type": "stop"
+            },
+            {
+              "id": "5",
+              "type": "stop"
+            },
+            {
+              "id": "1787",
+              "type": "stop"
+            },
+            {
+              "id": "1788",
+              "type": "stop"
+            },
+            {
+              "id": "5093",
+              "type": "stop"
+            },
+            {
+              "id": "5095",
+              "type": "stop"
+            },
+            {
+              "id": "15095",
+              "type": "stop"
+            },
+            {
+              "id": "place-tumnl",
+              "type": "stop"
+            },
+            {
+              "id": "6567",
+              "type": "stop"
+            },
+            {
+              "id": "49001",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Dudley Station",
+        "polyline": "sooaGhjvpLaAzBXXb@`@d@\\NJz@`@|CnArBp@\\J??b@LjCf@`C^zBd@VoGHgBx@\\f@XjBv@??vAj@hAZfCd@rB\\~ATpCd@\\D??F@v@Np@N\\NzCvAr@^tC`BZN??NHn@^RRd@l@b@l@h@p@hCjDT^Xf@LXPh@J\\|@jDNd@Tn@hA~Bp@jAR\\??lAtBvAfCrC~ET\\??bAdBbBhCzAdC\\d@??bA~AvAzBJNV^??bAxA~DjFRT??~@nAFF~@|ANTd@p@l@r@XXTRlBnALHXJ??l@Nt@Z`A|@d@h@jAvA|@dAn@t@\\h@NZXjA^`AX`@TR\\XJqB",
+        "priority": 3
+      },
+      "id": "7490022",
+      "links": {
+        "self": "/shapes/7490022"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "749",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "49001",
+              "type": "stop"
+            },
+            {
+              "id": "8279",
+              "type": "stop"
+            },
+            {
+              "id": "place-tumnl",
+              "type": "stop"
+            },
+            {
+              "id": "49003",
+              "type": "stop"
+            },
+            {
+              "id": "5098",
+              "type": "stop"
+            },
+            {
+              "id": "5100",
+              "type": "stop"
+            },
+            {
+              "id": "19402",
+              "type": "stop"
+            },
+            {
+              "id": "15176",
+              "type": "stop"
+            },
+            {
+              "id": "55",
+              "type": "stop"
+            },
+            {
+              "id": "60",
+              "type": "stop"
+            },
+            {
+              "id": "61",
+              "type": "stop"
+            },
+            {
+              "id": "64",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Dudley Station",
+        "polyline": "_znaGvbupLDS{Ao@UKm@a@c@xBSp@HPLf@v@pENr@L^L^Xp@Vb@\\d@b@b@j@`@f@Vd@NbEnA_@fBe@~Bc@bCUxAGb@AJG^O|Bx@\\f@XjBv@??vAj@hAZfCd@rB\\~ATpCd@\\D??F@v@Np@N\\NzCvAr@^tC`BZN??NHn@^RRd@l@b@l@h@p@hCjDT^Xf@LXPh@J\\|@jDNd@Tn@hA~Bp@jAR\\??lAtBvAfCrC~ET\\??bAdBbBhCzAdC\\d@??bA~AvAzBJNV^??bAxA~DjFRT??~@nAFF~@|ANTd@p@l@r@XXTRlBnALHXJ??l@Nt@Z`A|@d@h@jAvA|@dAn@t@\\h@NZXjA^`AX`@TR\\XJqB",
+        "priority": 3
+      },
+      "id": "7510024",
+      "links": {
+        "self": "/shapes/7510024"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "751",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "6538",
+              "type": "stop"
+            },
+            {
+              "id": "place-tumnl",
+              "type": "stop"
+            },
+            {
+              "id": "49003",
+              "type": "stop"
+            },
+            {
+              "id": "5098",
+              "type": "stop"
+            },
+            {
+              "id": "5100",
+              "type": "stop"
+            },
+            {
+              "id": "19402",
+              "type": "stop"
+            },
+            {
+              "id": "15176",
+              "type": "stop"
+            },
+            {
+              "id": "55",
+              "type": "stop"
+            },
+            {
+              "id": "60",
+              "type": "stop"
+            },
+            {
+              "id": "61",
+              "type": "stop"
+            },
+            {
+              "id": "64",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "}iqaGfgnpLVs@Vy@HYF[@QAWDUBOVk@xBi@xGwA??nDu@HEFKFO@Q?OAOIUMMQGI?w@P??iOjDY@YAUG[Is@u@WUoBcBSUQUOYIMKIICa@?EA_@B??iAFQBMFEBENYv@Ub@_@h@]^e@b@e@Ta@Nq@FQBG@EDIJEFO\\ITaBvE??}ArEGR@TBPFJLNLDRBfACx@CN?PDVPJHHJHT?DDT@T?XA`@Ab@Gv@[fB]|AKd@Sz@Uv@]`AY`AKj@Ib@I~@A^Ab@@j@Df@Hb@Nj@P^PXVZ^Tb@Rj@Fb@?h@IVMTMRSTYRg@t@sBL]Pa@P]T_@bAuA^e@^_@p@g@d@Y^SVG??NEh@KZE|@Ix@Gp@@|AFbCRzKbAxGn@t@LvAVr@N`B`@p@Rl@TrB`AvFvC`EvBfPrIp@^bAn@x@j@~AnArAnAv@t@pAxA`BxBl@|@j@z@j@bAl@pAbAzBp@`Bx@bC`@vA\\bBRdALbAH`ADl@???HArDE~AI|@ObAg@`CMj@w@`DoA~DiAbDS^QVQNQLYDWOOMQSIQCMAK?S`A}C??|@sC|AgFVy@\\mAPkAD_BBaB?o@CW\\Q`@BJDFHNZBxA?l@???t@GnAG`AaAdD{C~J??CDe@nA]f@qAvAo@XcG`@GBs@f@m@h@e@j@[n@_EdKo@jB?@??i@bBQ`AOvAKrAmAnPAnCDvAHzAf@`CNh@n@nBXl@Zj@",
+        "priority": 3
+      },
+      "id": "7410022",
+      "links": {
+        "self": "/shapes/7410022"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "741",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "17091",
+              "type": "stop"
+            },
+            {
+              "id": "27092",
+              "type": "stop"
+            },
+            {
+              "id": "17093",
+              "type": "stop"
+            },
+            {
+              "id": "17094",
+              "type": "stop"
+            },
+            {
+              "id": "17095",
+              "type": "stop"
+            },
+            {
+              "id": "17096",
+              "type": "stop"
+            },
+            {
+              "id": "74614",
+              "type": "stop"
+            },
+            {
+              "id": "place-wtcst",
+              "type": "stop"
+            },
+            {
+              "id": "place-crtst",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "orwaGj`rpL|Gek@??pBwPFUNo@X{AXsAV}@T{@DM??Rw@\\oAPo@l@}@|@{@\\_@\\[XUZS~F}Ch@YVS\\Yj@e@dM}E????tBZNqApDwB~A}@`B_A|Am@f@Ev@Hv@PbA\\l@X\\Rl@`@b@`@hAjAT\\jA}BNGBAJNbDtDJAjEpFbJdGHFFBB@nAkC\\RxAp@lDnEX\\HP\\r@JRTX|CtDJJLHb@LrAH@`@BLh@f@JJ??fAdAd@P~@TN@REd@ONKPK~AuAh@g@f@k@z@gAbCcDr@w@j@e@n@_@RMRGRCV?PDTLPNd@x@JXLRTVr@n@xAnAdAx@XNTFNBL?VAPCRGLIVSNQPa@Pc@d@yAMG[WGOAWD[Ro@Xu@\\q@lAiBV]d@m@v@q@XS\\QZM??DCVI`AUdBWp@@|AFbCRzKbAxGn@t@LvAVr@N`B`@p@Rl@TrB`AvFvC`EvBfPrIp@^bAn@x@j@~AnArAnAv@t@pAxA`BxBl@|@j@z@j@bAl@pAbAzBp@`Bx@bC`@vA\\bBRdALbAH`ADl@???HArDE~AI|@ObAg@`CMj@w@`DoA~DiAbDS^QVQNQLYDWOOMQSIQCMAK?S`A}C??|@sC|AgFVy@\\mAPkAD_BBaB?o@CW\\Q`@BJDFHNZBxA?l@???t@GnAG`AaAdD{C~J??CDe@nA]f@qAvAo@XcG`@GBs@f@m@h@e@j@[n@_EdKo@jB?@??i@bBQ`AOvAKrAmAnPAnCDvAHzAf@`CNh@n@nBXl@Zj@",
+        "priority": 3
+      },
+      "id": "7430009",
+      "links": {
+        "self": "/shapes/7430009"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "743",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-chels",
+              "type": "stop"
+            },
+            {
+              "id": "place-belsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-boxdt",
+              "type": "stop"
+            },
+            {
+              "id": "place-estav",
+              "type": "stop"
+            },
+            {
+              "id": "place-aport",
+              "type": "stop"
+            },
+            {
+              "id": "17096",
+              "type": "stop"
+            },
+            {
+              "id": "74614",
+              "type": "stop"
+            },
+            {
+              "id": "place-wtcst",
+              "type": "stop"
+            },
+            {
+              "id": "place-crtst",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "qpjaGfqzpLJyB{@Mi@Ge@I]Gc@Oo@u@}@eAkAwAe@i@aA}@a@_@MKYOc@UOG[S??uAy@o@i@[a@s@cA}AaBGGeAsA??MQ_EkFkAcB??OUKOwA{BaBeCQ]??iAgBcBiCmAqB??KQsC_FwAgCaBsCq@kAiA_CUo@Oe@K_@??q@kCK]Qi@MYYg@U_@iCkDi@q@c@m@e@m@SSo@_@[O??OIuCaBs@_@cCkA??WK]Oq@Ow@Oe@GqCe@_BUsB]gCe@iA[oBy@??sAi@g@Yy@]g@OiAYSG_AOmAQ??SC?e@EiAAYG_BCy@I}A?mB?y@FuAPwCL}Bp@mDFkAh@_D",
+        "priority": 3
+      },
+      "id": "7510025",
+      "links": {
+        "self": "/shapes/7510025"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "751",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "64",
+              "type": "stop"
+            },
+            {
+              "id": "3",
+              "type": "stop"
+            },
+            {
+              "id": "4",
+              "type": "stop"
+            },
+            {
+              "id": "5",
+              "type": "stop"
+            },
+            {
+              "id": "1787",
+              "type": "stop"
+            },
+            {
+              "id": "1788",
+              "type": "stop"
+            },
+            {
+              "id": "5093",
+              "type": "stop"
+            },
+            {
+              "id": "5095",
+              "type": "stop"
+            },
+            {
+              "id": "15095",
+              "type": "stop"
+            },
+            {
+              "id": "place-tumnl",
+              "type": "stop"
+            },
+            {
+              "id": "6537",
+              "type": "stop"
+            },
+            {
+              "id": "6538",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "cmmaGn|ppL?[G{LEqJ??CqJ??CoDBUDODKJOPKFAL?f@???n@?Vxk@qBBk@@G{LiA{@Qf@??uAzD}AnEuAvD??KTo@d@_BrA{AnACBGPATDNHFN@LIxCnC{@tBCJALAlABxA?l@???t@GnAG`AaAdD{C~J??CDe@nA]f@qAvAo@XcG`@GBs@f@m@h@e@j@[n@_EdKo@jB?@??i@bBQ`AOvAKrAmAnPAnCDvAHzAf@`CNh@n@nBXl@Zj@",
+        "priority": 3
+      },
+      "id": "7420038",
+      "links": {
+        "self": "/shapes/7420038"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "742",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "31255",
+              "type": "stop"
+            },
+            {
+              "id": "30250",
+              "type": "stop"
+            },
+            {
+              "id": "30251",
+              "type": "stop"
+            },
+            {
+              "id": "31259",
+              "type": "stop"
+            },
+            {
+              "id": "31257",
+              "type": "stop"
+            },
+            {
+              "id": "31256",
+              "type": "stop"
+            },
+            {
+              "id": "74614",
+              "type": "stop"
+            },
+            {
+              "id": "place-wtcst",
+              "type": "stop"
+            },
+            {
+              "id": "place-crtst",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.336339,
+        "location_type": 0,
+        "longitude": -71.07707,
+        "name": "Washington St @ Massachusetts Ave",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "5",
+      "links": {
+        "self": "/stops/5"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=5"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Melnea Cass Blvd, Roxbury, MA",
+        "description": "Washington St @ Melnea Cass Blvd - Silver Line - South Station/Downtown Crossing",
+        "latitude": 42.333021,
+        "location_type": 0,
+        "longitude": -71.080799,
+        "name": "Washington St @ Melnea Cass Blvd - Silver Line",
+        "platform_code": null,
+        "platform_name": "South Station/Downtown Crossing",
+        "wheelchair_boarding": 1
+      },
+      "id": "3",
+      "links": {
+        "self": "/stops/3"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=3"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": "Northern Ave @ Tide St - Silver Line - SL2 Design Center",
+        "latitude": 42.34508,
+        "location_type": 0,
+        "longitude": -71.031986,
+        "name": "Northern Ave @ Tide St",
+        "platform_code": null,
+        "platform_name": "Design Center",
+        "wheelchair_boarding": 0
+      },
+      "id": "30249",
+      "links": {
+        "self": "/stops/30249"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=30249"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Dudley St, Roxbury",
+        "description": null,
+        "latitude": 42.329789,
+        "location_type": 0,
+        "longitude": -71.083887,
+        "name": "Dudley Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "64",
+      "links": {
+        "self": "/stops/64"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=64"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St at Worcester Sq, Boston, MA",
+        "description": null,
+        "latitude": 42.337524,
+        "location_type": 0,
+        "longitude": -71.075479,
+        "name": "Washington St @ Worcester St",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "1787",
+      "links": {
+        "self": "/stops/1787"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=1787"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Terminal A Arrivals, Door A104, Boston Logan International Airport, Boston, MA, 02128",
+        "description": "Terminal A - Silver Line - SL1 South Station",
+        "latitude": 42.364612,
+        "location_type": 0,
+        "longitude": -71.020862,
+        "name": "Terminal A",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 0
+      },
+      "id": "17091",
+      "links": {
+        "self": "/stops/17091"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=17091"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Silver Line Way and Starboard Way, Boston, MA 02210",
+        "description": "Silver Line Way before Manulife Building - Silver Line - South Station",
+        "latitude": 42.347188,
+        "location_type": 0,
+        "longitude": -71.038846,
+        "name": "Silver Line Way before Manulife Building",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 1
+      },
+      "id": "74614",
+      "links": {
+        "self": "/stops/74614"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=74614"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Newton St, Boston, MA, 02118",
+        "description": null,
+        "latitude": 42.338763,
+        "location_type": 0,
+        "longitude": -71.073677,
+        "name": "Washington St @ E Newton St",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "1788",
+      "links": {
+        "self": "/stops/1788"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=1788"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.394049,
+        "location_type": 1,
+        "longitude": -71.028365,
+        "name": "Box District",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-boxdt",
+      "links": {
+        "self": "/stops/place-boxdt"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-boxdt"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Black Falcon Ave and Design Center Pl, Boston, MA 02210",
+        "description": "Drydock Ave @ Design Center Place - Silver Line - SL2 South Station",
+        "latitude": 42.3446,
+        "location_type": 0,
+        "longitude": -71.034476,
+        "name": "Drydock Ave @ Design Center Place",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 1
+      },
+      "id": "31255",
+      "links": {
+        "self": "/stops/31255"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=31255"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Atlantic Ave and Summer St, Boston, MA 02110",
+        "description": null,
+        "latitude": 42.352271,
+        "location_type": 1,
+        "longitude": -71.055242,
+        "name": "South Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-sstat",
+      "links": {
+        "self": "/stops/place-sstat"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sstat"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": "Essex St @ Atlantic Ave - Silver Line - SL4 Dudley",
+        "latitude": 42.35176,
+        "location_type": 0,
+        "longitude": -71.056003,
+        "name": "Essex St @ Atlantic Ave",
+        "platform_code": null,
+        "platform_name": "Dudley",
+        "wheelchair_boarding": 1
+      },
+      "id": "6538",
+      "links": {
+        "self": "/stops/6538"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=6538"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Terminal B Arrivals, Door B103, Boston Logan International Airport, Boston, MA, 02128",
+        "description": "Terminal B Stop 1 - Silver Line - SL1 South Station",
+        "latitude": 42.3621,
+        "location_type": 0,
+        "longitude": -71.01882,
+        "name": "Terminal B Stop 1 - Arrivals Level",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 1
+      },
+      "id": "27092",
+      "links": {
+        "self": "/stops/27092"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=27092"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Seaport Blvd and Pittsburg St, Boston, MA",
+        "description": null,
+        "latitude": 42.35245,
+        "location_type": 1,
+        "longitude": -71.04685,
+        "name": "Courthouse",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-crtst",
+      "links": {
+        "self": "/stops/place-crtst"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-crtst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.397071,
+        "location_type": 1,
+        "longitude": -71.042102,
+        "name": "Chelsea",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-chels",
+      "links": {
+        "self": "/stops/place-chels"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-chels"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Congress St and World Trade Center Ave, Boston, MA",
+        "description": null,
+        "latitude": 42.34863,
+        "location_type": 1,
+        "longitude": -71.04246,
+        "name": "World Trade Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-wtcst",
+      "links": {
+        "self": "/stops/place-wtcst"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-wtcst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and E Berkeley St, Boston, MA",
+        "description": "Washington St @ E Berkeley St - Silver Line - South Station/Downtown Crossing",
+        "latitude": 42.343824,
+        "location_type": 0,
+        "longitude": -71.065927,
+        "name": "Washington St @ E Berkeley St",
+        "platform_code": null,
+        "platform_name": "South Station/Downtown Crossing",
+        "wheelchair_boarding": 1
+      },
+      "id": "5095",
+      "links": {
+        "self": "/stops/5095"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=5095"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Terminal C Arrivals, Door C106, Boston Logan International Airport, Boston, MA, 02128",
+        "description": "Terminal C - Silver Line - SL1 South Station",
+        "latitude": 42.366494,
+        "location_type": 0,
+        "longitude": -71.017289,
+        "name": "Terminal C - Arrivals Level",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 1
+      },
+      "id": "17094",
+      "links": {
+        "self": "/stops/17094"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=17094"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Union Park St, Boston, MA",
+        "description": "Washington St @ Union Pk - Silver Line - Dudley",
+        "latitude": 42.340497,
+        "location_type": 0,
+        "longitude": -71.071317,
+        "name": "Washington St @ Union Pk",
+        "platform_code": null,
+        "platform_name": "Dudley",
+        "wheelchair_boarding": 1
+      },
+      "id": "5100",
+      "links": {
+        "self": "/stops/5100"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=5100"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Silver Line Way and Starboard Way, Boston, MA 02210",
+        "description": "Silver Line Way after Manulife Building - Silver Line - Airport/Design Center/Chelsea",
+        "latitude": 42.347056,
+        "location_type": 0,
+        "longitude": -71.038814,
+        "name": "Silver Line Way after Manulife Building",
+        "platform_code": null,
+        "platform_name": "Airport/Design Center/Chelsea",
+        "wheelchair_boarding": 1
+      },
+      "id": "74624",
+      "links": {
+        "self": "/stops/74624"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=74624"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.395438,
+        "location_type": 1,
+        "longitude": -71.033884,
+        "name": "Bellingham Square",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-belsq",
+      "links": {
+        "self": "/stops/place-belsq"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-belsq"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "21 Dry Dock Ave, Boston, MA 02210",
+        "description": "23 Drydock Ave - Silver Line - SL2 Design Center",
+        "latitude": 42.344649,
+        "location_type": 0,
+        "longitude": -71.030268,
+        "name": "23 Drydock Ave",
+        "platform_code": null,
+        "platform_name": "Design Center",
+        "wheelchair_boarding": 0
+      },
+      "id": "30250",
+      "links": {
+        "self": "/stops/30250"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=30250"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Northern Ave and Tide St, Boston, MA 02210",
+        "description": "Northern Ave @ Tide St - Silver Line - SL2 South Station",
+        "latitude": 42.345192,
+        "location_type": 0,
+        "longitude": -71.031996,
+        "name": "Northern Ave @ Tide St",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 0
+      },
+      "id": "31257",
+      "links": {
+        "self": "/stops/31257"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=31257"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Union Park St, Boston, MA",
+        "description": "Washington St @ Union Pk - Silver Line - South Station/Downtown Crossing",
+        "latitude": 42.341308,
+        "location_type": 0,
+        "longitude": -71.069417,
+        "name": "Washington St @ Union Pk",
+        "platform_code": null,
+        "platform_name": "South Station/Downtown Crossing",
+        "wheelchair_boarding": 1
+      },
+      "id": "5093",
+      "links": {
+        "self": "/stops/5093"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=5093"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Northern Ave and Harbor St, Boston, MA 02210",
+        "description": "Northern Ave @ Harbor St - Silver Line - SL2 Design Center",
+        "latitude": 42.346634,
+        "location_type": 0,
+        "longitude": -71.035301,
+        "name": "Northern Ave @ Harbor St",
+        "platform_code": null,
+        "platform_name": "Design Center",
+        "wheelchair_boarding": 0
+      },
+      "id": "247",
+      "links": {
+        "self": "/stops/247"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=247"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Terminal E Arrivals, Door E106, Boston Logan International Airport, Boston, MA, 02128",
+        "description": "Terminal E - Silver Line - SL1 South Station",
+        "latitude": 42.369344,
+        "location_type": 0,
+        "longitude": -71.020238,
+        "name": "Terminal E - Arrivals Level",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 1
+      },
+      "id": "17095",
+      "links": {
+        "self": "/stops/17095"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=17095"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.388374,
+        "location_type": 1,
+        "longitude": -71.023859,
+        "name": "Eastern Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-estav",
+      "links": {
+        "self": "/stops/place-estav"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-estav"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": "Northern Ave opp Harbor St - Silver Line - SL2 South Station",
+        "latitude": 42.346538,
+        "location_type": 0,
+        "longitude": -71.034878,
+        "name": "Northern Ave opp Harbor St",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 0
+      },
+      "id": "31256",
+      "links": {
+        "self": "/stops/31256"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=31256"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "750 Washington St, Boston, MA",
+        "description": null,
+        "latitude": 42.349662,
+        "location_type": 1,
+        "longitude": -71.063917,
+        "name": "Tufts Medical Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-tumnl",
+      "links": {
+        "self": "/stops/place-tumnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-tumnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Transportation Way and Service Rd, Boston, MA 02128",
+        "description": null,
+        "latitude": 42.374262,
+        "location_type": 1,
+        "longitude": -71.030395,
+        "name": "Airport",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-aport",
+      "links": {
+        "self": "/stops/place-aport"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-aport"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Terminal B Arrivals, Door B110, Boston Logan International Airport, Boston, MA, 02128",
+        "description": "Terminal B Stop 2 - Silver Line - SL1 South Station",
+        "latitude": 42.361657,
+        "location_type": 0,
+        "longitude": -71.017833,
+        "name": "Terminal B Stop 2 - Arrivals Level",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 1
+      },
+      "id": "17093",
+      "links": {
+        "self": "/stops/17093"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=17093"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.351549,
+        "location_type": 0,
+        "longitude": -71.052959,
+        "name": "Summer St @ Dorchester Ave",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "892",
+      "links": {
+        "self": "/stops/892"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=892"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Lenox St, Boston, MA 02118",
+        "description": null,
+        "latitude": 42.334949,
+        "location_type": 0,
+        "longitude": -71.078873,
+        "name": "Washington St @ Lenox St",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "4",
+      "links": {
+        "self": "/stops/4"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=4"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": "Drydock Ave @ Black Falcon Ave - Silver Line - SL2 Design Center",
+        "latitude": 42.344232,
+        "location_type": 0,
+        "longitude": -71.027213,
+        "name": "Drydock Ave @ Black Falcon Ave",
+        "platform_code": null,
+        "platform_name": "Design Center",
+        "wheelchair_boarding": 0
+      },
+      "id": "31259",
+      "links": {
+        "self": "/stops/31259"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=31259"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.344706,
+        "location_type": 0,
+        "longitude": -71.028419,
+        "name": "27 Drydock Ave",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 0
+      },
+      "id": "30251",
+      "links": {
+        "self": "/stops/30251"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=30251"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "88 Black Falcon Ave, Boston, MA 02210",
+        "description": "88 Black Falcon - Silver Line - SL2 South Station",
+        "latitude": 42.343753,
+        "location_type": 0,
+        "longitude": -71.026335,
+        "name": "88 Black Falcon",
+        "platform_code": null,
+        "platform_name": "South Station",
+        "wheelchair_boarding": 0
+      },
+      "id": "31258",
+      "links": {
+        "self": "/stops/31258"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=31258"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": "Temple Pl @ Washington St - Silver Line - SL5 Dudley",
+        "latitude": 42.355385,
+        "location_type": 0,
+        "longitude": -71.062211,
+        "name": "Temple Pl @ Washington St",
+        "platform_code": null,
+        "platform_name": "Dudley",
+        "wheelchair_boarding": 1
+      },
+      "id": "49001",
+      "links": {
+        "self": "/stops/49001"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=49001"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Herald St, Boston, MA",
+        "description": "Washington St @ Herald St - Silver Line - Dudley",
+        "latitude": 42.346457,
+        "location_type": 0,
+        "longitude": -71.064695,
+        "name": "Washington St @ Herald St",
+        "platform_code": null,
+        "platform_name": "Dudley",
+        "wheelchair_boarding": 1
+      },
+      "id": "49003",
+      "links": {
+        "self": "/stops/49003"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=49003"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

@@ -9,19 +9,14 @@ import jackwtat.simplembta.utilities.ShapesJsonParser;
 public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
     private String realTimeApiKey;
     private String routeId;
-    private Callbacks callbacks;
+    private OnPostExecuteListener onPostExecuteListener;
 
     public ShapesAsyncTask(String realTimeApiKey,
                            String routeId,
-                           Callbacks callbacks) {
+                           OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.routeId = routeId;
-        this.callbacks = callbacks;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        callbacks.onPreExecute();
+        this.onPostExecuteListener = onPostExecuteListener;
     }
 
     @Override
@@ -33,19 +28,15 @@ public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
                 "include=stops"
         };
 
-        Shape[] shapes = ShapesJsonParser.parse(realTimeApiClient.get("shapes", routeArgs));
-
-        return shapes;
+        return ShapesJsonParser.parse(realTimeApiClient.get("shapes", routeArgs));
     }
 
     @Override
     protected void onPostExecute(Shape[] shapes) {
-        callbacks.onPostExecute(shapes);
+        onPostExecuteListener.onPostExecute(shapes);
     }
 
-    public interface Callbacks {
-        void onPreExecute();
-
+    public interface OnPostExecuteListener {
         void onPostExecute(Shape[] shapes);
     }
 }

@@ -31,9 +31,12 @@ import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
@@ -42,7 +45,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,9 +62,12 @@ import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.LocationClient.LocationClientCallbacks;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Shape;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
+import jackwtat.simplembta.utilities.ShapesJsonParser;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private final static String LOG_TAG = "MapSearchFragment";
@@ -75,7 +85,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     public static final long FASTEST_LOCATION_INTERVAL = 250;
 
     // Maximum elapsed time since time of last location query
-    public static final long MAXIMUM_TIME_SINCE_LAST_LOCATION = 90000;
+    public static final long MAXIMUM_LOCATION_TIME = 90000;
 
     // Maximum age of fresh location data
     public static final long MAXIMUM_LOCATION_AGE = 1000;
@@ -99,7 +109,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private LocationClient locationClient;
     private LocationClientCallbacks locationClientCallbacks;
     private MapSearchPredictionsAsyncTask predictionsAsyncTask;
-    private MapSearchPredictionsAsyncTask.Callbacks predictionsCallbacks;
+    private MapSearchPredictionsAsyncTask.onPostExecuteListener predictionsOnPostExecuteListener;
     private MapSearchRecyclerViewAdapter recyclerViewAdapter;
     private ErrorManager errorManager;
     private Timer autoRefreshTimer;
@@ -109,22 +119,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private boolean mapCameraMoving = false;
     private boolean userHasMovedMap = false;
     private boolean routeDetailOpened = false;
+    private long refreshTime = 0;
+    private long locationQueryTime = 0;
+    private int locationAttemptsCount = 0;
 
+    private List<Route> currentRoutes;
     private Location currentLocation;
-    private Date refreshTime;
-    private Date locationQueryTime;
-    private int locationAttemptsCount;
 
-    List<Route> currentRoutes;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Get MBTA realTime API key
         realTimeApiKey = getContext().getString(R.string.v3_mbta_realtime_api_key);
 
+        // Get error manager
         errorManager = ErrorManager.getErrorManager();
 
+        // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
         // Get the location the user last viewed
@@ -141,12 +154,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onSuccess() {
                 Location currentLocation = locationClient.getLastLocation();
-                locationQueryTime = new Date();
+                locationQueryTime = new Date().getTime();
 
                 if (locationAttemptsCount < MAXIMUM_LOCATION_ATTEMPTS) {
-                    if (locationQueryTime.getTime() - currentLocation.getTime() < MAXIMUM_LOCATION_AGE) {
+                    if (locationQueryTime - currentLocation.getTime() < MAXIMUM_LOCATION_AGE) {
                         locationAttemptsCount = MAXIMUM_LOCATION_ATTEMPTS;
-                        recenterMap(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                        recenterMap(new LatLng(
+                                currentLocation.getLatitude(),
+                                currentLocation.getLongitude()));
                     } else {
                         locationAttemptsCount++;
                     }
@@ -179,16 +194,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
             }
         };
 
-        predictionsCallbacks = new MapSearchPredictionsAsyncTask.Callbacks() {
-            @Override
-            public void onPreExecute() {
-            }
-
+        predictionsOnPostExecuteListener = new MapSearchPredictionsAsyncTask.onPostExecuteListener() {
             @Override
             public void onPostExecute(List<Route> routes) {
                 refreshing = false;
 
-                refreshTime = new Date();
+                refreshTime = new Date().getTime();
 
                 currentRoutes = routes;
 
@@ -232,28 +243,16 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         });
         params.setBehavior(behavior);
 
-        // Initialize map view
+        // Get and initialize map view
         mapView = rootView.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        // Get swipe refresh layout
+        // Get and initialize swipe refresh layout
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
-
-        // Set swipe refresh color
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
                 R.color.colorAccent));
-
-        // Enable swipe refresh scrolling
-        swipeRefreshLayout.setEnabled(true);
-
-        // Set swipe refresh overscroll listener to update predictions
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                forceUpdate();
-            }
-        });
+        swipeRefreshLayout.setEnabled(false);
 
         // Initialize recycler view
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
@@ -314,6 +313,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                recenterMap(marker.getPosition());
+                return false;
+            }
+        });
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
@@ -334,40 +341,33 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
 
-        // Draw the subway and commuter rail lines
-        try {
-            JSONObject jRouteShapes = new JSONObject(
-                    RawResourceReader.toString(getResources().openRawResource(R.raw.route_shapes)));
+        // Get the subway, Silver Line, and commuter rail shapes
+        Shape[] blueShapes = getShapesFromJson(R.raw.shape_blue);
+        Shape[] orangeShapes = getShapesFromJson(R.raw.shape_orange);
+        Shape[] redShapes = getShapesFromJson(R.raw.shape_red);
+        Shape[] greenShapes = getShapesFromJson(R.raw.shape_green);
+        Shape[] silverShapes = getShapesFromJson(R.raw.shape_silver);
+        Shape[] mattapanShapes = getShapesFromJson(R.raw.shape_mattapan);
 
-            JSONArray jData = jRouteShapes.getJSONArray("data");
+        // Draw the route shapes
+        drawRouteShapes(blueShapes, getContext().getResources().getColor(R.color.blue_line));
+        drawRouteShapes(orangeShapes, getContext().getResources().getColor(R.color.orange_line));
+        drawRouteShapes(redShapes, getContext().getResources().getColor(R.color.red_line));
+        drawRouteShapes(greenShapes, getContext().getResources().getColor(R.color.green_line));
+        drawRouteShapes(silverShapes, getContext().getResources().getColor(R.color.silver_line));
+        drawRouteShapes(mattapanShapes, getContext().getResources().getColor(R.color.red_line));
 
-            for (int i = 0; i < jData.length(); i++) {
-                try {
-                    JSONObject jRoute = jData.getJSONObject(i);
-                    gMap.addPolyline(new PolylineOptions()
-                            .addAll(PolyUtil.decode(jRoute.getString("shape")))
-                            .color(Color.parseColor("#FFFFFF"))
-                            .zIndex(0)
-                            .jointType(JointType.ROUND)
-                            .startCap(new RoundCap())
-                            .endCap(new RoundCap())
-                            .width(14));
-                    gMap.addPolyline(new PolylineOptions()
-                            .addAll(PolyUtil.decode(jRoute.getString("shape")))
-                            .color(Color.parseColor(jRoute.getString("color")))
-                            .zIndex(jRoute.getInt("z-index"))
-                            .jointType(JointType.ROUND)
-                            .startCap(new RoundCap())
-                            .endCap(new RoundCap())
-                            .width(8));
-                } catch (JSONException e) {
-                    Log.e(LOG_TAG, "Unable to parse route shape at index " + i);
-                }
-            }
+        // Draw the stop markers
+        HashMap<String, Stop> distinctStops = new HashMap<>();
 
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Unable to parse route shapes JSON");
-        }
+        distinctStops.putAll(getStopsFromShapes(blueShapes));
+        distinctStops.putAll(getStopsFromShapes(orangeShapes));
+        distinctStops.putAll(getStopsFromShapes(redShapes));
+        distinctStops.putAll(getStopsFromShapes(greenShapes));
+        distinctStops.putAll(getStopsFromShapes(silverShapes));
+        distinctStops.putAll(getStopsFromShapes(mattapanShapes));
+
+        drawStopMarkers(distinctStops.values());
     }
 
     @Override
@@ -404,15 +404,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         // If the user navigated to Route Detail and too much time has elapsed when they returned,
         // then clear the predictions and force a refresh
         Long onResumeTime = new Date().getTime();
-        if (routeDetailOpened &&
-                onResumeTime - refreshTime.getTime() > MAXIMUM_PREDICTION_AGE) {
+        if (routeDetailOpened && onResumeTime - refreshTime > MAXIMUM_PREDICTION_AGE) {
             clearPredictions();
             forceUpdate();
 
             // If too much time has elapsed since the user has navigated away from the app,
             // then clear the predictions and update the location to force a refresh
-        } else if (!routeDetailOpened && (locationQueryTime == null ||
-                onResumeTime - locationQueryTime.getTime() > MAXIMUM_TIME_SINCE_LAST_LOCATION)) {
+        } else if (!routeDetailOpened && onResumeTime - locationQueryTime > MAXIMUM_LOCATION_TIME) {
             clearPredictions();
             refreshLocation();
 
@@ -510,7 +508,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
             }
 
             predictionsAsyncTask = new MapSearchPredictionsAsyncTask(
-                    realTimeApiKey, currentLocation, predictionsCallbacks);
+                    realTimeApiKey, currentLocation, predictionsOnPostExecuteListener);
             predictionsAsyncTask.execute();
         }
     }
@@ -524,5 +522,60 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private void forceUpdate() {
         swipeRefreshLayout.setRefreshing(true);
         getPredictions();
+    }
+
+    private Shape[] getShapesFromJson(int jsonFile) {
+        return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
+    }
+
+    private HashMap<String, Stop> getStopsFromShapes(Shape[] shapes) {
+        HashMap<String, Stop> stops = new HashMap<>();
+
+        for (Shape shape : shapes) {
+            for (Stop stop : shape.getStops()) {
+                stops.put(stop.getId(), stop);
+            }
+        }
+
+        return stops;
+    }
+
+    private void drawRouteShapes(Shape[] shapes, int color) {
+        for (Shape s : shapes) {
+            List<LatLng> shapeCoordinates = PolyUtil.decode(s.getPolyline());
+
+            gMap.addPolyline(new PolylineOptions()
+                    .addAll(shapeCoordinates)
+                    .color(Color.parseColor("#FFFFFF"))
+                    .zIndex(0)
+                    .jointType(JointType.ROUND)
+                    .startCap(new RoundCap())
+                    .endCap(new RoundCap())
+                    .width(14));
+
+            gMap.addPolyline(new PolylineOptions()
+                    .addAll(shapeCoordinates)
+                    .color(color)
+                    .zIndex(1)
+                    .jointType(JointType.ROUND)
+                    .startCap(new RoundCap())
+                    .endCap(new RoundCap())
+                    .width(8));
+        }
+    }
+
+    private void drawStopMarkers(Collection<Stop> stops) {
+        for (Stop stop : stops) {
+            Marker stopMarker = gMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(
+                            stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
+                    .anchor(0.5f, 0.5f)
+                    .title(stop.getName())
+                    .zIndex(2)
+                    .flat(true)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.mbta_stop_icon)));
+
+            stopMarker.setTag(stop);
+        }
     }
 }

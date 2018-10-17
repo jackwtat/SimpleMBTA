@@ -23,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,6 +59,7 @@ import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.views.ServiceAlertsListView;
 import jackwtat.simplembta.views.RouteNameView;
 
@@ -68,23 +70,26 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     // Maximum age of prediction
     public static final long MAXIMUM_PREDICTION_AGE = 90000;
 
-    private String realTimeApiKey;
-    private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
-    private RouteDetailPredictionsAsyncTask.Callbacks predictionsCallbacks;
-    private ShapesAsyncTask shapesAsyncTask;
-    private ShapesAsyncTask.Callbacks shapesCallbacks;
-
     private AppBarLayout appBarLayout;
     private MapView mapView;
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
+    private ProgressBar mapProgressBar;
 
+    private String realTimeApiKey;
+    private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
+    private RouteDetailPredictionsAsyncTask.onPostExecuteListener predictionsOnPostExecuteListener;
+    private ShapesAsyncTask shapesAsyncTask;
+    private ShapesAsyncTask.OnPostExecuteListener shapesOnPostExecuteListener;
+    private ErrorManager errorManager;
     private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer autoRefreshTimer;
-    private long refreshTime;
-    private boolean refreshing;
+
+    private boolean refreshing = false;
+    private boolean mapReady = false;
+    private long refreshTime = 0;
 
     private Route route;
     private int direction;
@@ -95,12 +100,17 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
 
+        // Get MBTA realTime API key
+        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
+
+        // Get error manager
+        errorManager = ErrorManager.getErrorManager();
+
+        // Get values passed from calling activity/fragment
         Intent intent = getIntent();
         route = (Route) intent.getSerializableExtra("route");
         direction = intent.getIntExtra("direction", Route.NULL_DIRECTION);
         refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
-
-        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
         // Set action bar
         setTitle(route.getLongDisplayName(this));
@@ -118,12 +128,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
             // Set action bar background color
             ActionBar actionBar = getSupportActionBar();
-            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
+            actionBar.setBackgroundDrawable(
+                    new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
         }
 
         // Get app bar and app bar params
         appBarLayout = findViewById(R.id.app_bar_layout);
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        CoordinatorLayout.LayoutParams params =
+                (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
 
         // Disable scrolling inside app bar
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -141,13 +153,17 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Initialize service alerts
         initializeServiceAlerts();
 
-        // Initialize map view
+        // Get and initialize map view
         mapView = findViewById(R.id.map_view);
-        mapView.getLayoutParams().height = (int) (getResources().getDisplayMetrics().heightPixels * .6);
+        mapView.getLayoutParams().height =
+                (int) (getResources().getDisplayMetrics().heightPixels * .6);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        // Get and set swipe refresh layout
+        // Get map progress bar
+        mapProgressBar = findViewById(R.id.map_progress_bar);
+
+        // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,
                 R.color.colorAccent));
@@ -170,33 +186,26 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         loadPredictions(route.getPredictions(direction));
 
         // Create the predictions async task callbacks
-        predictionsCallbacks = new RouteDetailPredictionsAsyncTask.Callbacks() {
-            @Override
-            public void onPreExecute() {
-            }
+        predictionsOnPostExecuteListener =
+                new RouteDetailPredictionsAsyncTask.onPostExecuteListener() {
+                    @Override
+                    public void onPostExecute(List<Prediction> predictions) {
+                        swipeRefreshLayout.setRefreshing(false);
 
-            @Override
-            public void onPostExecute(List<Prediction> predictions) {
-                swipeRefreshLayout.setRefreshing(false);
+                        refreshTime = new Date().getTime();
 
-                refreshTime = new Date().getTime();
+                        refreshing = false;
 
-                refreshing = false;
+                        route.clearPredictions(direction);
 
-                route.clearPredictions(direction);
+                        route.addPredictions(predictions);
 
-                route.addPredictions(predictions);
-
-                loadPredictions(predictions);
-            }
-        };
+                        loadPredictions(predictions);
+                    }
+                };
 
         // Create the shapes async task callbacks
-        shapesCallbacks = new ShapesAsyncTask.Callbacks() {
-            @Override
-            public void onPreExecute() {
-            }
-
+        shapesOnPostExecuteListener = new ShapesAsyncTask.OnPostExecuteListener() {
             @Override
             public void onPostExecute(Shape[] shapes) {
                 HashMap<String, Stop> distinctStops = new HashMap<>();
@@ -207,36 +216,41 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                         drawRouteShape(route, shape);
 
                         for (Stop stop : shape.getStops()) {
-                            if (!distinctStops.containsKey(stop.getId())) {
-                                distinctStops.put(stop.getId(), stop);
-                            }
+                            distinctStops.put(stop.getId(), stop);
                         }
                     }
                 }
 
+                Stop currentStop = route.getNearestStop(direction);
                 Marker selectedStopMarker = null;
                 LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
 
-                Stop currentStop = route.getNearestStop(direction);
-
                 for (Stop s : distinctStops.values()) {
                     Marker currentMarker = drawStopMarker(s);
-                    boundsBuilder.include(new LatLng(
-                            s.getLocation().getLatitude(), s.getLocation().getLongitude()));
+                    boundsBuilder.include(currentMarker.getPosition());
 
-                    if (currentStop != null && (currentStop.equals(s) || currentStop.isParentOf(s.getId()) ||
-                            s.isParentOf(currentStop.getId()))) {
+                    if (currentStop != null && (currentStop.equals(s) ||
+                            currentStop.isParentOf(s.getId()) || s.isParentOf(currentStop.getId()))) {
                         selectedStopMarker = currentMarker;
                     }
                 }
 
                 if (selectedStopMarker != null) {
                     selectedStopMarker.showInfoWindow();
-                } else if (distinctStops.size() > 0) {
-                    gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+                    gMap.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(selectedStopMarker.getPosition(), 15));
                 } else if (currentStop != null) {
-                    drawStopMarker(currentStop).showInfoWindow();
+                    selectedStopMarker = drawStopMarker(currentStop);
+                    selectedStopMarker.showInfoWindow();
+                    boundsBuilder.include(selectedStopMarker.getPosition());
+                    gMap.moveCamera(
+                            CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+                } else if (distinctStops.size() > 0) {
+                    gMap.moveCamera(
+                            CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
                 }
+
+                mapProgressBar.setVisibility(View.GONE);
             }
         };
     }
@@ -244,6 +258,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
+        mapReady = true;
+
+        // Move the map camera to the last known location
+        Stop stop = route.getNearestStop(direction);
+        LatLng latLng = (stop == null)
+                ? new LatLng(42.3604, -71.0580)
+                : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
         // Set the action listener
         gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -460,7 +482,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
 
         predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route, direction,
-                predictionsCallbacks);
+                predictionsOnPostExecuteListener);
         predictionsAsyncTask.execute();
     }
 
@@ -491,7 +513,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         shapesAsyncTask = new ShapesAsyncTask(
                 realTimeApiKey,
                 route.getId(),
-                shapesCallbacks);
+                shapesOnPostExecuteListener);
         shapesAsyncTask.execute();
     }
 
@@ -529,6 +551,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         Marker stopMarker = gMap.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
+                .anchor(0.5f, 0.5f)
                 .title(stop.getName())
                 .zIndex(2)
                 .flat(true)

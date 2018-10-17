@@ -1,0 +1,804 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Ashmont",
+        "polyline": "qsaaGfrvpLYLuDxAI?e@MWASBcElAq@LsCZc@HaOfBoOlByB^??yB`@uE|@qBFqA@{AOu@Qo@]iAi@o@a@o@i@k@i@q@u@a@k@]m@c@{@Sc@Uq@_@qAm@wDCSo@sD??G_@Mm@Ge@IeACq@Ac@Ay@AkDAeDEmAMqAI_@Ia@I[Oc@i@iAU]_@_@SO}@g@IAIC{@CaB?uABcAEy@GiAMuAWYGc@KqDu@yHiAgBYO?_AM}@KyA[}@Ui@QmA]kA_@cA_@aA[}Am@??SI]KoBq@_AYoDcAeBc@mASwAOoBEs@?kCL}BDqC@cCFeA@_A@u@Dw@DmADiAF[@sBPyAF??u@DSByAPeAT}@V]Nk@Tm@X_@RcAv@WNo@r@]b@{DtF[h@}A|Bq@hAUZ}B|Cm@d@m@\\{@XY@MC_@QqBq@{F_C??g@ScnAl@??qCBie@i[y@c@m@QYIu@Gc@?i@DiARm@TQNa@f@uDbNIX??k@hBq@jBs@vBk@bA_JrQUj@??aDfI??[v@Wn@w@pBa@`Aa@fAwBtFc@~@k@hAsCxDwJ~N]|@Mb@K^CFKn@Gb@C\\ATCjAEt@GhBEbA??AXGlAAPM`DYjIM|CO|GM|DG|AGxCa@`MUbHs@fJOfD??ATIrB_Ap^s@jRWlJYdHOhGIpBKjAk@bBe@bAaDnGkBzD??m@pAwMpVgArCsBdGkEbPc@nAYb@a@d@eChDwG|HMPEFwCzNK^KVMJIB_@?iAO??kAOmB]gBGm@A[HSL[^a@|@e@fAo@r@iBh@aB^}@BkAGaNq@am@iDQ???sMUyQ~@uCJsBDo@Pc@Xm@l@m@bAaAvBu@pB]hAOx@UdAKr@??i@dD_@lDKlBOpCQjESvHKtEYbJg@rUGjCRnDFv@NbAPjAHRHLLFt@Nt@Vt@j@f@|@Vt@@DR~B@b@HpAFxN",
+        "priority": 2
+      },
+      "id": "931_0010",
+      "links": {
+        "self": "/shapes/931_0010"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-asmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-smmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-fldcr",
+              "type": "stop"
+            },
+            {
+              "id": "place-shmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-andrw",
+              "type": "stop"
+            },
+            {
+              "id": "place-brdwy",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-dwnxg",
+              "type": "stop"
+            },
+            {
+              "id": "place-pktrm",
+              "type": "stop"
+            },
+            {
+              "id": "place-chmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-knncl",
+              "type": "stop"
+            },
+            {
+              "id": "place-cntsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-harsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-portr",
+              "type": "stop"
+            },
+            {
+              "id": "place-davis",
+              "type": "stop"
+            },
+            {
+              "id": "place-alfcl",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Braintree",
+        "polyline": "iyr`GzmjpLWAgAGoBQoCMo@EwBSaCKgMeAs@EcDUsEa@wAOqAIg@EeCSqA?[Bs@Ds@H{@JcB\\q@Nw@TiA^mAh@mEvCIFA@MHaGlDqAv@{BlAeHbEg@XULOJWLSJiAr@KFKF[PoBfA{Ar@qD`BmBr@iAXaAVy@P}@Lq@HeAH{@?cAEq@Gk@CSCc@G??qAO}BYMAuAQw@KiBOwBYoCe@mPoCkHmA}@OWCWE_@GkIwA{AWQCMAUEyBa@cGy@oC[_BSuAMiAE{@Bm@FcAPODMDE@YJQDYHq@XeAh@q@\\yBdAi@T??u@\\m@ZmBlAgCjA{@h@w@l@MJKH[Zw@|@wLzMSTQR[XoE~E]`@sDtDoEzEe@d@sAvAsD~DmPxQsF~F}AtA]ZOLOLm@`@IF??yAxAWXkCzCeAtA{HfJiIzIcLzLuC`D}F`G??{@z@uBxB{@`AkCfCgA`Ac@Xw@`@i@Vy@XiAZwDdAqA`@o@PiAj@gAr@aAt@wAnAUV}@fAKJKNEDMNmAvA}BjC_EbFyDnEgDzDgAfAeBnB_F|FIHIJw@~@aAfAcAhAcDrDSTSTg@n@a@b@iL`NmEhFiCxCqLjNcDpD}DvE}HtIgAz@oAz@IDgAh@_A`@_ARy@LkBHy@@wAIuAOqBa@YEsWgE{D}@yCw@}IoCeDcAgF_BkB_@_AK}BEyHXeE@{@@sEJkCF]Bg@@}AFM@a@D_AN??]FSDUBm@FqCd@}@VgAd@eAr@m@f@g@j@{@hAoAhBkBdD[h@}A|Bq@hAUZ}B|Cm@d@m@\\{@XY@MC_@QqBq@{F_C??g@ScnAl@??qCBie@i[y@c@m@QYIu@Gc@?i@DiARm@TQNa@f@uDbNIX??k@hBq@jBs@vBk@bA_JrQUj@??aDfI??[v@Wn@w@pBa@`Aa@fAwBtFc@~@k@hAsCxDwJ~N]|@Mb@K^CFKn@Gb@C\\ATCjAEt@GhBEbA??AXGlAAPM`DYjIM|CO|GM|DG|AGxCa@`MUbHs@fJOfD??ATIrB_Ap^s@jRWlJYdHOhGIpBKjAk@bBe@bAaDnGkBzD??m@pAwMpVgArCsBdGkEbPc@nAYb@a@d@eChDwG|HMPEFwCzNK^KVMJIB_@?iAO??kAOmB]gBGm@A[HSL[^a@|@e@fAo@r@iBh@aB^}@BkAGaNq@am@iDQ???sMUyQ~@uCJsBDo@Pc@Xm@l@m@bAaAvBu@pB]hAOx@UdAKr@??i@dD_@lDKlBOpCQjESvHKtEYbJg@rUGjCRnDFv@NbAPjAHRHLLFt@Nt@Vt@j@f@|@Vt@@DR~B@b@HpAFxN",
+        "priority": 1
+      },
+      "id": "933_0010",
+      "links": {
+        "self": "/shapes/933_0010"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-brntn",
+              "type": "stop"
+            },
+            {
+              "id": "place-qamnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-nqncy",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-andrw",
+              "type": "stop"
+            },
+            {
+              "id": "place-brdwy",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-dwnxg",
+              "type": "stop"
+            },
+            {
+              "id": "place-pktrm",
+              "type": "stop"
+            },
+            {
+              "id": "place-chmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-knncl",
+              "type": "stop"
+            },
+            {
+              "id": "place-cntsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-harsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-portr",
+              "type": "stop"
+            },
+            {
+              "id": "place-davis",
+              "type": "stop"
+            },
+            {
+              "id": "place-alfcl",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": "Alewife Brook Pkwy and Cambridge Park Dr, Cambridge, MA 02140",
+        "description": null,
+        "latitude": 42.395428,
+        "location_type": 1,
+        "longitude": -71.142483,
+        "name": "Alewife",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-alfcl",
+      "links": {
+        "self": "/stops/place-alfcl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-alfcl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Dorchester Ave and Southhampton St, South Boston, MA 02127",
+        "description": null,
+        "latitude": 42.330154,
+        "location_type": 1,
+        "longitude": -71.057655,
+        "name": "Andrew",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-andrw",
+      "links": {
+        "self": "/stops/place-andrw"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-andrw"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Dorchester Ave and Ashmont St, Boston, MA 02124",
+        "description": null,
+        "latitude": 42.284652,
+        "location_type": 1,
+        "longitude": -71.064489,
+        "name": "Ashmont",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-asmnl",
+      "links": {
+        "self": "/stops/place-asmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-asmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Dorchester Ave and Broadway, Boston, MA",
+        "description": null,
+        "latitude": 42.342622,
+        "location_type": 1,
+        "longitude": -71.056967,
+        "name": "Broadway",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-brdwy",
+      "links": {
+        "self": "/stops/place-brdwy"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-brdwy"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "197 Ivory St, Braintree, MA 02184",
+        "description": null,
+        "latitude": 42.207854,
+        "location_type": 1,
+        "longitude": -71.001138,
+        "name": "Braintree",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-brntn",
+      "links": {
+        "self": "/stops/place-brntn"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-brntn"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Cambridge St and Charles St, Boston, MA",
+        "description": null,
+        "latitude": 42.361166,
+        "location_type": 1,
+        "longitude": -71.070628,
+        "name": "Charles/MGH",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-chmnl",
+      "links": {
+        "self": "/stops/place-chmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-chmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Massachusetts Avenue and Prospect Street, Cambridge, MA 02139",
+        "description": null,
+        "latitude": 42.365486,
+        "location_type": 1,
+        "longitude": -71.103802,
+        "name": "Central",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-cntsq",
+      "links": {
+        "self": "/stops/place-cntsq"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-cntsq"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "College Ave and Elm St, Somerville, MA",
+        "description": null,
+        "latitude": 42.39674,
+        "location_type": 1,
+        "longitude": -71.121815,
+        "name": "Davis",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-davis",
+      "links": {
+        "self": "/stops/place-davis"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-davis"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Summer St, Boston, MA",
+        "description": null,
+        "latitude": 42.355518,
+        "location_type": 1,
+        "longitude": -71.060225,
+        "name": "Downtown Crossing",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-dwnxg",
+      "links": {
+        "self": "/stops/place-dwnxg"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-dwnxg"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "50 Freeman St, Dorchester, MA 02122",
+        "description": null,
+        "latitude": 42.300093,
+        "location_type": 1,
+        "longitude": -71.061667,
+        "name": "Fields Corner",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-fldcr",
+      "links": {
+        "self": "/stops/place-fldcr"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-fldcr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1400 Massachusetts Ave, Cambridge, MA",
+        "description": null,
+        "latitude": 42.373362,
+        "location_type": 1,
+        "longitude": -71.118956,
+        "name": "Harvard",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-harsq",
+      "links": {
+        "self": "/stops/place-harsq"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-harsq"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "599 Old Colony Ave Boston, MA 02127-3805",
+        "description": null,
+        "latitude": 42.320685,
+        "location_type": 1,
+        "longitude": -71.052391,
+        "name": "JFK/UMass",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-jfk",
+      "links": {
+        "self": "/stops/place-jfk"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-jfk"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "300 Main St, Cambridge, MA 02142",
+        "description": null,
+        "latitude": 42.362491,
+        "location_type": 1,
+        "longitude": -71.086177,
+        "name": "Kendall/MIT",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-knncl",
+      "links": {
+        "self": "/stops/place-knncl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-knncl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Hancock St and Hunt St, Quincy, MA 02171",
+        "description": null,
+        "latitude": 42.275275,
+        "location_type": 1,
+        "longitude": -71.029583,
+        "name": "North Quincy",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-nqncy",
+      "links": {
+        "self": "/stops/place-nqncy"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-nqncy"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Tremont St and Winter St, Boston, MA 02108",
+        "description": null,
+        "latitude": 42.356395,
+        "location_type": 1,
+        "longitude": -71.062424,
+        "name": "Park Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-pktrm",
+      "links": {
+        "self": "/stops/place-pktrm"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-pktrm"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1899 Massachusetts Ave, Cambridge, MA 02140",
+        "description": null,
+        "latitude": 42.3884,
+        "location_type": 1,
+        "longitude": -71.119149,
+        "name": "Porter",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-portr",
+      "links": {
+        "self": "/stops/place-portr"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-portr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Burgin Pkwy and Centre St, Quincy, MA 02169",
+        "description": null,
+        "latitude": 42.233391,
+        "location_type": 1,
+        "longitude": -71.007153,
+        "name": "Quincy Adams",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-qamnl",
+      "links": {
+        "self": "/stops/place-qamnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-qamnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "175 Thomas E Burgin Pkwy, Quincy, MA 02169",
+        "description": null,
+        "latitude": 42.251809,
+        "location_type": 1,
+        "longitude": -71.005409,
+        "name": "Quincy Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-qnctr",
+      "links": {
+        "self": "/stops/place-qnctr"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-qnctr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "125 Savin Hill Ave, Dorchester, MA 02124",
+        "description": null,
+        "latitude": 42.31129,
+        "location_type": 1,
+        "longitude": -71.053331,
+        "name": "Savin Hill",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-shmnl",
+      "links": {
+        "self": "/stops/place-shmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-shmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Dayton St and Clementine Park, Dorchester, MA 02124",
+        "description": null,
+        "latitude": 42.293126,
+        "location_type": 1,
+        "longitude": -71.065738,
+        "name": "Shawmut",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-smmnl",
+      "links": {
+        "self": "/stops/place-smmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-smmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Atlantic Ave and Summer St, Boston, MA 02110",
+        "description": null,
+        "latitude": 42.352271,
+        "location_type": 1,
+        "longitude": -71.055242,
+        "name": "South Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-sstat",
+      "links": {
+        "self": "/stops/place-sstat"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sstat"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

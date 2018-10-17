@@ -1,0 +1,694 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Oak Grove",
+        "polyline": "qzdaGbn`qLiAs@oDwBOKOIm@e@MKiBiAsA_A}CkBwA_A_CsAwCaBeAo@oFwCIEgDiBw@i@i@[}@i@_DeBeAk@QK??a@UYOyCaBwDgB{Ai@_DgA??qA]iBm@eA[wDaASGiA_@uB{@e@UKE??WMmAk@wAu@w@c@iCcBoA}@gDqCwCcC}AiAmA_AwA}@QKg@]SMMG??wAs@cHsCg@MICuEqA[Im@OqAa@_A[}@Uo@Sq@Yg@U]S}@_@e@Sa@Wo@YcAo@oA}@eE_D}@u@????a@]OKo@o@_BiBOOgEoFOSkL{NSUuCyD??SWc@i@qCsDgAuAkNaRoDyEc@m@c@o@]g@??s@eAmDoEsBcCo@y@KIyAmB_@g@oHmJcB_C}AyBw@eAU_@Sc@EMKc@?A??Kg@K_BGmAAkAAcBAu@?_GAiCBwG@qFBcAN{C@g@C[Ke@aHsROQyAU??}@OyBwB{@aASMYK}B_@eDa@UC??y@Go@Ci@Ak@OWKu@q@c@g@iDcDiAuAw@u@AA??sA}AcBsBwAwBaEmDWOOAwC?U???{GCmMf@s@Ha@R??c@Xi@d@cCtCuHlG??QLea@n_@ABqGlKyCjGe@bBCD??yAlEs@nBWv@sB~DmAnB{A|BiBnBmB`B{JdI{Az@c@LID]Ls@Pa@F[Bo@@uFBaDJw@A[AS?qBE??yAEgACcC?W@aA?e@AoA@UA_@@eB@uA@oBHeBBqED{AAeC@eCFmER}@D??gCHaEBuOA}CAoCAgACeBAmCCgA?gACyDGqCEg@CMAgEGo@E??g@CY?W?aB?Q?}CAqB?qQK_GGwABgB?_IGsHGqFEgB?kCDeB@c@?gFEgBMwCWoAMaEs@OEcAWqA]iDcAgF_BgHwBICqBo@[I??qBm@YKyAa@iA]{@[mGkBqIcCiA]OEMEuDiAkBe@mAUeAO_Ee@QAQAUCYCsC[qBQ",
+        "priority": 1
+      },
+      "id": "903_0017",
+      "links": {
+        "self": "/shapes/903_0017"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Orange",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-forhl",
+              "type": "stop"
+            },
+            {
+              "id": "place-grnst",
+              "type": "stop"
+            },
+            {
+              "id": "place-sbmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-jaksn",
+              "type": "stop"
+            },
+            {
+              "id": "place-rcmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-rugg",
+              "type": "stop"
+            },
+            {
+              "id": "place-masta",
+              "type": "stop"
+            },
+            {
+              "id": "place-bbsta",
+              "type": "stop"
+            },
+            {
+              "id": "place-tumnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-chncl",
+              "type": "stop"
+            },
+            {
+              "id": "place-dwnxg",
+              "type": "stop"
+            },
+            {
+              "id": "place-state",
+              "type": "stop"
+            },
+            {
+              "id": "place-haecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "place-ccmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-sull",
+              "type": "stop"
+            },
+            {
+              "id": "place-astao",
+              "type": "stop"
+            },
+            {
+              "id": "place-welln",
+              "type": "stop"
+            },
+            {
+              "id": "place-mlmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-ogmnl",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": "499 Foley St, Somerville, MA 02145",
+        "description": null,
+        "latitude": 42.392811,
+        "location_type": 1,
+        "longitude": -71.077257,
+        "name": "Assembly",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-astao",
+      "links": {
+        "self": "/stops/place-astao"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-astao"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "145 Dartmouth St Boston, MA 02116",
+        "description": null,
+        "latitude": 42.34735,
+        "location_type": 1,
+        "longitude": -71.075727,
+        "name": "Back Bay",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-bbsta",
+      "links": {
+        "self": "/stops/place-bbsta"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bbsta"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Austin St and Rutherford Ave, Charlestown, MA",
+        "description": null,
+        "latitude": 42.373622,
+        "location_type": 1,
+        "longitude": -71.069533,
+        "name": "Community College",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-ccmnl",
+      "links": {
+        "self": "/stops/place-ccmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-ccmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington Street and Boylston Street, Boston, MA",
+        "description": null,
+        "latitude": 42.352547,
+        "location_type": 1,
+        "longitude": -71.062752,
+        "name": "Chinatown",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-chncl",
+      "links": {
+        "self": "/stops/place-chncl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-chncl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Summer St, Boston, MA",
+        "description": null,
+        "latitude": 42.355518,
+        "location_type": 1,
+        "longitude": -71.060225,
+        "name": "Downtown Crossing",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-dwnxg",
+      "links": {
+        "self": "/stops/place-dwnxg"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-dwnxg"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St and Hyde Park Ave, Jamaica Plain, MA 02130",
+        "description": null,
+        "latitude": 42.300523,
+        "location_type": 1,
+        "longitude": -71.113686,
+        "name": "Forest Hills",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-forhl",
+      "links": {
+        "self": "/stops/place-forhl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-forhl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "150 Green St, Jamaica Plain, MA",
+        "description": null,
+        "latitude": 42.310525,
+        "location_type": 1,
+        "longitude": -71.107414,
+        "name": "Green Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-grnst",
+      "links": {
+        "self": "/stops/place-grnst"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-grnst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "136 Blackstone St, Boston, MA 02109",
+        "description": null,
+        "latitude": 42.363021,
+        "location_type": 1,
+        "longitude": -71.05829,
+        "name": "Haymarket",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-haecl",
+      "links": {
+        "self": "/stops/place-haecl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-haecl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1500 Columbus Ave, Jamaica Plain, MA",
+        "description": null,
+        "latitude": 42.323132,
+        "location_type": 1,
+        "longitude": -71.099592,
+        "name": "Jackson Square",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-jaksn",
+      "links": {
+        "self": "/stops/place-jaksn"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-jaksn"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "393 Massachusetts Ave, Boston, MA 02118",
+        "description": null,
+        "latitude": 42.341512,
+        "location_type": 1,
+        "longitude": -71.083423,
+        "name": "Massachusetts Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-masta",
+      "links": {
+        "self": "/stops/place-masta"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-masta"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commercial St and Pleasant St, Malden, MA 02148",
+        "description": null,
+        "latitude": 42.426632,
+        "location_type": 1,
+        "longitude": -71.07411,
+        "name": "Malden Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-mlmnl",
+      "links": {
+        "self": "/stops/place-mlmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-mlmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "135 Causeway St, Boston MA 02114",
+        "description": null,
+        "latitude": 42.365577,
+        "location_type": 1,
+        "longitude": -71.06129,
+        "name": "North Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-north",
+      "links": {
+        "self": "/stops/place-north"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-north"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St at Winter St, Malden, MA 02148",
+        "description": null,
+        "latitude": 42.43668,
+        "location_type": 1,
+        "longitude": -71.071097,
+        "name": "Oak Grove",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-ogmnl",
+      "links": {
+        "self": "/stops/place-ogmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-ogmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1400 Tremont St, Roxbury, MA",
+        "description": null,
+        "latitude": 42.331397,
+        "location_type": 1,
+        "longitude": -71.095451,
+        "name": "Roxbury Crossing",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-rcmnl",
+      "links": {
+        "self": "/stops/place-rcmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-rcmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1150 Tremont St, Roxbury, MA 02120",
+        "description": null,
+        "latitude": 42.336377,
+        "location_type": 1,
+        "longitude": -71.088961,
+        "name": "Ruggles",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-rugg",
+      "links": {
+        "self": "/stops/place-rugg"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-rugg"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "100 Boylston St, Jamaica Plain, MA",
+        "description": null,
+        "latitude": 42.317062,
+        "location_type": 1,
+        "longitude": -71.104248,
+        "name": "Stony Brook",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-sbmnl",
+      "links": {
+        "self": "/stops/place-sbmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sbmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "200 Washington St, Boston, MA",
+        "description": null,
+        "latitude": 42.358978,
+        "location_type": 1,
+        "longitude": -71.057598,
+        "name": "State Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-state",
+      "links": {
+        "self": "/stops/place-state"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-state"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Maffa Way and Cambridge St, Charlestown, MA 02129",
+        "description": null,
+        "latitude": 42.383975,
+        "location_type": 1,
+        "longitude": -71.076994,
+        "name": "Sullivan Square",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-sull",
+      "links": {
+        "self": "/stops/place-sull"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sull"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "750 Washington St, Boston, MA",
+        "description": null,
+        "latitude": 42.349662,
+        "location_type": 1,
+        "longitude": -71.063917,
+        "name": "Tufts Medical Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-tumnl",
+      "links": {
+        "self": "/stops/place-tumnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-tumnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Revere Beach Pkwy and Rivers Edge Dr, Medford, MA 02155",
+        "description": null,
+        "latitude": 42.40237,
+        "location_type": 1,
+        "longitude": -71.077082,
+        "name": "Wellington",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-welln",
+      "links": {
+        "self": "/stops/place-welln"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-welln"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
