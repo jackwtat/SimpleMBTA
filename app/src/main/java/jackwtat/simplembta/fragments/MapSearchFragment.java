@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,6 +239,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setZoomControlsEnabled(true);
 
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            gMap.setMyLocationEnabled(true);
+            mapUiSettings.setMyLocationButtonEnabled(true);
+        }
+
         // Move the map camera to the last known location
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
@@ -407,12 +414,16 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         boolean staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
                 onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
 
-        if (mapReady && locationPermissionGranted && staleLocation) {
+        if (locationPermissionGranted && staleLocation) {
             mapState = USER_HAS_NOT_MOVED_MAP;
-            mapTargetView.setVisibility(View.GONE);
+            if (mapReady) {
+                mapTargetView.setVisibility(View.GONE);
+            }
         } else {
-            mapTargetView.setVisibility(View.VISIBLE);
             forceUpdate();
+            if (mapReady) {
+                mapTargetView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -521,6 +532,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
 
                     if (mapReady) {
+                        Log.i(LOG_TAG, "Error found");
                         UiSettings mapUiSettings = gMap.getUiSettings();
                         mapUiSettings.setMyLocationButtonEnabled(false);
                         mapTargetView.setVisibility(View.VISIBLE);
