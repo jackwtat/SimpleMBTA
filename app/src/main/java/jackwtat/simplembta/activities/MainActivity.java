@@ -76,29 +76,34 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
 
     @Override
     public void onErrorChanged() {
-        errorTextView.setOnClickListener(null);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                errorTextView.setOnClickListener(null);
 
-        if (errorManager.hasNetworkError()) {
-            errorTextView.setText(R.string.network_error_text);
-            errorTextView.setVisibility(View.VISIBLE);
+                if (errorManager.hasNetworkError()) {
+                    errorTextView.setText(R.string.network_error_text);
+                    errorTextView.setVisibility(View.VISIBLE);
 
-        } else if (errorManager.hasLocationPermissionDenied()) {
-            errorTextView.setText(R.string.location_permission_denied_text);
-            errorTextView.setVisibility(View.VISIBLE);
-            errorTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    requestLocationPermission();
+                } else if (errorManager.hasLocationPermissionDenied()) {
+                    errorTextView.setText(R.string.location_permission_denied_text);
+                    errorTextView.setVisibility(View.VISIBLE);
+                    errorTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestLocationPermission();
+                        }
+                    });
+
+                } else if (errorManager.hasLocationError()) {
+                    errorTextView.setText(R.string.location_error_text);
+                    errorTextView.setVisibility(View.VISIBLE);
+
+                } else {
+                    errorTextView.setVisibility(View.GONE);
                 }
-            });
-
-        } else if (errorManager.hasLocationError()) {
-            errorTextView.setText(R.string.location_error_text);
-            errorTextView.setVisibility(View.VISIBLE);
-
-        } else {
-            errorTextView.setVisibility(View.GONE);
-        }
+            }
+        });
     }
 
     private void requestLocationPermission() {

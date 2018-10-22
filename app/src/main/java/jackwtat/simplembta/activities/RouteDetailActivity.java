@@ -364,15 +364,20 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onErrorChanged() {
-        errorTextView.setOnClickListener(null);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                errorTextView.setOnClickListener(null);
 
-        if (errorManager.hasNetworkError()) {
-            errorTextView.setText(R.string.network_error_text);
-            errorTextView.setVisibility(View.VISIBLE);
+                if (errorManager.hasNetworkError()) {
+                    errorTextView.setText(R.string.network_error_text);
+                    errorTextView.setVisibility(View.VISIBLE);
 
-        } else if (!errorManager.hasNetworkError()) {
-            errorTextView.setVisibility(View.GONE);
-        }
+                } else if (!errorManager.hasNetworkError()) {
+                    errorTextView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -672,7 +677,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private class ServiceAlertsUpdateTimerTask extends TimerTask{
+    private class ServiceAlertsUpdateTimerTask extends TimerTask {
 
         @Override
         public void run() {
