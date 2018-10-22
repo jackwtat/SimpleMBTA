@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
@@ -19,8 +20,6 @@ import jackwtat.simplembta.fragments.MapSearchFragment;
 
 public class MainActivity extends AppCompatActivity implements ErrorManager.OnErrorChangedListener {
     public final static String LOG_TAG = "MainActivity";
-
-    private final int REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private PredictionsPagerAdapter predictionsPagerAdapter;
     private ViewPager viewPager;
@@ -52,19 +51,14 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         */
 
         errorTextView = findViewById(R.id.error_message_text_view);
-        errorManager = ErrorManager.getErrorManager();
-        errorManager.registerOnErrorChangeListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        // Get location access permission from user
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
-        }
+        errorManager = ErrorManager.getErrorManager();
+        errorManager.registerOnErrorChangeListener(this);
     }
 
     @Override
@@ -91,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
                     errorTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            requestLocationPermission();
+                            LocationClient.requestLocationPermission(MainActivity.this);
                         }
                     });
 
@@ -104,11 +98,5 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
                 }
             }
         });
-    }
-
-    private void requestLocationPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                REQUEST_ACCESS_FINE_LOCATION);
     }
 }

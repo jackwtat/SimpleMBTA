@@ -110,7 +110,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private Route route;
     private int direction;
-    private List<Prediction> currentPredictions;
     private ArrayList<Shape> routeShapes = new ArrayList<>();
     private ArrayList<Marker> stopMarkers = new ArrayList<>();
     private Marker selectedStopMarker;
@@ -129,13 +128,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         direction = intent.getIntExtra("direction", Route.NULL_DIRECTION);
         refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
 
-        // Get predictions from the current route
-        currentPredictions = route.getPredictions(direction);
-
-        // Get error manager
+        // Get error textview
         errorTextView = findViewById(R.id.error_message_text_view);
-        errorManager = ErrorManager.getErrorManager();
-        errorManager.registerOnErrorChangeListener(this);
 
         // Get network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(this);
@@ -288,6 +282,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     protected void onStart() {
         super.onStart();
         mapView.onStart();
+
+        errorManager = ErrorManager.getErrorManager();
+        errorManager.registerOnErrorChangeListener(this);
     }
 
     @Override
@@ -372,6 +369,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 if (errorManager.hasNetworkError()) {
                     errorTextView.setText(R.string.network_error_text);
                     errorTextView.setVisibility(View.VISIBLE);
+
+                    route.clearPredictions(Route.INBOUND);
+                    route.clearPredictions(Route.OUTBOUND);
+                    route.clearServiceAlerts();
+
+                    refreshRecyclerView();
+                    refreshServiceAlertsView();
 
                 } else if (!errorManager.hasNetworkError()) {
                     errorTextView.setVisibility(View.GONE);
@@ -480,13 +484,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             errorManager.setNetworkError(true);
             refreshing = false;
             swipeRefreshLayout.setRefreshing(false);
-            clearPredictions();
         }
     }
 
     private void refreshRecyclerView() {
-        if (!userIsScrolling && currentPredictions != null) {
-            recyclerViewAdapter.setPredictions(currentPredictions);
+        if (!userIsScrolling) {
+            recyclerViewAdapter.setPredictions(route.getPredictions(direction));
 
             if (recyclerViewAdapter.getItemCount() == 0) {
                 appBarLayout.setExpanded(true);

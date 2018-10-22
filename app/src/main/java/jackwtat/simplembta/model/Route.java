@@ -288,26 +288,6 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
-    public boolean hasLivePickUps(int direction) {
-        if (direction == INBOUND) {
-            for (Prediction p : inboundPredictions) {
-                if (p.willPickUpPassengers() && p.isLive()) {
-                    return true;
-                }
-            }
-            return false;
-        } else if (direction == OUTBOUND) {
-            for (Prediction p : outboundPredictions) {
-                if (p.willPickUpPassengers() && p.isLive()) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            return false;
-        }
-    }
-
     public boolean hasNearbyStops() {
         return nearestInboundStop != null || nearestOutboundStop != null;
     }

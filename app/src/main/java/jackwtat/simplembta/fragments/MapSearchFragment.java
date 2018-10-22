@@ -62,7 +62,8 @@ import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.utilities.ShapesJsonParser;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
-        MapSearchPredictionsAsyncTask.OnPostExecuteListener, LocationClientCallbacks {
+        MapSearchPredictionsAsyncTask.OnPostExecuteListener, LocationClientCallbacks,
+        ErrorManager.OnErrorChangedListener {
     public static final String LOG_TAG = "MapSearchFragment";
 
     // Maximum age of prediction
@@ -129,9 +130,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Get MBTA realTime API key
         realTimeApiKey = getContext().getString(R.string.v3_mbta_realtime_api_key);
 
-        // Get error manager
-        errorManager = ErrorManager.getErrorManager();
-
         // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
@@ -141,6 +139,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         targetLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
         targetLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
 
+        LocationClient.requestLocationPermission(getActivity());
         locationClient = new LocationClient(getContext(), LOCATION_CLIENT_INTERVAL,
                 FASTEST_LOCATION_CLIENT_INTERVAL);
     }
@@ -238,12 +237,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         mapUiSettings.setRotateGesturesEnabled(false);
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setZoomControlsEnabled(true);
-
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            gMap.setMyLocationEnabled(true);
-            mapUiSettings.setMyLocationButtonEnabled(true);
-        }
 
         // Move the map camera to the last known location
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -380,6 +373,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         mapView.onStart();
+
+        // Get error manager
+        errorManager = ErrorManager.getErrorManager();
+        errorManager.registerOnErrorChangeListener(this);
     }
 
     @Override
@@ -405,12 +402,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         timer.schedule(new PredictionsUpdateTimerTask(),
                 PREDICTIONS_UPDATE_RATE, PREDICTIONS_UPDATE_RATE);
 
-        if (mapState == USER_HAS_NOT_MOVED_MAP ||
-                onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME) {
+        boolean locationPermissionGranted = ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
+                onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
+
+        if (mapReady && locationPermissionGranted && staleLocation) {
             mapState = USER_HAS_NOT_MOVED_MAP;
             mapTargetView.setVisibility(View.GONE);
         } else {
             mapTargetView.setVisibility(View.VISIBLE);
+            forceUpdate();
         }
     }
 
@@ -504,6 +506,36 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         refreshRecyclerView();
     }
 
+    @Override
+    public void onErrorChanged() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (errorManager.hasLocationPermissionDenied() || errorManager.hasLocationError() ||
+                        errorManager.hasNetworkError()) {
+                    mapState = USER_HAS_MOVED_MAP;
+
+                    if (currentRoutes != null) {
+                        currentRoutes.clear();
+                        refreshRecyclerView();
+                    }
+
+                    if (mapReady) {
+                        UiSettings mapUiSettings = gMap.getUiSettings();
+                        mapUiSettings.setMyLocationButtonEnabled(false);
+                        mapTargetView.setVisibility(View.VISIBLE);
+                    }
+
+                } else if (mapReady && ActivityCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    UiSettings mapUiSettings = gMap.getUiSettings();
+                    gMap.setMyLocationEnabled(true);
+                    mapUiSettings.setMyLocationButtonEnabled(true);
+                }
+            }
+        });
+    }
+
     private void backgroundUpdate() {
         if (!refreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
             getPredictions();
@@ -532,7 +564,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             errorManager.setNetworkError(true);
             refreshing = false;
             swipeRefreshLayout.setRefreshing(false);
-            clearPredictions();
+            if (currentRoutes != null) {
+                currentRoutes.clear();
+            }
         }
     }
 

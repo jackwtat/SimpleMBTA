@@ -21,18 +21,24 @@ public class ErrorManager {
     }
 
     public void setNetworkError(boolean error) {
-        networkError = error;
-        notifyErrorChanged();
+        if (error != networkError) {
+            networkError = error;
+            notifyErrorChanged();
+        }
     }
 
     public void setLocationError(boolean error) {
-        locationError = error;
-        notifyErrorChanged();
+        if (error != locationError) {
+            locationError = error;
+            notifyErrorChanged();
+        }
     }
 
     public void setLocationPermissionDenied(boolean error) {
-        locationPermissionDenied = error;
-        notifyErrorChanged();
+        if (error != locationPermissionDenied) {
+            locationPermissionDenied = error;
+            notifyErrorChanged();
+        }
     }
 
     public boolean hasNetworkError() {
@@ -49,11 +55,11 @@ public class ErrorManager {
 
     public void registerOnErrorChangeListener(OnErrorChangedListener listener) {
         onErrorChangedListeners.add(listener);
+        listener.onErrorChanged();
     }
 
     private void notifyErrorChanged() {
         for (OnErrorChangedListener listener : onErrorChangedListeners) {
-
             listener.onErrorChanged();
         }
     }

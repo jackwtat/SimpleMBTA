@@ -2,6 +2,7 @@ package jackwtat.simplembta.clients;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -26,11 +27,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class LocationClient {
     private final String LOG_TAG = "LocationClient";
 
+    private static final int REQUEST_ACCESS_FINE_LOCATION = 1;
+
     private Context context;
     private FusedLocationProviderClient locationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private Location lastLocation;
+
+    public static void requestLocationPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_ACCESS_FINE_LOCATION);
+    }
 
     @SuppressLint("RestrictedApi")
     public LocationClient(Context context, long updateInterval, long fastestUpdateInterval) {
@@ -107,6 +116,7 @@ public class LocationClient {
     }
 
     public interface LocationClientCallbacks {
+
         void onSuccess();
 
         void onFailure();
