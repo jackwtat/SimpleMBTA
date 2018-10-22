@@ -14,12 +14,8 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 
 public class RouteNameView extends RelativeLayout {
-    final static public int SQUARE_BACKGROUND = 0;
-    final static public int ROUNDED_BACKGROUND = 1;
-
     View rootView;
-    View routeNameAccentView;
-    TextView routeNameTextView;
+    TextView textView;
 
     public RouteNameView(Context context) {
         super(context);
@@ -36,60 +32,31 @@ public class RouteNameView extends RelativeLayout {
         initializeViews(context);
     }
 
-    public RouteNameView(Context context, Route route, float textSize, int backgroundShape,
-                         boolean abbreviateName, boolean enableColorAccent) {
+    public RouteNameView(Context context, Route route) {
         super(context);
         initializeViews(context);
-        setRouteNameView(route, textSize, backgroundShape, abbreviateName, enableColorAccent);
+        setRouteNameView(context, route);
     }
 
-    public void setRouteNameView(Route route, float textSize, int backgroundShape,
-                                 boolean abbreviateName, boolean enableColorAccent) {
-        setBackground(route, backgroundShape);
-        setColorAccent(route, enableColorAccent);
-        setRouteName(route, abbreviateName, textSize);
-    }
-
-    private void setBackground(Route route, int backgroundShape) {
-        Drawable background;
-
-        // Background shape
-        if (backgroundShape == ROUNDED_BACKGROUND) {
-            background = getContext().getResources().getDrawable(R.drawable.rounded_background);
+    public void setRouteNameView(Context context, Route route) {
+        // Set text
+        if (route.getMode() == Route.BUS) {
+            textView.setText(route.getShortDisplayName(context));
         } else {
-            background = getContext().getResources().getDrawable(R.drawable.square_background);
+            textView.setText(route.getLongDisplayName(context));
         }
 
-        // Background color
+        // Set text color
+        textView.setTextColor(Color.parseColor(route.getTextColor()));
+
+        // Set background color
+        Drawable background = textView.getBackground();
         DrawableCompat.setTint(background, Color.parseColor(route.getPrimaryColor()));
-
-        // Set background
-        setBackground(background);
-    }
-
-    private void setColorAccent(Route route, boolean enableColorAccent) {
-        if (enableColorAccent && route.getMode() == Route.BUS &&
-                !route.getLongName().contains("Silver Line") && !route.getShortName().contains("SL")) {
-            routeNameAccentView.setVisibility(View.VISIBLE);
-        } else {
-            routeNameAccentView.setVisibility(View.GONE);
-        }
-    }
-
-    private void setRouteName(Route route, boolean abbreviateName, float textSize) {
-        routeNameTextView.setTextColor(Color.parseColor(route.getTextColor()));
-        routeNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-
-        if (abbreviateName) {
-            routeNameTextView.setText(route.getShortDisplayName(getContext()));
-        } else {
-            routeNameTextView.setText(route.getLongDisplayName(getContext()));
-        }
+        textView.setBackground(background);
     }
 
     private void initializeViews(Context context) {
         rootView = inflate(context, R.layout.route_name_view, this);
-        routeNameAccentView = rootView.findViewById(R.id.route_name_accent);
-        routeNameTextView = rootView.findViewById(R.id.route_name_text_view);
+        textView = rootView.findViewById(R.id.route_name_text_view);
     }
 }

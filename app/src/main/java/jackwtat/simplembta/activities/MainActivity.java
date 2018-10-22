@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         tabLayout.setupWithViewPager(viewPager);
         */
 
+        errorTextView = findViewById(R.id.error_message_text_view);
         errorManager = ErrorManager.getErrorManager();
         errorManager.registerOnErrorChangeListener(this);
-        errorTextView = findViewById(R.id.error_message_text_view);
     }
 
     @Override

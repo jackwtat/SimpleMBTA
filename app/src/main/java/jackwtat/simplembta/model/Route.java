@@ -5,14 +5,20 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import jackwtat.simplembta.R;
 
 public class Route implements Comparable<Route>, Serializable {
-    public static final int INBOUND = 1;
     public static final int OUTBOUND = 0;
-    public static final int NULL_DIRECTION = 1;
+    public static final int INBOUND = 1;
+    public static final int WESTBOUND = 0;
+    public static final int EASTBOUND = 1;
+    public static final int SOUTHBOUND = 0;
+    public static final int NORTHBOUND = 1;
+    public static final int NULL_DIRECTION = 0;
 
     public static final int LIGHT_RAIL = 0;
     public static final int HEAVY_RAIL = 1;
@@ -34,8 +40,6 @@ public class Route implements Comparable<Route>, Serializable {
 
     private Stop nearestInboundStop = null;
     private Stop nearestOutboundStop = null;
-    private boolean hasLiveInboundPickUps = false;
-    private boolean hasLiveOutboundPickUps = false;
     private ArrayList<Prediction> inboundPredictions = new ArrayList<>();
     private ArrayList<Prediction> outboundPredictions = new ArrayList<>();
 
@@ -207,24 +211,51 @@ public class Route implements Comparable<Route>, Serializable {
         this.sortOrder = sortOrder;
     }
 
-    public void setNearestStop(int direction, Stop stop) {
+    public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
         if (direction == INBOUND) {
-            if (nearestInboundStop == null || !nearestInboundStop.equals(stop)) {
+            if (clearPredictions) {
                 inboundPredictions.clear();
-                hasLiveInboundPickUps = false;
+            }
+
+            if (nearestInboundStop == null || !nearestInboundStop.equals(stop)) {
                 nearestInboundStop = stop;
             }
         } else if (direction == OUTBOUND) {
-            if (nearestOutboundStop == null || !nearestOutboundStop.equals(stop)) {
+            if (clearPredictions) {
                 outboundPredictions.clear();
-                hasLiveOutboundPickUps = false;
+            }
+
+            if (nearestOutboundStop == null || !nearestOutboundStop.equals(stop)) {
                 nearestOutboundStop = stop;
             }
         }
     }
 
-    public boolean hasPredictions() {
-        return inboundPredictions.size() > 0 || outboundPredictions.size() > 0;
+    public void addPrediction(Prediction prediction) {
+        if (prediction.getDestination().equals("Silver Line Way") && !id.equals("746")) {
+            return;
+        }
+
+        if (prediction.getDirection() == INBOUND) {
+            inboundPredictions.add(prediction);
+
+        } else if (prediction.getDirection() == OUTBOUND) {
+            outboundPredictions.add(prediction);
+        }
+    }
+
+    public void addAllPredictions(List<Prediction> predictions) {
+        for (Prediction p : predictions) {
+            addPrediction(p);
+        }
+    }
+
+    public void clearPredictions(int direction) {
+        if (direction == INBOUND) {
+            inboundPredictions.clear();
+        } else if (direction == OUTBOUND) {
+            outboundPredictions.clear();
+        }
     }
 
     public boolean hasPredictions(int direction) {
@@ -259,9 +290,19 @@ public class Route implements Comparable<Route>, Serializable {
 
     public boolean hasLivePickUps(int direction) {
         if (direction == INBOUND) {
-            return hasLiveInboundPickUps;
+            for (Prediction p : inboundPredictions) {
+                if (p.willPickUpPassengers() && p.isLive()) {
+                    return true;
+                }
+            }
+            return false;
         } else if (direction == OUTBOUND) {
-            return hasLiveOutboundPickUps;
+            for (Prediction p : outboundPredictions) {
+                if (p.willPickUpPassengers() && p.isLive()) {
+                    return true;
+                }
+            }
+            return false;
         } else {
             return false;
         }
@@ -271,36 +312,30 @@ public class Route implements Comparable<Route>, Serializable {
         return nearestInboundStop != null || nearestOutboundStop != null;
     }
 
-    public void addPrediction(Prediction prediction) {
-        if (prediction.getDestination().equals("Silver Line Way") && !id.equals("746")) {
-            return;
-        }
-
-        if (prediction.getDirection() == INBOUND) {
-            inboundPredictions.add(prediction);
-            hasLiveInboundPickUps = hasLiveInboundPickUps || (prediction.isLive() && prediction.willPickUpPassengers());
-        } else if (prediction.getDirection() == OUTBOUND) {
-            outboundPredictions.add(prediction);
-            hasLiveOutboundPickUps = hasLiveOutboundPickUps || (prediction.isLive() && prediction.willPickUpPassengers());
-        }
-    }
-
-    public void addPredictions(List<Prediction> predictions) {
-        for (Prediction p : predictions) {
-            addPrediction(p);
-        }
-    }
-
-    public void clearPredictions(int direction){
-        if(direction==INBOUND){
-            inboundPredictions.clear();
-        } if (direction == OUTBOUND){
-            outboundPredictions.clear();
-        }
-    }
-
     public void addServiceAlert(ServiceAlert serviceAlert) {
-        serviceAlerts.add(serviceAlert);
+        if (!serviceAlerts.contains(serviceAlert)) {
+            serviceAlerts.add(serviceAlert);
+        }
+    }
+
+    public void addAllServiceAlerts(ServiceAlert[] serviceAlerts) {
+        this.serviceAlerts.addAll(Arrays.asList(serviceAlerts));
+    }
+
+    public boolean hasUrgentServiceAlerts() {
+        for (ServiceAlert serviceAlert : serviceAlerts) {
+            if (serviceAlert.isActive() &&
+                    (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void clearServiceAlerts() {
+        serviceAlerts.clear();
     }
 
     public boolean isParentOf(String otherRouteId) {
@@ -327,38 +362,165 @@ public class Route implements Comparable<Route>, Serializable {
         else return false;
     }
 
-    public boolean hasUrgentServiceAlerts() {
-        for (ServiceAlert serviceAlert : serviceAlerts) {
-            if (serviceAlert.isActive() &&
-                    (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
-                return true;
-            }
-        }
-
-        return false;
+    public boolean isSilverLine() {
+        return id.equals("741") ||
+                id.equals("742") ||
+                id.equals("743") ||
+                id.equals("746") ||
+                id.equals("749") ||
+                id.equals("751");
     }
 
-    public static boolean isSilverLine(String routeId) {
-        return routeId.equals("741") ||
-                routeId.equals("742") ||
-                routeId.equals("743") ||
-                routeId.equals("746") ||
-                routeId.equals("749") ||
-                routeId.equals("751");
+    public boolean isGreenLine() {
+        return id.equals("Green-B") ||
+                id.equals("Green-C") ||
+                id.equals("Green-D") ||
+                id.equals("Green-E") ||
+                id.equals("Green-B,Green-C,Green-D,Green-E");
+    }
+
+    public boolean isNorthSideCommuterRail() {
+        return id.equals("CR-Fitchburg") ||
+                id.equals("CR-Haverhill") ||
+                id.equals("CR-Lowell") ||
+                id.equals("CR-Newburyport");
+    }
+
+    public boolean isSouthSideCommuterRail() {
+        return id.equals("CR-Fairmount") ||
+                id.equals("CR-Worcester") ||
+                id.equals("CR-Franklin") ||
+                id.equals("CR-Needham") ||
+                id.equals("CR-Providence") ||
+                id.equals("CR-Foxboro");
+    }
+
+    public boolean isOldColonyCommuterRail() {
+        return id.equals("CR-Greenbush") ||
+                id.equals("CR-Kingston") ||
+                id.equals("CR-Middleborough");
     }
 
     @Override
     public int compareTo(@NonNull Route otherRoute) {
-        return this.sortOrder - otherRoute.getSortOrder();
+        if (this.sortOrder != otherRoute.sortOrder) {
+            return this.sortOrder - otherRoute.sortOrder;
+        } else {
+            return this.longName.compareTo(otherRoute.longName);
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Route) {
             Route otherRoute = (Route) obj;
-            return id.equals(otherRoute.getId());
+            return id.equals(otherRoute.id);
         } else {
+            return false;
+        }
+    }
+
+    public boolean idEquals(String id) {
+        return this.id.equals(id);
+    }
+
+    public static class GreenLineGroup extends Route {
+        String[] ids = {"Green-B", "Green-C", "Green-D", "Green-E"};
+
+        public GreenLineGroup() {
+            super("Green-B,Green-C,Green-D,Green-E");
+            setMode(LIGHT_RAIL);
+            setShortName("GL");
+            setLongName("Green Line");
+            setPrimaryColor("00843D");
+            setTextColor("FFFFFF");
+            setSortOrder(4);
+        }
+
+        @Override
+        public boolean idEquals(String routeId) {
+            for (String id : ids) {
+                if (id.equals(routeId)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public static class NorthSideCommuterRail extends Route {
+        String[] ids = {"CR-Fitchburg", "CR-Haverhill", "CR-Lowell", "CR-Newburyport"};
+
+        public NorthSideCommuterRail() {
+            super("CR-Fitchburg,CR-Haverhill,CR-Lowell,CR-Newburyport");
+            setMode(COMMUTER_RAIL);
+            setShortName("CR");
+            setLongName("Commuter Rail");
+            setPrimaryColor("80276C");
+            setTextColor("FFFFFF");
+            setSortOrder(50);
+        }
+
+        @Override
+        public boolean idEquals(String routeId) {
+            for (String id : ids) {
+                if (id.equals(routeId)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public static class SouthSideCommuterRail extends Route {
+        String[] ids = {"CR-Fairmount", "CR-Worcester", "CR-Franklin", "CR-Needham",
+                "CR-Providence", "CR-Foxboro"};
+
+        public SouthSideCommuterRail() {
+            super("CR-Fairmount,CR-Worcester,CR-Franklin,CR-Needham,CR-Providence,CR-Foxboro");
+            setMode(COMMUTER_RAIL);
+            setShortName("CR");
+            setLongName("Commuter Rail");
+            setPrimaryColor("80276C");
+            setTextColor("FFFFFF");
+            setSortOrder(50);
+        }
+
+        @Override
+        public boolean idEquals(String routeId) {
+            for (String id : ids) {
+                if (id.equals(routeId)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public static class OldColonyCommuterRail extends Route {
+        String[] ids = {"CR-Greenbush", "CR-Kingston", "CR-Middleborough"};
+
+        public OldColonyCommuterRail() {
+            super("CR-Greenbush,CR-Kingston,CR-Middleborough");
+            setMode(COMMUTER_RAIL);
+            setShortName("CR");
+            setLongName("Commuter Rail");
+            setPrimaryColor("80276C");
+            setTextColor("FFFFFF");
+            setSortOrder(50);
+        }
+
+        @Override
+        public boolean idEquals(String routeId) {
+            for (String id : ids) {
+                if (id.equals(routeId)) {
+                    return true;
+                }
+            }
+
             return false;
         }
     }

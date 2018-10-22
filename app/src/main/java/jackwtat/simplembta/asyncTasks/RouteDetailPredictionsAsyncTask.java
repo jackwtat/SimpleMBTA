@@ -15,7 +15,7 @@ import jackwtat.simplembta.utilities.SchedulesJsonParser;
 
 public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<Prediction>> {
     private String realTimeApiKey;
-    private onPostExecuteListener onPostExecuteListener;
+    private OnPostExecuteListener onPostExecuteListener;
 
     private Route route;
     private int direction;
@@ -24,7 +24,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
     public RouteDetailPredictionsAsyncTask(String realTimeApiKey,
                                            Route route,
                                            int direction,
-                                           onPostExecuteListener onPostExecuteListener) {
+                                           OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.route = route;
         this.direction = direction;
@@ -75,7 +75,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         onPostExecuteListener.onPostExecute(predictions);
     }
 
-    public interface onPostExecuteListener {
+    public interface OnPostExecuteListener {
         void onPostExecute(List<Prediction> predictions);
     }
 }

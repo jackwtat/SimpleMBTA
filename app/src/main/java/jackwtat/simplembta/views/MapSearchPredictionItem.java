@@ -42,14 +42,16 @@ public class MapSearchPredictionItem extends LinearLayout {
         init(context);
     }
 
-    public void setPredictions(Route route, Stop stop, List<Prediction> predictions, long maxTime) {
+    public void setPredictions(Route route, int direction) {
+        Stop stop = route.getNearestStop(direction);
+        ArrayList<Prediction> predictions = route.getPredictions(direction);
+
         ArrayList<Prediction> pickUps = new ArrayList<>();
 
         // Find only predictions that pick up passengers
         for (Prediction p : predictions) {
             if (p.getPredictionTime() != null &&
                     p.willPickUpPassengers() &&
-                    p.getCountdownTime() <= maxTime &&
                     p.getCountdownTime() >= 0) {
                 pickUps.add(p);
             }
@@ -75,16 +77,12 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
 
         // Set the route name
-        routeLayout.addView(new RouteNameView(getContext(), route,
-                getContext().getResources().getDimension(R.dimen.small_route_name_text_size),
-                RouteNameView.ROUNDED_BACKGROUND,
-                route.getMode() == Route.BUS, false));
+        routeLayout.addView(new RouteNameView(getContext(), route));
 
         if (pickUps.size() > 0) {
-            int direction = pickUps.get(0).getDirection();
 
-            // For Red Line, add first prediction for each destination
-            if (route.getId().equals("Red")) {
+            // For light rail and heavy rail, add first prediction for each destination
+            if (route.getMode() == Route.LIGHT_RAIL || route.getMode() == Route.HEAVY_RAIL) {
                 ArrayList<String> destinations = new ArrayList<>();
                 for (Prediction p : pickUps) {
                     if (!destinations.contains(p.getDestination())) {

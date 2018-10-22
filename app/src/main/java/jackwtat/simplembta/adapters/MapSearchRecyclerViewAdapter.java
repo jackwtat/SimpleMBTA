@@ -2,6 +2,7 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,9 +17,9 @@ import jackwtat.simplembta.views.MapSearchPredictionItem;
 
 public class MapSearchRecyclerViewAdapter
         extends RecyclerView.Adapter<MapSearchRecyclerViewAdapter.ViewHolder> {
-    public static final String LOG_TAG = "MapSearchRecyclerViewAdapter";
+    public static final String LOG_TAG = "MSRVAdapter";
 
-    private ArrayList<DataHolder> dataHolders;
+    private ArrayList<adapterItem> adapterItems;
 
     private OnItemClickListener onItemClickListener;
 
@@ -31,46 +32,37 @@ public class MapSearchRecyclerViewAdapter
         }
     }
 
-    public class DataHolder implements Comparable<DataHolder> {
+    public class adapterItem implements Comparable<adapterItem> {
         Route route;
-        Stop stop;
-        ArrayList<Prediction> predictions;
         int direction;
 
-        DataHolder(Route route, int direction) {
+        adapterItem(Route route, int direction) {
             this.route = route;
             this.direction = direction;
-            this.stop = route.getNearestStop(direction);
-            this.predictions = route.getPredictions(direction);
         }
 
         @Override
-        public int compareTo(@NonNull DataHolder otherDataHolder) {
-            if (this.stop == null && otherDataHolder.stop == null) {
-                return this.route.compareTo(otherDataHolder.route);
-            } else if (this.stop == null) {
+        public int compareTo(@NonNull adapterItem otherAdapterItem) {
+            Stop thisStop = route.getNearestStop(direction);
+            Stop otherStop = otherAdapterItem.route.getNearestStop(otherAdapterItem.direction);
+
+            if (thisStop == null && otherStop == null) {
+                return this.route.compareTo(otherAdapterItem.route);
+            } else if (thisStop == null) {
                 return 1;
-            } else if (otherDataHolder.stop == null) {
+            } else if (otherStop == null) {
                 return -1;
-            } else if (!this.stop.equals(otherDataHolder.stop)) {
-                return this.stop.compareTo(otherDataHolder.stop);
-            } else if (!this.route.equals(otherDataHolder.route)) {
-                return this.route.compareTo(otherDataHolder.route);
+            } else if (!thisStop.equals(otherStop)) {
+                return thisStop.compareTo(otherStop);
+            } else if (!this.route.equals(otherAdapterItem.route)) {
+                return this.route.compareTo(otherAdapterItem.route);
             } else {
-                return otherDataHolder.direction - this.direction;
+                return otherAdapterItem.direction - this.direction;
             }
         }
 
         public Route getRoute() {
             return route;
-        }
-
-        public Stop getStop() {
-            return stop;
-        }
-
-        public List<Prediction> getPredictions() {
-            return predictions;
         }
 
         public int getDirection() {
@@ -79,7 +71,7 @@ public class MapSearchRecyclerViewAdapter
     }
 
     public MapSearchRecyclerViewAdapter() {
-        dataHolders = new ArrayList<>();
+        adapterItems = new ArrayList<>();
     }
 
     @NonNull
@@ -94,10 +86,8 @@ public class MapSearchRecyclerViewAdapter
 
         holder.predictionView.clear();
         holder.predictionView.setPredictions(
-                dataHolders.get(i).route,
-                dataHolders.get(i).stop,
-                dataHolders.get(i).predictions,
-                180 * 60000);
+                adapterItems.get(i).route,
+                adapterItems.get(i).getDirection());
 
         holder.predictionView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,50 +101,50 @@ public class MapSearchRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return dataHolders.size();
+        return adapterItems.size();
     }
 
-    public DataHolder getData(int position) {
-        return dataHolders.get(position);
+    public adapterItem getAdapterItem(int position) {
+        return adapterItems.get(position);
     }
 
     public void setRoutes(List<Route> routes) {
-        dataHolders.clear();
+        adapterItems.clear();
 
         for (Route route : routes) {
             if (route.hasPickUps(Route.INBOUND) || route.hasPickUps(Route.OUTBOUND)) {
                 if (route.hasPickUps(Route.INBOUND)) {
-                    dataHolders.add(new DataHolder(route, Route.INBOUND));
+                    adapterItems.add(new adapterItem(route, Route.INBOUND));
                 }
                 if (route.hasPickUps(Route.OUTBOUND)) {
-                    dataHolders.add(new DataHolder(route, Route.OUTBOUND));
+                    adapterItems.add(new adapterItem(route, Route.OUTBOUND));
                 }
             } else if (route.hasNearbyStops()) {
                 Stop inboundStop = route.getNearestStop(Route.INBOUND);
                 Stop outboundStop = route.getNearestStop(Route.OUTBOUND);
 
                 if (inboundStop != null && inboundStop.equals(outboundStop)) {
-                    dataHolders.add(new DataHolder(route, Route.INBOUND));
+                    adapterItems.add(new adapterItem(route, Route.INBOUND));
                 } else {
                     if (route.getNearestStop(Route.INBOUND) != null) {
-                        dataHolders.add(new DataHolder(route, Route.INBOUND));
+                        adapterItems.add(new adapterItem(route, Route.INBOUND));
                     }
                     if (route.getNearestStop(Route.OUTBOUND) != null) {
-                        dataHolders.add(new DataHolder(route, Route.OUTBOUND));
+                        adapterItems.add(new adapterItem(route, Route.OUTBOUND));
                     }
                 }
             } else {
-                dataHolders.add(new DataHolder(route, Route.NULL_DIRECTION));
+                adapterItems.add(new adapterItem(route, Route.NULL_DIRECTION));
             }
         }
 
-        Collections.sort(dataHolders);
+        Collections.sort(adapterItems);
 
         notifyDataSetChanged();
     }
 
     public void clear() {
-        dataHolders.clear();
+        adapterItems.clear();
         notifyDataSetChanged();
     }
 

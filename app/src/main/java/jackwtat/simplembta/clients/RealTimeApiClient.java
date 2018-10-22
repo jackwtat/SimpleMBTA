@@ -44,7 +44,7 @@ public class RealTimeApiClient {
         try {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+            Log.e(LOG_TAG, "Problem making the HTTP request");
         }
 
         return jsonResponse;
@@ -92,7 +92,7 @@ public class RealTimeApiClient {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making HTTP request.", e);
+            Log.e(LOG_TAG, "Problem making HTTP request");
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

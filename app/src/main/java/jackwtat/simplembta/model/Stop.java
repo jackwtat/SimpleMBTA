@@ -64,11 +64,34 @@ public class Stop implements Comparable<Stop>, Serializable {
             }
         }
 
-        if (this.id.equals("64") && id.equals("64000")) {
+        if ((this.id.equals("64") || this.id.equals("64,64000")) && id.equals("64000")) {
+            this.id="64,64000";
             return true;
         }
 
         return false;
+    }
+
+    public boolean isGreenLineHub() {
+        return id.equals("place-lech") ||
+                id.equals("place-spmnl") ||
+                id.equals("place-north") ||
+                id.equals("place-haecl") ||
+                id.equals("place-gover") ||
+                id.equals("place-pktrm") ||
+                id.equals("place-boyls") ||
+                id.equals("place-armnl") ||
+                id.equals("place-coecl") ||
+                id.equals("place-hymnl") ||
+                id.equals("place-kencl");
+    }
+
+    public boolean isCommuterRailHub(boolean includeTerminals) {
+        return (includeTerminals && (id.equals("place-north") || id.equals("place-sstat"))) ||
+                id.equals("place-bbsta") ||
+                id.equals("place-rugg") ||
+                id.equals("place-jfk") ||
+                id.equals("place-qnctr");
     }
 
     @Override

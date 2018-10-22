@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jackw on 12/21/2017.
@@ -59,6 +60,10 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
         return severity;
     }
 
+    public List<String> getAffectedRoutes() {
+        return affectedRoutes;
+    }
+
     public Lifecycle getLifecycle() {
         return lifecycle;
     }
@@ -89,8 +94,12 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
         }
     }
 
-    public ArrayList<String> getAffectedRoutes() {
-        return affectedRoutes;
+    public boolean affectsRoute(String routeId) {
+        return affectedRoutes.contains(routeId);
+    }
+
+    public boolean affectsMode(int mode) {
+        return affectedModes[mode];
     }
 
     public void addAffectedRoute(String routeId) {
@@ -138,6 +147,16 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
             return serviceAlert.getSeverity() - this.severity;
         } else {
             return serviceAlert.getId().compareTo(this.id);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ServiceAlert) {
+            ServiceAlert otherServiceAlert = (ServiceAlert) obj;
+            return id.equals(otherServiceAlert.id);
+        } else {
+            return false;
         }
     }
 

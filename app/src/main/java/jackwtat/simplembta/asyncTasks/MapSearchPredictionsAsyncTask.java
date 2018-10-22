@@ -2,6 +2,7 @@ package jackwtat.simplembta.asyncTasks;
 
 import android.location.Location;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +22,9 @@ import jackwtat.simplembta.utilities.StopsJsonParser;
 
 public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Route>> {
     private String realTimeApiKey;
-    private Location location;
-    private onPostExecuteListener onPostExecuteListener;
+
+    public final Location location;
+    public final OnPostExecuteListener onPostExecuteListener;
 
     private HashMap<String, Route> routes;
     private HashMap<String, Stop> stops;
@@ -30,10 +32,10 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     public MapSearchPredictionsAsyncTask(String realTimeApiKey,
                                          Location location,
-                                         onPostExecuteListener onPostExecuteListener) {
+                                         OnPostExecuteListener OnPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.location = location;
-        this.onPostExecuteListener = onPostExecuteListener;
+        this.onPostExecuteListener = OnPostExecuteListener;
     }
 
     @Override
@@ -77,7 +79,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 "include=route,trip,stop,schedule"
         };
 
-        processLivePredictions(PredictionsJsonParser
+        processPredictions(PredictionsJsonParser
                 .parse(realTimeApiClient.get("predictions", predictionsArgs)));
 
         // Get non-live schedule data for inbound routes
@@ -98,10 +100,11 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 "filter[stop]=" + stopArgBuilder.toString(),
                 "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                 "filter[min_time]=" + DateUtil.getMbtaTime(0),
+                "filter[max_time]=" + DateUtil.getMbtaTime(6),
                 "include=route,trip,stop,prediction"
         };
 
-        processScheduledPredictions(SchedulesJsonParser
+        processPredictions(SchedulesJsonParser
                 .parse(realTimeApiClient.get("schedules", scheduleArgs)));
 
         // Get all alerts for these routes
@@ -117,13 +120,18 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
         for (ServiceAlert alert : alerts) {
             for (Route route : routes.values()) {
-                if (alert.getAffectedRoutes().contains(route.getId()) ||
-                        alert.isAffectedMode(route.getMode())) {
+                if (alert.affectsMode(route.getMode())) {
                     route.addServiceAlert(alert);
+                } else {
+                    for (String affectedRouteId : alert.getAffectedRoutes()) {
+                        if (route.idEquals(affectedRouteId)) {
+                            route.addServiceAlert(alert);
+                            break;
+                        }
+                    }
                 }
             }
         }
-
         return new ArrayList<>(routes.values());
     }
 
@@ -132,11 +140,43 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
         onPostExecuteListener.onPostExecute(routes);
     }
 
-    private void processLivePredictions(Prediction[] livePredictions) {
+    private void processPredictions(Prediction[] livePredictions) {
         for (Prediction prediction : livePredictions) {
             if (!predictionIds.contains(prediction.getId())) {
                 predictionIds.add(prediction.getId());
 
+                // Replace prediction's stop ID with its parent stop ID
+                for (Stop stop : stops.values()) {
+                    if (stop.isParentOf(prediction.getStopId())) {
+                        prediction.setStop(stop);
+                        break;
+                    }
+                }
+
+                // If the prediction is for the eastbound Green Line, then replace the route
+                // with the Green Line Grouped route. This is to reduce the maximum number of
+                // prediction cards displayed and reduces UI clutter.
+                if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
+                        prediction.getDirection() == Route.EASTBOUND &&
+                        prediction.getStop().isGreenLineHub()) {
+                    prediction.setRoute(new Route.GreenLineGroup());
+                }
+
+                // If the prediction is for the inbound Commuter Rail, then replace the route
+                // with the Commuter Rail Grouped route. This is to reduce the maximum number
+                // of prediction cards displayed and reduces UI clutter.
+                if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                        prediction.getDirection() == Route.INBOUND &&
+                        prediction.getStop().isCommuterRailHub(false)) {
+                    if (prediction.getRoute().isNorthSideCommuterRail()) {
+                        prediction.setRoute(new Route.NorthSideCommuterRail());
+                    } else if (prediction.getRoute().isSouthSideCommuterRail()) {
+                        prediction.setRoute(new Route.SouthSideCommuterRail());
+                    } else if (prediction.getRoute().isOldColonyCommuterRail()) {
+                        prediction.setRoute(new Route.OldColonyCommuterRail());
+                    }
+                }
+
                 // Add route to routes list if not already there
                 if (!routes.containsKey(prediction.getRouteId())) {
                     routes.put(prediction.getRouteId(), prediction.getRoute());
@@ -146,14 +186,6 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 if (!stops.containsKey(prediction.getStopId())) {
                     prediction.getStop().setDistanceFromOrigin(location);
                     stops.put(prediction.getStopId(), prediction.getStop());
-                }
-
-                // Replace prediction's stop ID with its parent stop ID
-                for (Stop stop : stops.values()) {
-                    if (stop.isParentOf(prediction.getStopId())) {
-                        prediction.setStop(stop);
-                        break;
-                    }
                 }
 
                 // Add prediction to its respective route
@@ -167,68 +199,20 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
                     // If route does not have predictions in this prediction's direction
                 } else if (!routes.get(routeId).hasPredictions(direction)) {
-                    routes.get(routeId).setNearestStop(direction, stop);
+                    routes.get(routeId).setNearestStop(direction, stop, true);
                     routes.get(routeId).addPrediction(prediction);
 
                     // If this prediction's stop is closer than route's current nearest stop
-                } else if (stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0) {
-                    routes.get(routeId).setNearestStop(direction, stop);
-                    routes.get(routeId).addPrediction(prediction);
-                }
-            }
-        }
-    }
-
-    private void processScheduledPredictions(Prediction[] scheduledPredictions) {
-        for (Prediction prediction : scheduledPredictions) {
-            if (!predictionIds.contains(prediction.getId())) {
-                predictionIds.add(prediction.getId());
-
-                // Add route to routes list if not already there
-                if (!routes.containsKey(prediction.getRouteId())) {
-                    routes.put(prediction.getRouteId(), prediction.getRoute());
-                }
-
-                // Add stop to stops list if not already there
-                if (!stops.containsKey(prediction.getStopId())) {
-                    prediction.getStop().setDistanceFromOrigin(location);
-                    stops.put(prediction.getStopId(), prediction.getStop());
-                }
-
-                // Replace prediction's stop ID with its parent stop ID
-                for (Stop stop : stops.values()) {
-                    if (stop.isParentOf(prediction.getStopId())) {
-                        prediction.setStop(stop);
-                        break;
-                    }
-                }
-
-                // Add prediction to its respective route
-                int direction = prediction.getDirection();
-                String routeId = prediction.getRouteId();
-                Stop stop = stops.get(prediction.getStopId());
-
-                // If this prediction's stop is the route's nearest stop
-                if (stop.equals(routes.get(routeId).getNearestStop(direction))) {
-                    routes.get(routeId).addPrediction(prediction);
-
-                    // If route does not have predictions in this prediction's direction
-                } else if (!routes.get(routeId).hasPredictions(direction)) {
-                    routes.get(routeId).setNearestStop(direction, stop);
-                    routes.get(routeId).addPrediction(prediction);
-
-                    // If this prediction's stop is closer than route's current nearest stop
-                    // and the route doesn't already have live pick-ups in this direction
                 } else if (stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0
-                        && !routes.get(routeId).hasLivePickUps(direction)) {
-                    routes.get(routeId).setNearestStop(direction, stop);
+                        && prediction.willPickUpPassengers()) {
+                    routes.get(routeId).setNearestStop(direction, stop, true);
                     routes.get(routeId).addPrediction(prediction);
                 }
             }
         }
     }
 
-    public interface onPostExecuteListener {
+    public interface OnPostExecuteListener {
         void onPostExecute(List<Route> routes);
     }
 }

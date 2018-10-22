@@ -126,6 +126,10 @@
               "type": "stop"
             },
             {
+              "id": "place-wlsta",
+              "type": "stop"
+            },
+            {
               "id": "place-nqncy",
               "type": "stop"
             },
@@ -789,6 +793,35 @@
         "facilities": {
           "links": {
             "related": "/facilities/?filter[stop]=place-sstat"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "90 Woodbine St, Quincy, MA 02171",
+        "description": null,
+        "latitude": 42.266514,
+        "location_type": 1,
+        "longitude": -71.020337,
+        "name": "Wollaston",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-wlsta",
+      "links": {
+        "self": "/stops/place-wlsta"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-wlsta"
           }
         },
         "parent_station": {

@@ -8,18 +8,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@drawable/rounded_background"
         android:gravity="center"
         android:maxLines="1"
         android:minWidth="@dimen/small_route_name_width"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:textSize="20sp"
         android:textStyle="bold" />
-
-    <View
-        android:id="@+id/route_name_accent"
-        android:layout_width="wrap_content"
-        android:layout_height="4dp"
-        android:layout_below="@id/route_name_text_view"
-        android:background="@color/bus_accent"
-        android:visibility="gone" />
 </RelativeLayout>

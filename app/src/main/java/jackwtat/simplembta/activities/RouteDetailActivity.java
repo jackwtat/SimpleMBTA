@@ -1,12 +1,12 @@
 package jackwtat.simplembta.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,7 +17,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,6 +42,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +53,9 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.RouteDetailRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.RouteDetailPredictionsAsyncTask;
+import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
+import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -61,11 +63,18 @@ import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.views.ServiceAlertsListView;
-import jackwtat.simplembta.views.RouteNameView;
+import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
-public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
-    // Time since last refresh before values can automatically refresh onResume, in milliseconds
-    private final long AUTO_REFRESH_RATE = 15000;
+public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
+        ErrorManager.OnErrorChangedListener, RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
+        ShapesAsyncTask.OnPostExecuteListener, ServiceAlertsAsyncTask.OnPostExecuteListener {
+    public static final String LOG_TAG = "RouteDetailActivity";
+
+    // Predictions auto update rate
+    public static final long PREDICTIONS_UPDATE_RATE = 15000;
+
+    // Service alerts auto update rate
+    public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
 
     // Maximum age of prediction
     public static final long MAXIMUM_PREDICTION_AGE = 90000;
@@ -77,23 +86,34 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
     private ProgressBar mapProgressBar;
+    private TextView errorTextView;
+
+    private LinearLayout serviceAlertsLayout;
+    private ImageView serviceAlertIcon;
+    private ImageView serviceAdvisoryIcon;
+    private TextView serviceAlertsTextView;
 
     private String realTimeApiKey;
     private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
-    private RouteDetailPredictionsAsyncTask.onPostExecuteListener predictionsOnPostExecuteListener;
+    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
-    private ShapesAsyncTask.OnPostExecuteListener shapesOnPostExecuteListener;
+    private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
     private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
-    private Timer autoRefreshTimer;
+    private Timer timer;
 
     private boolean refreshing = false;
     private boolean mapReady = false;
+    private boolean mapCameraIsMoving = false;
+    private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
     private Route route;
     private int direction;
-
+    private List<Prediction> currentPredictions;
+    private ArrayList<Shape> routeShapes = new ArrayList<>();
+    private ArrayList<Marker> stopMarkers = new ArrayList<>();
+    private Marker selectedStopMarker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,14 +123,22 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get MBTA realTime API key
         realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
-        // Get error manager
-        errorManager = ErrorManager.getErrorManager();
-
         // Get values passed from calling activity/fragment
         Intent intent = getIntent();
         route = (Route) intent.getSerializableExtra("route");
         direction = intent.getIntExtra("direction", Route.NULL_DIRECTION);
         refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
+
+        // Get predictions from the current route
+        currentPredictions = route.getPredictions(direction);
+
+        // Get error manager
+        errorTextView = findViewById(R.id.error_message_text_view);
+        errorManager = ErrorManager.getErrorManager();
+        errorManager.registerOnErrorChangeListener(this);
+
+        // Get network connectivity client
+        networkConnectivityClient = new NetworkConnectivityClient(this);
 
         // Set action bar
         setTitle(route.getLongDisplayName(this));
@@ -136,6 +164,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         appBarLayout = findViewById(R.id.app_bar_layout);
         CoordinatorLayout.LayoutParams params =
                 (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        params.height = (int) (getResources().getDisplayMetrics().heightPixels * .6);
 
         // Disable scrolling inside app bar
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -149,9 +178,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Get the no predictions indicator
         noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
-
-        // Initialize service alerts
-        initializeServiceAlerts();
 
         // Get and initialize map view
         mapView = findViewById(R.id.map_view);
@@ -178,81 +204,30 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Disable recycler view scrolling until predictions loaded;
         recyclerView.setNestedScrollingEnabled(false);
 
+        // Add on scroll listener
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    userIsScrolling = false;
+                    refreshRecyclerView();
+                    refreshServiceAlertsView();
+
+                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    userIsScrolling = true;
+                }
+            }
+        });
+
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        // Load predictions from the current route
-        loadPredictions(route.getPredictions(direction));
-
-        // Create the predictions async task callbacks
-        predictionsOnPostExecuteListener =
-                new RouteDetailPredictionsAsyncTask.onPostExecuteListener() {
-                    @Override
-                    public void onPostExecute(List<Prediction> predictions) {
-                        swipeRefreshLayout.setRefreshing(false);
-
-                        refreshTime = new Date().getTime();
-
-                        refreshing = false;
-
-                        route.clearPredictions(direction);
-
-                        route.addPredictions(predictions);
-
-                        loadPredictions(predictions);
-                    }
-                };
-
-        // Create the shapes async task callbacks
-        shapesOnPostExecuteListener = new ShapesAsyncTask.OnPostExecuteListener() {
-            @Override
-            public void onPostExecute(Shape[] shapes) {
-                HashMap<String, Stop> distinctStops = new HashMap<>();
-
-                for (Shape shape : shapes) {
-                    if (shape.getDirection() == direction && shape.getPriority() > -1 &&
-                            shape.getStops().length > 1) {
-                        drawRouteShape(route, shape);
-
-                        for (Stop stop : shape.getStops()) {
-                            distinctStops.put(stop.getId(), stop);
-                        }
-                    }
-                }
-
-                Stop currentStop = route.getNearestStop(direction);
-                Marker selectedStopMarker = null;
-                LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-
-                for (Stop s : distinctStops.values()) {
-                    Marker currentMarker = drawStopMarker(s);
-                    boundsBuilder.include(currentMarker.getPosition());
-
-                    if (currentStop != null && (currentStop.equals(s) ||
-                            currentStop.isParentOf(s.getId()) || s.isParentOf(currentStop.getId()))) {
-                        selectedStopMarker = currentMarker;
-                    }
-                }
-
-                if (selectedStopMarker != null) {
-                    selectedStopMarker.showInfoWindow();
-                    gMap.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(selectedStopMarker.getPosition(), 15));
-                } else if (currentStop != null) {
-                    selectedStopMarker = drawStopMarker(currentStop);
-                    selectedStopMarker.showInfoWindow();
-                    boundsBuilder.include(selectedStopMarker.getPosition());
-                    gMap.moveCamera(
-                            CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
-                } else if (distinctStops.size() > 0) {
-                    gMap.moveCamera(
-                            CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
-                }
-
-                mapProgressBar.setVisibility(View.GONE);
-            }
-        };
+        // Get the service alerts views
+        serviceAlertsLayout = findViewById(R.id.service_alerts_layout);
+        serviceAlertIcon = findViewById(R.id.service_alert_icon);
+        serviceAdvisoryIcon = findViewById(R.id.service_advisory_icon);
+        serviceAlertsTextView = findViewById(R.id.service_alerts_text_view);
     }
 
     @Override
@@ -267,16 +242,29 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
-        // Set the action listener
+        // Set the action listeners
+        gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int reason) {
+                mapCameraIsMoving = true;
+            }
+        });
+        gMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                if (mapCameraIsMoving) {
+                    mapCameraIsMoving = false;
+                }
+            }
+        });
         gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                route.setNearestStop(direction, (Stop) marker.getTag());
-
-                clearPredictions();
+                selectedStopMarker = marker;
+                route.setNearestStop(direction, (Stop) marker.getTag(), true);
 
                 swipeRefreshLayout.setRefreshing(true);
-
+                clearPredictions();
                 forceUpdate();
 
                 return false;
@@ -300,19 +288,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     protected void onStart() {
         super.onStart();
         mapView.onStart();
-
-        autoRefreshTimer = new Timer();
-        autoRefreshTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        backgroundUpdate();
-                    }
-                });
-            }
-        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
     }
 
     @Override
@@ -320,39 +295,43 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         super.onResume();
         mapView.onResume();
 
-        // Force recycler view to update UI so that the minutes are accurate
-        if (route != null) {
-            recyclerViewAdapter.setPredictions(route.getPredictions(direction));
+        // Refresh the activity to update UI so that the predictions and service alerts are accurate
+        // as of the last update
+        refreshRecyclerView();
+        refreshServiceAlertsView();
+
+        // Get the route shapes if there aren't any
+        if (routeShapes.size() == 0) {
+            getRouteShapes();
         }
 
+        // If too much time has elapsed since last refresh, then clear predictions and force update
         if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
             clearPredictions();
-
             swipeRefreshLayout.setRefreshing(true);
-
             forceUpdate();
 
             // If there are no predictions displayed in the recycler view, then force a refresh
         } else if (recyclerViewAdapter.getItemCount() < 1) {
             swipeRefreshLayout.setRefreshing(true);
-
             forceUpdate();
 
+            // Otherwise, background update
         } else {
             backgroundUpdate();
         }
+
+        timer = new Timer();
+        timer.schedule(new PredictionsUpdateTimerTask(),
+                PREDICTIONS_UPDATE_RATE, PREDICTIONS_UPDATE_RATE);
+        timer.schedule(new ServiceAlertsUpdateTimerTask(),
+                SERVICE_ALERTS_UPDATE_RATE, SERVICE_ALERTS_UPDATE_RATE);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
 
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
@@ -362,7 +341,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             shapesAsyncTask.cancel(true);
         }
 
-        autoRefreshTimer.cancel();
+        timer.cancel();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
     }
 
     @Override
@@ -377,124 +362,139 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         mapView.onLowMemory();
     }
 
-    private void initializeServiceAlerts() {
-        LinearLayout serviceAlertsLayout = findViewById(R.id.service_alerts_layout);
-        ImageView serviceAlertIcon = findViewById(R.id.service_alert_icon);
-        ImageView serviceAdvisoryIcon = findViewById(R.id.service_advisory_icon);
-        TextView serviceAlertsTextView = findViewById(R.id.service_alerts_text_view);
+    @Override
+    public void onErrorChanged() {
+        errorTextView.setOnClickListener(null);
 
-        final ArrayList<ServiceAlert> serviceAlerts = route.getServiceAlerts();
-        String alertsText = "";
-        int alertsCount = 0;
-        int advisoriesCount = 0;
+        if (errorManager.hasNetworkError()) {
+            errorTextView.setText(R.string.network_error_text);
+            errorTextView.setVisibility(View.VISIBLE);
 
-        for (ServiceAlert alert : serviceAlerts) {
-            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
-                alertsCount++;
-            } else {
-                advisoriesCount++;
-            }
-        }
-
-        if (alertsCount == 1) {
-            alertsText += alertsCount + " " + getResources().getString(R.string.alert);
-        } else if (alertsCount > 1) {
-            alertsText += alertsCount + " " + getResources().getString(R.string.alerts);
-        }
-
-        if (advisoriesCount > 0) {
-            if (!alertsText.equals("")) {
-                alertsText += ", ";
-            }
-
-            if (advisoriesCount == 1) {
-                alertsText += advisoriesCount + " " + getResources().getString(R.string.advisory);
-            } else {
-                alertsText += advisoriesCount + " " + getResources().getString(R.string.advisories);
-            }
-        }
-
-        if (alertsCount + advisoriesCount == 0) {
-            serviceAlertsLayout.setVisibility(View.GONE);
-        } else {
-            serviceAlertsTextView.setText(alertsText);
-
-            if (alertsCount > 0) {
-                serviceAlertIcon.setVisibility(View.VISIBLE);
-                serviceAdvisoryIcon.setVisibility(View.GONE);
-            } else {
-                serviceAlertIcon.setVisibility(View.GONE);
-                serviceAdvisoryIcon.setVisibility(View.VISIBLE);
-            }
-            serviceAlertsLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    createServiceAlertDialog(view.getContext(), serviceAlerts).show();
-                }
-            });
+        } else if (!errorManager.hasNetworkError()) {
+            errorTextView.setVisibility(View.GONE);
         }
     }
 
-    private AlertDialog createServiceAlertDialog(Context context, List<ServiceAlert> serviceAlerts) {
-        Collections.sort(serviceAlerts);
+    @Override
+    public void onPostExecute(List<Prediction> predictions) {
+        refreshing = false;
+        refreshTime = new Date().getTime();
 
-        AlertDialog serviceAlertDialog = new AlertDialog.Builder(context).create();
+        route.clearPredictions(direction);
+        route.addAllPredictions(predictions);
 
-        RouteNameView routeNameView = new RouteNameView(context, route,
-                context.getResources().getDimension(
-                        R.dimen.large_route_name_text_size), RouteNameView.SQUARE_BACKGROUND,
-                false, true);
-        routeNameView.setGravity(Gravity.CENTER);
+        refreshRecyclerView();
+    }
 
-        serviceAlertDialog.setCustomTitle(routeNameView);
+    @Override
+    public void onPostExecute(ServiceAlert[] serviceAlerts) {
+        route.clearServiceAlerts();
+        route.addAllServiceAlerts(serviceAlerts);
 
-        serviceAlertDialog.setView(new ServiceAlertsListView(context, serviceAlerts));
+        refreshServiceAlertsView();
+    }
 
-        serviceAlertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+    @Override
+    public void onPostExecute(Shape[] shapes) {
+        routeShapes.addAll(Arrays.asList(shapes));
 
-        return serviceAlertDialog;
+        HashMap<String, Stop> distinctStops = new HashMap<>();
+
+        for (Shape shape : shapes) {
+            if (shape.getDirection() == direction && shape.getPriority() > -1 &&
+                    shape.getStops().length > 1) {
+                drawRouteShape(shape);
+
+                for (Stop stop : shape.getStops()) {
+                    distinctStops.put(stop.getId(), stop);
+                }
+            }
+        }
+
+        Stop currentStop = route.getNearestStop(direction);
+        selectedStopMarker = null;
+        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
+
+        for (Stop s : distinctStops.values()) {
+            Marker currentMarker = drawStopMarker(s);
+            stopMarkers.add(currentMarker);
+            boundsBuilder.include(currentMarker.getPosition());
+
+            if (currentStop != null && (currentStop.equals(s) ||
+                    currentStop.isParentOf(s.getId()) || s.isParentOf(currentStop.getId()))) {
+                selectedStopMarker = currentMarker;
+            }
+        }
+
+        if (selectedStopMarker != null) {
+            selectedStopMarker.showInfoWindow();
+            gMap.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(selectedStopMarker.getPosition(), 15));
+        } else if (currentStop != null) {
+            selectedStopMarker = drawStopMarker(currentStop);
+            selectedStopMarker.showInfoWindow();
+            boundsBuilder.include(selectedStopMarker.getPosition());
+            gMap.moveCamera(
+                    CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+        } else if (distinctStops.size() > 0) {
+            gMap.moveCamera(
+                    CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+        }
+
+        mapProgressBar.setVisibility(View.GONE);
     }
 
     private void backgroundUpdate() {
-        if (route != null && route.getNearestStop(direction) != null && !refreshing) {
+        if (!refreshing) {
             getPredictions();
         }
     }
 
     private void forceUpdate() {
-        if (route != null && route.getNearestStop(direction) != null) {
-            getPredictions();
-        }
+        getPredictions();
     }
 
     private void getPredictions() {
-        refreshing = true;
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
 
-        if (predictionsAsyncTask != null) {
-            predictionsAsyncTask.cancel(true);
+            refreshing = true;
+
+            if (predictionsAsyncTask != null) {
+                predictionsAsyncTask.cancel(true);
+            }
+
+            if (route != null && route.getNearestStop(direction) != null) {
+                predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route,
+                        direction, this);
+                predictionsAsyncTask.execute();
+            } else {
+                onPostExecute(new ArrayList<Prediction>());
+            }
+        } else {
+            errorManager.setNetworkError(true);
+            refreshing = false;
+            swipeRefreshLayout.setRefreshing(false);
+            clearPredictions();
         }
-
-        predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route, direction,
-                predictionsOnPostExecuteListener);
-        predictionsAsyncTask.execute();
     }
 
-    private void loadPredictions(List<Prediction> predictions) {
-        recyclerViewAdapter.setPredictions(predictions);
+    private void refreshRecyclerView() {
+        if (!userIsScrolling && currentPredictions != null) {
+            recyclerViewAdapter.setPredictions(currentPredictions);
 
-        if (recyclerViewAdapter.getItemCount() == 0) {
-            recyclerView.setNestedScrollingEnabled(false);
-            noPredictionsTextView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setNestedScrollingEnabled(true);
-            noPredictionsTextView.setVisibility(View.GONE);
+            if (recyclerViewAdapter.getItemCount() == 0) {
+                appBarLayout.setExpanded(true);
+                recyclerView.setNestedScrollingEnabled(false);
+                noPredictionsTextView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setNestedScrollingEnabled(true);
+                noPredictionsTextView.setVisibility(View.GONE);
+            }
+        }
+
+        if (!refreshing) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -505,27 +505,131 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         recyclerView.setNestedScrollingEnabled(false);
     }
 
-    private void getRouteShapes() {
-        if (shapesAsyncTask != null) {
-            shapesAsyncTask.cancel(true);
-        }
+    private void getServiceAlerts() {
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
 
-        shapesAsyncTask = new ShapesAsyncTask(
-                realTimeApiKey,
-                route.getId(),
-                shapesOnPostExecuteListener);
-        shapesAsyncTask.execute();
+            if (serviceAlertsAsyncTask != null) {
+                serviceAlertsAsyncTask.cancel(true);
+            }
+
+            serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
+                    realTimeApiKey,
+                    route.getId(),
+                    this);
+            serviceAlertsAsyncTask.execute();
+        } else {
+            errorManager.setNetworkError(true);
+        }
     }
 
-    private void drawRouteShape(Route route, Shape shape) {
-        List<LatLng> shapeCoordinates = PolyUtil.decode(shape.getPolyline());
+    private void refreshServiceAlertsView() {
+        if (!userIsScrolling) {
+            if (route.getServiceAlerts().size() > 0) {
+                final ArrayList<ServiceAlert> serviceAlerts = route.getServiceAlerts();
 
-        int lineColor;
-        if (route.getMode() != Route.BUS || Route.isSilverLine(route.getId())) {
-            lineColor = Color.parseColor(route.getPrimaryColor());
-        } else {
-            lineColor = getResources().getColor(R.color.colorPrimary);
+                String alertsText = "";
+                int alertsCount = 0;
+                int advisoriesCount = 0;
+
+                // Sort the service alerts
+                Collections.sort(serviceAlerts);
+
+                // Count how the number of alerts and advisories each
+                // Alerts are new, ongoing service alerts; Advisories are all other alerts
+                for (ServiceAlert alert : serviceAlerts) {
+                    if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                            alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                        alertsCount++;
+                    } else {
+                        advisoriesCount++;
+                    }
+                }
+
+                // Show the number of alerts
+                if (alertsCount > 0) {
+                    alertsText = (alertsCount > 1)
+                            ? alertsCount + " " + getResources().getString(R.string.alerts)
+                            : alertsCount + " " + getResources().getString(R.string.alert);
+                }
+
+                // Show the number of advisories
+                if (advisoriesCount > 0) {
+                    alertsText = (alertsCount > 0) ? alertsText + ", " : alertsText;
+
+                    alertsText = (advisoriesCount > 1)
+                            ? alertsText + advisoriesCount + " " + getResources().getString(R.string.advisories)
+                            : alertsText + advisoriesCount + " " + getResources().getString(R.string.advisory);
+                }
+
+                // Set the service alerts view
+                serviceAlertsTextView.setText(alertsText);
+
+                // Display the appropriate service alerts icon
+                // Red icon if there is at least one alert, otherwise grey icon
+                if (alertsCount > 0) {
+                    serviceAlertIcon.setVisibility(View.VISIBLE);
+                    serviceAdvisoryIcon.setVisibility(View.GONE);
+                } else {
+                    serviceAlertIcon.setVisibility(View.GONE);
+                    serviceAdvisoryIcon.setVisibility(View.VISIBLE);
+                }
+
+                // Set the onClickListener to display the service alerts details
+                serviceAlertsLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog dialog = new AlertDialog.Builder(view.getContext()).create();
+
+                        dialog.setCustomTitle(new ServiceAlertsTitleView(view.getContext(),
+                                (serviceAlerts.size() > 1)
+                                        ? view.getContext().getString(R.string.service_alerts)
+                                        : view.getContext().getString(R.string.service_alert),
+                                Color.parseColor(route.getTextColor()),
+                                Color.parseColor(route.getPrimaryColor()),
+                                route.getMode() == Route.BUS && !route.isSilverLine()));
+
+                        dialog.setView(new ServiceAlertsListView(view.getContext(), serviceAlerts));
+
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+
+                        dialog.show();
+                    }
+                });
+
+                serviceAlertsLayout.setVisibility(View.VISIBLE);
+            } else {
+                serviceAlertsLayout.setVisibility(View.GONE);
+            }
         }
+    }
+
+    private void getRouteShapes() {
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
+
+            if (shapesAsyncTask != null) {
+                shapesAsyncTask.cancel(true);
+            }
+
+            shapesAsyncTask = new ShapesAsyncTask(
+                    realTimeApiKey,
+                    route.getId(),
+                    this);
+            shapesAsyncTask.execute();
+        } else {
+            errorManager.setNetworkError(true);
+        }
+    }
+
+    private void drawRouteShape(@NonNull Shape shape) {
+        List<LatLng> shapeCoordinates = PolyUtil.decode(shape.getPolyline());
 
         gMap.addPolyline(new PolylineOptions()
                 .addAll(shapeCoordinates)
@@ -538,16 +642,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         gMap.addPolyline(new PolylineOptions()
                 .addAll(shapeCoordinates)
-                .color(lineColor)
+                .color(Color.parseColor(route.getPrimaryColor()))
                 .zIndex(1)
                 .jointType(JointType.ROUND)
                 .startCap(new RoundCap())
                 .endCap(new RoundCap())
                 .width(8));
-
     }
 
-    private Marker drawStopMarker(Stop stop) {
+    private Marker drawStopMarker(@NonNull Stop stop) {
         Marker stopMarker = gMap.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
@@ -560,5 +663,20 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         stopMarker.setTag(stop);
 
         return stopMarker;
+    }
+
+    private class PredictionsUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            backgroundUpdate();
+        }
+    }
+
+    private class ServiceAlertsUpdateTimerTask extends TimerTask{
+
+        @Override
+        public void run() {
+            getServiceAlerts();
+        }
     }
 }

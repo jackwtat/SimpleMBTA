@@ -10,7 +10,9 @@
 
     <!-- Service Alerts -->
     <string name="service_advisory">Service Advisory</string>
+    <string name="service_advisories">Service Advisories</string>
     <string name="service_alert">Service Alert</string>
+    <string name="service_alerts">Service Alerts</string>
     <string name="alert">Alert</string>
     <string name="alerts">Alerts</string>
     <string name="advisory">Advisory</string>

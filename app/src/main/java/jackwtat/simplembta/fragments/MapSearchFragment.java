@@ -18,16 +18,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraMoveStartedListener;
-import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
@@ -41,13 +39,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -69,36 +61,39 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.utilities.ShapesJsonParser;
 
-public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
-    private final static String LOG_TAG = "MapSearchFragment";
+public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
+        MapSearchPredictionsAsyncTask.OnPostExecuteListener, LocationClientCallbacks {
+    public static final String LOG_TAG = "MapSearchFragment";
 
     // Maximum age of prediction
-    public static final long MAXIMUM_PREDICTION_AGE = 90000;
+    public static final long MAX_PREDICTION_AGE = 90000;
 
-    // Time since last refresh before predictions can automatically refresh
-    private static final long AUTO_REFRESH_RATE = 15000;
+    // Predictions auto update rate
+    public static final long PREDICTIONS_UPDATE_RATE = 15000;
 
-    // Time between location updates
-    public static final long LOCATION_UPDATE_INTERVAL = 500;
+    // Location auto update rate
+    public static final long LOCATION_UPDATE_RATE = 1000;
+
+    // Time between location client updates
+    public static final long LOCATION_CLIENT_INTERVAL = 500;
 
     // Fastest time between location updates
-    public static final long FASTEST_LOCATION_INTERVAL = 250;
+    public static final long FASTEST_LOCATION_CLIENT_INTERVAL = 250;
 
-    // Maximum elapsed time since time of last location query
-    public static final long MAXIMUM_LOCATION_TIME = 90000;
+    // Time since last onStop() before restarting the location
+    public static final long LOCATION_UPDATE_RESTART_TIME = 180000;
 
-    // Maximum age of fresh location data
-    public static final long MAXIMUM_LOCATION_AGE = 1000;
+    // Default level of zoom for the map
+    public static final int DEFAULT_MAP_ZOOM_LEVEL = 15;
 
-    // Time to wait between attempts to get recent location
-    public static final int LOCATION_ATTEMPT_WAIT_TIME = 250;
-
-    // Maximum number of attempts to get recent location
-    public static final int MAXIMUM_LOCATION_ATTEMPTS = 10;
+    // Map interaction stasues
+    public static final int USER_HAS_NOT_MOVED_MAP = 0;
+    public static final int USER_HAS_MOVED_MAP = 1;
 
     private View rootView;
     private AppBarLayout appBarLayout;
     private MapView mapView;
+    private ImageView mapTargetView;
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -107,25 +102,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
     private LocationClient locationClient;
-    private LocationClientCallbacks locationClientCallbacks;
     private MapSearchPredictionsAsyncTask predictionsAsyncTask;
-    private MapSearchPredictionsAsyncTask.onPostExecuteListener predictionsOnPostExecuteListener;
     private MapSearchRecyclerViewAdapter recyclerViewAdapter;
     private ErrorManager errorManager;
-    private Timer autoRefreshTimer;
+    private Timer timer;
+
 
     private boolean refreshing = false;
     private boolean mapReady = false;
-    private boolean mapCameraMoving = false;
-    private boolean userHasMovedMap = false;
-    private boolean routeDetailOpened = false;
+    private boolean cameraIsMoving = false;
+    private int mapState = USER_HAS_NOT_MOVED_MAP;
+    private boolean userIsScrolling = false;
     private long refreshTime = 0;
-    private long locationQueryTime = 0;
-    private int locationAttemptsCount = 0;
+    private long onPauseTime = 0;
 
     private List<Route> currentRoutes;
-    private Location currentLocation;
-
+    private Location currentLocation = new Location("");
+    private Location targetLocation = new Location("");
+    private ArrayList<Marker> stopMarkers = new ArrayList<>();
+    private Marker selectedStopMarker = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,87 +138,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         // Get the location the user last viewed
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(
                 getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
-        currentLocation = new Location("");
-        currentLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
-        currentLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
+        targetLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
+        targetLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
 
-        locationClient = new LocationClient(getContext(), LOCATION_UPDATE_INTERVAL,
-                FASTEST_LOCATION_INTERVAL);
-
-        locationClientCallbacks = new LocationClientCallbacks() {
-            @Override
-            public void onSuccess() {
-                Location currentLocation = locationClient.getLastLocation();
-                locationQueryTime = new Date().getTime();
-
-                if (locationAttemptsCount < MAXIMUM_LOCATION_ATTEMPTS) {
-                    if (locationQueryTime - currentLocation.getTime() < MAXIMUM_LOCATION_AGE) {
-                        locationAttemptsCount = MAXIMUM_LOCATION_ATTEMPTS;
-                        recenterMap(new LatLng(
-                                currentLocation.getLatitude(),
-                                currentLocation.getLongitude()));
-                    } else {
-                        locationAttemptsCount++;
-                    }
-
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            locationClient.updateLocation(locationClientCallbacks);
-                        }
-                    }, LOCATION_ATTEMPT_WAIT_TIME);
-                } else {
-                    recenterMap(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-
-                    errorManager.setNetworkError(false);
-                    errorManager.setLocationError(false);
-                    errorManager.setLocationPermissionDenied(false);
-                }
-            }
-
-            @Override
-            public void onFailure() {
-                errorManager.setLocationError(true);
-                forceUpdate();
-            }
-
-            @Override
-            public void onNoPermission() {
-                errorManager.setLocationPermissionDenied(true);
-                forceUpdate();
-            }
-        };
-
-        predictionsOnPostExecuteListener = new MapSearchPredictionsAsyncTask.onPostExecuteListener() {
-            @Override
-            public void onPostExecute(List<Route> routes) {
-                refreshing = false;
-
-                refreshTime = new Date().getTime();
-
-                currentRoutes = routes;
-
-                recyclerViewAdapter.setRoutes(routes);
-
-                swipeRefreshLayout.setRefreshing(false);
-
-                if (recyclerViewAdapter.getItemCount() == 0) {
-                    appBarLayout.setExpanded(true);
-                    recyclerView.setNestedScrollingEnabled(false);
-                    noPredictionsTextView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setNestedScrollingEnabled(true);
-                    noPredictionsTextView.setVisibility(View.GONE);
-                }
-
-                errorManager.setNetworkError(false);
-            }
-        };
+        locationClient = new LocationClient(getContext(), LOCATION_CLIENT_INTERVAL,
+                FASTEST_LOCATION_CLIENT_INTERVAL);
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map_search, container, false);
 
         // Get app bar and app bar params
@@ -248,6 +173,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+        // Get the map target view
+        mapTargetView = rootView.findViewById(R.id.map_target_view);
+
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(),
@@ -263,64 +191,44 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         // Disable scrolling while fragment is still initializing
         recyclerView.setNestedScrollingEnabled(false);
 
-        // Set recycler view predictions adapter
-        recyclerViewAdapter = new MapSearchRecyclerViewAdapter();
+        // Add onScrollListener
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    userIsScrolling = false;
+                    refreshRecyclerView();
+                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    userIsScrolling = true;
+                }
+            }
+        });
 
+        // Set  predictions adapter
+        recyclerViewAdapter = new MapSearchRecyclerViewAdapter();
+        recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Set the onClickListener listener
         recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                routeDetailOpened = true;
-
                 Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                intent.putExtra("route", recyclerViewAdapter.getData(position).getRoute());
-                intent.putExtra("direction", recyclerViewAdapter.getData(position).getDirection());
+                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
+                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
                 intent.putExtra("refreshTime", refreshTime);
                 startActivity(intent);
             }
         });
-        recyclerView.setAdapter(recyclerViewAdapter);
 
+        // Set the no predictions indicator
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
-        noPredictionsTextView.setVisibility(View.GONE);
 
         return rootView;
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         gMap = googleMap;
-        mapReady = true;
-
-        // Set the action listeners
-        gMap.setOnCameraMoveStartedListener(new OnCameraMoveStartedListener() {
-            @Override
-            public void onCameraMoveStarted(int reason) {
-                mapCameraMoving = true;
-                userHasMovedMap = reason == REASON_GESTURE || reason == REASON_API_ANIMATION;
-            }
-        });
-        gMap.setOnCameraIdleListener(new OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                if (mapCameraMoving) {
-                    mapCameraMoving = false;
-
-                    LatLng latLng = gMap.getCameraPosition().target;
-                    currentLocation.setLatitude(latLng.latitude);
-                    currentLocation.setLongitude(latLng.longitude);
-
-                    forceUpdate();
-                }
-            }
-        });
-        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                marker.showInfoWindow();
-                recenterMap(marker.getPosition());
-                return false;
-            }
-        });
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
@@ -333,21 +241,22 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
 
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mapUiSettings.setMyLocationButtonEnabled(true);
             gMap.setMyLocationEnabled(true);
+            mapUiSettings.setMyLocationButtonEnabled(true);
         }
 
         // Move the map camera to the last known location
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+                new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
+                DEFAULT_MAP_ZOOM_LEVEL));
 
         // Get the subway, Silver Line, and commuter rail shapes
-        Shape[] blueShapes = getShapesFromJson(R.raw.shape_blue);
-        Shape[] orangeShapes = getShapesFromJson(R.raw.shape_orange);
-        Shape[] redShapes = getShapesFromJson(R.raw.shape_red);
-        Shape[] greenShapes = getShapesFromJson(R.raw.shape_green);
-        Shape[] silverShapes = getShapesFromJson(R.raw.shape_silver);
-        Shape[] mattapanShapes = getShapesFromJson(R.raw.shape_mattapan);
+        Shape[] blueShapes = getShapesFromJson(R.raw.shapes_blue);
+        Shape[] orangeShapes = getShapesFromJson(R.raw.shapes_orange);
+        Shape[] redShapes = getShapesFromJson(R.raw.shapes_red);
+        Shape[] greenShapes = getShapesFromJson(R.raw.shapes_green);
+        Shape[] silverShapes = getShapesFromJson(R.raw.shapes_silver);
+        Shape[] mattapanShapes = getShapesFromJson(R.raw.shapes_mattapan);
 
         // Draw the route shapes
         drawRouteShapes(blueShapes, getContext().getResources().getColor(R.color.blue_line));
@@ -367,28 +276,110 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         distinctStops.putAll(getStopsFromShapes(silverShapes));
         distinctStops.putAll(getStopsFromShapes(mattapanShapes));
 
-        drawStopMarkers(distinctStops.values());
+        for (Stop s : distinctStops.values()) {
+            stopMarkers.add(drawStopMarkers(s));
+        }
+
+        // Set the action listeners
+        gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int reason) {
+                cameraIsMoving = true;
+
+                if (reason == REASON_GESTURE) {
+                    mapState = USER_HAS_MOVED_MAP;
+                    mapTargetView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        gMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                if (cameraIsMoving) {
+                    cameraIsMoving = false;
+
+                    // If the user has moved the map, then force a predictions update
+                    if (mapState == USER_HAS_MOVED_MAP) {
+                        targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
+                        targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+                        swipeRefreshLayout.setRefreshing(true);
+                        forceUpdate();
+
+                    } else if (mapTargetView.getVisibility() == View.VISIBLE) {
+                        mapTargetView.setVisibility(View.GONE);
+                    }
+
+                    if (gMap.getCameraPosition().zoom <= 12) {
+                        for (Marker marker : stopMarkers) {
+                            marker.setVisible(false);
+                        }
+                    } else {
+                        for (Marker marker : stopMarkers) {
+                            marker.setVisible(true);
+                        }
+
+                        if (selectedStopMarker != null) {
+                            LatLng markerPosition = selectedStopMarker.getPosition();
+
+                            Location markerLocation = new Location("");
+                            markerLocation.setLatitude(markerPosition.latitude);
+                            markerLocation.setLongitude(markerPosition.longitude);
+
+                            if (markerLocation.distanceTo(targetLocation) > 200) {
+                                selectedStopMarker.hideInfoWindow();
+                                selectedStopMarker = null;
+                            } else {
+                                selectedStopMarker.showInfoWindow();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                selectedStopMarker = marker;
+                mapState = USER_HAS_MOVED_MAP;
+                mapTargetView.setVisibility(View.VISIBLE);
+                gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                        new LatLng(marker.getPosition().latitude, marker.getPosition().longitude)
+                ));
+                selectedStopMarker.showInfoWindow();
+
+                return false;
+            }
+        });
+        gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
+                mapState = USER_HAS_NOT_MOVED_MAP;
+                swipeRefreshLayout.setRefreshing(true);
+                targetLocation = currentLocation;
+                gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                        new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude())));
+                forceUpdate();
+            }
+        });
+        gMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                mapState = USER_HAS_NOT_MOVED_MAP;
+                swipeRefreshLayout.setRefreshing(true);
+                targetLocation = currentLocation;
+                forceUpdate();
+
+                return false;
+            }
+        });
+
+        mapReady = true;
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mapView.onStart();
-
-        locationClient.connect();
-
-        autoRefreshTimer = new Timer();
-        autoRefreshTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        backgroundUpdate();
-                    }
-                });
-            }
-        }, AUTO_REFRESH_RATE, AUTO_REFRESH_RATE);
     }
 
     @Override
@@ -396,33 +387,31 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         super.onResume();
         mapView.onResume();
 
-        // Force recycler view to update UI so that the minutes are accurate
-        if (currentRoutes != null) {
-            recyclerViewAdapter.setRoutes(currentRoutes);
-        }
-
-        // If the user navigated to Route Detail and too much time has elapsed when they returned,
-        // then clear the predictions and force a refresh
+        // Get the time
         Long onResumeTime = new Date().getTime();
-        if (routeDetailOpened && onResumeTime - refreshTime > MAXIMUM_PREDICTION_AGE) {
+
+        // If too much time has elapsed since last refresh, then clear the predictions
+        if (onResumeTime - refreshTime > MAX_PREDICTION_AGE) {
             clearPredictions();
-            forceUpdate();
-
-            // If too much time has elapsed since the user has navigated away from the app,
-            // then clear the predictions and update the location to force a refresh
-        } else if (!routeDetailOpened && onResumeTime - locationQueryTime > MAXIMUM_LOCATION_TIME) {
-            clearPredictions();
-            refreshLocation();
-
-            // If there are no predictions displayed in the recycler view, then force a refresh
-        } else if (recyclerViewAdapter.getItemCount() < 1) {
-            forceUpdate();
-
-        } else {
-            backgroundUpdate();
         }
 
-        routeDetailOpened = false;
+        swipeRefreshLayout.setRefreshing(true);
+
+        locationClient.connect();
+
+        timer = new Timer();
+        timer.schedule(new LocationUpdateTimerTask(),
+                0, LOCATION_UPDATE_RATE);
+        timer.schedule(new PredictionsUpdateTimerTask(),
+                PREDICTIONS_UPDATE_RATE, PREDICTIONS_UPDATE_RATE);
+
+        if (mapState == USER_HAS_NOT_MOVED_MAP ||
+                onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME) {
+            mapState = USER_HAS_NOT_MOVED_MAP;
+            mapTargetView.setVisibility(View.GONE);
+        } else {
+            mapTargetView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -430,21 +419,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         super.onPause();
         mapView.onPause();
 
-        mapCameraMoving = false;
-
-        // Save the location the user last viewed
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat("latitude", (float) currentLocation.getLatitude());
-        editor.putFloat("longitude", (float) currentLocation.getLongitude());
-        editor.apply();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
+        cameraIsMoving = false;
 
         refreshing = false;
 
@@ -452,13 +427,29 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
             predictionsAsyncTask.cancel(true);
         }
 
+        if (timer != null) {
+            timer.cancel();
+        }
+
         locationClient.disconnect();
 
-        autoRefreshTimer.cancel();
+        onPauseTime = new Date().getTime();
 
         swipeRefreshLayout.setRefreshing(false);
 
-        userHasMovedMap = false;
+        // Save the location the user last viewed
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("latitude", (float) targetLocation.getLatitude());
+        editor.putFloat("longitude", (float) targetLocation.getLongitude());
+        editor.apply();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
     }
 
     @Override
@@ -473,17 +464,94 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         mapView.onLowMemory();
     }
 
-    private void refreshLocation() {
-        swipeRefreshLayout.setRefreshing(true);
+    @Override
+    public void onSuccess() {
+        if (mapReady && !cameraIsMoving) {
+            currentLocation = locationClient.getLastLocation();
 
-        locationAttemptsCount = 0;
+            if (mapState == USER_HAS_NOT_MOVED_MAP) {
+                gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                        new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
 
-        locationClient.updateLocation(locationClientCallbacks);
+                if (targetLocation.distanceTo(currentLocation) > 400) {
+                    targetLocation = currentLocation;
+                    forceUpdate();
+                } else {
+                    targetLocation = currentLocation;
+                    backgroundUpdate();
+                }
+            }
+        }
+
+        errorManager.setLocationError(false);
+        errorManager.setLocationPermissionDenied(false);
     }
 
-    private void recenterMap(LatLng latLng) {
-        if (mapReady && !userHasMovedMap) {
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+    @Override
+    public void onFailure() {
+        errorManager.setLocationError(true);
+    }
+
+    @Override
+    public void onNoPermission() {
+        errorManager.setLocationPermissionDenied(true);
+    }
+
+    @Override
+    public void onPostExecute(List<Route> routes) {
+        refreshing = false;
+        currentRoutes = new ArrayList<>(routes);
+        refreshRecyclerView();
+    }
+
+    private void backgroundUpdate() {
+        if (!refreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
+            getPredictions();
+        }
+    }
+
+    private void forceUpdate() {
+        getPredictions();
+    }
+
+    private void getPredictions() {
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
+
+            refreshing = true;
+            refreshTime = new Date().getTime();
+
+            if (predictionsAsyncTask != null) {
+                predictionsAsyncTask.cancel(true);
+            }
+
+            predictionsAsyncTask = new MapSearchPredictionsAsyncTask(
+                    realTimeApiKey, targetLocation, this);
+            predictionsAsyncTask.execute();
+        } else {
+            errorManager.setNetworkError(true);
+            refreshing = false;
+            swipeRefreshLayout.setRefreshing(false);
+            clearPredictions();
+        }
+    }
+
+    private void refreshRecyclerView() {
+        if (!userIsScrolling && currentRoutes != null) {
+            recyclerViewAdapter.setRoutes(currentRoutes);
+
+            if (recyclerViewAdapter.getItemCount() == 0) {
+                appBarLayout.setExpanded(true);
+                recyclerView.setNestedScrollingEnabled(false);
+                noPredictionsTextView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setNestedScrollingEnabled(true);
+                noPredictionsTextView.setVisibility(View.GONE);
+            }
+        }
+
+        if (!refreshing) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -492,36 +560,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         noPredictionsTextView.setVisibility(View.GONE);
         appBarLayout.setExpanded(true);
         recyclerView.setNestedScrollingEnabled(false);
-    }
-
-    private void getPredictions() {
-        if (!networkConnectivityClient.isConnected()) {
-            refreshing = false;
-            errorManager.setNetworkError(true);
-            swipeRefreshLayout.setRefreshing(false);
-            clearPredictions();
-        } else {
-            refreshing = true;
-
-            if (predictionsAsyncTask != null) {
-                predictionsAsyncTask.cancel(true);
-            }
-
-            predictionsAsyncTask = new MapSearchPredictionsAsyncTask(
-                    realTimeApiKey, currentLocation, predictionsOnPostExecuteListener);
-            predictionsAsyncTask.execute();
-        }
-    }
-
-    private void backgroundUpdate() {
-        if (!refreshing) {
-            getPredictions();
-        }
-    }
-
-    private void forceUpdate() {
-        swipeRefreshLayout.setRefreshing(true);
-        getPredictions();
     }
 
     private Shape[] getShapesFromJson(int jsonFile) {
@@ -564,18 +602,32 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void drawStopMarkers(Collection<Stop> stops) {
-        for (Stop stop : stops) {
-            Marker stopMarker = gMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(
-                            stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
-                    .anchor(0.5f, 0.5f)
-                    .title(stop.getName())
-                    .zIndex(2)
-                    .flat(true)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.mbta_stop_icon)));
+    private Marker drawStopMarkers(Stop stop) {
+        Marker stopMarker = gMap.addMarker(new MarkerOptions()
+                .position(new LatLng(
+                        stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
+                .anchor(0.5f, 0.5f)
+                .title(stop.getName())
+                .zIndex(2)
+                .flat(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mbta_stop_icon)));
 
-            stopMarker.setTag(stop);
+        stopMarker.setTag(stop);
+
+        return stopMarker;
+    }
+
+    private class LocationUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            locationClient.updateLocation(MapSearchFragment.this);
+        }
+    }
+
+    private class PredictionsUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            backgroundUpdate();
         }
     }
 }

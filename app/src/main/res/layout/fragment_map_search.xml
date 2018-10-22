@@ -27,10 +27,12 @@
                     android:layout_height="match_parent" />
 
                 <ImageView
+                    android:id="@+id/map_target_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_map_target" />
+                    android:src="@drawable/ic_map_target"
+                    android:visibility="gone" />
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
