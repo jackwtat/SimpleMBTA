@@ -79,6 +79,7 @@ public class MapSearchPredictionItem extends LinearLayout {
         // Set the route name
         routeLayout.addView(new RouteNameView(getContext(), route));
 
+        // Add predictions
         if (pickUps.size() > 0) {
 
             // For light rail and heavy rail, add first prediction for each destination
@@ -86,28 +87,40 @@ public class MapSearchPredictionItem extends LinearLayout {
                 ArrayList<String> destinations = new ArrayList<>();
                 for (Prediction p : pickUps) {
                     if (!destinations.contains(p.getDestination())) {
-                        predictionsListLayout.addView(new IndividualPredictionItem(getContext(), p));
+                        predictionsListLayout.addView(
+                                new IndividualPredictionItem(getContext(), p));
                         destinations.add(p.getDestination());
                     }
                 }
 
-                // For buses, add first live prediction or scheduled prediction if there are no live predictions
+                // For buses, add first live, pick-up prediction or scheduled prediction if there
+                // are no live predictions
             } else if (route.getMode() == Route.BUS) {
-                if (route.hasLivePickUps(direction)) {
-                    for (Prediction p : pickUps) {
-                        if (p.isLive()) {
-                            predictionsListLayout.addView(new IndividualPredictionItem(getContext(), p));
-                            break;
-                        }
+                boolean livePredictionFound = false;
+
+                // Search for the first live pick-up prediction
+                for (Prediction p : pickUps) {
+                    if (p.isLive()) {
+                        predictionsListLayout.addView(
+                                new IndividualPredictionItem(getContext(), p));
+                        livePredictionFound = true;
+                        break;
                     }
-                } else {
-                    predictionsListLayout.addView(new IndividualPredictionItem(getContext(), pickUps.get(0)));
+                }
+
+                // If unable to locate a current, live pick-up prediction, then add first prediction
+                if (!livePredictionFound) {
+                    predictionsListLayout.addView(
+                            new IndividualPredictionItem(getContext(), pickUps.get(0)));
                 }
 
                 // For all other routes, add first prediction
             } else {
-                predictionsListLayout.addView(new IndividualPredictionItem(getContext(), pickUps.get(0)));
+                predictionsListLayout.addView(
+                        new IndividualPredictionItem(getContext(), pickUps.get(0)));
             }
+
+            // Display appropriate message if there are no predictions
         } else {
             if (stop != null) {
                 noPredictionsView.setText(getContext().getResources().getString(R.string.no_current_predictions));
