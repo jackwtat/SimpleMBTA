@@ -88,7 +88,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
         int dropOffColor = context.getResources().getColor(R.color.dropOffPrediction);
 
         liveIndicator.setTextColor(liveColor);
-        dropOffIndicator.setTextColor(dropOffColor);
+        dropOffIndicator.setTextColor(context.getResources().getColor(R.color.HighlightedText));
         DrawableCompat.setTint(liveIndicator.getBackground(), liveColor);
         DrawableCompat.setTint(dropOffIndicator.getBackground(), dropOffColor);
 

@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@drawable/rounded_border"
+            android:background="@drawable/rounded_background"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@string/drop_off"
