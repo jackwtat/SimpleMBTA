@@ -112,11 +112,14 @@ public class MapSearchRecyclerViewAdapter
         adapterItems.clear();
 
         for (Route route : routes) {
-            if (route.hasPickUps(Route.INBOUND) || route.hasPickUps(Route.OUTBOUND)) {
-                if (route.hasPickUps(Route.INBOUND)) {
+            boolean hasInboundPickUps = route.hasPickUps(Route.INBOUND);
+            boolean hasOutboundPickUps = route.hasPickUps(Route.OUTBOUND);
+
+            if (hasInboundPickUps || hasOutboundPickUps) {
+                if (hasInboundPickUps) {
                     adapterItems.add(new adapterItem(route, Route.INBOUND));
                 }
-                if (route.hasPickUps(Route.OUTBOUND)) {
+                if (hasOutboundPickUps) {
                     adapterItems.add(new adapterItem(route, Route.OUTBOUND));
                 }
             } else if (route.hasNearbyStops()) {
