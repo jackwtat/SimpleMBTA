@@ -95,17 +95,19 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
             }
         }
 
-        String[] scheduleArgs = {
-                "filter[route]=" + routeArgBuilder.toString(),
-                "filter[stop]=" + stopArgBuilder.toString(),
-                "filter[date]=" + DateUtil.getCurrentMbtaDate(),
-                "filter[min_time]=" + DateUtil.getMbtaTime(0),
-                "filter[max_time]=" + DateUtil.getMbtaTime(6),
-                "include=route,trip,stop,prediction"
-        };
+        if (routeArgBuilder.length() > 0) {
+            String[] scheduleArgs = {
+                    "filter[route]=" + routeArgBuilder.toString(),
+                    "filter[stop]=" + stopArgBuilder.toString(),
+                    "filter[date]=" + DateUtil.getCurrentMbtaDate(),
+                    "filter[min_time]=" + DateUtil.getMbtaTime(0),
+                    "filter[max_time]=" + DateUtil.getMbtaTime(6),
+                    "include=route,trip,stop,prediction"
+            };
 
-        processPredictions(SchedulesJsonParser
-                .parse(realTimeApiClient.get("schedules", scheduleArgs)));
+            processPredictions(SchedulesJsonParser
+                    .parse(realTimeApiClient.get("schedules", scheduleArgs)));
+        }
 
         // Get all alerts for these routes
         routeArgBuilder = new StringBuilder();
@@ -113,20 +115,22 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
             routeArgBuilder.append(route.getId()).append(",");
         }
 
-        String[] alertsArgs = {"filter[route]=" + routeArgBuilder.toString()};
+        if (routeArgBuilder.length() > 0) {
+            String[] alertsArgs = {"filter[route]=" + routeArgBuilder.toString()};
 
-        ServiceAlert[] alerts = ServiceAlertsJsonParser
-                .parse(realTimeApiClient.get("alerts", alertsArgs));
+            ServiceAlert[] alerts = ServiceAlertsJsonParser
+                    .parse(realTimeApiClient.get("alerts", alertsArgs));
 
-        for (ServiceAlert alert : alerts) {
-            for (Route route : routes.values()) {
-                if (alert.affectsMode(route.getMode())) {
-                    route.addServiceAlert(alert);
-                } else {
-                    for (String affectedRouteId : alert.getAffectedRoutes()) {
-                        if (route.idEquals(affectedRouteId)) {
-                            route.addServiceAlert(alert);
-                            break;
+            for (ServiceAlert alert : alerts) {
+                for (Route route : routes.values()) {
+                    if (alert.affectsMode(route.getMode())) {
+                        route.addServiceAlert(alert);
+                    } else {
+                        for (String affectedRouteId : alert.getAffectedRoutes()) {
+                            if (route.idEquals(affectedRouteId)) {
+                                route.addServiceAlert(alert);
+                                break;
+                            }
                         }
                     }
                 }

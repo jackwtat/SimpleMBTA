@@ -109,7 +109,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private ErrorManager errorManager;
     private Timer timer;
 
-
     private boolean refreshing = false;
     private boolean mapReady = false;
     private boolean cameraIsMoving = false;
