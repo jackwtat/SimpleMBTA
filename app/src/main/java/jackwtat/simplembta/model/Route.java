@@ -232,15 +232,13 @@ public class Route implements Comparable<Route>, Serializable {
     }
 
     public void addPrediction(Prediction prediction) {
-        if (prediction.getDestination().equals("Silver Line Way") && !id.equals("746")) {
-            return;
-        }
+        if (prediction.isValidPrediction()) {
+            if (prediction.getDirection() == INBOUND) {
+                inboundPredictions.add(prediction);
 
-        if (prediction.getDirection() == INBOUND) {
-            inboundPredictions.add(prediction);
-
-        } else if (prediction.getDirection() == OUTBOUND) {
-            outboundPredictions.add(prediction);
+            } else if (prediction.getDirection() == OUTBOUND) {
+                outboundPredictions.add(prediction);
+            }
         }
     }
 

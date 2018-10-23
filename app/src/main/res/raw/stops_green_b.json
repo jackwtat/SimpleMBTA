@@ -1,0 +1,1451 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Lake St, Boston, MA 02135",
+        "description": null,
+        "latitude": 42.340081,
+        "location_type": 1,
+        "longitude": -71.166769,
+        "name": "Boston College",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-lake",
+      "links": {
+        "self": "/stops/place-lake"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70106",
+              "type": "stop"
+            },
+            {
+              "id": "70107",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-lake"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.3396,
+        "location_type": 1,
+        "longitude": -71.157661,
+        "name": "South Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-sougr",
+      "links": {
+        "self": "/stops/place-sougr"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70110",
+              "type": "stop"
+            },
+            {
+              "id": "70111",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sougr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Chestnut Hill Ave, Boston, MA",
+        "description": null,
+        "latitude": 42.338169,
+        "location_type": 1,
+        "longitude": -71.15316,
+        "name": "Chestnut Hill Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-chill",
+      "links": {
+        "self": "/stops/place-chill"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70112",
+              "type": "stop"
+            },
+            {
+              "id": "70113",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-chill"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Chiswick Rd, Boston, MA",
+        "description": null,
+        "latitude": 42.340805,
+        "location_type": 1,
+        "longitude": -71.150711,
+        "name": "Chiswick Road",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-chswk",
+      "links": {
+        "self": "/stops/place-chswk"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70114",
+              "type": "stop"
+            },
+            {
+              "id": "70115",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-chswk"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Sutherland Rd, Boston, MA",
+        "description": null,
+        "latitude": 42.341614,
+        "location_type": 1,
+        "longitude": -71.146202,
+        "name": "Sutherland Road",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-sthld",
+      "links": {
+        "self": "/stops/place-sthld"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70116",
+              "type": "stop"
+            },
+            {
+              "id": "70117",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sthld"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Washington St, Boston, MA",
+        "description": null,
+        "latitude": 42.343864,
+        "location_type": 1,
+        "longitude": -71.142853,
+        "name": "Washington Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-wascm",
+      "links": {
+        "self": "/stops/place-wascm"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70120",
+              "type": "stop"
+            },
+            {
+              "id": "70121",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-wascm"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Warren St, Boston, MA",
+        "description": null,
+        "latitude": 42.348343,
+        "location_type": 1,
+        "longitude": -71.140457,
+        "name": "Warren Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-wrnst",
+      "links": {
+        "self": "/stops/place-wrnst"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70124",
+              "type": "stop"
+            },
+            {
+              "id": "70125",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-wrnst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Allston St and Commonwealth Ave, Boston, MA 02134",
+        "description": null,
+        "latitude": 42.348701,
+        "location_type": 1,
+        "longitude": -71.137955,
+        "name": "Allston Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-alsgr",
+      "links": {
+        "self": "/stops/place-alsgr"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70126",
+              "type": "stop"
+            },
+            {
+              "id": "70127",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-alsgr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Griggs St, Boston, MA",
+        "description": null,
+        "latitude": 42.348545,
+        "location_type": 1,
+        "longitude": -71.134949,
+        "name": "Griggs Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-grigg",
+      "links": {
+        "self": "/stops/place-grigg"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70128",
+              "type": "stop"
+            },
+            {
+              "id": "70129",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-grigg"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Harvard Ave, Boston, MA",
+        "description": null,
+        "latitude": 42.350243,
+        "location_type": 1,
+        "longitude": -71.131355,
+        "name": "Harvard Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-harvd",
+      "links": {
+        "self": "/stops/place-harvd"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70130",
+              "type": "stop"
+            },
+            {
+              "id": "70131",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-harvd"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Brighton Ave, Boston, MA, 02215",
+        "description": null,
+        "latitude": 42.351967,
+        "location_type": 1,
+        "longitude": -71.125031,
+        "name": "Packards Corner",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-brico",
+      "links": {
+        "self": "/stops/place-brico"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70134",
+              "type": "stop"
+            },
+            {
+              "id": "70135",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-brico"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Babcock St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.35182,
+        "location_type": 1,
+        "longitude": -71.12165,
+        "name": "Babcock Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-babck",
+      "links": {
+        "self": "/stops/place-babck"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70136",
+              "type": "stop"
+            },
+            {
+              "id": "70137",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-babck"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Pleasant St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.351521,
+        "location_type": 1,
+        "longitude": -71.118889,
+        "name": "Pleasant Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-plsgr",
+      "links": {
+        "self": "/stops/place-plsgr"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70138",
+              "type": "stop"
+            },
+            {
+              "id": "70139",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-plsgr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Saint Paul St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.3512,
+        "location_type": 1,
+        "longitude": -71.116104,
+        "name": "Saint Paul Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-stplb",
+      "links": {
+        "self": "/stops/place-stplb"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70140",
+              "type": "stop"
+            },
+            {
+              "id": "70141",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-stplb"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Amory St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.350941,
+        "location_type": 1,
+        "longitude": -71.113876,
+        "name": "Boston University West",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-buwst",
+      "links": {
+        "self": "/stops/place-buwst"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70142",
+              "type": "stop"
+            },
+            {
+              "id": "70143",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-buwst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Marsh Chapel, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.350082,
+        "location_type": 1,
+        "longitude": -71.106865,
+        "name": "Boston University Central",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-bucen",
+      "links": {
+        "self": "/stops/place-bucen"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70144",
+              "type": "stop"
+            },
+            {
+              "id": "70145",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bucen"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Granby St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.349735,
+        "location_type": 1,
+        "longitude": -71.103889,
+        "name": "Boston University East",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-buest",
+      "links": {
+        "self": "/stops/place-buest"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70146",
+              "type": "stop"
+            },
+            {
+              "id": "70147",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-buest"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Blandford Mall, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.349293,
+        "location_type": 1,
+        "longitude": -71.100258,
+        "name": "Blandford Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-bland",
+      "links": {
+        "self": "/stops/place-bland"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70148",
+              "type": "stop"
+            },
+            {
+              "id": "70149",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bland"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Kenmore St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.348949,
+        "location_type": 1,
+        "longitude": -71.095169,
+        "name": "Kenmore",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-kencl",
+      "links": {
+        "self": "/stops/place-kencl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70150",
+              "type": "stop"
+            },
+            {
+              "id": "70151",
+              "type": "stop"
+            },
+            {
+              "id": "899",
+              "type": "stop"
+            },
+            {
+              "id": "9070150",
+              "type": "stop"
+            },
+            {
+              "id": "9070151",
+              "type": "stop"
+            },
+            {
+              "id": "door-kencl-beacon",
+              "type": "stop"
+            },
+            {
+              "id": "door-kencl-busway",
+              "type": "stop"
+            },
+            {
+              "id": "door-kencl-commonwealth",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-kencl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "100 Massachusetts Ave, Boston, MA",
+        "description": null,
+        "latitude": 42.347888,
+        "location_type": 1,
+        "longitude": -71.087903,
+        "name": "Hynes Convention Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-hymnl",
+      "links": {
+        "self": "/stops/place-hymnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70152",
+              "type": "stop"
+            },
+            {
+              "id": "70153",
+              "type": "stop"
+            },
+            {
+              "id": "79",
+              "type": "stop"
+            },
+            {
+              "id": "93",
+              "type": "stop"
+            },
+            {
+              "id": "door-hymnl-mass",
+              "type": "stop"
+            },
+            {
+              "id": "door-hymnl-newbury",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-hymnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Boylston St and Dartmouth St, Boston, MA",
+        "description": null,
+        "latitude": 42.349974,
+        "location_type": 1,
+        "longitude": -71.077447,
+        "name": "Copley",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-coecl",
+      "links": {
+        "self": "/stops/place-coecl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70154",
+              "type": "stop"
+            },
+            {
+              "id": "70155",
+              "type": "stop"
+            },
+            {
+              "id": "door-coecl-bpl",
+              "type": "stop"
+            },
+            {
+              "id": "door-coecl-church",
+              "type": "stop"
+            },
+            {
+              "id": "door-coecl-east",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-coecl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Arlington St and Boylston St, Boston, MA 02116",
+        "description": null,
+        "latitude": 42.351902,
+        "location_type": 1,
+        "longitude": -71.070893,
+        "name": "Arlington",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-armnl",
+      "links": {
+        "self": "/stops/place-armnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70156",
+              "type": "stop"
+            },
+            {
+              "id": "70157",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-arlte",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-arltw",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-church",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-copley",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-elevator",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-garden",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-parkpl",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-armnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Boylston St and Tremont St, Boston, MA",
+        "description": null,
+        "latitude": 42.35302,
+        "location_type": 1,
+        "longitude": -71.06459,
+        "name": "Boylston",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-boyls",
+      "links": {
+        "self": "/stops/place-boyls"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70158",
+              "type": "stop"
+            },
+            {
+              "id": "70159",
+              "type": "stop"
+            },
+            {
+              "id": "door-boyls-inbound",
+              "type": "stop"
+            },
+            {
+              "id": "door-boyls-outbound",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-boyls"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Tremont St and Winter St, Boston, MA 02108",
+        "description": null,
+        "latitude": 42.356395,
+        "location_type": 1,
+        "longitude": -71.062424,
+        "name": "Park Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-pktrm",
+      "links": {
+        "self": "/stops/place-pktrm"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70075",
+              "type": "stop"
+            },
+            {
+              "id": "70076",
+              "type": "stop"
+            },
+            {
+              "id": "70196",
+              "type": "stop"
+            },
+            {
+              "id": "70197",
+              "type": "stop"
+            },
+            {
+              "id": "70198",
+              "type": "stop"
+            },
+            {
+              "id": "70199",
+              "type": "stop"
+            },
+            {
+              "id": "70200",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-elevatoreb",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-elevatorwb",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-exitalewife",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-exitashbrain",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-tremonte",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-tremontw",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-west",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-winter",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-pktrm"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Cambridge St and Court St, Boston, MA",
+        "description": null,
+        "latitude": 42.359705,
+        "location_type": 1,
+        "longitude": -71.059215,
+        "name": "Government Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-gover",
+      "links": {
+        "self": "/stops/place-gover"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "4510",
+              "type": "stop"
+            },
+            {
+              "id": "70039",
+              "type": "stop"
+            },
+            {
+              "id": "70040",
+              "type": "stop"
+            },
+            {
+              "id": "70201",
+              "type": "stop"
+            },
+            {
+              "id": "70202",
+              "type": "stop"
+            },
+            {
+              "id": "door-gover-main",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-gover"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "136 Blackstone St, Boston, MA 02109",
+        "description": null,
+        "latitude": 42.363021,
+        "location_type": 1,
+        "longitude": -71.05829,
+        "name": "Haymarket",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-haecl",
+      "links": {
+        "self": "/stops/place-haecl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70024",
+              "type": "stop"
+            },
+            {
+              "id": "70025",
+              "type": "stop"
+            },
+            {
+              "id": "70203",
+              "type": "stop"
+            },
+            {
+              "id": "70204",
+              "type": "stop"
+            },
+            {
+              "id": "8310",
+              "type": "stop"
+            },
+            {
+              "id": "door-haym-busway",
+              "type": "stop"
+            },
+            {
+              "id": "door-haym-congress",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-haecl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "135 Causeway St, Boston MA 02114",
+        "description": null,
+        "latitude": 42.365577,
+        "location_type": 1,
+        "longitude": -71.06129,
+        "name": "North Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-north",
+      "links": {
+        "self": "/stops/place-north"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "113",
+              "type": "stop"
+            },
+            {
+              "id": "114",
+              "type": "stop"
+            },
+            {
+              "id": "70026",
+              "type": "stop"
+            },
+            {
+              "id": "70027",
+              "type": "stop"
+            },
+            {
+              "id": "70205",
+              "type": "stop"
+            },
+            {
+              "id": "70206",
+              "type": "stop"
+            },
+            {
+              "id": "North Station",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-01",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-02",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-03",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-04",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-05",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-06",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-07",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-08",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-09",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-10",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-causewaye",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-causeways",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-crcauseway",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-crnashua",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-valenti",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-north"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Leverett Circle and Nashua St, Boston, MA 02114",
+        "description": null,
+        "latitude": 42.366664,
+        "location_type": 1,
+        "longitude": -71.067666,
+        "name": "Science Park",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-spmnl",
+      "links": {
+        "self": "/stops/place-spmnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70207",
+              "type": "stop"
+            },
+            {
+              "id": "70208",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-nashua",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-nashuael",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-obrien",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-obrienel",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-spmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Cambridge St and O'Brien Hwy, Cambridge, MA 02141",
+        "description": null,
+        "latitude": 42.370772,
+        "location_type": 1,
+        "longitude": -71.076536,
+        "name": "Lechmere",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-lech",
+      "links": {
+        "self": "/stops/place-lech"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "14150",
+              "type": "stop"
+            },
+            {
+              "id": "70209",
+              "type": "stop"
+            },
+            {
+              "id": "70210",
+              "type": "stop"
+            },
+            {
+              "id": "door-lech-entrance",
+              "type": "stop"
+            },
+            {
+              "id": "door-lech-exit",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-lech"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

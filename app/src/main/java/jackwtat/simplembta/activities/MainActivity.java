@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import jackwtat.simplembta.clients.LocationClient;
+import jackwtat.simplembta.model.Stops;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Stops.init(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         */
 
         errorTextView = findViewById(R.id.error_message_text_view);
+
     }
 
     @Override

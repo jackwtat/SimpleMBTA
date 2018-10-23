@@ -1,0 +1,1267 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "address": "Beacon St and Chestnut Hill Ave, Brighton, MA",
+        "description": null,
+        "latitude": 42.336142,
+        "location_type": 1,
+        "longitude": -71.149326,
+        "name": "Cleveland Circle",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-clmnl",
+      "links": {
+        "self": "/stops/place-clmnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70237",
+              "type": "stop"
+            },
+            {
+              "id": "70238",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-clmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Englewood Ave, Brookline, MA",
+        "description": null,
+        "latitude": 42.336971,
+        "location_type": 1,
+        "longitude": -71.14566,
+        "name": "Englewood Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-engav",
+      "links": {
+        "self": "/stops/place-engav"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70235",
+              "type": "stop"
+            },
+            {
+              "id": "70236",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-engav"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Dean Rd, Brookline, MA",
+        "description": null,
+        "latitude": 42.337807,
+        "location_type": 1,
+        "longitude": -71.141853,
+        "name": "Dean Road",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-denrd",
+      "links": {
+        "self": "/stops/place-denrd"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70233",
+              "type": "stop"
+            },
+            {
+              "id": "70234",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-denrd"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Tappan St, Brookline, MA",
+        "description": null,
+        "latitude": 42.338459,
+        "location_type": 1,
+        "longitude": -71.138702,
+        "name": "Tappan Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-tapst",
+      "links": {
+        "self": "/stops/place-tapst"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70231",
+              "type": "stop"
+            },
+            {
+              "id": "70232",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-tapst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Washington St, Brookline, MA",
+        "description": null,
+        "latitude": 42.339394,
+        "location_type": 1,
+        "longitude": -71.13533,
+        "name": "Washington Square",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-bcnwa",
+      "links": {
+        "self": "/stops/place-bcnwa"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "1276",
+              "type": "stop"
+            },
+            {
+              "id": "1292",
+              "type": "stop"
+            },
+            {
+              "id": "70229",
+              "type": "stop"
+            },
+            {
+              "id": "70230",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bcnwa"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Fairbanks Ave, Brookline, MA",
+        "description": null,
+        "latitude": 42.339725,
+        "location_type": 1,
+        "longitude": -71.131073,
+        "name": "Fairbanks Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-fbkst",
+      "links": {
+        "self": "/stops/place-fbkst"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70227",
+              "type": "stop"
+            },
+            {
+              "id": "70228",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-fbkst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1481 Beacon Street, Brookline, MA",
+        "description": null,
+        "latitude": 42.340023,
+        "location_type": 1,
+        "longitude": -71.129082,
+        "name": "Brandon Hall",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-bndhl",
+      "links": {
+        "self": "/stops/place-bndhl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70225",
+              "type": "stop"
+            },
+            {
+              "id": "70226",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bndhl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Summit Ave, Brookline, MA",
+        "description": null,
+        "latitude": 42.34111,
+        "location_type": 1,
+        "longitude": -71.12561,
+        "name": "Summit Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-sumav",
+      "links": {
+        "self": "/stops/place-sumav"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70223",
+              "type": "stop"
+            },
+            {
+              "id": "70224",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sumav"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Harvard St, Brookline, MA",
+        "description": null,
+        "latitude": 42.342116,
+        "location_type": 1,
+        "longitude": -71.121263,
+        "name": "Coolidge Corner",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-cool",
+      "links": {
+        "self": "/stops/place-cool"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "1308",
+              "type": "stop"
+            },
+            {
+              "id": "1372",
+              "type": "stop"
+            },
+            {
+              "id": "70219",
+              "type": "stop"
+            },
+            {
+              "id": "70220",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-cool"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Saint Paul St, Brookline, MA 02446",
+        "description": null,
+        "latitude": 42.343327,
+        "location_type": 1,
+        "longitude": -71.116997,
+        "name": "Saint Paul Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-stpul",
+      "links": {
+        "self": "/stops/place-stpul"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70217",
+              "type": "stop"
+            },
+            {
+              "id": "70218",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-stpul"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Powell St, Brookline, MA",
+        "description": null,
+        "latitude": 42.344074,
+        "location_type": 1,
+        "longitude": -71.114197,
+        "name": "Kent Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-kntst",
+      "links": {
+        "self": "/stops/place-kntst"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70215",
+              "type": "stop"
+            },
+            {
+              "id": "70216",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-kntst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Hawes St, Brookline, MA",
+        "description": null,
+        "latitude": 42.344906,
+        "location_type": 1,
+        "longitude": -71.111145,
+        "name": "Hawes Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-hwsst",
+      "links": {
+        "self": "/stops/place-hwsst"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70213",
+              "type": "stop"
+            },
+            {
+              "id": "70214",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-hwsst"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Beacon St and Saint Mary's St, Boston, MA",
+        "description": null,
+        "latitude": 42.345974,
+        "location_type": 1,
+        "longitude": -71.107353,
+        "name": "Saint Marys Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-smary",
+      "links": {
+        "self": "/stops/place-smary"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70211",
+              "type": "stop"
+            },
+            {
+              "id": "70212",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-smary"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Kenmore St, Boston, MA 02215",
+        "description": null,
+        "latitude": 42.348949,
+        "location_type": 1,
+        "longitude": -71.095169,
+        "name": "Kenmore",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-kencl",
+      "links": {
+        "self": "/stops/place-kencl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70150",
+              "type": "stop"
+            },
+            {
+              "id": "70151",
+              "type": "stop"
+            },
+            {
+              "id": "899",
+              "type": "stop"
+            },
+            {
+              "id": "9070150",
+              "type": "stop"
+            },
+            {
+              "id": "9070151",
+              "type": "stop"
+            },
+            {
+              "id": "door-kencl-beacon",
+              "type": "stop"
+            },
+            {
+              "id": "door-kencl-busway",
+              "type": "stop"
+            },
+            {
+              "id": "door-kencl-commonwealth",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-kencl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "100 Massachusetts Ave, Boston, MA",
+        "description": null,
+        "latitude": 42.347888,
+        "location_type": 1,
+        "longitude": -71.087903,
+        "name": "Hynes Convention Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-hymnl",
+      "links": {
+        "self": "/stops/place-hymnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70152",
+              "type": "stop"
+            },
+            {
+              "id": "70153",
+              "type": "stop"
+            },
+            {
+              "id": "79",
+              "type": "stop"
+            },
+            {
+              "id": "93",
+              "type": "stop"
+            },
+            {
+              "id": "door-hymnl-mass",
+              "type": "stop"
+            },
+            {
+              "id": "door-hymnl-newbury",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-hymnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Boylston St and Dartmouth St, Boston, MA",
+        "description": null,
+        "latitude": 42.349974,
+        "location_type": 1,
+        "longitude": -71.077447,
+        "name": "Copley",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-coecl",
+      "links": {
+        "self": "/stops/place-coecl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70154",
+              "type": "stop"
+            },
+            {
+              "id": "70155",
+              "type": "stop"
+            },
+            {
+              "id": "door-coecl-bpl",
+              "type": "stop"
+            },
+            {
+              "id": "door-coecl-church",
+              "type": "stop"
+            },
+            {
+              "id": "door-coecl-east",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-coecl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Arlington St and Boylston St, Boston, MA 02116",
+        "description": null,
+        "latitude": 42.351902,
+        "location_type": 1,
+        "longitude": -71.070893,
+        "name": "Arlington",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-armnl",
+      "links": {
+        "self": "/stops/place-armnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70156",
+              "type": "stop"
+            },
+            {
+              "id": "70157",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-arlte",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-arltw",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-church",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-copley",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-elevator",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-garden",
+              "type": "stop"
+            },
+            {
+              "id": "door-armnl-parkpl",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-armnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Boylston St and Tremont St, Boston, MA",
+        "description": null,
+        "latitude": 42.35302,
+        "location_type": 1,
+        "longitude": -71.06459,
+        "name": "Boylston",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-boyls",
+      "links": {
+        "self": "/stops/place-boyls"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70158",
+              "type": "stop"
+            },
+            {
+              "id": "70159",
+              "type": "stop"
+            },
+            {
+              "id": "door-boyls-inbound",
+              "type": "stop"
+            },
+            {
+              "id": "door-boyls-outbound",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-boyls"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Tremont St and Winter St, Boston, MA 02108",
+        "description": null,
+        "latitude": 42.356395,
+        "location_type": 1,
+        "longitude": -71.062424,
+        "name": "Park Street",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-pktrm",
+      "links": {
+        "self": "/stops/place-pktrm"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70075",
+              "type": "stop"
+            },
+            {
+              "id": "70076",
+              "type": "stop"
+            },
+            {
+              "id": "70196",
+              "type": "stop"
+            },
+            {
+              "id": "70197",
+              "type": "stop"
+            },
+            {
+              "id": "70198",
+              "type": "stop"
+            },
+            {
+              "id": "70199",
+              "type": "stop"
+            },
+            {
+              "id": "70200",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-elevatoreb",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-elevatorwb",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-exitalewife",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-exitashbrain",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-tremonte",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-tremontw",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-west",
+              "type": "stop"
+            },
+            {
+              "id": "door-pktrm-winter",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-pktrm"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Cambridge St and Court St, Boston, MA",
+        "description": null,
+        "latitude": 42.359705,
+        "location_type": 1,
+        "longitude": -71.059215,
+        "name": "Government Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-gover",
+      "links": {
+        "self": "/stops/place-gover"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "4510",
+              "type": "stop"
+            },
+            {
+              "id": "70039",
+              "type": "stop"
+            },
+            {
+              "id": "70040",
+              "type": "stop"
+            },
+            {
+              "id": "70201",
+              "type": "stop"
+            },
+            {
+              "id": "70202",
+              "type": "stop"
+            },
+            {
+              "id": "door-gover-main",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-gover"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "136 Blackstone St, Boston, MA 02109",
+        "description": null,
+        "latitude": 42.363021,
+        "location_type": 1,
+        "longitude": -71.05829,
+        "name": "Haymarket",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-haecl",
+      "links": {
+        "self": "/stops/place-haecl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70024",
+              "type": "stop"
+            },
+            {
+              "id": "70025",
+              "type": "stop"
+            },
+            {
+              "id": "70203",
+              "type": "stop"
+            },
+            {
+              "id": "70204",
+              "type": "stop"
+            },
+            {
+              "id": "8310",
+              "type": "stop"
+            },
+            {
+              "id": "door-haym-busway",
+              "type": "stop"
+            },
+            {
+              "id": "door-haym-congress",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-haecl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "135 Causeway St, Boston MA 02114",
+        "description": null,
+        "latitude": 42.365577,
+        "location_type": 1,
+        "longitude": -71.06129,
+        "name": "North Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-north",
+      "links": {
+        "self": "/stops/place-north"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "113",
+              "type": "stop"
+            },
+            {
+              "id": "114",
+              "type": "stop"
+            },
+            {
+              "id": "70026",
+              "type": "stop"
+            },
+            {
+              "id": "70027",
+              "type": "stop"
+            },
+            {
+              "id": "70205",
+              "type": "stop"
+            },
+            {
+              "id": "70206",
+              "type": "stop"
+            },
+            {
+              "id": "North Station",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-01",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-02",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-03",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-04",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-05",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-06",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-07",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-08",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-09",
+              "type": "stop"
+            },
+            {
+              "id": "North Station-10",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-causewaye",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-causeways",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-crcauseway",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-crnashua",
+              "type": "stop"
+            },
+            {
+              "id": "door-north-valenti",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-north"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Leverett Circle and Nashua St, Boston, MA 02114",
+        "description": null,
+        "latitude": 42.366664,
+        "location_type": 1,
+        "longitude": -71.067666,
+        "name": "Science Park",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-spmnl",
+      "links": {
+        "self": "/stops/place-spmnl"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "70207",
+              "type": "stop"
+            },
+            {
+              "id": "70208",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-nashua",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-nashuael",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-obrien",
+              "type": "stop"
+            },
+            {
+              "id": "door-spmnl-obrienel",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-spmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Cambridge St and O'Brien Hwy, Cambridge, MA 02141",
+        "description": null,
+        "latitude": 42.370772,
+        "location_type": 1,
+        "longitude": -71.076536,
+        "name": "Lechmere",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-lech",
+      "links": {
+        "self": "/stops/place-lech"
+      },
+      "relationships": {
+        "child_stops": {
+          "data": [
+            {
+              "id": "14150",
+              "type": "stop"
+            },
+            {
+              "id": "70209",
+              "type": "stop"
+            },
+            {
+              "id": "70210",
+              "type": "stop"
+            },
+            {
+              "id": "door-lech-entrance",
+              "type": "stop"
+            },
+            {
+              "id": "door-lech-exit",
+              "type": "stop"
+            }
+          ]
+        },
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-lech"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
