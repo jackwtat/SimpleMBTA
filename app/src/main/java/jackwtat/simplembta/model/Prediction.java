@@ -188,11 +188,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         // Out of service Green Line trains sometimes show up as in service on incorrect lines
         // if they're moving with their AVI turned on
         if (route.isGreenLine()) {
-            if (!Stops.greenSubway.containsKey(stop.getId()) ||
-                    (route.getId().equals("Green-B") && !Stops.greenB.containsKey(stop.getId())) ||
-                    (route.getId().equals("Green-C") && !Stops.greenC.containsKey(stop.getId())) ||
-                    (route.getId().equals("Green-D") && !Stops.greenD.containsKey(stop.getId())) ||
-                    (route.getId().equals("Green-E") && !Stops.greenE.containsKey(stop.getId()))) {
+            if ((route.getId().equals("Green-B") && !Stops.greenB.containsKey(stop.getId())) ||
+                            (route.getId().equals("Green-C") && !Stops.greenC.containsKey(stop.getId())) ||
+                            (route.getId().equals("Green-D") && !Stops.greenD.containsKey(stop.getId())) ||
+                            (route.getId().equals("Green-E") && !Stops.greenE.containsKey(stop.getId()))) {
                 return false;
             }
         }
