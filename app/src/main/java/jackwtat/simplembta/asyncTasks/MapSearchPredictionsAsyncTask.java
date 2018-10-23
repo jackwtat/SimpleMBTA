@@ -28,7 +28,8 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     private HashMap<String, Route> routes;
     private HashMap<String, Stop> stops;
-    private ArrayList<String> predictionIds = new ArrayList<>();
+    private HashMap<String, Stop> childStops = new HashMap<>();
+    private HashMap<String, Prediction> predictions = new HashMap<>();
 
     public MapSearchPredictionsAsyncTask(String realTimeApiKey,
                                          Location location,
@@ -53,6 +54,10 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
         for (Stop stop : stops.values()) {
             stop.setDistanceFromOrigin(location);
+
+            for (String childId : stop.getChildIds()) {
+                childStops.put(childId, stop);
+            }
         }
 
         if (stops.size() == 0) {
@@ -146,15 +151,12 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     private void processPredictions(Prediction[] livePredictions) {
         for (Prediction prediction : livePredictions) {
-            if (!predictionIds.contains(prediction.getId())) {
-                predictionIds.add(prediction.getId());
+            if (!predictions.containsKey(prediction.getId())) {
+                predictions.put(prediction.getId(), prediction);
 
                 // Replace prediction's stop ID with its parent stop ID
-                for (Stop stop : stops.values()) {
-                    if (stop.isParentOf(prediction.getStopId())) {
-                        prediction.setStop(stop);
-                        break;
-                    }
+                if(childStops.containsKey(prediction.getStopId())){
+                    prediction.setStop(childStops.get(prediction.getStopId()));
                 }
 
                 // If the prediction is for the eastbound Green Line, then replace the route
