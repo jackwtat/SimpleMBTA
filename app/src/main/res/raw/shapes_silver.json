@@ -1009,35 +1009,6 @@
     },
     {
       "attributes": {
-        "address": "Washington St and Union Park St, Boston, MA",
-        "description": "Washington St @ Union Pk - Silver Line - Dudley",
-        "latitude": 42.340497,
-        "location_type": 0,
-        "longitude": -71.071317,
-        "name": "Washington St @ Union Pk",
-        "platform_code": null,
-        "platform_name": "Dudley",
-        "wheelchair_boarding": 1
-      },
-      "id": "5100",
-      "links": {
-        "self": "/stops/5100"
-      },
-      "relationships": {
-        "child_stops": {},
-        "facilities": {
-          "links": {
-            "related": "/facilities/?filter[stop]=5100"
-          }
-        },
-        "parent_station": {
-          "data": null
-        }
-      },
-      "type": "stop"
-    },
-    {
-      "attributes": {
         "address": "Silver Line Way and Starboard Way, Boston, MA 02210",
         "description": "Silver Line Way after Manulife Building - Silver Line - Airport/Design Center/Chelsea",
         "latitude": 42.347056,
