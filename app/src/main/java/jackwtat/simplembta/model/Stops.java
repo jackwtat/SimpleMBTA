@@ -24,7 +24,19 @@ public class Stops {
     }
 
     private static HashMap<String, Stop> getStopsFromJson(Context context, int jsonFile) {
-        return StopsJsonParser.parse(RawResourceReader.toString(
+        HashMap<String, Stop> stops = StopsJsonParser.parse(RawResourceReader.toString(
                 context.getResources().openRawResource(jsonFile)));
+
+        HashMap<String, Stop> childStops = new HashMap<>();
+
+        for (Stop stop : stops.values()) {
+            for (String childId : stop.getChildIds()) {
+                childStops.put(childId, stop);
+            }
+        }
+
+        stops.putAll(childStops);
+
+        return stops;
     }
 }
