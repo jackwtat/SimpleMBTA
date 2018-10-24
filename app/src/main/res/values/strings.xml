@@ -32,6 +32,8 @@
     <string name="no_nearby_predictions">No current predictions near this location</string>
     <string name="no_predictions_this_stop">No current predictions at this stop</string>
     <string name="no_current_predictions">No current predictions</string>
+    <string name="no_current">No current</string>
+    <string name="predictions">predictions</string>
 
     <!-- Route Names -->
     <string name="red_line_long_name">Red Line</string>
