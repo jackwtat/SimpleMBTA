@@ -123,18 +123,11 @@ public class MapSearchRecyclerViewAdapter
                     adapterItems.add(new adapterItem(route, Route.OUTBOUND));
                 }
             } else if (route.hasNearbyStops()) {
-                Stop inboundStop = route.getNearestStop(Route.INBOUND);
-                Stop outboundStop = route.getNearestStop(Route.OUTBOUND);
-
-                if (inboundStop != null && inboundStop.equals(outboundStop)) {
+                if (route.getNearestStop(Route.INBOUND) != null) {
                     adapterItems.add(new adapterItem(route, Route.INBOUND));
-                } else {
-                    if (route.getNearestStop(Route.INBOUND) != null) {
-                        adapterItems.add(new adapterItem(route, Route.INBOUND));
-                    }
-                    if (route.getNearestStop(Route.OUTBOUND) != null) {
-                        adapterItems.add(new adapterItem(route, Route.OUTBOUND));
-                    }
+                }
+                if (route.getNearestStop(Route.OUTBOUND) != null) {
+                    adapterItems.add(new adapterItem(route, Route.OUTBOUND));
                 }
             } else {
                 adapterItems.add(new adapterItem(route, Route.NULL_DIRECTION));

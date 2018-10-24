@@ -122,11 +122,18 @@ public class MapSearchPredictionItem extends LinearLayout {
 
             // Display appropriate message if there are no predictions
         } else {
+            StringBuilder stringBuilder = new StringBuilder();
             if (stop != null) {
-                noPredictionsView.setText(getContext().getResources().getString(R.string.no_current_predictions));
+                stringBuilder.append(getContext().getResources().getString(R.string.no_current))
+                        .append(" ")
+                        .append(route.getDirectionName(direction).toLowerCase())
+                        .append(" ")
+                        .append(getContext().getResources().getString(R.string.predictions));
             } else {
-                noPredictionsView.setText(getContext().getResources().getString(R.string.no_nearby_predictions));
+                stringBuilder.append(getContext().getResources().getString(R.string.no_nearby_predictions));
             }
+
+            noPredictionsView.setText(stringBuilder.toString());
             noPredictionsView.setVisibility(VISIBLE);
         }
     }

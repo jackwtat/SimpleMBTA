@@ -136,7 +136,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         networkConnectivityClient = new NetworkConnectivityClient(this);
 
         // Set action bar
-        setTitle(route.getLongDisplayName(this));
+        setTitle(route.getLongDisplayName(this) + " - " + route.getDirectionName(direction));
         if (Build.VERSION.SDK_INT >= 21) {
             // Create color for status bar
             float[] hsv = new float[3];
