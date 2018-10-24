@@ -258,12 +258,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         Shape[] mattapanShapes = getShapesFromJson(R.raw.shapes_mattapan);
 
         // Draw the route shapes
-        drawRouteShapes(blueShapes, getContext().getResources().getColor(R.color.blue_line));
-        drawRouteShapes(orangeShapes, getContext().getResources().getColor(R.color.orange_line));
-        drawRouteShapes(redShapes, getContext().getResources().getColor(R.color.red_line));
-        drawRouteShapes(greenShapes, getContext().getResources().getColor(R.color.green_line));
-        drawRouteShapes(silverShapes, getContext().getResources().getColor(R.color.silver_line));
-        drawRouteShapes(mattapanShapes, getContext().getResources().getColor(R.color.red_line));
+        drawRouteShapes(blueShapes, getContext().getResources().getColor(R.color.blue_line), 2);
+        drawRouteShapes(orangeShapes, getContext().getResources().getColor(R.color.orange_line), 4);
+        drawRouteShapes(redShapes, getContext().getResources().getColor(R.color.red_line), 5);
+        drawRouteShapes(greenShapes, getContext().getResources().getColor(R.color.green_line), 3);
+        drawRouteShapes(silverShapes, getContext().getResources().getColor(R.color.silver_line), 1);
+        drawRouteShapes(mattapanShapes, getContext().getResources().getColor(R.color.red_line), 5);
 
         // Draw the stop markers
         HashMap<String, Stop> distinctStops = new HashMap<>();
@@ -623,12 +623,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         return stops;
     }
 
-    private void drawRouteShapes(Shape[] shapes, int color) {
+    private void drawRouteShapes(Shape[] shapes, int color, int zIndex) {
         for (Shape s : shapes) {
-            List<LatLng> shapeCoordinates = PolyUtil.decode(s.getPolyline());
+            List<LatLng> coordinates = PolyUtil.decode(s.getPolyline());
 
+            // Draw white background/line padding
             gMap.addPolyline(new PolylineOptions()
-                    .addAll(shapeCoordinates)
+                    .addAll(coordinates)
                     .color(Color.parseColor("#FFFFFF"))
                     .zIndex(0)
                     .jointType(JointType.ROUND)
@@ -636,10 +637,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     .endCap(new RoundCap())
                     .width(14));
 
+            // Draw primary polyline
             gMap.addPolyline(new PolylineOptions()
-                    .addAll(shapeCoordinates)
+                    .addAll(coordinates)
                     .color(color)
-                    .zIndex(1)
+                    .zIndex(zIndex)
                     .jointType(JointType.ROUND)
                     .startCap(new RoundCap())
                     .endCap(new RoundCap())
@@ -653,7 +655,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
                 .anchor(0.5f, 0.5f)
                 .title(stop.getName())
-                .zIndex(2)
+                .zIndex(300)
                 .flat(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mbta_stop_icon)));
 
