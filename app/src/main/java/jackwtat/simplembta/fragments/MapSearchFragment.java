@@ -88,9 +88,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Default level of zoom for the map
     public static final int DEFAULT_MAP_ZOOM_LEVEL = 15;
 
-    // Map interaction stasues
-    public static final int USER_HAS_NOT_MOVED_MAP = 0;
-    public static final int USER_HAS_MOVED_MAP = 1;
+    // Map interaction statuses
+    private static final int USER_HAS_NOT_MOVED_MAP = 0;
+    private static final int USER_HAS_MOVED_MAP = 1;
 
     private View rootView;
     private AppBarLayout appBarLayout;
@@ -114,11 +114,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private boolean cameraIsMoving = false;
     private int mapState = USER_HAS_NOT_MOVED_MAP;
     private boolean userIsScrolling = false;
+    private boolean userLocationFound = false;
     private long refreshTime = 0;
     private long onPauseTime = 0;
 
     private List<Route> currentRoutes;
-    private Location currentLocation = new Location("");
+    private Location userLocation = new Location("");
     private Location targetLocation = new Location("");
     private ArrayList<Marker> stopMarkers = new ArrayList<>();
     private Marker selectedStopMarker = null;
@@ -354,7 +355,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onMyLocationClick(@NonNull Location location) {
                 mapState = USER_HAS_NOT_MOVED_MAP;
                 swipeRefreshLayout.setRefreshing(true);
-                targetLocation = currentLocation;
+                targetLocation = userLocation;
                 gMap.animateCamera(CameraUpdateFactory.newLatLng(
                         new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude())));
                 forceUpdate();
@@ -365,7 +366,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public boolean onMyLocationButtonClick() {
                 mapState = USER_HAS_NOT_MOVED_MAP;
                 swipeRefreshLayout.setRefreshing(true);
-                targetLocation = currentLocation;
+                targetLocation = userLocation;
                 forceUpdate();
 
                 return false;
@@ -479,17 +480,23 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onSuccess() {
         if (mapReady && !cameraIsMoving) {
-            currentLocation = locationClient.getLastLocation();
+            userLocation = locationClient.getLastLocation();
 
             if (mapState == USER_HAS_NOT_MOVED_MAP) {
-                gMap.animateCamera(CameraUpdateFactory.newLatLng(
-                        new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
+                if (userLocationFound) {
+                    gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
+                } else {
+                    gMap.moveCamera(CameraUpdateFactory.newLatLng(
+                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
+                    userLocationFound = true;
+                }
 
-                if (targetLocation.distanceTo(currentLocation) > 400) {
-                    targetLocation = currentLocation;
+                if (targetLocation.distanceTo(userLocation) > 400) {
+                    targetLocation = userLocation;
                     forceUpdate();
                 } else {
-                    targetLocation = currentLocation;
+                    targetLocation = userLocation;
                     backgroundUpdate();
                 }
             }
