@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Routes;
 import jackwtat.simplembta.model.Stop;
 
 public class SchedulesJsonParser {
@@ -100,6 +101,13 @@ public class SchedulesJsonParser {
                         route.setLongName(jRouteAttr.getString("long_name"));
                         route.setPrimaryColor(jRouteAttr.getString("color"));
                         route.setTextColor(jRouteAttr.getString("text_color"));
+
+                        JSONArray jDirectionNames = jRouteAttr.getJSONArray("direction_names");
+                        String[] directionNames = new String[jDirectionNames.length()];
+                        for (int j = 0; j < jDirectionNames.length(); j++) {
+                            directionNames[j] = jDirectionNames.getString(j);
+                        }
+                        route.setDirectionNames(directionNames);
                     }
                     schedule.setRoute(route);
 
@@ -121,9 +129,12 @@ public class SchedulesJsonParser {
                     }
 
                     if (jRelationships.getJSONObject("prediction").getString("data").equals("null")) {
-                        if (!schedules.containsKey(id)) {
-                            schedules.put(id, schedule);
-                        } else if (schedule.getRoute().isParentOf(schedules.get(id).getRouteId())) {
+                        // If we don't already have a prediction with the same ID
+                        // or if the existing prediction is for the child route of this route,
+                        // then add this prediction
+                        if (!schedules.containsKey(id) || Routes.isParentOf(
+                                schedule.getRoute().getId(),
+                                schedules.get(id).getRouteId())) {
                             schedules.put(id, schedule);
                         }
                     }

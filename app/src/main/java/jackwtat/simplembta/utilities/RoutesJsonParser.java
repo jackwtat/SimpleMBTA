@@ -50,6 +50,13 @@ public class RoutesJsonParser {
                     route.setPrimaryColor(primaryColor);
                     route.setTextColor(textColor);
 
+                    JSONArray jDirectionNames = jAttributes.getJSONArray("direction_names");
+                    String[] directionNames = new String[jDirectionNames.length()];
+                    for (int j = 0; j < jDirectionNames.length(); j++) {
+                        directionNames[j] = jDirectionNames.getString(j);
+                    }
+                    route.setDirectionNames(directionNames);
+
                     routes.put(id, route);
 
                 } catch (JSONException e) {

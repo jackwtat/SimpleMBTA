@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Routes;
 import jackwtat.simplembta.model.Stop;
 
 public class PredictionsJsonParser {
@@ -117,6 +118,13 @@ public class PredictionsJsonParser {
                             route.setLongName(jRouteAttr.getString("long_name"));
                             route.setPrimaryColor(jRouteAttr.getString("color"));
                             route.setTextColor(jRouteAttr.getString("text_color"));
+
+                            JSONArray jDirectionNames = jRouteAttr.getJSONArray("direction_names");
+                            String[] directionNames = new String[jDirectionNames.length()];
+                            for (int j = 0; j < jDirectionNames.length(); j++) {
+                                directionNames[j] = jDirectionNames.getString(j);
+                            }
+                            route.setDirectionNames(directionNames);
                         }
                         prediction.setRoute(route);
 
@@ -136,8 +144,12 @@ public class PredictionsJsonParser {
                             prediction.setTripName(jTripAttr.getString("name"));
                         }
 
-                        if (!predictions.containsKey(id) ||
-                                prediction.getRoute().isParentOf(predictions.get(id).getRouteId())) {
+                        // If we don't already have a prediction with the same ID
+                        // or if the existing prediction is for the child route of this route,
+                        // then add this prediction
+                        if (!predictions.containsKey(id) || Routes.isParentOf(
+                                prediction.getRoute().getId(),
+                                predictions.get(id).getRouteId())) {
                             predictions.put(id, prediction);
                         }
                     } catch (JSONException e) {

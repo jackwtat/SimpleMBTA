@@ -11,6 +11,7 @@ import java.util.List;
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Routes;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.utilities.DateUtil;
@@ -141,6 +142,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 }
             }
         }
+
         return new ArrayList<>(routes.values());
     }
 
@@ -151,11 +153,11 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     private void processPredictions(Prediction[] livePredictions) {
         for (Prediction prediction : livePredictions) {
-            if (!predictions.containsKey(prediction.getId())) {
+            if (!predictions.containsKey(prediction.getId()) && prediction.isValidPrediction()) {
                 predictions.put(prediction.getId(), prediction);
 
                 // Replace prediction's stop ID with its parent stop ID
-                if(childStops.containsKey(prediction.getStopId())){
+                if (childStops.containsKey(prediction.getStopId())) {
                     prediction.setStop(childStops.get(prediction.getStopId()));
                 }
 
@@ -165,7 +167,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
                         prediction.getDirection() == Route.EASTBOUND &&
                         prediction.getStop().isGreenLineHub()) {
-                    prediction.setRoute(new Route.GreenLineGroup());
+                    prediction.setRoute(new Routes.GreenLineGroup());
                 }
 
                 // If the prediction is for the inbound Commuter Rail, then replace the route
@@ -174,12 +176,15 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
                         prediction.getDirection() == Route.INBOUND &&
                         prediction.getStop().isCommuterRailHub(false)) {
-                    if (prediction.getRoute().isNorthSideCommuterRail()) {
-                        prediction.setRoute(new Route.NorthSideCommuterRail());
-                    } else if (prediction.getRoute().isSouthSideCommuterRail()) {
-                        prediction.setRoute(new Route.SouthSideCommuterRail());
-                    } else if (prediction.getRoute().isOldColonyCommuterRail()) {
-                        prediction.setRoute(new Route.OldColonyCommuterRail());
+
+                    if (Routes.isNorthSideCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new Routes.NorthSideCommuterRail());
+
+                    } else if (Routes.isSouthSideCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new Routes.SouthSideCommuterRail());
+
+                    } else if (Routes.isOldColonyCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new Routes.OldColonyCommuterRail());
                     }
                 }
 

@@ -60,7 +60,11 @@ public class ErrorManager {
 
     private void notifyErrorChanged() {
         for (OnErrorChangedListener listener : onErrorChangedListeners) {
-            listener.onErrorChanged();
+            try {
+                listener.onErrorChanged();
+            } catch(NullPointerException e){
+                
+            }
         }
     }
 
