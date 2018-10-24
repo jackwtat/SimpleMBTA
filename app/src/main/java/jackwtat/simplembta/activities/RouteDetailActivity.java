@@ -58,6 +58,7 @@ import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Routes;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
@@ -595,7 +596,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                                         : view.getContext().getString(R.string.service_alert),
                                 Color.parseColor(route.getTextColor()),
                                 Color.parseColor(route.getPrimaryColor()),
-                                route.getMode() == Route.BUS && !route.isSilverLine()));
+                                route.getMode() == Route.BUS &&
+                                        !Routes.isSilverLine(route.getId())));
 
                         dialog.setView(new ServiceAlertsListView(view.getContext(), serviceAlerts));
 
