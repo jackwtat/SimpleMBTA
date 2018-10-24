@@ -83,7 +83,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final long FASTEST_LOCATION_CLIENT_INTERVAL = 250;
 
     // Time since last onStop() before restarting the location
-    public static final long LOCATION_UPDATE_RESTART_TIME = 180000;
+    public static final long LOCATION_UPDATE_RESTART_TIME = 300000;
 
     // Default level of zoom for the map
     public static final int DEFAULT_MAP_ZOOM_LEVEL = 15;
@@ -410,8 +410,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         boolean locationPermissionGranted = ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
+                onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
 
-        if (locationPermissionGranted && mapState == USER_HAS_NOT_MOVED_MAP) {
+        if (locationPermissionGranted && staleLocation) {
+            mapState = USER_HAS_NOT_MOVED_MAP;
             if (mapReady) {
                 mapTargetView.setVisibility(View.GONE);
             }
