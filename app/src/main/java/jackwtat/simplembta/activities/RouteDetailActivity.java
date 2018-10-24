@@ -105,6 +105,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private boolean refreshing = false;
     private boolean mapReady = false;
+    private boolean shapesLoaded = false;
     private boolean mapCameraIsMoving = false;
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
@@ -207,6 +208,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     userIsScrolling = false;
                     refreshRecyclerView();
                     refreshServiceAlertsView();
+                    if (!shapesLoaded) {
+                        refreshShapes();
+                    }
 
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
@@ -408,50 +412,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     public void onPostExecute(Shape[] shapes) {
         routeShapes.addAll(Arrays.asList(shapes));
 
-        HashMap<String, Stop> distinctStops = new HashMap<>();
-
-        for (Shape shape : shapes) {
-            if (shape.getDirection() == direction && shape.getPriority() > -1 &&
-                    shape.getStops().length > 1) {
-                drawRouteShape(shape);
-
-                for (Stop stop : shape.getStops()) {
-                    distinctStops.put(stop.getId(), stop);
-                }
-            }
-        }
-
-        Stop currentStop = route.getNearestStop(direction);
-        selectedStopMarker = null;
-        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-
-        for (Stop s : distinctStops.values()) {
-            Marker currentMarker = drawStopMarker(s);
-            stopMarkers.add(currentMarker);
-            boundsBuilder.include(currentMarker.getPosition());
-
-            if (currentStop != null && (currentStop.equals(s) ||
-                    currentStop.isParentOf(s.getId()) || s.isParentOf(currentStop.getId()))) {
-                selectedStopMarker = currentMarker;
-            }
-        }
-
-        if (selectedStopMarker != null) {
-            selectedStopMarker.showInfoWindow();
-            gMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(selectedStopMarker.getPosition(), 15));
-        } else if (currentStop != null) {
-            selectedStopMarker = drawStopMarker(currentStop);
-            selectedStopMarker.showInfoWindow();
-            boundsBuilder.include(selectedStopMarker.getPosition());
-            gMap.moveCamera(
-                    CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
-        } else if (distinctStops.size() > 0) {
-            gMap.moveCamera(
-                    CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
-        }
-
-        mapProgressBar.setVisibility(View.GONE);
+        refreshShapes();
     }
 
     private void backgroundUpdate() {
@@ -620,6 +581,58 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    private void refreshShapes() {
+        if (!userIsScrolling && routeShapes.size() > 0) {
+            gMap.clear();
+
+            HashMap<String, Stop> distinctStops = new HashMap<>();
+
+            for (Shape shape : routeShapes) {
+                if (shape.getDirection() == direction && shape.getPriority() > -1 &&
+                        shape.getStops().length > 1) {
+                    drawRouteShape(shape);
+
+                    for (Stop stop : shape.getStops()) {
+                        distinctStops.put(stop.getId(), stop);
+                    }
+                }
+            }
+
+            Stop currentStop = route.getNearestStop(direction);
+            selectedStopMarker = null;
+            LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
+
+            for (Stop s : distinctStops.values()) {
+                Marker currentMarker = drawStopMarker(s);
+                stopMarkers.add(currentMarker);
+                boundsBuilder.include(currentMarker.getPosition());
+
+                if (currentStop != null && (currentStop.equals(s) ||
+                        currentStop.isParentOf(s.getId()) || s.isParentOf(currentStop.getId()))) {
+                    selectedStopMarker = currentMarker;
+                }
+            }
+
+            if (selectedStopMarker != null) {
+                selectedStopMarker.showInfoWindow();
+                gMap.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(selectedStopMarker.getPosition(), 15));
+            } else if (currentStop != null) {
+                selectedStopMarker = drawStopMarker(currentStop);
+                selectedStopMarker.showInfoWindow();
+                boundsBuilder.include(selectedStopMarker.getPosition());
+                gMap.moveCamera(
+                        CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+            } else if (distinctStops.size() > 0) {
+                gMap.moveCamera(
+                        CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+            }
+
+            mapProgressBar.setVisibility(View.GONE);
+            shapesLoaded = true;
+        }
+    }
+
     private void getRouteShapes() {
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
@@ -683,7 +696,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private class ServiceAlertsUpdateTimerTask extends TimerTask {
-
         @Override
         public void run() {
             getServiceAlerts();
