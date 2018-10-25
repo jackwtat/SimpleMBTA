@@ -112,9 +112,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private boolean refreshing = false;
     private boolean mapReady = false;
     private boolean cameraIsMoving = false;
-    private int mapState = USER_HAS_NOT_MOVED_MAP;
     private boolean userIsScrolling = false;
-    private boolean userLocationFound = false;
+    private boolean staleLocation = true;
+    private int mapState = USER_HAS_NOT_MOVED_MAP;
     private long refreshTime = 0;
     private long onPauseTime = 0;
 
@@ -259,12 +259,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         Shape[] mattapanShapes = getShapesFromJson(R.raw.shapes_mattapan);
 
         // Draw the route shapes
-        drawRouteShapes(blueShapes, getContext().getResources().getColor(R.color.blue_line), 2);
-        drawRouteShapes(orangeShapes, getContext().getResources().getColor(R.color.orange_line), 4);
-        drawRouteShapes(redShapes, getContext().getResources().getColor(R.color.red_line), 5);
-        drawRouteShapes(greenShapes, getContext().getResources().getColor(R.color.green_line), 3);
-        drawRouteShapes(silverShapes, getContext().getResources().getColor(R.color.silver_line), 1);
-        drawRouteShapes(mattapanShapes, getContext().getResources().getColor(R.color.red_line), 5);
+        drawRouteShapes(blueShapes, getResources().getColor(R.color.blue_line), 2);
+        drawRouteShapes(orangeShapes, getResources().getColor(R.color.orange_line), 4);
+        drawRouteShapes(redShapes, getResources().getColor(R.color.red_line), 5);
+        drawRouteShapes(greenShapes, getResources().getColor(R.color.green_line), 3);
+        drawRouteShapes(silverShapes, getResources().getColor(R.color.silver_line), 1);
+        drawRouteShapes(mattapanShapes, getResources().getColor(R.color.red_line), 5);
 
         // Draw the stop markers
         HashMap<String, Stop> distinctStops = new HashMap<>();
@@ -411,7 +411,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         boolean locationPermissionGranted = ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
+        staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
                 onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
 
         if (locationPermissionGranted && staleLocation) {
@@ -483,13 +483,24 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             userLocation = locationClient.getLastLocation();
 
             if (mapState == USER_HAS_NOT_MOVED_MAP) {
-                if (userLocationFound) {
-                    gMap.animateCamera(CameraUpdateFactory.newLatLng(
-                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
-                } else {
+                if (staleLocation) {
+                    // If the user is far outside the MBTA's operating area, then center to Boston
+                    if (userLocation.getLatitude() < 41.3 ||
+                            userLocation.getLatitude() > 43.3 ||
+                            userLocation.getLongitude() < -72.5 ||
+                            userLocation.getLongitude() > -69.9) {
+                        userLocation.setLatitude(42.3604);
+                        userLocation.setLongitude(-71.0580);
+                        mapState = USER_HAS_MOVED_MAP;
+                        mapTargetView.setVisibility(View.VISIBLE);
+                    }
+
                     gMap.moveCamera(CameraUpdateFactory.newLatLng(
                             new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
-                    userLocationFound = true;
+                    staleLocation = false;
+                } else {
+                    gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                 }
 
                 if (targetLocation.distanceTo(userLocation) > 400) {
