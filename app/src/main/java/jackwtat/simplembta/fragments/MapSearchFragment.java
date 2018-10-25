@@ -491,8 +491,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             userLocation.getLongitude() > -69.9) {
                         userLocation.setLatitude(42.3604);
                         userLocation.setLongitude(-71.0580);
-                        mapState = USER_HAS_MOVED_MAP;
                         mapTargetView.setVisibility(View.VISIBLE);
+                        mapState = USER_HAS_MOVED_MAP;
                     }
 
                     gMap.moveCamera(CameraUpdateFactory.newLatLng(
@@ -541,8 +541,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void run() {
                 if (errorManager.hasLocationPermissionDenied() || errorManager.hasLocationError() ||
                         errorManager.hasNetworkError()) {
-                    mapState = USER_HAS_MOVED_MAP;
-
                     if (currentRoutes != null) {
                         currentRoutes.clear();
                         refreshRecyclerView();
