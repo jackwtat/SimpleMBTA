@@ -28,12 +28,14 @@
     <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>
     <string name="location_error_text">Unable to get your current location</string>
     <string name="network_error_text">Unable to connect to the internet</string>
+
+    <!-- No Predictions Messages -->
     <string name="no_nearby_services">No MBTA services near this location</string>
-    <string name="no_nearby_predictions">No current predictions near this location</string>
-    <string name="no_predictions_this_stop">No current predictions at this stop</string>
-    <string name="no_current_predictions">No current predictions</string>
-    <string name="no_current">No current</string>
-    <string name="predictions">predictions</string>
+    <string name="no_nearby_predictions">No predictions near this location</string>
+    <string name="no_predictions_this_stop">No predictions at this stop</string>
+    <string name="no_predictions_this_stop_p1">No</string>
+    <string name="no_predictions_this_stop_p2">predictions at this stop</string>
+    <string name="select_stop">Select a stop to see predictions</string>
 
     <!-- Route Names -->
     <string name="red_line_long_name">Red Line</string>

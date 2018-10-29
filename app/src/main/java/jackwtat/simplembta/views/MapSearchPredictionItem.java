@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
@@ -124,11 +123,11 @@ public class MapSearchPredictionItem extends LinearLayout {
         } else {
             StringBuilder stringBuilder = new StringBuilder();
             if (stop != null) {
-                stringBuilder.append(getContext().getResources().getString(R.string.no_current))
+                stringBuilder.append(getContext().getResources().getString(R.string.no_predictions_this_stop_p1))
                         .append(" ")
                         .append(route.getDirectionName(direction).toLowerCase())
                         .append(" ")
-                        .append(getContext().getResources().getString(R.string.predictions));
+                        .append(getContext().getResources().getString(R.string.no_predictions_this_stop_p2));
             } else {
                 stringBuilder.append(getContext().getResources().getString(R.string.no_nearby_predictions));
             }

@@ -197,7 +197,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshRecyclerView();
+                    refreshPredictions();
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
                 }
@@ -531,7 +531,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onPostExecute(List<Route> routes) {
         refreshing = false;
         currentRoutes = new ArrayList<>(routes);
-        refreshRecyclerView();
+        refreshPredictions();
     }
 
     @Override
@@ -543,7 +543,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         errorManager.hasNetworkError()) {
                     if (currentRoutes != null) {
                         currentRoutes.clear();
-                        refreshRecyclerView();
+                        refreshPredictions();
                     }
 
                     if (mapReady) {
@@ -597,22 +597,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void refreshRecyclerView() {
+    private void refreshPredictions() {
         if (!userIsScrolling && currentRoutes != null) {
             recyclerViewAdapter.setRoutes(currentRoutes);
+            swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
+                if (currentRoutes.size() == 0) {
+                    noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_services));
+                } else {
+                    noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_predictions));
+                }
+
+                noPredictionsTextView.setVisibility(View.VISIBLE);
                 appBarLayout.setExpanded(true);
                 recyclerView.setNestedScrollingEnabled(false);
-                noPredictionsTextView.setVisibility(View.VISIBLE);
             } else {
-                recyclerView.setNestedScrollingEnabled(true);
                 noPredictionsTextView.setVisibility(View.GONE);
+                recyclerView.setNestedScrollingEnabled(true);
             }
-        }
-
-        if (!refreshing) {
-            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
