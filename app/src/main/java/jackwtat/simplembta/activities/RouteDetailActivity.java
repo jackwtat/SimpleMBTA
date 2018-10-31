@@ -1,6 +1,5 @@
 package jackwtat.simplembta.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,16 +12,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,8 +39,6 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +60,7 @@ import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.utilities.ErrorManager;
+import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 import jackwtat.simplembta.views.ServiceAlertsListView;
 import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
@@ -99,11 +93,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private TextView noPredictionsTextView;
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
-
-    private LinearLayout serviceAlertsLayout;
-    private ImageView serviceAlertIcon;
-    private ImageView serviceAdvisoryIcon;
-    private TextView serviceAlertsTextView;
+    private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
 
     private String realTimeApiKey;
     private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
@@ -200,6 +190,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get map progress bar
         mapProgressBar = findViewById(R.id.map_progress_bar);
 
+        // Get service alerts indicator
+        serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
+
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,
@@ -236,12 +229,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-
-        // Get the service alerts views
-        serviceAlertsLayout = findViewById(R.id.service_alerts_layout);
-        serviceAlertIcon = findViewById(R.id.service_alert_icon);
-        serviceAdvisoryIcon = findViewById(R.id.service_advisory_icon);
-        serviceAlertsTextView = findViewById(R.id.service_alerts_text_view);
     }
 
     @Override
@@ -526,87 +513,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private void refreshServiceAlertsView() {
         if (!userIsScrolling) {
             if (route.getServiceAlerts().size() > 0) {
-                final ArrayList<ServiceAlert> serviceAlerts = route.getServiceAlerts();
-
-                String alertsText = "";
-                int alertsCount = 0;
-                int advisoriesCount = 0;
-
-                // Sort the service alerts
-                Collections.sort(serviceAlerts);
-
-                // Count how the number of alerts and advisories each
-                // Alerts are new, ongoing service alerts; Advisories are all other alerts
-                for (ServiceAlert alert : serviceAlerts) {
-                    if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
-                        alertsCount++;
-                    } else {
-                        advisoriesCount++;
-                    }
-                }
-
-                // Show the number of alerts
-                if (alertsCount > 0) {
-                    alertsText = (alertsCount > 1)
-                            ? alertsCount + " " + getResources().getString(R.string.alerts)
-                            : alertsCount + " " + getResources().getString(R.string.alert);
-                }
-
-                // Show the number of advisories
-                if (advisoriesCount > 0) {
-                    alertsText = (alertsCount > 0) ? alertsText + ", " : alertsText;
-
-                    alertsText = (advisoriesCount > 1)
-                            ? alertsText + advisoriesCount + " " + getResources().getString(R.string.advisories)
-                            : alertsText + advisoriesCount + " " + getResources().getString(R.string.advisory);
-                }
-
-                // Set the service alerts view
-                serviceAlertsTextView.setText(alertsText);
-
-                // Display the appropriate service alerts icon
-                // Red icon if there is at least one alert, otherwise grey icon
-                if (alertsCount > 0) {
-                    serviceAlertIcon.setVisibility(View.VISIBLE);
-                    serviceAdvisoryIcon.setVisibility(View.GONE);
-                } else {
-                    serviceAlertIcon.setVisibility(View.GONE);
-                    serviceAdvisoryIcon.setVisibility(View.VISIBLE);
-                }
-
-                // Set the onClickListener to display the service alerts details
-                serviceAlertsLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog dialog = new AlertDialog.Builder(view.getContext()).create();
-
-                        dialog.setCustomTitle(new ServiceAlertsTitleView(view.getContext(),
-                                (serviceAlerts.size() > 1)
-                                        ? view.getContext().getString(R.string.service_alerts)
-                                        : view.getContext().getString(R.string.service_alert),
-                                Color.parseColor(route.getTextColor()),
-                                Color.parseColor(route.getPrimaryColor()),
-                                route.getMode() == Route.BUS &&
-                                        !Routes.isSilverLine(route.getId())));
-
-                        dialog.setView(new ServiceAlertsListView(view.getContext(), serviceAlerts));
-
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-
-                        dialog.show();
-                    }
-                });
-
-                serviceAlertsLayout.setVisibility(View.VISIBLE);
+                serviceAlertsIndicatorView.setServiceAlerts(route);
+                serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
             } else {
-                serviceAlertsLayout.setVisibility(View.GONE);
+                serviceAlertsIndicatorView.setVisibility(View.GONE);
             }
         }
     }
