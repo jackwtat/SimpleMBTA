@@ -11,18 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Routes;
 import jackwtat.simplembta.model.ServiceAlert;
 
 public class ServiceAlertsIndicatorView extends LinearLayout {
-    public final static int NO_ICON = 0;
-    public final static int ADVISORY_ICON = 1;
-    public final static int ALERT_ICON = 2;
-
     private View rootView;
     private ImageView serviceAlertIcon;
     private ImageView serviceAdvisoryIcon;
