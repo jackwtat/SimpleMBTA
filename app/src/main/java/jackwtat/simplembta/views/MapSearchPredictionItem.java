@@ -19,7 +19,7 @@ import jackwtat.simplembta.model.Stop;
 
 public class MapSearchPredictionItem extends LinearLayout {
     View rootView;
-    LinearLayout routeLayout;
+    RouteNameView routeNameView;
     LinearLayout predictionsListLayout;
     TextView noPredictionsView;
     TextView stopNameView;
@@ -76,7 +76,7 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
 
         // Set the route name
-        routeLayout.addView(new RouteNameView(getContext(), route));
+        routeNameView.setRouteNameView(getContext(), route);
 
         // Add predictions
         if (pickUps.size() > 0) {
@@ -138,7 +138,6 @@ public class MapSearchPredictionItem extends LinearLayout {
     }
 
     public void clear() {
-        routeLayout.removeAllViews();
         predictionsListLayout.removeAllViews();
         noPredictionsView.setVisibility(GONE);
         stopNameView.setText("");
@@ -150,7 +149,7 @@ public class MapSearchPredictionItem extends LinearLayout {
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_map_search_prediction, this);
 
-        routeLayout = rootView.findViewById(R.id.route_layout);
+        routeNameView = rootView.findViewById(R.id.route_name_view);
         predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
         noPredictionsView = rootView.findViewById(R.id.no_predictions_text_view);
         stopNameView = rootView.findViewById(R.id.stop_text_view);
