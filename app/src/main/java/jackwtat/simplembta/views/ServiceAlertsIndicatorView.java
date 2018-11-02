@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.List;
+
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Routes;
@@ -121,6 +124,9 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                List<ServiceAlert> serviceAlerts = route.getServiceAlerts();
+                Collections.sort(serviceAlerts);
+
                 AlertDialog dialog = new AlertDialog.Builder(view.getContext()).create();
 
                 dialog.setCustomTitle(new ServiceAlertsTitleView(view.getContext(),
@@ -136,7 +142,7 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
                         route.getMode() == Route.BUS &&
                                 !Routes.isSilverLine(route.getId())));
 
-                dialog.setView(new ServiceAlertsListView(view.getContext(), route.getServiceAlerts()));
+                dialog.setView(new ServiceAlertsListView(view.getContext(), serviceAlerts));
 
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
                         new DialogInterface.OnClickListener() {

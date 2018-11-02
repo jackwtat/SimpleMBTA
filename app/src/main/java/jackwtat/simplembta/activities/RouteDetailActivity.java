@@ -15,10 +15,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,8 +63,6 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
-import jackwtat.simplembta.views.ServiceAlertsListView;
-import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
@@ -143,22 +143,25 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Set action bar
         setTitle(route.getLongDisplayName(this) + " - " + route.getDirectionName(direction));
-        if (Build.VERSION.SDK_INT >= 21) {
-            // Create color for status bar
-            float[] hsv = new float[3];
-            Color.colorToHSV(Color.parseColor(route.getPrimaryColor()), hsv);
-            hsv[2] *= .8f;
 
-            // Set status bar color
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(Color.HSVToColor(hsv));
+        if (route.getMode() != Route.BUS || Routes.isSilverLine(route.getId())) {
+            if (Build.VERSION.SDK_INT >= 21) {
+                // Create color for status bar
+                float[] hsv = new float[3];
+                Color.colorToHSV(Color.parseColor(route.getPrimaryColor()), hsv);
+                hsv[2] *= .8f;
 
-            // Set action bar background color
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setBackgroundDrawable(
-                    new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
+                // Set status bar color
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(Color.HSVToColor(hsv));
+
+                // Set action bar background color
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.setBackgroundDrawable(
+                        new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
+            }
         }
 
         // Get app bar and app bar params
@@ -262,7 +265,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if (marker.getTag() instanceof Stop) {
+                    selectedStopMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
+
                     selectedStopMarker = marker;
+                    selectedStopMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
                     selectedStopMarker.showInfoWindow();
 
                     route.setNearestStop(direction, (Stop) marker.getTag(), true);
@@ -270,17 +276,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     swipeRefreshLayout.setRefreshing(true);
                     clearPredictions();
                     forceUpdate();
-                } else if (selectedStopMarker != null) {
-                    selectedStopMarker.showInfoWindow();
                 }
 
                 return true;
-            }
-        });
-        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                selectedStopMarker.showInfoWindow();
             }
         });
 
@@ -583,6 +581,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 if (currentStop != null && (currentStop.equals(stop) ||
                         currentStop.isParentOf(stop.getId()) || stop.isParentOf(currentStop.getId()))) {
                     selectedStopMarker = currentMarker;
+                    currentMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
+                    currentMarker.showInfoWindow();
                 }
             }
 
@@ -633,10 +633,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 .position(new LatLng(
                         stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
                 .anchor(0.5f, 0.5f)
-                .title(stop.getName())
                 .zIndex(2)
                 .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mbta_stop_icon)));
+                .title(stop.getName())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_stop)));
 
         stopMarker.setTag(stop);
 
@@ -686,9 +686,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         Marker vehicleMarker = gMap.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         vehicle.getLocation().getLatitude(), vehicle.getLocation().getLongitude()))
-                .title(vehicle.getLabel())
+                .rotation(vehicle.getLocation().getBearing())
+                .anchor(0.5f, 0.5f)
                 .zIndex(3)
                 .flat(true)
+                .title(vehicle.getLabel())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))
         );
 
         vehicleMarker.setTag(vehicle);

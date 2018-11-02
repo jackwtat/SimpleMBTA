@@ -309,7 +309,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         mapTargetView.setVisibility(View.GONE);
                     }
 
-                    if (gMap.getCameraPosition().zoom <= 12) {
+                    if (gMap.getCameraPosition().zoom <= 11) {
                         for (Marker marker : stopMarkers) {
                             marker.setVisible(false);
                         }
@@ -676,7 +676,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 .title(stop.getName())
                 .zIndex(300)
                 .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mbta_stop_icon)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_stop)));
 
         stopMarker.setTag(stop);
 
