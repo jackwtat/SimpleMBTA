@@ -1,4 +1,4 @@
-package jackwtat.simplembta.utilities;
+package jackwtat.simplembta.jsonParsers;
 
 import android.location.Location;
 import android.text.TextUtils;
@@ -11,9 +11,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
-import jackwtat.simplembta.model.Routes;
+import jackwtat.simplembta.model.routes.Bus;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.utilities.DateUtil;
 
 public class PredictionsJsonParser {
     public static final String LOG_TAG = "PredictionsJsonParser";
@@ -147,7 +148,7 @@ public class PredictionsJsonParser {
                         // If we don't already have a prediction with the same ID
                         // or if the existing prediction is for the child route of this route,
                         // then add this prediction
-                        if (!predictions.containsKey(id) || Routes.isParentOf(
+                        if (!predictions.containsKey(id) || Bus.isParentOf(
                                 prediction.getRoute().getId(),
                                 predictions.get(id).getRouteId())) {
                             predictions.put(id, prediction);

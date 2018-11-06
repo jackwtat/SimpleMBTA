@@ -1,4 +1,4 @@
-package jackwtat.simplembta.utilities;
+package jackwtat.simplembta.jsonParsers;
 
 import android.text.TextUtils;
 import android.util.Log;

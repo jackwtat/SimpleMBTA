@@ -8,10 +8,10 @@ import java.util.List;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.DateUtil;
-import jackwtat.simplembta.utilities.PredictionsJsonParser;
-import jackwtat.simplembta.utilities.SchedulesJsonParser;
+import jackwtat.simplembta.jsonParsers.PredictionsJsonParser;
+import jackwtat.simplembta.jsonParsers.SchedulesJsonParser;
 
 public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<Prediction>> {
     private String realTimeApiKey;

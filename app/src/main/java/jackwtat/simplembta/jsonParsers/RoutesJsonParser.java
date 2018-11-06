@@ -1,4 +1,4 @@
-package jackwtat.simplembta.utilities;
+package jackwtat.simplembta.jsonParsers;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -7,10 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.routes.Route;
 
 public class RoutesJsonParser {
     public static final String LOG_TAG = "RoutesJsonParser";

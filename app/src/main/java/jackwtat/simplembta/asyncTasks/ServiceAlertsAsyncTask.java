@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.ServiceAlert;
-import jackwtat.simplembta.utilities.ServiceAlertsJsonParser;
+import jackwtat.simplembta.jsonParsers.ServiceAlertsJsonParser;
 
 public class ServiceAlertsAsyncTask extends AsyncTask<Void, Void, ServiceAlert[]> {
     private String realTimeApiKey;

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Shape;
-import jackwtat.simplembta.utilities.ShapesJsonParser;
+import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 
 public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
     private String realTimeApiKey;

@@ -2,7 +2,6 @@ package jackwtat.simplembta.asyncTasks;
 
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,16 +9,19 @@ import java.util.List;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
-import jackwtat.simplembta.model.Routes;
+import jackwtat.simplembta.model.routes.CommuterRailNorthSide;
+import jackwtat.simplembta.model.routes.CommuterRailOldColony;
+import jackwtat.simplembta.model.routes.CommuterRailSouthSide;
+import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.utilities.DateUtil;
-import jackwtat.simplembta.utilities.PredictionsJsonParser;
-import jackwtat.simplembta.utilities.RoutesJsonParser;
-import jackwtat.simplembta.utilities.SchedulesJsonParser;
-import jackwtat.simplembta.utilities.ServiceAlertsJsonParser;
-import jackwtat.simplembta.utilities.StopsJsonParser;
+import jackwtat.simplembta.jsonParsers.PredictionsJsonParser;
+import jackwtat.simplembta.jsonParsers.RoutesJsonParser;
+import jackwtat.simplembta.jsonParsers.SchedulesJsonParser;
+import jackwtat.simplembta.jsonParsers.ServiceAlertsJsonParser;
+import jackwtat.simplembta.jsonParsers.StopsJsonParser;
 
 public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Route>> {
     private String realTimeApiKey;
@@ -167,7 +169,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
                         prediction.getDirection() == Route.EASTBOUND &&
                         prediction.getStop().isGreenLineHub()) {
-                    prediction.setRoute(new Routes.GreenLineGroup());
+                    prediction.setRoute(new GreenLine());
                 }
 
                 // If the prediction is for the inbound Commuter Rail, then replace the route
@@ -177,14 +179,14 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                         prediction.getDirection() == Route.INBOUND &&
                         prediction.getStop().isCommuterRailHub(false)) {
 
-                    if (Routes.isNorthSideCommuterRail(prediction.getRoute().getId())) {
-                        prediction.setRoute(new Routes.NorthSideCommuterRail());
+                    if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new CommuterRailNorthSide());
 
-                    } else if (Routes.isSouthSideCommuterRail(prediction.getRoute().getId())) {
-                        prediction.setRoute(new Routes.SouthSideCommuterRail());
+                    } else if (CommuterRailSouthSide.isSouthSideCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new CommuterRailSouthSide());
 
-                    } else if (Routes.isOldColonyCommuterRail(prediction.getRoute().getId())) {
-                        prediction.setRoute(new Routes.OldColonyCommuterRail());
+                    } else if (CommuterRailOldColony.isOldColonyCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new CommuterRailOldColony());
                     }
                 }
 

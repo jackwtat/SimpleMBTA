@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Vehicle;
-import jackwtat.simplembta.utilities.VehiclesJsonParser;
+import jackwtat.simplembta.jsonParsers.VehiclesJsonParser;
 
 public class VehiclesAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
     String realTimeApiKey;
