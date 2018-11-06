@@ -30,12 +30,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
@@ -54,13 +52,14 @@ import jackwtat.simplembta.asyncTasks.MapSearchPredictionsAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.LocationClient.LocationClientCallbacks;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
-import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
-import jackwtat.simplembta.utilities.ShapesJsonParser;
+import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
+import jackwtat.simplembta.map.markers.StopMarkerFactory;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         MapSearchPredictionsAsyncTask.OnPostExecuteListener, LocationClientCallbacks,
@@ -669,14 +668,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private Marker drawStopMarkers(Stop stop) {
-        Marker stopMarker = gMap.addMarker(new MarkerOptions()
-                .position(new LatLng(
-                        stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
-                .anchor(0.5f, 0.5f)
-                .title(stop.getName())
-                .zIndex(300)
-                .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_stop)));
+        Marker stopMarker = gMap.addMarker(StopMarkerFactory.createMarkerOptions(stop));
+
+        stopMarker.setZIndex(10);
 
         stopMarker.setTag(stop);
 
