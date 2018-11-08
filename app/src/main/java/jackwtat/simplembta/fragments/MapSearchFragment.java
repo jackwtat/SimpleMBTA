@@ -30,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -52,14 +53,18 @@ import jackwtat.simplembta.asyncTasks.MapSearchPredictionsAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.LocationClient.LocationClientCallbacks;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.model.routes.BlueLine;
+import jackwtat.simplembta.model.routes.GreenLineCombined;
+import jackwtat.simplembta.model.routes.OrangeLine;
+import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.routes.SilverLineCombined;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
-import jackwtat.simplembta.map.markers.StopMarkerFactory;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         MapSearchPredictionsAsyncTask.OnPostExecuteListener, LocationClientCallbacks,
@@ -120,8 +125,15 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private List<Route> currentRoutes;
     private Location userLocation = new Location("");
     private Location targetLocation = new Location("");
-    private ArrayList<Marker> stopMarkers = new ArrayList<>();
     private Marker selectedStopMarker = null;
+    private HashMap<String, Marker> keyStopMarkers = new HashMap<>();
+    private Route[] keyRoutes = {
+            new BlueLine("Blue"),
+            new OrangeLine("Orange"),
+            new RedLine("Red"),
+            new RedLine("Mattapan"),
+            new GreenLineCombined(),
+            new SilverLineCombined()};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,6 +154,24 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         LocationClient.requestLocationPermission(getActivity());
         locationClient = new LocationClient(getContext(), LOCATION_CLIENT_INTERVAL,
                 FASTEST_LOCATION_CLIENT_INTERVAL);
+
+        // Add the key (permanent) routes shapes
+        Shape[][] shapes = {
+                getShapesFromJson(R.raw.shapes_blue),
+                getShapesFromJson(R.raw.shapes_orange),
+                getShapesFromJson(R.raw.shapes_red),
+                getShapesFromJson(R.raw.shapes_green_combined),
+                getShapesFromJson(R.raw.shapes_silver),
+                getShapesFromJson(R.raw.shapes_mattapan)};
+
+        for (Shape[] s : shapes) {
+            for (Route r : keyRoutes) {
+                if (r.idEquals(s[0].getRouteId())) {
+                    r.setShapes(s);
+                    break;
+                }
+            }
+        }
     }
 
     @Nullable
@@ -169,6 +199,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         // Get and initialize map view
         mapView = rootView.findViewById(R.id.map_view);
+        mapView.getLayoutParams().height =
+                (int) (getResources().getDisplayMetrics().heightPixels * .6);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
@@ -228,6 +260,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         gMap = googleMap;
+        mapReady = true;
+
+        // Move the map camera to the last known location
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
+                DEFAULT_MAP_ZOOM_LEVEL));
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
@@ -238,45 +276,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setZoomControlsEnabled(true);
 
+        // Enable map location UI features
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             gMap.setMyLocationEnabled(true);
             mapUiSettings.setMyLocationButtonEnabled(true);
         }
 
-        // Move the map camera to the last known location
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
-                DEFAULT_MAP_ZOOM_LEVEL));
-
-        // Get the subway, Silver Line, and commuter rail shapes
-        Shape[] blueShapes = getShapesFromJson(R.raw.shapes_blue);
-        Shape[] orangeShapes = getShapesFromJson(R.raw.shapes_orange);
-        Shape[] redShapes = getShapesFromJson(R.raw.shapes_red);
-        Shape[] greenShapes = getShapesFromJson(R.raw.shapes_green);
-        Shape[] silverShapes = getShapesFromJson(R.raw.shapes_silver);
-        Shape[] mattapanShapes = getShapesFromJson(R.raw.shapes_mattapan);
-
-        // Draw the route shapes
-        drawRouteShapes(blueShapes, getResources().getColor(R.color.blue_line), 2);
-        drawRouteShapes(orangeShapes, getResources().getColor(R.color.orange_line), 4);
-        drawRouteShapes(redShapes, getResources().getColor(R.color.red_line), 5);
-        drawRouteShapes(greenShapes, getResources().getColor(R.color.green_line), 3);
-        drawRouteShapes(silverShapes, getResources().getColor(R.color.silver_line), 1);
-        drawRouteShapes(mattapanShapes, getResources().getColor(R.color.red_line), 5);
-
-        // Draw the stop markers
-        HashMap<String, Stop> distinctStops = new HashMap<>();
-
-        distinctStops.putAll(getStopsFromShapes(blueShapes));
-        distinctStops.putAll(getStopsFromShapes(orangeShapes));
-        distinctStops.putAll(getStopsFromShapes(redShapes));
-        distinctStops.putAll(getStopsFromShapes(greenShapes));
-        distinctStops.putAll(getStopsFromShapes(silverShapes));
-        distinctStops.putAll(getStopsFromShapes(mattapanShapes));
-
-        for (Stop s : distinctStops.values()) {
-            stopMarkers.add(drawStopMarkers(s));
+        // Draw the key routes
+        for (int i = 0; i < keyRoutes.length; i++) {
+            drawRouteShapes(keyRoutes[i], keyRoutes.length - i);
+            drawStopMarkers(keyRoutes[i]);
         }
 
         // Set the action listeners
@@ -309,11 +319,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
 
                     if (gMap.getCameraPosition().zoom <= 11) {
-                        for (Marker marker : stopMarkers) {
+                        for (Marker marker : keyStopMarkers.values()) {
                             marker.setVisible(false);
                         }
                     } else {
-                        for (Marker marker : stopMarkers) {
+                        for (Marker marker : keyStopMarkers.values()) {
                             marker.setVisible(true);
                         }
 
@@ -371,8 +381,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 return false;
             }
         });
-
-        mapReady = true;
     }
 
     @Override
@@ -629,20 +637,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
 
-    private HashMap<String, Stop> getStopsFromShapes(Shape[] shapes) {
-        HashMap<String, Stop> stops = new HashMap<>();
-
-        for (Shape shape : shapes) {
-            for (Stop stop : shape.getStops()) {
-                stops.put(stop.getId(), stop);
-            }
-        }
-
-        return stops;
-    }
-
-    private void drawRouteShapes(Shape[] shapes, int color, int zIndex) {
-        for (Shape s : shapes) {
+    private void drawRouteShapes(Route route, int zIndex) {
+        for (Shape s : route.getShapes()) {
             List<LatLng> coordinates = PolyUtil.decode(s.getPolyline());
 
             // Draw white background/line padding
@@ -658,7 +654,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             // Draw primary polyline
             gMap.addPolyline(new PolylineOptions()
                     .addAll(coordinates)
-                    .color(color)
+                    .color(Color.parseColor(route.getPrimaryColor()))
                     .zIndex(zIndex)
                     .jointType(JointType.ROUND)
                     .startCap(new RoundCap())
@@ -667,14 +663,30 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private Marker drawStopMarkers(Stop stop) {
-        Marker stopMarker = gMap.addMarker(StopMarkerFactory.createMarkerOptions(stop));
+    private void drawStopMarkers(Route route) {
+        HashMap<String, Marker> markers = new HashMap<>();
 
-        stopMarker.setZIndex(10);
+        for (Shape shape : route.getShapes()) {
+            for (Stop stop : shape.getStops()) {
+                if (keyStopMarkers.containsKey(stop.getId())) {
+                     keyStopMarkers.get(stop.getId()).setIcon(
+                            BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
+                } else if (!markers.containsKey(stop.getId())) {
+                    Marker stopMarker = gMap.addMarker(route.getStopMarkerOptions()
+                            .position(new LatLng(
+                                    stop.getLocation().getLatitude(),
+                                    stop.getLocation().getLongitude()))
+                            .zIndex(20)
+                            .title(stop.getName()));
 
-        stopMarker.setTag(stop);
+                    stopMarker.setTag(stop);
 
-        return stopMarker;
+                    markers.put(stop.getId(), stopMarker);
+                }
+            }
+        }
+
+        keyStopMarkers.putAll(markers);
     }
 
     private class LocationUpdateTimerTask extends TimerTask {

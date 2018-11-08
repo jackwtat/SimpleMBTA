@@ -5,6 +5,10 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Date;
 
+import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.GreenLineCombined;
+import jackwtat.simplembta.model.routes.Route;
+
 public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Pick up types
@@ -39,7 +43,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Trip data
     private String tripId = "null";
-    private int direction = Route.NULL_DIRECTION;
+    private int direction = Direction.NULL_DIRECTION;
     private String destination = "null";
     private String tripName = "null";
 
@@ -187,7 +191,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
         // Out of service Green Line trains sometimes show up as in service on incorrect lines
         // if they're moving with their AVI turned on
-        if (Routes.isGreenLine(route.getId())) {
+        if (GreenLine.isGreenLine(route.getId())) {
             if ((route.getId().equals("Green-B") && !Stops.greenB.containsKey(stop.getId())) ||
                     (route.getId().equals("Green-C") && !Stops.greenC.containsKey(stop.getId())) ||
                     (route.getId().equals("Green-D") && !Stops.greenD.containsKey(stop.getId())) ||

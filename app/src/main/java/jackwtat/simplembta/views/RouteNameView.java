@@ -10,7 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.utilities.DisplayNameUtil;
 
 public class RouteNameView extends RelativeLayout {
     View rootView;
@@ -40,9 +41,9 @@ public class RouteNameView extends RelativeLayout {
     public void setRouteNameView(Context context, Route route) {
         // Set text
         if (route.getMode() == Route.BUS) {
-            textView.setText(route.getShortDisplayName(context));
+            textView.setText(DisplayNameUtil.getShortDisplayName(context, route));
         } else {
-            textView.setText(route.getLongDisplayName(context));
+            textView.setText(DisplayNameUtil.getLongDisplayName(context, route));
         }
 
         // Set text color

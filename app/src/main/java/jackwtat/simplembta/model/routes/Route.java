@@ -1,26 +1,22 @@
-package jackwtat.simplembta.model;
+package jackwtat.simplembta.model.routes;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
+
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import jackwtat.simplembta.R;
+import jackwtat.simplembta.map.markers.StopMarkerFactory;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.model.Shape;
+import jackwtat.simplembta.model.Stop;
 
 public class Route implements Comparable<Route>, Serializable {
-    public static final int OUTBOUND = 0;
-    public static final int INBOUND = 1;
-    public static final int WESTBOUND = 0;
-    public static final int EASTBOUND = 1;
-    public static final int SOUTHBOUND = 0;
-    public static final int NORTHBOUND = 1;
-    public static final int NULL_DIRECTION = 0;
-
     public static final int LIGHT_RAIL = 0;
     public static final int HEAVY_RAIL = 1;
     public static final int COMMUTER_RAIL = 2;
@@ -36,6 +32,8 @@ public class Route implements Comparable<Route>, Serializable {
     private String primaryColor = "#FFFFFF";
     private String accentColor = "#3191E1";
     private String textColor = "#000000";
+    private StopMarkerFactory markerFactory = new StopMarkerFactory();
+    private Shape[] shapes = {};
 
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
 
@@ -67,74 +65,6 @@ public class Route implements Comparable<Route>, Serializable {
         return longName;
     }
 
-    // Returns the language-specific short name of this route
-    // Context is required to get the proper translation
-    public String getShortDisplayName(Context context) {
-        if (mode == HEAVY_RAIL) {
-            if (id.equals("Red"))
-                return context.getResources().getString(R.string.red_line_short_name);
-            else if (id.equals("Orange"))
-                return context.getResources().getString(R.string.orange_line_short_name);
-            else if (id.equals("Blue"))
-                return context.getResources().getString(R.string.blue_line_short_name);
-            else
-                return id;
-
-        } else if (mode == LIGHT_RAIL) {
-            if (id.equals("Green-B"))
-                return context.getResources().getString(R.string.green_line_b_short_name);
-            else if (id.equals("Green-C"))
-                return context.getResources().getString(R.string.green_line_c_short_name);
-            else if (id.equals("Green-D"))
-                return context.getResources().getString(R.string.green_line_d_short_name);
-            else if (id.equals("Green-E"))
-                return context.getResources().getString(R.string.green_line_e_short_name);
-            else if (id.equals("Mattapan"))
-                return context.getResources().getString(R.string.red_line_mattapan_short_name);
-            else
-                return id;
-
-        } else if (mode == BUS) {
-            if (id.equals("746"))
-                return context.getResources().getString(R.string.silver_line_waterfront_short_name);
-            else if (!shortName.equals("") && !shortName.equals("null"))
-                return shortName;
-            else
-                return id;
-
-        } else if (mode == COMMUTER_RAIL) {
-            if (id.equals("CapeFlyer")) {
-                return context.getResources().getString(R.string.cape_flyer_short_name);
-            } else {
-                return context.getResources().getString(R.string.commuter_rail_short_name);
-            }
-
-        } else if (mode == FERRY) {
-            return context.getResources().getString(R.string.ferry_short_name);
-
-        } else {
-            return id;
-        }
-    }
-
-    // Returns the language-specific full name of this route
-    // Context is required to get the proper translation
-    public String getLongDisplayName(Context context) {
-        if (mode == BUS) {
-            if (longName.contains("Silver Line") || shortName.contains("SL")) {
-                return context.getResources().getString((R.string.silver_line_long_name)) +
-                        " " + shortName;
-            } else {
-                return context.getResources().getString(R.string.route_prefix) +
-                        " " + shortName;
-            }
-        } else if (!longName.equals("") && !longName.equals("null")) {
-            return longName;
-        } else {
-            return id;
-        }
-    }
-
     public String getPrimaryColor() {
         return primaryColor;
     }
@@ -163,6 +93,14 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
+    public MarkerOptions getStopMarkerOptions() {
+        return markerFactory.createMarkerOptions();
+    }
+
+    public BitmapDescriptor getStopMarkerIcon() {
+        return markerFactory.getIcon();
+    }
+
     public Stop getNearestStop(int direction) {
         if (direction == 0 || direction == 1) {
             return nearestStops[direction];
@@ -181,6 +119,10 @@ public class Route implements Comparable<Route>, Serializable {
 
     public ArrayList<ServiceAlert> getServiceAlerts() {
         return serviceAlerts;
+    }
+
+    public Shape[] getShapes() {
+        return shapes;
     }
 
     public void setMode(int mode) {
@@ -233,6 +175,14 @@ public class Route implements Comparable<Route>, Serializable {
         if (direction == 0 || direction == 1) {
             directionNames[direction] = name;
         }
+    }
+
+    public void setShapes(Shape[] shapes){
+        this.shapes = shapes;
+    }
+
+    public void setStopMarkerFactory(StopMarkerFactory factory) {
+        this.markerFactory = factory;
     }
 
     public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {

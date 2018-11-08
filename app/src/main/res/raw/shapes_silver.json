@@ -61,7 +61,7 @@
               "type": "stop"
             },
             {
-              "id": "6567",
+              "id": "place-chncl",
               "type": "stop"
             },
             {
@@ -98,7 +98,7 @@
               "type": "stop"
             },
             {
-              "id": "8279",
+              "id": "place-boyls",
               "type": "stop"
             },
             {
@@ -406,7 +406,7 @@
               "type": "stop"
             },
             {
-              "id": "6537",
+              "id": "place-chncl",
               "type": "stop"
             },
             {
@@ -1550,6 +1550,64 @@
         "facilities": {
           "links": {
             "related": "/facilities/?filter[stop]=49003"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Boylston St and Tremont St, Boston, MA",
+        "description": null,
+        "latitude": 42.352996,
+        "location_type": 1,
+        "longitude": -71.064467,
+        "name": "Boylston",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "place-boyls",
+      "links": {
+        "self": "/stops/place-boyls"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-boyls"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington Street and Boylston Street, Boston, MA",
+        "description": null,
+        "latitude": 42.352629,
+        "location_type": 1,
+        "longitude": -71.062557,
+        "name": "Chinatown",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-chncl",
+      "links": {
+        "self": "/stops/place-chncl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-chncl"
           }
         },
         "parent_station": {

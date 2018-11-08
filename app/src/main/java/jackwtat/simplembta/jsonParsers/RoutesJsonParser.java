@@ -9,7 +9,15 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import jackwtat.simplembta.model.routes.BlueLine;
+import jackwtat.simplembta.model.routes.Bus;
+import jackwtat.simplembta.model.routes.CommuterRail;
+import jackwtat.simplembta.model.routes.Ferry;
+import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.OrangeLine;
+import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.routes.SilverLine;
 
 public class RoutesJsonParser {
     public static final String LOG_TAG = "RoutesJsonParser";
@@ -32,8 +40,6 @@ public class RoutesJsonParser {
 
                     String id = jRoute.getString("id");
 
-                    Route route = new Route(id);
-
                     JSONObject jAttributes = jRoute.getJSONObject("attributes");
                     int mode = jAttributes.getInt("type");
                     int sortOrder = jAttributes.getInt("sort_order");
@@ -41,6 +47,40 @@ public class RoutesJsonParser {
                     String longName = jAttributes.getString("long_name");
                     String primaryColor = jAttributes.getString("color");
                     String textColor = jAttributes.getString("text_color");
+
+                    Route route;
+
+                    if (mode == Route.BUS) {
+                        if (SilverLine.isSilverLine(id)) {
+                            route = new SilverLine(id);
+                        } else {
+                            route = new Bus(id);
+                        }
+                    } else if (mode == Route.HEAVY_RAIL) {
+                        if (BlueLine.isBlueLine(id)) {
+                            route = new BlueLine(id);
+                        } else if (OrangeLine.isOrangeLine(id)) {
+                            route = new OrangeLine(id);
+                        } else if (RedLine.isRedLine(id)) {
+                            route = new RedLine(id);
+                        } else {
+                            route = new Route(id);
+                        }
+                    } else if (mode == Route.LIGHT_RAIL) {
+                        if (GreenLine.isGreenLine(id)) {
+                            route = new GreenLine(id);
+                        } else if (RedLine.isRedLine(id)) {
+                            route = new RedLine(id);
+                        } else {
+                            route = new Route(id);
+                        }
+                    } else if (mode == Route.COMMUTER_RAIL) {
+                        route = new CommuterRail(id);
+                    } else if (mode == Route.FERRY) {
+                        route = new Ferry(id);
+                    } else {
+                        route = new Route(id);
+                    }
 
                     route.setMode(mode);
                     route.setSortOrder(sortOrder);

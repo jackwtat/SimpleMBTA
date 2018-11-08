@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
-import jackwtat.simplembta.utilities.StopsJsonParser;
+import jackwtat.simplembta.jsonParsers.StopsJsonParser;
 
 public class Stops {
     public static HashMap<String, Stop> greenSubway;

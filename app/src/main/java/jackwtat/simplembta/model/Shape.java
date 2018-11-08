@@ -3,12 +3,12 @@ package jackwtat.simplembta.model;
 import android.support.annotation.NonNull;
 
 public class Shape implements Comparable<Shape> {
-    String id;
-    String polyline = "";
-    String routeId = "";
-    int direction = 1;
-    int priority = -1;
-    Stop[] stops = new Stop[0];
+    private String id;
+    private String polyline = "";
+    private String routeId = "";
+    private int direction = 1;
+    private int priority = -1;
+    private Stop[] stops = new Stop[0];
 
     public Shape(String id) {
         this.id = id;

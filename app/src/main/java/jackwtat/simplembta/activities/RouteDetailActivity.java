@@ -15,12 +15,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,14 +53,22 @@ import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
-import jackwtat.simplembta.model.Routes;
+import jackwtat.simplembta.model.routes.BlueLine;
+import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.OrangeLine;
+import jackwtat.simplembta.model.routes.RedLine;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
+import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
+import jackwtat.simplembta.map.markers.StopMarkerFactory;
+import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -84,6 +91,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     // Maximum age of prediction
     public static final long MAXIMUM_PREDICTION_AGE = 90000;
+
+    // Default level of zoom for the map
+    public static final int DEFAULT_MAP_ZOOM_LEVEL = 15;
 
     private AppBarLayout appBarLayout;
     private MapView mapView;
@@ -114,10 +124,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private Route route;
     private int direction;
-    private Shape[] shapes = new Shape[0];
+    private Vehicle[] vehicles = new Vehicle[0];
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private ArrayList<Marker> stopMarkers = new ArrayList<>();
-    private Vehicle[] vehicles = new Vehicle[0];
     private ArrayList<Marker> vehicleMarkers = new ArrayList<>();
     private Marker selectedStopMarker;
 
@@ -132,7 +141,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get values passed from calling activity/fragment
         Intent intent = getIntent();
         route = (Route) intent.getSerializableExtra("route");
-        direction = intent.getIntExtra("direction", Route.NULL_DIRECTION);
+        direction = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
         refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
 
         // Get error textview
@@ -142,26 +151,25 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         networkConnectivityClient = new NetworkConnectivityClient(this);
 
         // Set action bar
-        setTitle(route.getLongDisplayName(this) + " - " + route.getDirectionName(direction));
+        setTitle(DisplayNameUtil.getLongDisplayName(this, route) + " - " +
+                route.getDirectionName(direction));
 
-        if (route.getMode() != Route.BUS || Routes.isSilverLine(route.getId())) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                // Create color for status bar
-                float[] hsv = new float[3];
-                Color.colorToHSV(Color.parseColor(route.getPrimaryColor()), hsv);
-                hsv[2] *= .8f;
+        if (Build.VERSION.SDK_INT >= 21) {
+            // Create color for status bar
+            float[] hsv = new float[3];
+            Color.colorToHSV(Color.parseColor(route.getPrimaryColor()), hsv);
+            hsv[2] *= .8f;
 
-                // Set status bar color
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.setStatusBarColor(Color.HSVToColor(hsv));
+            // Set status bar color
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(Color.HSVToColor(hsv));
 
-                // Set action bar background color
-                ActionBar actionBar = getSupportActionBar();
-                actionBar.setBackgroundDrawable(
-                        new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
-            }
+            // Set action bar background color
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setBackgroundDrawable(
+                    new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
         }
 
         // Get app bar and app bar params
@@ -239,13 +247,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         gMap = googleMap;
         mapReady = true;
 
-        // Move the map camera to the last known location
-        Stop stop = route.getNearestStop(direction);
-        LatLng latLng = (stop == null)
-                ? new LatLng(42.3604, -71.0580)
-                : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
         // Set the action listeners
         gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
@@ -265,14 +266,24 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if (marker.getTag() instanceof Stop) {
-                    selectedStopMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
+                    // Change the icon of the last selected marker to the unselected stop icon
+                    if (selectedStopMarker != null) {
+                        selectedStopMarker.setIcon(route.getStopMarkerIcon());
+                    }
 
+                    // Change the icon to the currently selected marker to the selected stop icon
+                    // and show hte info window
                     selectedStopMarker = marker;
                     selectedStopMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
                     selectedStopMarker.showInfoWindow();
 
+                    // Change the nearest stop in the route object to the selected stop
                     route.setNearestStop(direction, (Stop) marker.getTag(), true);
 
+                    // TODO: Find the nearest stop in the opposite direction
+
+
+                    // Refresh the predictions
                     swipeRefreshLayout.setRefreshing(true);
                     clearPredictions();
                     forceUpdate();
@@ -281,6 +292,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 return true;
             }
         });
+
+        // Move the map camera to the selected stop
+        Stop stop = route.getNearestStop(direction);
+        LatLng latLng = (stop == null)
+                ? new LatLng(42.3604, -71.0580)
+                : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM_LEVEL));
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
@@ -291,7 +309,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setZoomControlsEnabled(true);
 
-        // Load the route outline and stop markers
+        // Load route shapes
         getShapes();
     }
 
@@ -316,7 +334,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         refreshVehicles();
 
         // Get the route shapes if there aren't any
-        if (shapes.length == 0) {
+        if (polylines.size() == 0 && mapReady) {
             getShapes();
         }
 
@@ -391,8 +409,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     errorTextView.setText(R.string.network_error_text);
                     errorTextView.setVisibility(View.VISIBLE);
 
-                    route.clearPredictions(Route.INBOUND);
-                    route.clearPredictions(Route.OUTBOUND);
+                    route.clearPredictions(Direction.INBOUND);
+                    route.clearPredictions(Direction.OUTBOUND);
                     route.clearServiceAlerts();
 
                     vehicles = new Vehicle[0];
@@ -520,7 +538,41 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void getShapes() {
-        if (networkConnectivityClient.isConnected()) {
+        // Hard coding to save the user time and data
+        if (route.getMode() == Route.HEAVY_RAIL || route.getMode() == Route.LIGHT_RAIL) {
+            if (BlueLine.isBlueLine(route.getId())) {
+                route.setShapes(getShapesFromJson(R.raw.shapes_blue));
+
+            } else if (OrangeLine.isOrangeLine(route.getId())) {
+                route.setShapes(getShapesFromJson(R.raw.shapes_orange));
+
+            } else if (RedLine.isRedLine(route.getId()) && !RedLine.isMattapanLine(route.getId())) {
+                route.setShapes(getShapesFromJson(R.raw.shapes_red));
+
+            } else if (RedLine.isRedLine(route.getId()) && RedLine.isMattapanLine(route.getId())) {
+                route.setShapes(getShapesFromJson(R.raw.shapes_mattapan));
+
+            } else if (GreenLine.isGreenLine(route.getId())) {
+                if (GreenLine.isGreenLineB(route.getId())) {
+                    route.setShapes(getShapesFromJson(R.raw.shapes_green_b));
+
+                } else if (GreenLine.isGreenLineC(route.getId())) {
+                    route.setShapes(getShapesFromJson(R.raw.shapes_green_c));
+
+                } else if (GreenLine.isGreenLineD(route.getId())) {
+                    route.setShapes(getShapesFromJson(R.raw.shapes_green_d));
+
+                } else if (GreenLine.isGreenLineE(route.getId())) {
+                    route.setShapes(getShapesFromJson(R.raw.shapes_green_e));
+
+                } else {
+                    route.setShapes(getShapesFromJson(R.raw.shapes_green_combined));
+                }
+            }
+
+            refreshShapes();
+            
+        } else if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
             if (shapesAsyncTask != null) {
@@ -538,9 +590,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    private Shape[] getShapesFromJson(int jsonFile) {
+        return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
+    }
+
     @Override
     public void onPostExecute(Shape[] shapes) {
-        this.shapes = shapes;
+        route.setShapes(shapes);
 
         refreshShapes();
     }
@@ -559,7 +615,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
             HashMap<String, Stop> distinctStops = new HashMap<>();
 
-            for (Shape shape : shapes) {
+            for (Shape shape : route.getShapes()) {
                 if (shape.getPriority() > -1 && shape.getStops().length > 1) {
                     drawPolyline(shape);
 
@@ -629,14 +685,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private Marker drawStopMarker(@NonNull Stop stop) {
-        Marker stopMarker = gMap.addMarker(new MarkerOptions()
-                .position(new LatLng(
-                        stop.getLocation().getLatitude(), stop.getLocation().getLongitude()))
-                .anchor(0.5f, 0.5f)
-                .zIndex(2)
-                .flat(true)
-                .title(stop.getName())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_stop)));
+        MarkerOptions markerOptions = route.getStopMarkerOptions();
+
+        markerOptions.position(new LatLng(
+                stop.getLocation().getLatitude(), stop.getLocation().getLongitude()));
+        markerOptions.zIndex(10);
+        markerOptions.title(stop.getName());
+
+        Marker stopMarker = gMap.addMarker(markerOptions);
 
         stopMarker.setTag(stop);
 
@@ -688,7 +744,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                         vehicle.getLocation().getLatitude(), vehicle.getLocation().getLongitude()))
                 .rotation(vehicle.getLocation().getBearing())
                 .anchor(0.5f, 0.5f)
-                .zIndex(3)
+                .zIndex(20)
                 .flat(true)
                 .title(vehicle.getLabel())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))

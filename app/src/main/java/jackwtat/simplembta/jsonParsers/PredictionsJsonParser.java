@@ -11,9 +11,16 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.Bus;
+import jackwtat.simplembta.model.routes.CommuterRail;
+import jackwtat.simplembta.model.routes.Ferry;
+import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.OrangeLine;
+import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DateUtil;
 
 public class PredictionsJsonParser {
@@ -113,12 +120,45 @@ public class PredictionsJsonParser {
                         if (jRoute != null) {
                             JSONObject jRouteAttr = jRoute.getJSONObject("attributes");
 
+                            int mode = jRouteAttr.getInt("type");
+                            int sortOrder = (jRouteAttr.getInt("sort_order"));
+                            String shortName = (jRouteAttr.getString("short_name"));
+                            String longName = (jRouteAttr.getString("long_name"));
+                            String primaryColor = (jRouteAttr.getString("color"));
+                            String textColor = (jRouteAttr.getString("text_color"));
+
+                            if (mode == Route.BUS) {
+                                if (SilverLine.isSilverLine(routeId)) {
+                                    route = new SilverLine(routeId);
+                                } else {
+                                    route = new Bus(routeId);
+                                }
+                            } else if (mode == Route.HEAVY_RAIL) {
+                                if (BlueLine.isBlueLine(routeId)) {
+                                    route = new BlueLine(routeId);
+                                } else if (OrangeLine.isOrangeLine(routeId)) {
+                                    route = new OrangeLine(routeId);
+                                } else if (RedLine.isRedLine(routeId)) {
+                                    route = new RedLine(routeId);
+                                }
+                            } else if (mode == Route.LIGHT_RAIL) {
+                                if (GreenLine.isGreenLine(routeId)) {
+                                    route = new GreenLine(routeId);
+                                } else if (RedLine.isRedLine(routeId)) {
+                                    route = new RedLine(routeId);
+                                }
+                            } else if (mode == Route.COMMUTER_RAIL) {
+                                route = new CommuterRail(routeId);
+                            } else if (mode == Route.FERRY) {
+                                route = new Ferry(routeId);
+                            }
+
                             route.setMode(jRouteAttr.getInt("type"));
-                            route.setSortOrder(jRouteAttr.getInt("sort_order"));
-                            route.setShortName(jRouteAttr.getString("short_name"));
-                            route.setLongName(jRouteAttr.getString("long_name"));
-                            route.setPrimaryColor(jRouteAttr.getString("color"));
-                            route.setTextColor(jRouteAttr.getString("text_color"));
+                            route.setSortOrder(sortOrder);
+                            route.setShortName(shortName);
+                            route.setLongName(longName);
+                            route.setPrimaryColor(primaryColor);
+                            route.setTextColor(textColor);
 
                             JSONArray jDirectionNames = jRouteAttr.getJSONArray("direction_names");
                             String[] directionNames = new String[jDirectionNames.length()];

@@ -15,9 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.Route;
-import jackwtat.simplembta.model.Routes;
+import jackwtat.simplembta.model.routes.Bus;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.model.routes.SilverLine;
 
 public class ServiceAlertsIndicatorView extends LinearLayout {
     private View rootView;
@@ -140,7 +141,7 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
                         Color.parseColor(route.getTextColor()),
                         Color.parseColor(route.getPrimaryColor()),
                         route.getMode() == Route.BUS &&
-                                !Routes.isSilverLine(route.getId())));
+                                !SilverLine.isSilverLine(route.getId())));
 
                 dialog.setView(new ServiceAlertsListView(view.getContext(), serviceAlerts));
 

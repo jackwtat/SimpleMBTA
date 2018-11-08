@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.utilities.DateUtil;
 
 public class ServiceAlertsJsonParser {
     public static final String LOG_TAG = "ServiceAlertsJsonParser";

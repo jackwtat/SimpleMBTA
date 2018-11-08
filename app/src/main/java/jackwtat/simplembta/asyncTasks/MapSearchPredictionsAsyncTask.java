@@ -8,11 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.CommuterRailNorthSide;
 import jackwtat.simplembta.model.routes.CommuterRailOldColony;
 import jackwtat.simplembta.model.routes.CommuterRailSouthSide;
-import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -167,16 +168,16 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 // with the Green Line Grouped route. This is to reduce the maximum number of
                 // prediction cards displayed and reduces UI clutter.
                 if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
-                        prediction.getDirection() == Route.EASTBOUND &&
+                        prediction.getDirection() == Direction.EASTBOUND &&
                         prediction.getStop().isGreenLineHub()) {
-                    prediction.setRoute(new GreenLine());
+                    prediction.setRoute(new GreenLineCombined());
                 }
 
                 // If the prediction is for the inbound Commuter Rail, then replace the route
                 // with the Commuter Rail Grouped route. This is to reduce the maximum number
                 // of prediction cards displayed and reduces UI clutter.
                 if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                        prediction.getDirection() == Route.INBOUND &&
+                        prediction.getDirection() == Direction.INBOUND &&
                         prediction.getStop().isCommuterRailHub(false)) {
 
                     if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {

@@ -55,7 +55,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_expand_less_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_back_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -65,8 +65,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="606060" />
-                            <entry key="outputName" value="ic_expand_less_black_24dp" />
+                            <entry key="outputName" value="ic_activity_back_arrow_black" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\jackw" />
                           </map>

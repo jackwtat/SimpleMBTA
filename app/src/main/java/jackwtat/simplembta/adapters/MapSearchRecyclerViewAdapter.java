@@ -2,7 +2,6 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
 
@@ -112,25 +111,25 @@ public class MapSearchRecyclerViewAdapter
         adapterItems.clear();
 
         for (Route route : routes) {
-            boolean hasInboundPickUps = route.hasPickUps(Route.INBOUND);
-            boolean hasOutboundPickUps = route.hasPickUps(Route.OUTBOUND);
+            boolean hasInboundPickUps = route.hasPickUps(Direction.INBOUND);
+            boolean hasOutboundPickUps = route.hasPickUps(Direction.OUTBOUND);
 
             if (hasInboundPickUps || hasOutboundPickUps) {
                 if (hasInboundPickUps) {
-                    adapterItems.add(new adapterItem(route, Route.INBOUND));
+                    adapterItems.add(new adapterItem(route, Direction.INBOUND));
                 }
                 if (hasOutboundPickUps) {
-                    adapterItems.add(new adapterItem(route, Route.OUTBOUND));
+                    adapterItems.add(new adapterItem(route, Direction.OUTBOUND));
                 }
             } else if (route.hasNearbyStops()) {
-                if (route.getNearestStop(Route.INBOUND) != null) {
-                    adapterItems.add(new adapterItem(route, Route.INBOUND));
+                if (route.getNearestStop(Direction.INBOUND) != null) {
+                    adapterItems.add(new adapterItem(route, Direction.INBOUND));
                 }
-                if (route.getNearestStop(Route.OUTBOUND) != null) {
-                    adapterItems.add(new adapterItem(route, Route.OUTBOUND));
+                if (route.getNearestStop(Direction.OUTBOUND) != null) {
+                    adapterItems.add(new adapterItem(route, Direction.OUTBOUND));
                 }
             } else {
-                adapterItems.add(new adapterItem(route, Route.NULL_DIRECTION));
+                adapterItems.add(new adapterItem(route, Direction.NULL_DIRECTION));
             }
         }
 
