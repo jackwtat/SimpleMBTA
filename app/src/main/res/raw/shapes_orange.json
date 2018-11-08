@@ -488,9 +488,9 @@
       "attributes": {
         "address": "1400 Tremont St, Roxbury, MA",
         "description": null,
-        "latitude": 42.331529,
+        "latitude": 42.331401,
         "location_type": 1,
-        "longitude": -71.095229,
+        "longitude": -71.095340,
         "name": "Roxbury Crossing",
         "platform_code": null,
         "platform_name": null,
