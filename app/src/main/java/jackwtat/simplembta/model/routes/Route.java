@@ -33,7 +33,9 @@ public class Route implements Comparable<Route>, Serializable {
     private String primaryColor = "#FFFFFF";
     private String accentColor = "#3191E1";
     private String textColor = "#000000";
-    private Direction[] directions = new Direction[2];
+    private Direction[] directions = {
+            new Direction(Direction.OUTBOUND, "Outbound"),
+            new Direction(Direction.INBOUND, "Inbound")};
     private Shape[] shapes = {};
     private StopMarkerFactory markerFactory = new StopMarkerFactory();
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
@@ -81,7 +83,7 @@ public class Route implements Comparable<Route>, Serializable {
         return sortOrder;
     }
 
-    public Direction[] getDirections() {
+    public Direction[] getAllDirections() {
         return directions;
     }
 
@@ -100,17 +102,17 @@ public class Route implements Comparable<Route>, Serializable {
         return markerFactory.getIcon();
     }
 
-    public Stop getNearestStop(int direction) {
-        if (direction == 0 || direction == 1) {
-            return nearestStops[direction];
+    public Stop getNearestStop(int directionId) {
+        if (directionId == 0 || directionId == 1) {
+            return nearestStops[directionId];
         } else {
             return null;
         }
     }
 
-    public ArrayList<Prediction> getPredictions(int direction) {
-        if (direction == 0 || direction == 1) {
-            return predictions.get(direction);
+    public ArrayList<Prediction> getPredictions(int directionId) {
+        if (directionId == 0 || directionId == 1) {
+            return predictions.get(directionId);
         } else {
             return null;
         }
@@ -187,10 +189,10 @@ public class Route implements Comparable<Route>, Serializable {
     }
 
     public void addPrediction(Prediction prediction) {
-        int direction = prediction.getDirection();
+        int directionId = prediction.getDirection();
 
-        if (direction == 0 || direction == 1) {
-            predictions.get(direction).add(prediction);
+        if (directionId == 0 || directionId == 1) {
+            predictions.get(directionId).add(prediction);
         }
     }
 
@@ -200,23 +202,23 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
-    public void clearPredictions(int direction) {
-        if (direction == 0 || direction == 1) {
-            predictions.get(direction).clear();
+    public void clearPredictions(int directionId) {
+        if (directionId == 0 || directionId == 1) {
+            predictions.get(directionId).clear();
         }
     }
 
-    public boolean hasPredictions(int direction) {
-        if (direction == 0 || direction == 1) {
-            return predictions.get(direction).size() > 0;
+    public boolean hasPredictions(int directionId) {
+        if (directionId == 0 || directionId == 1) {
+            return predictions.get(directionId).size() > 0;
         } else {
             return false;
         }
     }
 
-    public boolean hasPickUps(int direction) {
-        if (direction == 0 || direction == 1) {
-            for (Prediction p : predictions.get(direction)) {
+    public boolean hasPickUps(int directionId) {
+        if (directionId == 0 || directionId == 1) {
+            for (Prediction p : predictions.get(directionId)) {
                 if (p.willPickUpPassengers()) {
                     return true;
                 }
