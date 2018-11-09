@@ -107,6 +107,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         return stop.getId();
     }
 
+    public String getParentStopId() {
+        return stop.getParentId();
+    }
+
     public Stop getStop() {
         return stop;
     }
@@ -181,26 +185,6 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     public void setTripName(String tripName) {
         this.tripName = tripName;
-    }
-
-    public boolean isValidPrediction() {
-        // Silver Line Way trips are often duplicated under SL1 (741), SL2 (742), and SL3 (743)
-        if (getDestination().equals("Silver Line Way") && !route.getId().equals("746")) {
-            return false;
-        }
-
-        // Out of service Green Line trains sometimes show up as in service on incorrect lines
-        // if they're moving with their AVI turned on
-        if (GreenLine.isGreenLine(route.getId())) {
-            if ((route.getId().equals("Green-B") && !Stops.greenB.containsKey(stop.getId())) ||
-                    (route.getId().equals("Green-C") && !Stops.greenC.containsKey(stop.getId())) ||
-                    (route.getId().equals("Green-D") && !Stops.greenD.containsKey(stop.getId())) ||
-                    (route.getId().equals("Green-E") && !Stops.greenE.containsKey(stop.getId()))) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     @Override

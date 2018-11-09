@@ -10,9 +10,11 @@ import java.util.List;
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.routes.CommuterRail;
 import jackwtat.simplembta.model.routes.CommuterRailNorthSide;
 import jackwtat.simplembta.model.routes.CommuterRailOldColony;
 import jackwtat.simplembta.model.routes.CommuterRailSouthSide;
+import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
@@ -32,7 +34,6 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     private HashMap<String, Route> routes;
     private HashMap<String, Stop> stops;
-    private HashMap<String, Stop> childStops = new HashMap<>();
     private HashMap<String, Prediction> predictions = new HashMap<>();
 
     public MapSearchPredictionsAsyncTask(String realTimeApiKey,
@@ -58,10 +59,6 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
         for (Stop stop : stops.values()) {
             stop.setDistanceFromOrigin(location);
-
-            for (String childId : stop.getChildIds()) {
-                childStops.put(childId, stop);
-            }
         }
 
         if (stops.size() == 0) {
@@ -136,7 +133,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                         route.addServiceAlert(alert);
                     } else {
                         for (String affectedRouteId : alert.getAffectedRoutes()) {
-                            if (route.idEquals(affectedRouteId)) {
+                            if (route.equals(affectedRouteId)) {
                                 route.addServiceAlert(alert);
                                 break;
                             }
@@ -156,12 +153,12 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
     private void processPredictions(Prediction[] livePredictions) {
         for (Prediction prediction : livePredictions) {
-            if (!predictions.containsKey(prediction.getId()) && prediction.isValidPrediction()) {
+            if (!predictions.containsKey(prediction.getId())) {
                 predictions.put(prediction.getId(), prediction);
 
                 // Replace prediction's stop ID with its parent stop ID
-                if (childStops.containsKey(prediction.getStopId())) {
-                    prediction.setStop(childStops.get(prediction.getStopId()));
+                if(stops.containsKey(prediction.getParentStopId())){
+                    prediction.setStop(stops.get(prediction.getParentStopId()));
                 }
 
                 // If the prediction is for the eastbound Green Line, then replace the route
@@ -169,7 +166,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 // prediction cards displayed and reduces UI clutter.
                 if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
                         prediction.getDirection() == Direction.EASTBOUND &&
-                        prediction.getStop().isGreenLineHub()) {
+                        GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
                     prediction.setRoute(new GreenLineCombined());
                 }
 
@@ -178,7 +175,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 // of prediction cards displayed and reduces UI clutter.
                 if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
                         prediction.getDirection() == Direction.INBOUND &&
-                        prediction.getStop().isCommuterRailHub(false)) {
+                        CommuterRail.isCommuterRailHub(prediction.getStopId(), false)) {
 
                     if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {
                         prediction.setRoute(new CommuterRailNorthSide());

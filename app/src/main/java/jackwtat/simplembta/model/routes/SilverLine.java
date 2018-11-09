@@ -1,6 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
 import jackwtat.simplembta.map.markers.SilverLineStopMarkerFactory;
+import jackwtat.simplembta.model.Prediction;
 
 public class SilverLine extends Bus {
     public SilverLine(String id) {
@@ -10,13 +11,20 @@ public class SilverLine extends Bus {
         setStopMarkerFactory(new SilverLineStopMarkerFactory());
     }
 
-    public static boolean isSilverLine(String id) {
-        return id.equals("741") ||
-                id.equals("742") ||
-                id.equals("743") ||
-                id.equals("746") ||
-                id.equals("749") ||
-                id.equals("751");
+    @Override
+    public void addPrediction(Prediction prediction) {
+        // Silver Line Way trips are often duplicated under SL1 (741), SL2 (742), and SL3 (743)
+        if (!prediction.getDestination().equals("Silver Line Way") || prediction.getRouteId().equals("746"))
+            super.addPrediction(prediction);
+    }
+
+    public static boolean isSilverLine(String routeId) {
+        return isSL1(routeId) ||
+                isSL2(routeId) ||
+                isSL3(routeId) ||
+                isSL4(routeId) ||
+                isSL5(routeId) ||
+                isSLW(routeId);
     }
 
     public static boolean isSL1(String id) {

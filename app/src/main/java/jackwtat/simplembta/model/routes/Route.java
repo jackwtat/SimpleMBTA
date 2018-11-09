@@ -177,7 +177,7 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
-    public void setShapes(Shape[] shapes){
+    public void setShapes(Shape[] shapes) {
         this.shapes = shapes;
     }
 
@@ -279,12 +279,12 @@ public class Route implements Comparable<Route>, Serializable {
         if (obj instanceof Route) {
             Route otherRoute = (Route) obj;
             return id.equals(otherRoute.id);
+
+        } else if (obj instanceof String) {
+            return id.equals(obj);
+
         } else {
             return false;
         }
-    }
-
-    public boolean idEquals(String id) {
-        return this.id.equals(id);
     }
 }

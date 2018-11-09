@@ -166,7 +166,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         for (Shape[] s : shapes) {
             for (Route r : keyRoutes) {
-                if (r.idEquals(s[0].getRouteId())) {
+                if (r.equals(s[0].getRouteId())) {
                     r.setShapes(s);
                     break;
                 }
@@ -395,8 +395,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onResume() {
-        super.onResume();
         mapView.onResume();
+        super.onResume();
 
         // Get the time
         Long onResumeTime = new Date().getTime();
@@ -411,10 +411,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         locationClient.connect();
 
         timer = new Timer();
-        timer.schedule(new LocationUpdateTimerTask(),
-                0, LOCATION_UPDATE_RATE);
-        timer.schedule(new PredictionsUpdateTimerTask(),
-                PREDICTIONS_UPDATE_RATE, PREDICTIONS_UPDATE_RATE);
+        timer.schedule(new PredictionsUpdateTimerTask(), PREDICTIONS_UPDATE_RATE, PREDICTIONS_UPDATE_RATE);
+        timer.schedule(new LocationUpdateTimerTask(), 0, LOCATION_UPDATE_RATE);
 
         boolean locationPermissionGranted = ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -669,7 +667,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         for (Shape shape : route.getShapes()) {
             for (Stop stop : shape.getStops()) {
                 if (keyStopMarkers.containsKey(stop.getId())) {
-                     keyStopMarkers.get(stop.getId()).setIcon(
+                    keyStopMarkers.get(stop.getId()).setIcon(
                             BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
                 } else if (!markers.containsKey(stop.getId())) {
                     Marker stopMarker = gMap.addMarker(route.getStopMarkerOptions()
@@ -692,7 +690,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private class LocationUpdateTimerTask extends TimerTask {
         @Override
         public void run() {
-            locationClient.updateLocation(MapSearchFragment.this);
+            if (mapReady) {
+                locationClient.updateLocation(MapSearchFragment.this);
+            }
         }
     }
 

@@ -17,13 +17,26 @@ public class SilverLineCombined extends SilverLine {
     }
 
     @Override
-    public boolean idEquals(String routeId) {
-        for (String id : ids) {
-            if (id.equals(routeId)) {
-                return true;
+    public boolean equals(Object obj) {
+        if (obj instanceof Route) {
+            Route otherRoute = (Route) obj;
+            for (String id : ids) {
+                if (id.equals(otherRoute.getId()))
+                    return true;
             }
-        }
 
-        return false;
+            return getId().equals(otherRoute.getId());
+
+        } else if (obj instanceof String) {
+            for (String id : ids) {
+                if (id.equals(obj))
+                    return true;
+            }
+
+            return getId().equals(obj);
+
+        } else {
+            return false;
+        }
     }
 }

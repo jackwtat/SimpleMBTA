@@ -109,6 +109,16 @@ public class ShapesJsonParser {
                 location.setLongitude(jAttributes.getDouble("longitude"));
                 stop.setLocation(location);
 
+                // Get the parent stop id
+                try {
+                    stop.setParentId(jStop.getJSONObject("relationships")
+                            .getJSONObject("parent_station")
+                            .getJSONObject("data")
+                            .getString("id"));
+                } catch (JSONException e) {
+                    stop.setParentId("");
+                }
+
                 stops.put(id, stop);
 
             } catch (JSONException e) {

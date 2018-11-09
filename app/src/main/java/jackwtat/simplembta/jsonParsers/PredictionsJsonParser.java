@@ -89,6 +89,17 @@ public class PredictionsJsonParser {
                             location.setLatitude(jStopAttr.getDouble("latitude"));
                             location.setLongitude(jStopAttr.getDouble("longitude"));
                             stop.setLocation(location);
+
+                            // Get the parent stop id
+                            try {
+                                stop.setParentId(jStop.getJSONObject("relationships")
+                                        .getJSONObject("parent_station")
+                                        .getJSONObject("data")
+                                        .getString("id"));
+                            } catch (JSONException e) {
+                                stop.setParentId("");
+                            }
+
                         }
                         prediction.setStop(stop);
 

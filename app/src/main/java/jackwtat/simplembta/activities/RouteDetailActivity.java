@@ -571,7 +571,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
 
             refreshShapes();
-            
+
         } else if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
