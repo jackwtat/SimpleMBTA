@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.Bus;
 import jackwtat.simplembta.model.routes.CommuterRail;
@@ -90,11 +91,10 @@ public class RoutesJsonParser {
                     route.setTextColor(textColor);
 
                     JSONArray jDirectionNames = jAttributes.getJSONArray("direction_names");
-                    String[] directionNames = new String[jDirectionNames.length()];
                     for (int j = 0; j < jDirectionNames.length(); j++) {
-                        directionNames[j] = jDirectionNames.getString(j);
+                        route.setDirection(new Direction(j, jDirectionNames.getString(j)));
+
                     }
-                    route.setDirectionNames(directionNames);
 
                     routes.put(id, route);
 

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.Bus;
@@ -172,11 +173,10 @@ public class PredictionsJsonParser {
                             route.setTextColor(textColor);
 
                             JSONArray jDirectionNames = jRouteAttr.getJSONArray("direction_names");
-                            String[] directionNames = new String[jDirectionNames.length()];
                             for (int j = 0; j < jDirectionNames.length(); j++) {
-                                directionNames[j] = jDirectionNames.getString(j);
+                                route.setDirection(new Direction(j, jDirectionNames.getString(j)));
+
                             }
-                            route.setDirectionNames(directionNames);
                         }
                         prediction.setRoute(route);
 

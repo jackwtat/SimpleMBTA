@@ -1,5 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
+import jackwtat.simplembta.model.Direction;
+
 public class SilverLineCombined extends SilverLine {
     private String[] ids = {"741", "742", "743", "746", "749", "751"};
 
@@ -11,9 +13,8 @@ public class SilverLineCombined extends SilverLine {
         setPrimaryColor("7C878E");
         setTextColor("FFFFFF");
         setSortOrder(14);
-
-        String[] directionNames = {"Inbound", "Outbound"};
-        setDirectionNames(directionNames);
+        setDirection(new Direction(Direction.OUTBOUND, "Outbound"));
+        setDirection(new Direction(Direction.INBOUND, "Inbound"));
     }
 
     @Override

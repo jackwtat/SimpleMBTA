@@ -125,7 +125,7 @@ public class MapSearchPredictionItem extends LinearLayout {
             if (stop != null) {
                 stringBuilder.append(getContext().getResources().getString(R.string.no_predictions_this_stop_p1))
                         .append(" ")
-                        .append(route.getDirectionName(direction).toLowerCase())
+                        .append(route.getDirection(direction).getName().toLowerCase())
                         .append(" ")
                         .append(getContext().getResources().getString(R.string.no_predictions_this_stop_p2));
             } else {

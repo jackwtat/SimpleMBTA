@@ -1,5 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
+import jackwtat.simplembta.model.Direction;
+
 public class GreenLineCombined extends GreenLine {
     private String[] ids = {"Green-B", "Green-C", "Green-D", "Green-E"};
 
@@ -11,9 +13,8 @@ public class GreenLineCombined extends GreenLine {
         setPrimaryColor("00843D");
         setTextColor("FFFFFF");
         setSortOrder(4);
-
-        String[] directionNames = {"Westbound", "Eastbound"};
-        setDirectionNames(directionNames);
+        setDirection(new Direction(Direction.WESTBOUND, "Westbound"));
+        setDirection(new Direction(Direction.EASTBOUND, "Eastbound"));
     }
 
     @Override

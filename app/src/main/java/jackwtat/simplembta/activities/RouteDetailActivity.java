@@ -152,7 +152,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Set action bar
         setTitle(DisplayNameUtil.getLongDisplayName(this, route) + " - " +
-                route.getDirectionName(direction));
+                route.getDirection(direction).getName());
 
         if (Build.VERSION.SDK_INT >= 21) {
             // Create color for status bar

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jackwtat.simplembta.map.markers.StopMarkerFactory;
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
@@ -32,12 +33,11 @@ public class Route implements Comparable<Route>, Serializable {
     private String primaryColor = "#FFFFFF";
     private String accentColor = "#3191E1";
     private String textColor = "#000000";
-    private StopMarkerFactory markerFactory = new StopMarkerFactory();
+    private Direction[] directions = new Direction[2];
     private Shape[] shapes = {};
-
+    private StopMarkerFactory markerFactory = new StopMarkerFactory();
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
 
-    private String[] directionNames = {"Outbound", "Inbound"};
     private Stop[] nearestStops = new Stop[2];
     private ArrayList<ArrayList<Prediction>> predictions = new ArrayList<>();
 
@@ -81,16 +81,15 @@ public class Route implements Comparable<Route>, Serializable {
         return sortOrder;
     }
 
-    public String[] getDirectionNames() {
-        return directionNames;
+    public Direction[] getDirections() {
+        return directions;
     }
 
-    public String getDirectionName(int direction) {
-        if (direction == 0 || direction == 1) {
-            return directionNames[direction];
-        } else {
-            return "INVALID_DIRECTION";
-        }
+    public Direction getDirection(int directionId) {
+        if (directionId == 0 || directionId == 1)
+            return directions[directionId];
+        else
+            return new Direction(directionId, "null");
     }
 
     public MarkerOptions getStopMarkerOptions() {
@@ -165,16 +164,9 @@ public class Route implements Comparable<Route>, Serializable {
         this.sortOrder = sortOrder;
     }
 
-    public void setDirectionNames(String[] directionNames) {
-        for (int i = 0; i < 2 && i < directionNames.length; i++) {
-            this.directionNames[i] = directionNames[i];
-        }
-    }
-
-    public void setDirectionName(int direction, String name) {
-        if (direction == 0 || direction == 1) {
-            directionNames[direction] = name;
-        }
+    public void setDirection(Direction direction) {
+        if (direction.getId() == 0 || direction.getId() == 1)
+            directions[direction.getId()] = direction;
     }
 
     public void setShapes(Shape[] shapes) {
