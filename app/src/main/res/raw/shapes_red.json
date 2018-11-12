@@ -2,7 +2,7 @@
   "data": [
     {
       "attributes": {
-        "direction_id": 1,
+        "direction_id": -1,
         "name": "Ashmont",
         "polyline": "qsaaGfrvpLYLuDxAI?e@MWASBcElAq@LsCZc@HaOfBoOlByB^??yB`@uE|@qBFqA@{AOu@Qo@]iAi@o@a@o@i@k@i@q@u@a@k@]m@c@{@Sc@Uq@_@qAm@wDCSo@sD??G_@Mm@Ge@IeACq@Ac@Ay@AkDAeDEmAMqAI_@Ia@I[Oc@i@iAU]_@_@SO}@g@IAIC{@CaB?uABcAEy@GiAMuAWYGc@KqDu@yHiAgBYO?_AM}@KyA[}@Ui@QmA]kA_@cA_@aA[}Am@??SI]KoBq@_AYoDcAeBc@mASwAOoBEs@?kCL}BDqC@cCFeA@_A@u@Dw@DmADiAF[@sBPyAF??u@DSByAPeAT}@V]Nk@Tm@X_@RcAv@WNo@r@]b@{DtF[h@}A|Bq@hAUZ}B|Cm@d@m@\\{@XY@MC_@QqBq@{F_C??g@ScnAl@??qCBie@i[y@c@m@QYIu@Gc@?i@DiARm@TQNa@f@uDbNIX??k@hBq@jBs@vBk@bA_JrQUj@??aDfI??[v@Wn@w@pBa@`Aa@fAwBtFc@~@k@hAsCxDwJ~N]|@Mb@K^CFKn@Gb@C\\ATCjAEt@GhBEbA??AXGlAAPM`DYjIM|CO|GM|DG|AGxCa@`MUbHs@fJOfD??ATIrB_Ap^s@jRWlJYdHOhGIpBKjAk@bBe@bAaDnGkBzD??m@pAwMpVgArCsBdGkEbPc@nAYb@a@d@eChDwG|HMPEFwCzNK^KVMJIB_@?iAO??kAOmB]gBGm@A[HSL[^a@|@e@fAo@r@iBh@aB^}@BkAGaNq@am@iDQ???sMUyQ~@uCJsBDo@Pc@Xm@l@m@bAaAvBu@pB]hAOx@UdAKr@??i@dD_@lDKlBOpCQjESvHKtEYbJg@rUGjCRnDFv@NbAPjAHRHLLFt@Nt@Vt@j@f@|@Vt@@DR~B@b@HpAFxN",
         "priority": 2
@@ -21,63 +21,7 @@
         "stops": {
           "data": [
             {
-              "id": "place-asmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-smmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-fldcr",
-              "type": "stop"
-            },
-            {
-              "id": "place-shmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-jfk",
-              "type": "stop"
-            },
-            {
-              "id": "place-andrw",
-              "type": "stop"
-            },
-            {
-              "id": "place-brdwy",
-              "type": "stop"
-            },
-            {
-              "id": "place-sstat",
-              "type": "stop"
-            },
-            {
-              "id": "place-dwnxg",
-              "type": "stop"
-            },
-            {
-              "id": "place-pktrm",
-              "type": "stop"
-            },
-            {
-              "id": "place-chmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-knncl",
-              "type": "stop"
-            },
-            {
-              "id": "place-cntsq",
-              "type": "stop"
-            },
-            {
-              "id": "place-harsq",
-              "type": "stop"
-            },
-            {
-              "id": "place-portr",
+              "id": "place-alfcl",
               "type": "stop"
             },
             {
@@ -85,7 +29,63 @@
               "type": "stop"
             },
             {
-              "id": "place-alfcl",
+              "id": "place-portr",
+              "type": "stop"
+            },
+            {
+              "id": "place-harsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-cntsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-knncl",
+              "type": "stop"
+            },
+            {
+              "id": "place-chmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-pktrm",
+              "type": "stop"
+            },
+            {
+              "id": "place-dwnxg",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-brdwy",
+              "type": "stop"
+            },
+            {
+              "id": "place-andrw",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-shmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-fldcr",
+              "type": "stop"
+            },
+            {
+              "id": "place-smmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-asmnl",
               "type": "stop"
             }
           ]
@@ -114,67 +114,7 @@
         "stops": {
           "data": [
             {
-              "id": "place-brntn",
-              "type": "stop"
-            },
-            {
-              "id": "place-qamnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-qnctr",
-              "type": "stop"
-            },
-            {
-              "id": "place-wlsta",
-              "type": "stop"
-            },
-            {
-              "id": "place-nqncy",
-              "type": "stop"
-            },
-            {
-              "id": "place-jfk",
-              "type": "stop"
-            },
-            {
-              "id": "place-andrw",
-              "type": "stop"
-            },
-            {
-              "id": "place-brdwy",
-              "type": "stop"
-            },
-            {
-              "id": "place-sstat",
-              "type": "stop"
-            },
-            {
-              "id": "place-dwnxg",
-              "type": "stop"
-            },
-            {
-              "id": "place-pktrm",
-              "type": "stop"
-            },
-            {
-              "id": "place-chmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-knncl",
-              "type": "stop"
-            },
-            {
-              "id": "place-cntsq",
-              "type": "stop"
-            },
-            {
-              "id": "place-harsq",
-              "type": "stop"
-            },
-            {
-              "id": "place-portr",
+              "id": "place-alfcl",
               "type": "stop"
             },
             {
@@ -182,7 +122,63 @@
               "type": "stop"
             },
             {
-              "id": "place-alfcl",
+              "id": "place-portr",
+              "type": "stop"
+            },
+            {
+              "id": "place-harsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-cntsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-knncl",
+              "type": "stop"
+            },
+            {
+              "id": "place-chmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-pktrm",
+              "type": "stop"
+            },
+            {
+              "id": "place-dwnxg",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-brdwy",
+              "type": "stop"
+            },
+            {
+              "id": "place-andrw",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-nqncy",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-qamnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-brntn",
               "type": "stop"
             }
           ]

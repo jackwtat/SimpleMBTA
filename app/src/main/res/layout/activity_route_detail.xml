@@ -55,6 +55,19 @@
                         android:indeterminateTintMode="src_atop" />
                 </RelativeLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                <jackwtat.simplembta.views.ServiceAlertsIndicatorView
+                    android:id="@+id/service_alerts_indicator_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="pin"/>
+
+            </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout
@@ -63,10 +76,15 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <jackwtat.simplembta.views.ServiceAlertsIndicatorView
-                android:id="@+id/service_alerts_indicator_view"
+            <jackwtat.simplembta.views.StopSelectorView
+                android:id="@+id/stop_selector_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC" />
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout"

@@ -1,6 +1,8 @@
 package jackwtat.simplembta.model.routes;
 
+import jackwtat.simplembta.map.markers.GreenLineStopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.model.Stop;
 
 public class GreenLineCombined extends GreenLine {
     private String[] ids = {"Green-B", "Green-C", "Green-D", "Green-E"};
@@ -12,9 +14,16 @@ public class GreenLineCombined extends GreenLine {
         setLongName("Green Line");
         setPrimaryColor("00843D");
         setTextColor("FFFFFF");
+        setStopMarkerFactory(new GreenLineStopMarkerFactory());
         setSortOrder(4);
         setDirection(new Direction(Direction.WESTBOUND, "Westbound"));
         setDirection(new Direction(Direction.EASTBOUND, "Eastbound"));
+    }
+
+    @Override
+    public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
+        super.setNearestStop(0, stop, clearPredictions);
+        super.setNearestStop(1, stop, clearPredictions);
     }
 
     @Override

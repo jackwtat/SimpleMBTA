@@ -9,16 +9,13 @@ import jackwtat.simplembta.jsonParsers.VehiclesJsonParser;
 public class VehiclesAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
     String realTimeApiKey;
     String routeId;
-    int direction;
     OnPostExecuteListener onPostExecuteListener;
 
     public VehiclesAsyncTask(String realTimeApiKey,
                              String routeId,
-                             int direction,
                              OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.routeId = routeId;
-        this.direction = direction;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
@@ -27,8 +24,7 @@ public class VehiclesAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] routeArgs = {
-                "filter[route]=" + routeId,
-                "filter[direction_id]=" + direction
+                "filter[route]=" + routeId
         };
 
         return VehiclesJsonParser.parse(realTimeApiClient.get("vehicles", routeArgs));

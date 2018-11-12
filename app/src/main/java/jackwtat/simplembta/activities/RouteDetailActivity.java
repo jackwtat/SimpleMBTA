@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,14 +68,15 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
-import jackwtat.simplembta.map.markers.StopMarkerFactory;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
+import jackwtat.simplembta.views.StopSelectorView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
         ShapesAsyncTask.OnPostExecuteListener, ServiceAlertsAsyncTask.OnPostExecuteListener,
-        VehiclesAsyncTask.OnPostExecuteListener {
+        VehiclesAsyncTask.OnPostExecuteListener,
+        StopSelectorView.OnDirectionSelectedListener, StopSelectorView.OnStopSelectedListener {
     public static final String LOG_TAG = "RouteDetailActivity";
 
     // Predictions auto update rate
@@ -104,6 +106,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
+    private StopSelectorView stopSelectorView;
 
     private String realTimeApiKey;
     private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
@@ -123,10 +126,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private long refreshTime = 0;
 
     private Route route;
-    private int direction;
-    private Vehicle[] vehicles = new Vehicle[0];
+    private int selectedDirectionId;
     private ArrayList<Polyline> polylines = new ArrayList<>();
-    private ArrayList<Marker> stopMarkers = new ArrayList<>();
+    private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private ArrayList<Marker> vehicleMarkers = new ArrayList<>();
     private Marker selectedStopMarker;
 
@@ -141,18 +143,17 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get values passed from calling activity/fragment
         Intent intent = getIntent();
         route = (Route) intent.getSerializableExtra("route");
-        direction = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
+        selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
         refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
 
-        // Get error textview
+        // Get error text view
         errorTextView = findViewById(R.id.error_message_text_view);
 
         // Get network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(this);
 
         // Set action bar
-        setTitle(DisplayNameUtil.getLongDisplayName(this, route) + " - " +
-                route.getDirection(direction).getName());
+        setTitle(DisplayNameUtil.getLongDisplayName(this, route));
 
         if (Build.VERSION.SDK_INT >= 21) {
             // Create color for status bar
@@ -176,7 +177,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         appBarLayout = findViewById(R.id.app_bar_layout);
         CoordinatorLayout.LayoutParams params =
                 (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        params.height = (int) (getResources().getDisplayMetrics().heightPixels * .6);
+        //params.height = (int) (getResources().getDisplayMetrics().heightPixels * .6);
 
         // Disable scrolling inside app bar
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -204,6 +205,19 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get service alerts indicator
         serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
 
+        // Get the stop selector view
+        stopSelectorView = findViewById(R.id.stop_selector_view);
+        populateDirectionSpinner(route.getAllDirections());
+
+        // Populate the stops spinner with the nearest stop until we query the shapes
+        if (route.getNearestStop(selectedDirectionId) != null) {
+            Stop[] selectedStopArray = {route.getNearestStop(selectedDirectionId)};
+            populateStopSpinner(selectedStopArray);
+        }
+
+        stopSelectorView.setOnDirectionSelectedListener(this);
+        stopSelectorView.setOnStopSelectedListener(this);
+
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,
@@ -225,7 +239,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions();
+                    refreshPredictions(false);
                     refreshServiceAlertsView();
                     if (!shapesLoaded) {
                         refreshShapes();
@@ -266,21 +280,25 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if (marker.getTag() instanceof Stop) {
+                    Stop selectedStop = (Stop) marker.getTag();
+
                     // Change the icon of the last selected marker to the unselected stop icon
                     if (selectedStopMarker != null) {
                         selectedStopMarker.setIcon(route.getStopMarkerIcon());
                     }
 
                     // Change the icon to the currently selected marker to the selected stop icon
-                    // and show hte info window
+                    // and show the info window
                     selectedStopMarker = marker;
                     selectedStopMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
-                    selectedStopMarker.showInfoWindow();
+
+                    // Change the selected stop in the stop spinner
+                    stopSelectorView.selectStop(selectedStop.getId());
 
                     // Change the nearest stop in the route object to the selected stop
-                    route.setNearestStop(direction, (Stop) marker.getTag(), true);
+                    route.setNearestStop(selectedDirectionId, selectedStop, true);
 
-                    // TODO: Find the nearest stop in the opposite direction
+                    // TODO: Find the nearest stop in the opposite selectedDirectionId
 
 
                     // Refresh the predictions
@@ -294,7 +312,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
 
         // Move the map camera to the selected stop
-        Stop stop = route.getNearestStop(direction);
+        Stop stop = route.getNearestStop(selectedDirectionId);
         LatLng latLng = (stop == null)
                 ? new LatLng(42.3604, -71.0580)
                 : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
@@ -329,7 +347,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Refresh the activity to update UI so that the predictions and service alerts are accurate
         // as of the last update
-        refreshPredictions();
+        refreshPredictions(false);
         refreshServiceAlertsView();
         refreshVehicles();
 
@@ -413,9 +431,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     route.clearPredictions(Direction.OUTBOUND);
                     route.clearServiceAlerts();
 
-                    vehicles = new Vehicle[0];
+                    clearVehicleMarkers();
 
-                    refreshPredictions();
+                    refreshPredictions(true);
                     refreshServiceAlertsView();
                     refreshVehicles();
 
@@ -426,18 +444,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
     }
 
-    private void backgroundUpdate() {
-        if (!refreshing) {
-            getPredictions();
-        }
-    }
-
-    private void forceUpdate() {
-        getPredictions();
-    }
-
     private void getPredictions() {
-        if (networkConnectivityClient.isConnected()) {
+        if (networkConnectivityClient.isConnected() &&
+                route.getNearestStop(selectedDirectionId) != null) {
             errorManager.setNetworkError(false);
 
             refreshing = true;
@@ -446,58 +455,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 predictionsAsyncTask.cancel(true);
             }
 
-            if (route != null && route.getNearestStop(direction) != null) {
-                predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route,
-                        direction, this);
-                predictionsAsyncTask.execute();
-            } else {
-                refreshPredictions();
-            }
+            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route,
+                    selectedDirectionId, this);
+            predictionsAsyncTask.execute();
+
         } else {
             errorManager.setNetworkError(true);
             refreshing = false;
             swipeRefreshLayout.setRefreshing(false);
         }
-    }
-
-    @Override
-    public void onPostExecute(List<Prediction> predictions) {
-        refreshing = false;
-        refreshTime = new Date().getTime();
-
-        route.clearPredictions(direction);
-        route.addAllPredictions(predictions);
-
-        refreshPredictions();
-    }
-
-    private void refreshPredictions() {
-        if (!userIsScrolling) {
-            recyclerViewAdapter.setPredictions(route.getPredictions(direction));
-            swipeRefreshLayout.setRefreshing(false);
-
-            if (recyclerViewAdapter.getItemCount() == 0) {
-                if (route.getNearestStop(direction) == null) {
-                    noPredictionsTextView.setText(getResources().getString(R.string.select_stop));
-                } else {
-                    noPredictionsTextView.setText(getResources().getString(R.string.no_predictions_this_stop));
-                }
-
-                noPredictionsTextView.setVisibility(View.VISIBLE);
-                appBarLayout.setExpanded(true);
-                recyclerView.setNestedScrollingEnabled(false);
-            } else {
-                noPredictionsTextView.setVisibility(View.GONE);
-                recyclerView.setNestedScrollingEnabled(true);
-            }
-        }
-    }
-
-    private void clearPredictions() {
-        recyclerViewAdapter.clear();
-        noPredictionsTextView.setVisibility(View.GONE);
-        appBarLayout.setExpanded(true);
-        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private void getServiceAlerts() {
@@ -513,27 +479,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     route.getId(),
                     this);
             serviceAlertsAsyncTask.execute();
+
         } else {
             errorManager.setNetworkError(true);
-        }
-    }
-
-    @Override
-    public void onPostExecute(ServiceAlert[] serviceAlerts) {
-        route.clearServiceAlerts();
-        route.addAllServiceAlerts(serviceAlerts);
-
-        refreshServiceAlertsView();
-    }
-
-    private void refreshServiceAlertsView() {
-        if (!userIsScrolling) {
-            if (route.getServiceAlerts().size() > 0) {
-                serviceAlertsIndicatorView.setServiceAlerts(route);
-                serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
-            } else {
-                serviceAlertsIndicatorView.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -571,6 +519,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
 
             refreshShapes();
+            populateStopSpinner(route.getStops(selectedDirectionId));
 
         } else if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
@@ -582,16 +531,50 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             shapesAsyncTask = new ShapesAsyncTask(
                     realTimeApiKey,
                     route.getId(),
-                    direction,
                     this);
             shapesAsyncTask.execute();
+
         } else {
             errorManager.setNetworkError(true);
         }
     }
 
-    private Shape[] getShapesFromJson(int jsonFile) {
-        return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
+    private void getVehicles() {
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
+
+            if (vehiclesAsyncTask != null) {
+                vehiclesAsyncTask.cancel(true);
+            }
+
+            vehiclesAsyncTask = new VehiclesAsyncTask(
+                    realTimeApiKey,
+                    route.getId(),
+                    this);
+            vehiclesAsyncTask.execute();
+
+        } else {
+            errorManager.setNetworkError(true);
+        }
+    }
+
+    @Override
+    public void onPostExecute(List<Prediction> predictions) {
+        refreshing = false;
+        refreshTime = new Date().getTime();
+
+        route.clearPredictions(selectedDirectionId);
+        route.addAllPredictions(predictions);
+
+        refreshPredictions(false);
+    }
+
+    @Override
+    public void onPostExecute(ServiceAlert[] serviceAlerts) {
+        route.clearServiceAlerts();
+        route.addAllServiceAlerts(serviceAlerts);
+
+        refreshServiceAlertsView();
     }
 
     @Override
@@ -599,62 +582,93 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         route.setShapes(shapes);
 
         refreshShapes();
+        populateStopSpinner(route.getStops(selectedDirectionId));
+    }
+
+    @Override
+    public void onPostExecute(Vehicle[] vehicles) {
+        route.setVehicles(vehicles);
+
+        refreshVehicles();
+    }
+
+    private void refreshPredictions(boolean returnToTop) {
+        if (!userIsScrolling) {
+            recyclerViewAdapter.setPredictions(route.getPredictions(selectedDirectionId));
+            swipeRefreshLayout.setRefreshing(false);
+
+            if (recyclerViewAdapter.getItemCount() == 0) {
+                if (route.getNearestStop(selectedDirectionId) == null) {
+                    noPredictionsTextView.setText(getResources().getString(R.string.select_stop));
+                } else {
+                    noPredictionsTextView.setText(getResources().getString(R.string.no_predictions_this_stop));
+                }
+
+                noPredictionsTextView.setVisibility(View.VISIBLE);
+                appBarLayout.setExpanded(true);
+                recyclerView.setNestedScrollingEnabled(false);
+            } else {
+                noPredictionsTextView.setVisibility(View.GONE);
+                recyclerView.setNestedScrollingEnabled(true);
+            }
+
+            if (returnToTop) {
+                recyclerView.scrollToPosition(0);
+            }
+        }
+    }
+
+    private void refreshServiceAlertsView() {
+        if (!userIsScrolling) {
+            if (route.getServiceAlerts().size() > 0) {
+                serviceAlertsIndicatorView.setServiceAlerts(route);
+                serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
+            } else {
+                serviceAlertsIndicatorView.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void refreshShapes() {
         if (!userIsScrolling) {
-            for (Polyline pl : polylines) {
-                pl.remove();
-            }
-            polylines.clear();
+            clearShapes();
 
-            for (Marker m : stopMarkers) {
-                m.remove();
-            }
-            stopMarkers.clear();
+            Stop selectedStop = route.getNearestStop(selectedDirectionId);
 
-            HashMap<String, Stop> distinctStops = new HashMap<>();
+            for (Shape shape : route.getShapes(selectedDirectionId)) {
+                if (shape.getPriority() >= 0 && shape.getStops().length > 0) {
+                    // Draw the polyline
+                    polylines.addAll(Arrays.asList(drawPolyline(shape)));
 
-            for (Shape shape : route.getShapes()) {
-                if (shape.getPriority() > -1 && shape.getStops().length > 1) {
-                    drawPolyline(shape);
-
+                    // Draw each stop that hasn't been drawn yet
                     for (Stop stop : shape.getStops()) {
-                        distinctStops.put(stop.getId(), stop);
+                        if (!stopMarkers.containsKey(stop.getId())) {
+                            // Draw the stop marker
+                            Marker currentMarker = drawStopMarker(stop);
+
+                            // Use selected stop marker if this stop is the selected stop
+                            if (selectedStop != null && selectedStopMarker == null &&
+                                    (selectedStop.equals(stop) ||
+                                            selectedStop.isParentOf(stop.getId()) ||
+                                            stop.isParentOf(selectedStop.getId()))) {
+                                selectedStopMarker = currentMarker;
+                                selectedStopMarker.setIcon(BitmapDescriptorFactory
+                                        .fromResource(R.drawable.icon_selected_stop));
+                            }
+
+                            // Add stop to the drawn stops hash map
+                            stopMarkers.put(stop.getId(), currentMarker);
+                        }
                     }
                 }
             }
 
-            Stop currentStop = route.getNearestStop(direction);
-            selectedStopMarker = null;
-            LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-
-            for (Stop stop : distinctStops.values()) {
-                Marker currentMarker = drawStopMarker(stop);
-                stopMarkers.add(currentMarker);
-                boundsBuilder.include(currentMarker.getPosition());
-
-                if (currentStop != null && (currentStop.equals(stop) ||
-                        currentStop.isParentOf(stop.getId()) || stop.isParentOf(currentStop.getId()))) {
-                    selectedStopMarker = currentMarker;
-                    currentMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
-                    currentMarker.showInfoWindow();
-                }
-            }
-
-            if (selectedStopMarker != null) {
-                selectedStopMarker.showInfoWindow();
-                gMap.moveCamera(
-                        CameraUpdateFactory.newLatLngZoom(selectedStopMarker.getPosition(), 15));
-            } else if (currentStop != null) {
-                selectedStopMarker = drawStopMarker(currentStop);
-                selectedStopMarker.showInfoWindow();
-                boundsBuilder.include(selectedStopMarker.getPosition());
-                gMap.moveCamera(
-                        CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
-            } else if (distinctStops.size() > 0) {
-                gMap.moveCamera(
-                        CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+            // If the selected stop is not a stop included in the shape objects
+            if (selectedStopMarker == null && selectedStop != null) {
+                selectedStopMarker = drawStopMarker(selectedStop);
+                selectedStopMarker.setIcon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.icon_selected_stop));
+                stopMarkers.put(selectedStop.getId(), selectedStopMarker);
             }
 
             mapProgressBar.setVisibility(View.GONE);
@@ -662,26 +676,81 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void drawPolyline(@NonNull Shape shape) {
+    private void refreshVehicles() {
+        if (!userIsScrolling) {
+            clearVehicleMarkers();
+
+            for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
+                vehicleMarkers.add(drawVehicleMarker(vehicle));
+            }
+        }
+    }
+
+    private void clearPredictions() {
+        recyclerViewAdapter.clear();
+        noPredictionsTextView.setVisibility(View.GONE);
+        appBarLayout.setExpanded(true);
+        recyclerView.setNestedScrollingEnabled(false);
+    }
+
+    private void clearShapes() {
+        clearPolylines();
+        clearStopMarkers();
+    }
+
+    private void clearPolylines() {
+        for (Polyline pl : polylines) {
+            pl.remove();
+        }
+        polylines.clear();
+    }
+
+    private void clearStopMarkers() {
+        for (Marker m : stopMarkers.values()) {
+            m.remove();
+        }
+        stopMarkers.clear();
+
+        if (selectedStopMarker != null) {
+            selectedStopMarker.remove();
+            selectedStopMarker = null;
+        }
+    }
+
+    private void clearVehicleMarkers() {
+        for (Marker vm : vehicleMarkers) {
+            vm.remove();
+        }
+        vehicleMarkers.clear();
+    }
+
+    private Shape[] getShapesFromJson(int jsonFile) {
+        return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
+    }
+
+    private Polyline[] drawPolyline(@NonNull Shape shape) {
         List<LatLng> shapeCoordinates = PolyUtil.decode(shape.getPolyline());
 
-        polylines.add(gMap.addPolyline(new PolylineOptions()
-                .addAll(shapeCoordinates)
-                .color(Color.parseColor("#FFFFFF"))
-                .zIndex(0)
-                .jointType(JointType.ROUND)
-                .startCap(new RoundCap())
-                .endCap(new RoundCap())
-                .width(14)));
+        Polyline[] polylines = {
+                gMap.addPolyline(new PolylineOptions()
+                        .addAll(shapeCoordinates)
+                        .color(Color.parseColor(route.getPrimaryColor()))
+                        .zIndex(1)
+                        .jointType(JointType.ROUND)
+                        .startCap(new RoundCap())
+                        .endCap(new RoundCap())
+                        .width(8)),
 
-        polylines.add(gMap.addPolyline(new PolylineOptions()
-                .addAll(shapeCoordinates)
-                .color(Color.parseColor(route.getPrimaryColor()))
-                .zIndex(1)
-                .jointType(JointType.ROUND)
-                .startCap(new RoundCap())
-                .endCap(new RoundCap())
-                .width(8)));
+                gMap.addPolyline(new PolylineOptions()
+                        .addAll(shapeCoordinates)
+                        .color(Color.parseColor("#FFFFFF"))
+                        .zIndex(0)
+                        .jointType(JointType.ROUND)
+                        .startCap(new RoundCap())
+                        .endCap(new RoundCap())
+                        .width(14))};
+
+        return polylines;
     }
 
     private Marker drawStopMarker(@NonNull Stop stop) {
@@ -699,46 +768,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         return stopMarker;
     }
 
-    private void getVehicles() {
-        if (networkConnectivityClient.isConnected()) {
-            errorManager.setNetworkError(false);
-
-            if (vehiclesAsyncTask != null) {
-                vehiclesAsyncTask.cancel(true);
-            }
-
-            vehiclesAsyncTask = new VehiclesAsyncTask(
-                    realTimeApiKey,
-                    route.getId(),
-                    direction,
-                    this);
-            vehiclesAsyncTask.execute();
-        } else {
-            errorManager.setNetworkError(true);
-        }
-    }
-
-    @Override
-    public void onPostExecute(Vehicle[] vehicles) {
-        this.vehicles = vehicles;
-
-        refreshVehicles();
-    }
-
-    private void refreshVehicles() {
-        if (!userIsScrolling) {
-            for (Marker m : vehicleMarkers) {
-                m.remove();
-            }
-            vehicleMarkers.clear();
-
-            for (Vehicle vehicle : vehicles) {
-                drawVehicleMarker(vehicle);
-            }
-        }
-    }
-
-    private void drawVehicleMarker(@NonNull Vehicle vehicle) {
+    private Marker drawVehicleMarker(@NonNull Vehicle vehicle) {
         Marker vehicleMarker = gMap.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         vehicle.getLocation().getLatitude(), vehicle.getLocation().getLongitude()))
@@ -752,7 +782,59 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         vehicleMarker.setTag(vehicle);
 
-        vehicleMarkers.add(vehicleMarker);
+        return vehicleMarker;
+    }
+
+    private void populateDirectionSpinner(Direction[] directions) {
+        stopSelectorView.populateDirectionSpinner(directions);
+        stopSelectorView.selectDirection(selectedDirectionId);
+    }
+
+    private void populateStopSpinner(Stop[] stops) {
+        stopSelectorView.populateStopSpinner(stops);
+
+        if (route.getNearestStop(selectedDirectionId) != null) {
+            stopSelectorView.selectStop(route.getNearestStop(selectedDirectionId).getId());
+        }
+    }
+
+    @Override
+    public void onDirectionSelected(Direction selectedDirection) {
+        selectedDirectionId = selectedDirection.getId();
+
+        populateStopSpinner(route.getStops(selectedDirectionId));
+
+        refreshPredictions(true);
+
+        if (shapesLoaded) {
+            refreshShapes();
+            refreshVehicles();
+        }
+    }
+
+    @Override
+    public void onStopSelected(Stop selectedStop) {
+        if (selectedStopMarker != null) {
+            selectedStopMarker.setIcon(route.getStopMarkerIcon());
+        }
+        selectedStopMarker = stopMarkers.get(selectedStop.getId());
+        selectedStopMarker.setIcon(
+                BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
+
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
+
+        route.setNearestStop(selectedDirectionId, selectedStop, true);
+        getPredictions();
+    }
+
+    private void backgroundUpdate() {
+        if (!refreshing) {
+            getPredictions();
+        }
+    }
+
+    private void forceUpdate() {
+        getPredictions();
     }
 
     private class PredictionsUpdateTimerTask extends TimerTask {

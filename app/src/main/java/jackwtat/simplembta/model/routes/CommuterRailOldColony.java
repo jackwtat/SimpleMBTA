@@ -1,5 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
+import jackwtat.simplembta.model.Stop;
+
 public class CommuterRailOldColony extends CommuterRail {
     private String[] ids = {"CR-Greenbush", "CR-Kingston", "CR-Middleborough"};
 
@@ -11,6 +13,12 @@ public class CommuterRailOldColony extends CommuterRail {
         setPrimaryColor("80276C");
         setTextColor("FFFFFF");
         setSortOrder(50);
+    }
+
+    @Override
+    public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
+        super.setNearestStop(0, stop, clearPredictions);
+        super.setNearestStop(1, stop, clearPredictions);
     }
 
     @Override

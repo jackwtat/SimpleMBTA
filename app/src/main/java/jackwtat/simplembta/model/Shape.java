@@ -60,6 +60,6 @@ public class Shape implements Comparable<Shape> {
 
     @Override
     public int compareTo(@NonNull Shape shape) {
-        return this.priority - shape.getPriority();
+        return shape.priority - this.priority;
     }
 }

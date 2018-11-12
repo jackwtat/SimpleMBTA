@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.map.markers.StopMarkerFactory;
@@ -16,6 +17,7 @@ import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.Vehicle;
 
 public class Route implements Comparable<Route>, Serializable {
     public static final int LIGHT_RAIL = 0;
@@ -38,6 +40,7 @@ public class Route implements Comparable<Route>, Serializable {
             new Direction(Direction.INBOUND, "Inbound")};
     private Shape[] shapes = {};
     private StopMarkerFactory markerFactory = new StopMarkerFactory();
+    private Vehicle[] vehicles = {};
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
 
     private Stop[] nearestStops = new Stop[2];
@@ -57,6 +60,10 @@ public class Route implements Comparable<Route>, Serializable {
 
     public int getMode() {
         return mode;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
     }
 
     public String getShortName() {
@@ -79,9 +86,6 @@ public class Route implements Comparable<Route>, Serializable {
         return textColor;
     }
 
-    public int getSortOrder() {
-        return sortOrder;
-    }
 
     public Direction[] getAllDirections() {
         return directions;
@@ -94,12 +98,90 @@ public class Route implements Comparable<Route>, Serializable {
             return new Direction(directionId, "null");
     }
 
+    public Shape[] getAllShapes() {
+        return shapes;
+    }
+
+    public Shape[] getShapes(int directionId) {
+        ArrayList<Shape> directionalShapes = new ArrayList<>();
+
+        for (Shape s : shapes) {
+            if (s.getDirection() == directionId || s.getDirection() == -1) {
+                directionalShapes.add(s);
+            }
+        }
+
+        return directionalShapes.toArray(new Shape[0]);
+    }
+
     public MarkerOptions getStopMarkerOptions() {
         return markerFactory.createMarkerOptions();
     }
 
     public BitmapDescriptor getStopMarkerIcon() {
         return markerFactory.getIcon();
+    }
+
+    public Vehicle[] getAllVehicles() {
+        return vehicles;
+    }
+
+    public Vehicle[] getVehicles(int directionId) {
+        ArrayList<Vehicle> directionalVehicles = new ArrayList<>();
+
+        for (Vehicle v : vehicles) {
+            if (v.getDirection() == directionId) {
+                directionalVehicles.add(v);
+            }
+        }
+
+        return directionalVehicles.toArray(new Vehicle[0]);
+    }
+
+    public ArrayList<ServiceAlert> getServiceAlerts() {
+        return serviceAlerts;
+    }
+
+    public Stop[] getAllStops() {
+        ArrayList<Stop> sortedStops = new ArrayList<>();
+        HashMap<String, Stop> addedStops = new HashMap<>();
+
+        Shape[] allShapes = shapes;
+        Arrays.sort(allShapes);
+
+        for (Shape shape : allShapes) {
+            if (shape.getPriority() >= 0) {
+                for (Stop stop : shape.getStops()) {
+                    if (!addedStops.containsKey(stop.getId())) {
+                        sortedStops.add(stop);
+                        addedStops.put(stop.getId(), stop);
+                    }
+                }
+            }
+        }
+
+        return sortedStops.toArray(new Stop[0]);
+    }
+
+    public Stop[] getStops(int directionId) {
+        ArrayList<Stop> sortedStops = new ArrayList<>();
+        HashMap<String, Stop> addedStops = new HashMap<>();
+
+        Shape[] directionalShapes = getShapes(directionId);
+        Arrays.sort(directionalShapes);
+
+        for (Shape shape : directionalShapes) {
+            if (shape.getPriority() >= 0) {
+                for (Stop stop : shape.getStops()) {
+                    if (!addedStops.containsKey(stop.getId())) {
+                        sortedStops.add(stop);
+                        addedStops.put(stop.getId(), stop);
+                    }
+                }
+            }
+        }
+
+        return sortedStops.toArray(new Stop[0]);
     }
 
     public Stop getNearestStop(int directionId) {
@@ -118,16 +200,12 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
-    public ArrayList<ServiceAlert> getServiceAlerts() {
-        return serviceAlerts;
-    }
-
-    public Shape[] getShapes() {
-        return shapes;
-    }
-
     public void setMode(int mode) {
         this.mode = mode;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public void setShortName(String shortRouteName) {
@@ -162,10 +240,6 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
-    public void setSortOrder(int sortOrder) {
-        this.sortOrder = sortOrder;
-    }
-
     public void setDirection(Direction direction) {
         if (direction.getId() == 0 || direction.getId() == 1)
             directions[direction.getId()] = direction;
@@ -177,6 +251,36 @@ public class Route implements Comparable<Route>, Serializable {
 
     public void setStopMarkerFactory(StopMarkerFactory factory) {
         this.markerFactory = factory;
+    }
+
+    public void setVehicles(Vehicle[] vehicles) {
+        this.vehicles = vehicles;
+    }
+
+    public void addServiceAlert(ServiceAlert serviceAlert) {
+        if (!serviceAlerts.contains(serviceAlert)) {
+            serviceAlerts.add(serviceAlert);
+        }
+    }
+
+    public void addAllServiceAlerts(ServiceAlert[] serviceAlerts) {
+        this.serviceAlerts.addAll(Arrays.asList(serviceAlerts));
+    }
+
+    public boolean hasUrgentServiceAlerts() {
+        for (ServiceAlert serviceAlert : serviceAlerts) {
+            if (serviceAlert.isActive() &&
+                    (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void clearServiceAlerts() {
+        serviceAlerts.clear();
     }
 
     public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
@@ -231,32 +335,6 @@ public class Route implements Comparable<Route>, Serializable {
 
     public boolean hasNearbyStops() {
         return nearestStops[0] != null || nearestStops[1] != null;
-    }
-
-    public void addServiceAlert(ServiceAlert serviceAlert) {
-        if (!serviceAlerts.contains(serviceAlert)) {
-            serviceAlerts.add(serviceAlert);
-        }
-    }
-
-    public void addAllServiceAlerts(ServiceAlert[] serviceAlerts) {
-        this.serviceAlerts.addAll(Arrays.asList(serviceAlerts));
-    }
-
-    public boolean hasUrgentServiceAlerts() {
-        for (ServiceAlert serviceAlert : serviceAlerts) {
-            if (serviceAlert.isActive() &&
-                    (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void clearServiceAlerts() {
-        serviceAlerts.clear();
     }
 
     @Override

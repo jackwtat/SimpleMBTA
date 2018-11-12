@@ -2,123 +2,10 @@
   "data": [
     {
       "attributes": {
-        "direction_id": 1,
-        "name": "North Station",
-        "polyline": "}wkaGligqL_@uCQcAEYg@kDcAaIGc@??E]Kw@SiB_@wCc@qDQuAEa@Q{A??QwAk@yDg@gDc@uC??i@iDgAmHUuAIe@EMUu@Mc@AG??Ie@EYGi@KeBEaAAy@@_C?oDA{AAO???YIgBIeBM_BMmA??EY[oBQiAUiAe@sBOi@_@mAI]KWIYa@gBCO]gB??G_@g@_DKw@g@cEcAiGS_AEUCW??Gc@AYEe@[oBSiAc@wBcBaJ]uB??Ki@OaAs@mDo@uDUmAKm@??s@}Da@wBg@oCUmAAK??_AeFYuAUyAMy@{@sEKc@Om@??GQOq@]aBs@cEkFqXwF_Z",
-        "priority": 2
-      },
-      "id": "831_0009",
-      "links": {
-        "self": "/shapes/831_0009"
-      },
-      "relationships": {
-        "route": {
-          "data": {
-            "id": "Green-C",
-            "type": "route"
-          }
-        },
-        "stops": {
-          "data": [
-            {
-              "id": "place-clmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-engav",
-              "type": "stop"
-            },
-            {
-              "id": "place-denrd",
-              "type": "stop"
-            },
-            {
-              "id": "place-tapst",
-              "type": "stop"
-            },
-            {
-              "id": "place-bcnwa",
-              "type": "stop"
-            },
-            {
-              "id": "place-fbkst",
-              "type": "stop"
-            },
-            {
-              "id": "place-bndhl",
-              "type": "stop"
-            },
-            {
-              "id": "place-sumav",
-              "type": "stop"
-            },
-            {
-              "id": "place-cool",
-              "type": "stop"
-            },
-            {
-              "id": "place-stpul",
-              "type": "stop"
-            },
-            {
-              "id": "place-kntst",
-              "type": "stop"
-            },
-            {
-              "id": "place-hwsst",
-              "type": "stop"
-            },
-            {
-              "id": "place-smary",
-              "type": "stop"
-            },
-            {
-              "id": "place-kencl",
-              "type": "stop"
-            },
-            {
-              "id": "place-hymnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-coecl",
-              "type": "stop"
-            },
-            {
-              "id": "place-armnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-boyls",
-              "type": "stop"
-            },
-            {
-              "id": "place-pktrm",
-              "type": "stop"
-            },
-            {
-              "id": "place-gover",
-              "type": "stop"
-            },
-            {
-              "id": "place-haecl",
-              "type": "stop"
-            },
-            {
-              "id": "place-north",
-              "type": "stop"
-            }
-          ]
-        }
-      },
-      "type": "shape"
-    },
-    {
-      "attributes": {
-        "direction_id": 1,
+        "direction_id": -1,
         "name": "Park Street Station",
         "polyline": "oplaGpwjqLJq@B_@@W@}@KmBGmBAyAAqDJ}K@eEDaBHoAJ{AVcCJw@RkABQ??Z}AZwAVw@`@mAd@kAdAsCn@kBLg@Lk@DYLaBCUESKWA???AASYMQEEm@g@YQg@Sg@Uc@So@_@c@Wc@_@a@_@[_@w@gAaA_BO[??[s@a@kA[sAQ}@Go@G_ACcB@k@BiB?}@E}AEi@C]??Eo@Im@Mo@S_A]eA[y@Wk@u@oA_@e@]a@]]o@g@w@i@eAm@??ECuAy@{@m@uCeBm@[QI[U_B{@yAk@q@Sc@IiCUg@Mu@W??[KUKIGQYUe@Kc@Ii@Ew@?g@@]B]Ha@d@_CBE??t@aDNo@Jo@Dc@@a@?_@Ag@Gi@Gk@Om@_@cAOa@??O_@uA{DcAiCs@qB_@_A}@eCGM??q@iBOk@Gc@Eg@Ai@?m@FyALyB@k@?gAAe@Eq@QsAKe@Om@Uo@c@eAe@_AYi@q@kAg@o@QY??W_@IQAO?Yh@sIX{E@_@??^wFTqDHmABo@@E??HyB\\mFRiDB]??r@mL??Dg@LkC\\yFBW@[Fw@Da@?EHgA\\uFj@uIRiD??JkBn@qKFkA??`@uGT_ERgDJyA??B]JsBVyEViF@aBEqGMqF?G???A?oC@S@MFQt@aAzAkBHOL_@FWBQ@QQuR?kABm@??D{@Bm@b@aJ?SAOGa@{Igg@YcB_@aCMs@??",
-        "priority": 2
+        "priority": 4
       },
       "id": "813_0004",
       "links": {
@@ -134,91 +21,27 @@
         "stops": {
           "data": [
             {
-              "id": "place-lake",
+              "id": "place-lech",
               "type": "stop"
             },
             {
-              "id": "place-sougr",
+              "id": "place-spmnl",
               "type": "stop"
             },
             {
-              "id": "place-chill",
+              "id": "place-north",
               "type": "stop"
             },
             {
-              "id": "place-chswk",
+              "id": "place-haecl",
               "type": "stop"
             },
             {
-              "id": "place-sthld",
+              "id": "place-gover",
               "type": "stop"
             },
             {
-              "id": "place-wascm",
-              "type": "stop"
-            },
-            {
-              "id": "place-wrnst",
-              "type": "stop"
-            },
-            {
-              "id": "place-alsgr",
-              "type": "stop"
-            },
-            {
-              "id": "place-grigg",
-              "type": "stop"
-            },
-            {
-              "id": "place-harvd",
-              "type": "stop"
-            },
-            {
-              "id": "place-brico",
-              "type": "stop"
-            },
-            {
-              "id": "place-babck",
-              "type": "stop"
-            },
-            {
-              "id": "place-plsgr",
-              "type": "stop"
-            },
-            {
-              "id": "place-stplb",
-              "type": "stop"
-            },
-            {
-              "id": "place-buwst",
-              "type": "stop"
-            },
-            {
-              "id": "place-bucen",
-              "type": "stop"
-            },
-            {
-              "id": "place-buest",
-              "type": "stop"
-            },
-            {
-              "id": "place-bland",
-              "type": "stop"
-            },
-            {
-              "id": "place-kencl",
-              "type": "stop"
-            },
-            {
-              "id": "place-hymnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-coecl",
-              "type": "stop"
-            },
-            {
-              "id": "place-armnl",
+              "id": "place-pktrm",
               "type": "stop"
             },
             {
@@ -226,7 +49,91 @@
               "type": "stop"
             },
             {
-              "id": "place-pktrm",
+              "id": "place-armnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-coecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-hymnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-kencl",
+              "type": "stop"
+            },
+            {
+              "id": "place-bland",
+              "type": "stop"
+            },
+            {
+              "id": "place-buest",
+              "type": "stop"
+            },
+            {
+              "id": "place-bucen",
+              "type": "stop"
+            },
+            {
+              "id": "place-buwst",
+              "type": "stop"
+            },
+            {
+              "id": "place-stplb",
+              "type": "stop"
+            },
+            {
+              "id": "place-plsgr",
+              "type": "stop"
+            },
+            {
+              "id": "place-babck",
+              "type": "stop"
+            },
+            {
+              "id": "place-brico",
+              "type": "stop"
+            },
+            {
+              "id": "place-harvd",
+              "type": "stop"
+            },
+            {
+              "id": "place-grigg",
+              "type": "stop"
+            },
+            {
+              "id": "place-alsgr",
+              "type": "stop"
+            },
+            {
+              "id": "place-wrnst",
+              "type": "stop"
+            },
+            {
+              "id": "place-wascm",
+              "type": "stop"
+            },
+            {
+              "id": "place-sthld",
+              "type": "stop"
+            },
+            {
+              "id": "place-chswk",
+              "type": "stop"
+            },
+            {
+              "id": "place-chill",
+              "type": "stop"
+            },
+            {
+              "id": "place-sougr",
+              "type": "stop"
+            },
+            {
+              "id": "place-lake",
               "type": "stop"
             }
           ]
@@ -236,10 +143,131 @@
     },
     {
       "attributes": {
-        "direction_id": 1,
+        "direction_id": -1,
+        "name": "North Station",
+        "polyline": "}wkaGligqL_@uCQcAEYg@kDcAaIGc@??E]Kw@SiB_@wCc@qDQuAEa@Q{A??QwAk@yDg@gDc@uC??i@iDgAmHUuAIe@EMUu@Mc@AG??Ie@EYGi@KeBEaAAy@@_C?oDA{AAO???YIgBIeBM_BMmA??EY[oBQiAUiAe@sBOi@_@mAI]KWIYa@gBCO]gB??G_@g@_DKw@g@cEcAiGS_AEUCW??Gc@AYEe@[oBSiAc@wBcBaJ]uB??Ki@OaAs@mDo@uDUmAKm@??s@}Da@wBg@oCUmAAK??_AeFYuAUyAMy@{@sEKc@Om@??GQOq@]aBs@cEkFqXwF_Z",
+        "priority": 3
+      },
+      "id": "831_0009",
+      "links": {
+        "self": "/shapes/831_0009"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Green-C",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-lech",
+              "type": "stop"
+            },
+            {
+              "id": "place-spmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "place-haecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-gover",
+              "type": "stop"
+            },
+            {
+              "id": "place-pktrm",
+              "type": "stop"
+            },
+            {
+              "id": "place-boyls",
+              "type": "stop"
+            },
+            {
+              "id": "place-armnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-coecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-hymnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-kencl",
+              "type": "stop"
+            },
+            {
+              "id": "place-smary",
+              "type": "stop"
+            },
+            {
+              "id": "place-hwsst",
+              "type": "stop"
+            },
+            {
+              "id": "place-kntst",
+              "type": "stop"
+            },
+            {
+              "id": "place-stpul",
+              "type": "stop"
+            },
+            {
+              "id": "place-cool",
+              "type": "stop"
+            },
+            {
+              "id": "place-sumav",
+              "type": "stop"
+            },
+            {
+              "id": "place-bndhl",
+              "type": "stop"
+            },
+            {
+              "id": "place-fbkst",
+              "type": "stop"
+            },
+            {
+              "id": "place-bcnwa",
+              "type": "stop"
+            },
+            {
+              "id": "place-tapst",
+              "type": "stop"
+            },
+            {
+              "id": "place-denrd",
+              "type": "stop"
+            },
+            {
+              "id": "place-engav",
+              "type": "stop"
+            },
+            {
+              "id": "place-clmnl",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": -1,
         "name": "Government Center",
         "polyline": "c_laGhn{qLJa@d@yAL[lAuCh@kAPe@z@{BxAsDvBqF~BcGr@iBv@kBJUJYFWp@cB??t@kBh@qAlA{Cb@eATk@To@lC{G~@{B`AiCd@eA~C_IbAmCzEqLr@uA~@cBjAkBhBqCfBsCHOHKr@iA????tAwBr@sAb@_A`@aAZ_Az@wB~@iCXu@p@kBj@yAjCkHpAgDvBaGx@wBfDcJ`AqCtBuFhCcHHQ??j@aBhAqCL]Vq@^iARy@TgAPiAJeABk@DwB?o@E{AG{@Iq@SmAYsAY{@Um@Yo@]q@e@o@a@i@aAeAMQQSCCOQ{AyAwBwBiEqEWSGE??IIo@q@cAcAaAaA{@eAs@_Aa@q@CEEGe@{@{@{BoBeFEIEIgBgEmCsGy@oBq@aBo@}Aa@eAWq@Qi@}@yB[s@[s@wCuHEMIQy@iBk@wAIUKYm@gBY}@??CIUw@o@eCQy@I[EQYqB[gCW}CMyCCcB?eA@oAF{CLgC^mDdAyIPuAd@cEb@kDXuCb@iDVeCFg@Da@hBgPV{Bl@mFt@kG\\aD`@gD|@eIf@gERqBHaBBmA@_C?O?KA[??KaCAGUeCO}@UoAYkA_@wA[_A_AyB_@w@aB}CeC_FoHqNq@kAISGKw@aBqCmFu@}AgFaKwAkCi@aAg@eAa@_Ai@qA_@mAKg@G[Ms@??OeAMeAGu@Eu@E{@?o@G_AG_Ao@_HIw@OsAG_@K]Ms@Iq@Gs@CcAAuA?mBBkA@W?SDmAHy@??@CV}ADQf@uB\\eAfAgCbEsItAiCf@iA~@oBbBqDf@sA\\kANq@Lq@ZoBHeARaDBW@MNuDTaEPyEVyF??D{@B]LuB@U@Y?k@?o@EuAIiAK{@KcBEeAA{@CoBIuE?QGaFAw@Cc@Gm@OaAQaAKi@YaAKUEOIUk@cBu@_CWu@]}@??Wo@c@aAg@_A_@u@e@y@c@q@iAqAmAkAm@g@g@a@UOm@[MIKGiAi@mBaAkBw@_Ag@]OmCcAmA_@gAUmB[iA[e@Ow@USIMEa@Oo@[o@c@??KGm@i@m@m@s@y@g@q@a@m@c@u@wCqFuByDgAqBgCwE_@u@]w@OWEMOYEI??wAeD}@qB_BmDOUSKUGm@My@IQGIIMM",
-        "priority": 1
+        "priority": 2
       },
       "id": "852_0012",
       "links": {
@@ -255,75 +283,23 @@
         "stops": {
           "data": [
             {
-              "id": "place-river",
+              "id": "place-lech",
               "type": "stop"
             },
             {
-              "id": "place-woodl",
+              "id": "place-spmnl",
               "type": "stop"
             },
             {
-              "id": "place-waban",
+              "id": "place-north",
               "type": "stop"
             },
             {
-              "id": "place-eliot",
+              "id": "place-haecl",
               "type": "stop"
             },
             {
-              "id": "place-newtn",
-              "type": "stop"
-            },
-            {
-              "id": "place-newto",
-              "type": "stop"
-            },
-            {
-              "id": "place-chhil",
-              "type": "stop"
-            },
-            {
-              "id": "place-rsmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-bcnfd",
-              "type": "stop"
-            },
-            {
-              "id": "place-brkhl",
-              "type": "stop"
-            },
-            {
-              "id": "place-bvmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-longw",
-              "type": "stop"
-            },
-            {
-              "id": "place-fenwy",
-              "type": "stop"
-            },
-            {
-              "id": "place-kencl",
-              "type": "stop"
-            },
-            {
-              "id": "place-hymnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-coecl",
-              "type": "stop"
-            },
-            {
-              "id": "place-armnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-boyls",
+              "id": "place-gover",
               "type": "stop"
             },
             {
@@ -331,7 +307,75 @@
               "type": "stop"
             },
             {
-              "id": "place-gover",
+              "id": "place-boyls",
+              "type": "stop"
+            },
+            {
+              "id": "place-armnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-coecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-hymnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-kencl",
+              "type": "stop"
+            },
+            {
+              "id": "place-fenwy",
+              "type": "stop"
+            },
+            {
+              "id": "place-longw",
+              "type": "stop"
+            },
+            {
+              "id": "place-bvmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-brkhl",
+              "type": "stop"
+            },
+            {
+              "id": "place-bcnfd",
+              "type": "stop"
+            },
+            {
+              "id": "place-rsmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-chhil",
+              "type": "stop"
+            },
+            {
+              "id": "place-newto",
+              "type": "stop"
+            },
+            {
+              "id": "place-newtn",
+              "type": "stop"
+            },
+            {
+              "id": "place-eliot",
+              "type": "stop"
+            },
+            {
+              "id": "place-waban",
+              "type": "stop"
+            },
+            {
+              "id": "place-woodl",
+              "type": "stop"
+            },
+            {
+              "id": "place-river",
               "type": "stop"
             }
           ]
@@ -341,7 +385,7 @@
     },
     {
       "attributes": {
-        "direction_id": 1,
+        "direction_id": -1,
         "name": "Lechmere",
         "polyline": "cgjaGbu_qLCCCAOBGDKLIJW`@QX_@d@e@TgA`@aBn@WF??_Cp@wDbA??SH[FEAEEQYQ[Q]Ua@[i@o@oAM]O_@Yu@Ia@GYAGCW??CUAm@?w@Aw@?w@C_AAuC?qA?[Ee@Mq@Oi@]}@OYKS??Yq@a@eAOi@Ss@??EMQi@k@oBEO}AuFSw@m@mCMk@k@mB]eAOi@IU??m@kBm@}B}B}HcB_Gg@iB??WeA_BaFYaAgAyDUaA_@oAq@}Bq@cCIW{AcFg@_BQi@??s@yBYcA]kAQm@Oe@e@aAWe@gA{A_D}Da@g@k@u@??{MiQSY??_@i@yE{GW]_@Yw@[iHiAOCmBf@QGISYaAYcB_@aCMs@??cJog@Ga@??wAqIe@cDScCKcBXaLC_@CMEKEE??CEyA]]Ma@Ui@SOQQGa@QSIgBw@q@UYO]Co@]i@c@W[_@c@[_@{@eAU]??q@{@UYWQa@c@o@u@uB_Cu@q@eEmC[Ua@]??KIQQq@o@uE}DUOUAg@@aGRa@H[BSDKD??_@RMHi@b@MPyAbBmIjH??ONuCrCGPCN?RBh@BVJZbB~Ef@|ALl@D`@Bb@ANCN]~@_@`CKr@KbAUtASt@Sp@Un@Uh@Qd@e@jAELwAfDw@~B??ELo@zAeBlEkBnEqA~Cw@jBsBfFYt@Qt@UbAG\\EREl@ADMzAEb@K\\MVCH",
         "priority": 1
@@ -360,75 +404,7 @@
         "stops": {
           "data": [
             {
-              "id": "place-hsmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-bckhl",
-              "type": "stop"
-            },
-            {
-              "id": "place-rvrwy",
-              "type": "stop"
-            },
-            {
-              "id": "place-mispk",
-              "type": "stop"
-            },
-            {
-              "id": "place-fenwd",
-              "type": "stop"
-            },
-            {
-              "id": "place-brmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-lngmd",
-              "type": "stop"
-            },
-            {
-              "id": "place-mfa",
-              "type": "stop"
-            },
-            {
-              "id": "place-nuniv",
-              "type": "stop"
-            },
-            {
-              "id": "place-symcl",
-              "type": "stop"
-            },
-            {
-              "id": "place-prmnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-coecl",
-              "type": "stop"
-            },
-            {
-              "id": "place-armnl",
-              "type": "stop"
-            },
-            {
-              "id": "place-boyls",
-              "type": "stop"
-            },
-            {
-              "id": "place-pktrm",
-              "type": "stop"
-            },
-            {
-              "id": "place-gover",
-              "type": "stop"
-            },
-            {
-              "id": "place-haecl",
-              "type": "stop"
-            },
-            {
-              "id": "place-north",
+              "id": "place-lech",
               "type": "stop"
             },
             {
@@ -436,7 +412,75 @@
               "type": "stop"
             },
             {
-              "id": "place-lech",
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "place-haecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-gover",
+              "type": "stop"
+            },
+            {
+              "id": "place-pktrm",
+              "type": "stop"
+            },
+            {
+              "id": "place-boyls",
+              "type": "stop"
+            },
+            {
+              "id": "place-armnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-coecl",
+              "type": "stop"
+            },
+            {
+              "id": "place-prmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-symcl",
+              "type": "stop"
+            },
+            {
+              "id": "place-nuniv",
+              "type": "stop"
+            },
+            {
+              "id": "place-mfa",
+              "type": "stop"
+            },
+            {
+              "id": "place-lngmd",
+              "type": "stop"
+            },
+            {
+              "id": "place-brmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-fenwd",
+              "type": "stop"
+            },
+            {
+              "id": "place-mispk",
+              "type": "stop"
+            },
+            {
+              "id": "place-rvrwy",
+              "type": "stop"
+            },
+            {
+              "id": "place-bckhl",
+              "type": "stop"
+            },
+            {
+              "id": "place-hsmnl",
               "type": "stop"
             }
           ]

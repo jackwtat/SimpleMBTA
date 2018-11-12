@@ -9,16 +9,13 @@ import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
     private String realTimeApiKey;
     private String routeId;
-    private int direction;
     private OnPostExecuteListener onPostExecuteListener;
 
     public ShapesAsyncTask(String realTimeApiKey,
                            String routeId,
-                           int direction,
                            OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.routeId = routeId;
-        this.direction = direction;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
@@ -28,7 +25,6 @@ public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
 
         String[] routeArgs = {
                 "filter[route]=" + routeId,
-                "filter[direction_id]=" + direction,
                 "include=stops"
         };
 
