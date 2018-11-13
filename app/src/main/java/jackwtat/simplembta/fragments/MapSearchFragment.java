@@ -236,7 +236,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         });
 
         // Set  predictions adapter
-        recyclerViewAdapter = new MapSearchRecyclerViewAdapter(targetLocation);
+        recyclerViewAdapter = new MapSearchRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set the onClickListener listener
@@ -604,7 +604,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void refreshPredictions() {
         if (!userIsScrolling && currentRoutes != null) {
-            recyclerViewAdapter.setRoutes(currentRoutes);
+            recyclerViewAdapter.setData(targetLocation, currentRoutes);
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {

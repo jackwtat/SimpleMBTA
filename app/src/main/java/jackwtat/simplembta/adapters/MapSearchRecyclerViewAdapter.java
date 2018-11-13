@@ -58,8 +58,11 @@ public class MapSearchRecyclerViewAdapter
                 if (thisStop.getLocation().distanceTo(targetLocation) <
                         otherStop.getLocation().distanceTo(targetLocation)) {
                     return -1;
-                } else {
+                } else if (thisStop.getLocation().distanceTo(targetLocation) >
+                        otherStop.getLocation().distanceTo(targetLocation)) {
                     return 1;
+                } else {
+                    return 0;
                 }
             } else if (!this.route.equals(otherAdapterItem.route)) {
                 return this.route.compareTo(otherAdapterItem.route);
@@ -77,8 +80,7 @@ public class MapSearchRecyclerViewAdapter
         }
     }
 
-    public MapSearchRecyclerViewAdapter(Location targetLocation) {
-        this.targetLocation = targetLocation;
+    public MapSearchRecyclerViewAdapter() {
         adapterItems = new ArrayList<>();
     }
 
@@ -116,8 +118,10 @@ public class MapSearchRecyclerViewAdapter
         return adapterItems.get(position);
     }
 
-    public void setRoutes(List<Route> routes) {
+    public void setData(Location targetLocation, List<Route> routes) {
         adapterItems.clear();
+
+        this.targetLocation = targetLocation;
 
         for (Route route : routes) {
             boolean hasInboundPickUps = route.hasPickUps(Direction.INBOUND);
