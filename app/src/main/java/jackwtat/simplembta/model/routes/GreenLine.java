@@ -18,41 +18,56 @@ public class GreenLine extends Route {
     public void addPrediction(Prediction prediction) {
         // Out of service Green Line trains sometimes show up as in service on incorrect lines
         // if they're moving with their AVI turned on
-        if (prediction.getDirection() == Direction.EASTBOUND ||
-                isGreenLineSubwayStop(prediction.getStopId()) || isGreenLineSubwayStop(prediction.getParentStopId()) ||
-                (isGreenLineB(prediction.getRouteId()) && isGreenLineBStop(prediction.getStopId())) ||
-                (isGreenLineC(prediction.getRouteId()) && isGreenLineCStop(prediction.getStopId())) ||
-                (isGreenLineD(prediction.getRouteId()) && isGreenLineDStop(prediction.getStopId())) ||
-                (isGreenLineE(prediction.getRouteId()) && isGreenLineEStop(prediction.getStopId())) ||
-                (isGreenLineB(prediction.getRouteId()) && isGreenLineBStop(prediction.getParentStopId())) ||
-                (isGreenLineC(prediction.getRouteId()) && isGreenLineCStop(prediction.getParentStopId())) ||
-                (isGreenLineD(prediction.getRouteId()) && isGreenLineDStop(prediction.getParentStopId())) ||
-                (isGreenLineE(prediction.getRouteId()) && isGreenLineEStop(prediction.getParentStopId()))) {
+        if (isCorrectGreenLineStop(prediction.getRouteId(), prediction.getStopId()) ||
+                isCorrectGreenLineStop(prediction.getRouteId(), prediction.getParentStopId())) {
             super.addPrediction(prediction);
+        } else {
+            if (getNearestStop(0) != null &&
+                    getNearestStop(0).equals(prediction.getStop())) {
+                setNearestStop(0, null, true);
+            }
+            if (getNearestStop(1) != null &&
+                    getNearestStop(1).equals(prediction.getStop())) {
+                setNearestStop(1, null, true);
+            }
         }
     }
 
-    public static boolean isGreenLine(String id) {
-        return id.contains("Green-B") ||
-                id.contains("Green-C") ||
-                id.contains("Green-D") ||
-                id.contains("Green-E");
+    public static boolean isGreenLine(String routeId) {
+        return isGreenLineB(routeId) ||
+                isGreenLineC(routeId) ||
+                isGreenLineD(routeId) ||
+                isGreenLineE(routeId);
     }
 
-    public static boolean isGreenLineB(String id) {
-        return id.equals("Green-B");
+    public static boolean isGreenLineB(String routeId) {
+        return routeId.equals("Green-B");
     }
 
-    public static boolean isGreenLineC(String id) {
-        return id.equals("Green-C");
+    public static boolean isGreenLineC(String routeId) {
+        return routeId.equals("Green-C");
     }
 
-    public static boolean isGreenLineD(String id) {
-        return id.equals("Green-D");
+    public static boolean isGreenLineD(String routeId) {
+        return routeId.equals("Green-D");
     }
 
-    public static boolean isGreenLineE(String id) {
-        return id.equals("Green-E");
+    public static boolean isGreenLineE(String routeId) {
+        return routeId.equals("Green-E");
+    }
+
+    public static boolean isCorrectGreenLineStop(String routeId, String stopId) {
+        if (isGreenLineB(routeId)) {
+            return isGreenLineSubwayStop(stopId) || isGreenLineBStop(stopId);
+        } else if (isGreenLineC(routeId)) {
+            return isGreenLineSubwayStop(stopId) || isGreenLineCStop(stopId);
+        } else if (isGreenLineD(routeId)) {
+            return isGreenLineSubwayStop(stopId) || isGreenLineDStop(stopId);
+        } else if (isGreenLineE(routeId)) {
+            return isGreenLineSubwayStop(stopId) || isGreenLineEStop(stopId);
+        } else {
+            return false;
+        }
     }
 
     public static boolean isGreenLineSubwayStop(String stopId) {
@@ -64,9 +79,7 @@ public class GreenLine extends Route {
                 stopId.equals("place-pktrm") ||
                 stopId.equals("place-boyls") ||
                 stopId.equals("place-armnl") ||
-                stopId.equals("place-coecl") ||
-                stopId.equals("place-hymnl") ||
-                stopId.equals("place-kencl");
+                stopId.equals("place-coecl");
     }
 
     public static boolean isGreenLineBStop(String stopId) {
@@ -87,7 +100,9 @@ public class GreenLine extends Route {
                 stopId.equals("place-buwst") ||
                 stopId.equals("place-bucen") ||
                 stopId.equals("place-buest") ||
-                stopId.equals("place-bland");
+                stopId.equals("place-bland") ||
+                stopId.equals("place-hymnl") ||
+                stopId.equals("place-kencl");
     }
 
     public static boolean isGreenLineCStop(String stopId) {
@@ -103,7 +118,9 @@ public class GreenLine extends Route {
                 stopId.equals("place-stpul") ||
                 stopId.equals("place-kntst") ||
                 stopId.equals("place-hwsst") ||
-                stopId.equals("place-smary");
+                stopId.equals("place-smary") ||
+                stopId.equals("place-hymnl") ||
+                stopId.equals("place-kencl");
     }
 
     public static boolean isGreenLineDStop(String stopId) {
@@ -119,7 +136,9 @@ public class GreenLine extends Route {
                 stopId.equals("place-brkhl") ||
                 stopId.equals("place-bvmnl") ||
                 stopId.equals("place-longw") ||
-                stopId.equals("place-fenwy");
+                stopId.equals("place-fenwy") ||
+                stopId.equals("place-hymnl") ||
+                stopId.equals("place-kencl");
     }
 
     public static boolean isGreenLineEStop(String stopId) {
