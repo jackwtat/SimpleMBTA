@@ -7,12 +7,11 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/direction_name_text_view"
+        android:id="@+id/stop_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:lines="2"
         android:textColor="@color/PrimaryText"
         android:textStyle="bold"
-        tools:text="Northbound" />
+        tools:text="Washington St @ Massachusetts Avenue" />
 </LinearLayout>

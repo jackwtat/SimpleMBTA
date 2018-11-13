@@ -22,21 +22,22 @@ public class DirectionsSpinnerAdapter extends ArrayAdapter<Direction> {
         this.directions = directions;
     }
 
-    @Override
-    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return createItemView(position, convertView, parent);
-    }
-
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return createItemView(position, convertView, parent);
+        return createItemView(position, convertView, parent, R.layout.item_direction_spinner);
     }
 
-    private View createItemView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        return createItemView(position, convertView, parent, R.layout.item_direction_dropdown);
+    }
+
+    private View createItemView(int position, @Nullable View convertView, @NonNull ViewGroup parent,
+                                @NonNull int layout) {
         View listItem = convertView;
         if (listItem == null)
-            listItem = LayoutInflater.from(context).inflate(R.layout.item_direction_spinner, parent, false);
+            listItem = LayoutInflater.from(context).inflate(layout, parent, false);
 
         Direction direction = directions[position];
 
