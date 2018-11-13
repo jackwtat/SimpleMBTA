@@ -95,7 +95,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     public static final long MAXIMUM_PREDICTION_AGE = 90000;
 
     // Default level of zoom for the map
-    public static final int DEFAULT_MAP_ZOOM_LEVEL = 15;
+    public static final int DEFAULT_MAP_ZOOM_LEVEL = 13;
 
     private AppBarLayout appBarLayout;
     private MapView mapView;
