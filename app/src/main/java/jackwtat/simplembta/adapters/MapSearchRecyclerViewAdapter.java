@@ -1,5 +1,6 @@
 package jackwtat.simplembta.adapters;
 
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,6 +22,8 @@ public class MapSearchRecyclerViewAdapter
     private ArrayList<adapterItem> adapterItems;
 
     private OnItemClickListener onItemClickListener;
+
+    private Location targetLocation;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         MapSearchPredictionItem predictionView;
@@ -52,7 +55,12 @@ public class MapSearchRecyclerViewAdapter
             } else if (otherStop == null) {
                 return -1;
             } else if (!thisStop.equals(otherStop)) {
-                return thisStop.compareTo(otherStop);
+                if (thisStop.getLocation().distanceTo(targetLocation) <
+                        otherStop.getLocation().distanceTo(targetLocation)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             } else if (!this.route.equals(otherAdapterItem.route)) {
                 return this.route.compareTo(otherAdapterItem.route);
             } else {
@@ -69,7 +77,8 @@ public class MapSearchRecyclerViewAdapter
         }
     }
 
-    public MapSearchRecyclerViewAdapter() {
+    public MapSearchRecyclerViewAdapter(Location targetLocation) {
+        this.targetLocation = targetLocation;
         adapterItems = new ArrayList<>();
     }
 

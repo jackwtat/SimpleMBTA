@@ -236,7 +236,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         });
 
         // Set  predictions adapter
-        recyclerViewAdapter = new MapSearchRecyclerViewAdapter();
+        recyclerViewAdapter = new MapSearchRecyclerViewAdapter(targetLocation);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set the onClickListener listener

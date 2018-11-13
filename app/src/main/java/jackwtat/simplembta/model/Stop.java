@@ -12,7 +12,6 @@ public class Stop implements Comparable<Stop>, Serializable {
     private String[] childIds = new String[0];
     private double latitude = 0.0;
     private double longitude = 0.0;
-    private double distanceFromOrigin = 0.0;
 
     public Stop(String id) {
         this.id = id;
@@ -31,10 +30,6 @@ public class Stop implements Comparable<Stop>, Serializable {
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         return location;
-    }
-
-    public double getDistanceFromOrigin() {
-        return distanceFromOrigin;
     }
 
     public String getParentId() {
@@ -62,10 +57,6 @@ public class Stop implements Comparable<Stop>, Serializable {
         longitude = location.getLongitude();
     }
 
-    public void setDistanceFromOrigin(Location origin) {
-        distanceFromOrigin = getLocation().distanceTo(origin);
-    }
-
     public boolean isParentOf(String id) {
         for (String childId : childIds) {
             if (childId.equals(id)) {
@@ -75,7 +66,7 @@ public class Stop implements Comparable<Stop>, Serializable {
 
         // Special ID for Dudley Station
         if ((this.id.equals("64") || this.id.equals("64,64000")) && id.equals("64000")) {
-            this.id="64,64000";
+            this.id = "64,64000";
             return true;
         }
 
@@ -84,11 +75,7 @@ public class Stop implements Comparable<Stop>, Serializable {
 
     @Override
     public int compareTo(@NonNull Stop otherStop) {
-        if (distanceFromOrigin == otherStop.getDistanceFromOrigin()) {
-            return id.compareTo(otherStop.getId());
-        } else {
-            return Double.compare(distanceFromOrigin, otherStop.getDistanceFromOrigin());
-        }
+        return id.compareTo(otherStop.getId());
     }
 
     @Override

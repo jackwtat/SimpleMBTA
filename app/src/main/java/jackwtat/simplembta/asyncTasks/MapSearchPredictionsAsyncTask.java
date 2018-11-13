@@ -29,7 +29,7 @@ import jackwtat.simplembta.jsonParsers.StopsJsonParser;
 public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Route>> {
     private String realTimeApiKey;
 
-    public final Location location;
+    public final Location targetLocation;
     public final OnPostExecuteListener onPostExecuteListener;
 
     private HashMap<String, Route> routes;
@@ -37,10 +37,10 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
     private HashMap<String, Prediction> predictions = new HashMap<>();
 
     public MapSearchPredictionsAsyncTask(String realTimeApiKey,
-                                         Location location,
+                                         Location targetLocation,
                                          OnPostExecuteListener OnPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
-        this.location = location;
+        this.targetLocation = targetLocation;
         this.onPostExecuteListener = OnPostExecuteListener;
     }
 
@@ -50,16 +50,12 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
         // Get the stops near the user
         String[] stopArgs = {
-                "filter[latitude]=" + Double.toString(location.getLatitude()),
-                "filter[longitude]=" + Double.toString(location.getLongitude()),
+                "filter[latitude]=" + Double.toString(targetLocation.getLatitude()),
+                "filter[longitude]=" + Double.toString(targetLocation.getLongitude()),
                 "include=child_stops"
         };
 
         stops = StopsJsonParser.parse(realTimeApiClient.get("stops", stopArgs));
-
-        for (Stop stop : stops.values()) {
-            stop.setDistanceFromOrigin(location);
-        }
 
         if (stops.size() == 0) {
             return new ArrayList<>();
@@ -80,8 +76,8 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
         // Get live predictions near the user
         String[] predictionsArgs = {
-                "filter[latitude]=" + Double.toString(location.getLatitude()),
-                "filter[longitude]=" + Double.toString(location.getLongitude()),
+                "filter[latitude]=" + Double.toString(targetLocation.getLatitude()),
+                "filter[longitude]=" + Double.toString(targetLocation.getLongitude()),
                 "include=route,trip,stop,schedule"
         };
 
@@ -157,7 +153,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 predictions.put(prediction.getId(), prediction);
 
                 // Replace prediction's stop ID with its parent stop ID
-                if(stops.containsKey(prediction.getParentStopId())){
+                if (stops.containsKey(prediction.getParentStopId())) {
                     prediction.setStop(stops.get(prediction.getParentStopId()));
                 }
 
@@ -195,7 +191,6 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
                 // Add stop to stops list if not already there
                 if (!stops.containsKey(prediction.getStopId())) {
-                    prediction.getStop().setDistanceFromOrigin(location);
                     stops.put(prediction.getStopId(), prediction.getStop());
                 }
 
@@ -214,7 +209,9 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                     routes.get(routeId).addPrediction(prediction);
 
                     // If this prediction's stop is closer than route's current nearest stop
-                } else if (stop.compareTo(routes.get(routeId).getNearestStop(direction)) < 0
+                } else if (stop.getLocation().distanceTo(targetLocation) <
+                        routes.get(routeId).getNearestStop(direction).getLocation()
+                                .distanceTo(targetLocation)
                         && prediction.willPickUpPassengers()) {
                     routes.get(routeId).setNearestStop(direction, stop, true);
                     routes.get(routeId).addPrediction(prediction);
