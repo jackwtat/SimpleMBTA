@@ -3,6 +3,7 @@ package jackwtat.simplembta.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -282,29 +283,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 if (marker.getTag() instanceof Stop) {
                     Stop selectedStop = (Stop) marker.getTag();
 
-                    // Change the icon of the last selected marker to the unselected stop icon
-                    if (selectedStopMarker != null) {
-                        selectedStopMarker.setIcon(route.getStopMarkerIcon());
-                    }
-
-                    // Change the icon to the currently selected marker to the selected stop icon
-                    // and show the info window
-                    selectedStopMarker = marker;
-                    selectedStopMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
-
-                    // Change the selected stop in the stop spinner
                     stopSelectorView.selectStop(selectedStop.getId());
-
-                    // Change the nearest stop in the route object to the selected stop
-                    route.setNearestStop(selectedDirectionId, selectedStop, true);
-
-                    // TODO: Find the nearest stop in the opposite selectedDirectionId
-
-
-                    // Refresh the predictions
-                    swipeRefreshLayout.setRefreshing(true);
-                    clearPredictions();
-                    forceUpdate();
                 }
 
                 return true;
@@ -455,8 +434,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 predictionsAsyncTask.cancel(true);
             }
 
-            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route,
-                    selectedDirectionId, this);
+            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route, this);
             predictionsAsyncTask.execute();
 
         } else {
@@ -563,7 +541,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         refreshing = false;
         refreshTime = new Date().getTime();
 
-        route.clearPredictions(selectedDirectionId);
+        route.clearPredictions(0);
+        route.clearPredictions(1);
         route.addAllPredictions(predictions);
 
         refreshPredictions(false);
@@ -814,6 +793,36 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onStopSelected(Stop selectedStop) {
+        // If already have the predictions for this stop, then just display those predictions
+        if (selectedStop.equals(route.getNearestStop(0)) ||
+                selectedStop.equals(route.getNearestStop(1))) {
+            refreshPredictions(true);
+        } else {
+            // Otherwise set the nearest stop to the selected stop
+            route.setNearestStop(selectedDirectionId, selectedStop, true);
+
+            // Find the nearest stop in the opposite direction
+            Stop nearestOppositeStop = null;
+            float oppositeStopDistance = 0;
+            int oppositeDirectionId = (selectedDirectionId + 1) % 2;
+
+            for (Stop s : route.getStops(oppositeDirectionId)) {
+                float dist = s.getLocation().distanceTo(selectedStop.getLocation());
+                if (nearestOppositeStop == null || dist < oppositeStopDistance) {
+                    nearestOppositeStop = s;
+                    oppositeStopDistance = dist;
+                }
+            }
+
+            route.setNearestStop(oppositeDirectionId, nearestOppositeStop, true);
+
+            // Clear the current predictions and get the predictions for the selected stop
+            recyclerViewAdapter.clear();
+            swipeRefreshLayout.setRefreshing(true);
+            getPredictions();
+        }
+
+        // Update the stop markers on the map
         if (selectedStopMarker != null) {
             selectedStopMarker.setIcon(route.getStopMarkerIcon());
         }
@@ -821,10 +830,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         selectedStopMarker.setIcon(
                 BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
 
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
-
-        route.setNearestStop(selectedDirectionId, selectedStop, true);
-        getPredictions();
+        // Center the map on the selected stop
+        gMap.animateCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
     }
 
     private void backgroundUpdate() {
