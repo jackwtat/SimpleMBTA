@@ -146,9 +146,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
         refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
 
-        // Get error text view
-        errorTextView = findViewById(R.id.error_message_text_view);
-
         // Get network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(this);
 
@@ -173,11 +170,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     new ColorDrawable(Color.parseColor(route.getPrimaryColor())));
         }
 
+        // Get error text view
+        errorTextView = findViewById(R.id.error_message_text_view);
+
         // Get app bar and app bar params
         appBarLayout = findViewById(R.id.app_bar_layout);
         CoordinatorLayout.LayoutParams params =
                 (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        //params.height = (int) (getResources().getDisplayMetrics().heightPixels * .6);
+        params.height = (int) (getResources().getDisplayMetrics().heightPixels * .6);
 
         // Disable scrolling inside app bar
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -189,21 +189,16 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
         params.setBehavior(behavior);
 
-        // Get the no predictions indicator
-        noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
+        // Get service alerts indicator
+        serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
 
         // Get and initialize map view
         mapView = findViewById(R.id.map_view);
-        mapView.getLayoutParams().height =
-                (int) (getResources().getDisplayMetrics().heightPixels * .6);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
         // Get map progress bar
         mapProgressBar = findViewById(R.id.map_progress_bar);
-
-        // Get service alerts indicator
-        serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
 
         // Get the stop selector view
         stopSelectorView = findViewById(R.id.stop_selector_view);
@@ -223,6 +218,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,
                 R.color.colorAccent));
         swipeRefreshLayout.setEnabled(false);
+
+        // Get the no predictions indicator
+        noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
 
         // Get recycler view
         recyclerView = findViewById(R.id.predictions_recycler_view);
@@ -601,6 +599,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             if (route.getServiceAlerts().size() > 0) {
                 serviceAlertsIndicatorView.setServiceAlerts(route);
                 serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
+
             } else {
                 serviceAlertsIndicatorView.setVisibility(View.GONE);
             }
