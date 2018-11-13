@@ -20,6 +20,10 @@ public class GreenLineCombined extends GreenLine {
         setDirection(new Direction(Direction.EASTBOUND, "Eastbound"));
     }
 
+    public static boolean isGreenLineCombined(String routeId) {
+        return routeId.equals("Green-B,Green-C,Green-D,Green-E");
+    }
+
     @Override
     public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
         super.setNearestStop(0, stop, clearPredictions);

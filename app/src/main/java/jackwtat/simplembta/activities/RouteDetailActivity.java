@@ -58,6 +58,7 @@ import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
@@ -477,7 +478,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 route.setShapes(getShapesFromJson(R.raw.shapes_mattapan));
 
             } else if (GreenLine.isGreenLine(route.getId())) {
-                if (GreenLine.isGreenLineB(route.getId())) {
+                if (GreenLineCombined.isGreenLineCombined(route.getId())) {
+                    route.setShapes(getShapesFromJson(R.raw.shapes_green_combined));
+                } else if (GreenLine.isGreenLineB(route.getId())) {
                     route.setShapes(getShapesFromJson(R.raw.shapes_green_b));
 
                 } else if (GreenLine.isGreenLineC(route.getId())) {
@@ -489,8 +492,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 } else if (GreenLine.isGreenLineE(route.getId())) {
                     route.setShapes(getShapesFromJson(R.raw.shapes_green_e));
 
-                } else {
-                    route.setShapes(getShapesFromJson(R.raw.shapes_green_combined));
                 }
             }
 
