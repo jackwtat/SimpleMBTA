@@ -21,13 +21,6 @@ public class DirectionsSpinnerAdapter extends ArrayAdapter<Direction> {
         super(context, 0, directions);
         this.context = context;
         this.directions = directions;
-
-        // If the southbound/outbound direction is first, then swap it with northbound/inbound
-        if (directions[0].getId() == Direction.SOUTHBOUND) {
-            Direction placeholder = directions[0];
-            directions[0] = directions[1];
-            directions[1] = placeholder;
-        }
     }
 
     @NonNull

@@ -786,6 +786,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void populateDirectionSpinner(Direction[] directions) {
+        if (directions[0].getId() == Direction.SOUTHBOUND) {
+            Direction d = directions[0];
+            directions[0] = directions[1];
+            directions[1] = d;
+        }
+
         stopSelectorView.populateDirectionSpinner(directions);
         stopSelectorView.selectDirection(selectedDirectionId);
     }
@@ -848,7 +854,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedStopMarker.setIcon(route.getStopMarkerIcon());
         }
 
-        if(mapReady) {
+        if (mapReady) {
             selectedStopMarker = stopMarkers.get(selectedStop.getId());
 
             if (selectedStopMarker == null) {

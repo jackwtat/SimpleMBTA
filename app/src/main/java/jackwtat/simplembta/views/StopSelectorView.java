@@ -64,8 +64,10 @@ public class StopSelectorView extends LinearLayout implements AdapterView.OnItem
     }
 
     public void selectDirection(int directionId) {
-        if (directionId >= 0 && directionId < directionSpinner.getCount()) {
-            directionSpinner.setSelection(directionId);
+        for (int i = 0; i < directions.length; i++) {
+            if (directions[i].getId() == directionId) {
+                directionSpinner.setSelection(i);
+            }
         }
     }
 
@@ -76,14 +78,6 @@ public class StopSelectorView extends LinearLayout implements AdapterView.OnItem
                 break;
             }
         }
-    }
-
-    public Direction getDirection(int position) {
-        return directions[position];
-    }
-
-    public Stop getStop(int position) {
-        return stops[position];
     }
 
     public void setOnDirectionSelectedListener(OnDirectionSelectedListener onDirectionSelectedListener) {
