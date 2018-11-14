@@ -25,12 +25,6 @@ public class GreenLineCombined extends GreenLine {
     }
 
     @Override
-    public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
-        super.setNearestStop(0, stop, clearPredictions);
-        super.setNearestStop(1, stop, clearPredictions);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Route) {
             Route otherRoute = (Route) obj;

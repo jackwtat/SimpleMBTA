@@ -636,7 +636,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawRouteShapes(Route route, int zIndex) {
-        for (Shape s : route.getAllShapes()) {
+        for (Shape s : route.getShapes(0)) {
+
             List<LatLng> coordinates = PolyUtil.decode(s.getPolyline());
 
             // Draw white background/line padding

@@ -2,7 +2,9 @@ package jackwtat.simplembta.model;
 
 import android.support.annotation.NonNull;
 
-public class Shape implements Comparable<Shape> {
+import java.io.Serializable;
+
+public class Shape implements Comparable<Shape>, Serializable {
     private String id;
     private String polyline = "";
     private String routeId = "";

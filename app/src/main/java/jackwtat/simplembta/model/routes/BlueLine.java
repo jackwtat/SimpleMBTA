@@ -2,7 +2,7 @@ package jackwtat.simplembta.model.routes;
 
 import jackwtat.simplembta.map.markers.BlueLineStopMarkerFactory;
 
-public class BlueLine extends Route {
+public class BlueLine extends RailRoute {
     public BlueLine(String id) {
         super(id);
         setPrimaryColor("003da5");

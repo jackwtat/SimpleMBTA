@@ -2,7 +2,7 @@
   "data": [
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "Downtown",
         "polyline": "qpjaGfqzpLaEqDo@u@}@eAkAwAe@i@aA}@a@_@MKYOc@UOG[S??uAy@o@i@[a@s@cA}AaBGGeAsA??MQ_EkFkAcB??OUKOwA{BaBeCQ]??iAgBcBiCmAqB??KQsC_FwAgCaBsCq@kAiA_CUo@Oe@K_@??q@kCK]Qi@MYYg@U_@iCkDi@q@c@m@e@m@SSo@_@[O??OIuCaBs@_@cCkA??WK]Oq@Ow@Oe@GqCe@_BUsB]gCe@iA[oBy@??sAi@g@Yy@]g@OiAYSG_AOaBUMC??UC{AAKAc@Ca@KYMo@_@GG}@y@a@a@A???uA}AiBlE",
         "priority": 3
@@ -75,7 +75,7 @@
     },
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "Dudley Station",
         "polyline": "sooaGhjvpLaAzBXXb@`@d@\\NJz@`@|CnArBp@\\J??b@LjCf@`C^zBd@VoGHgB",
         "priority": 3
@@ -148,7 +148,7 @@
     },
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "Dudley Station",
         "polyline": "_znaGvbupLDS{Ao@UKm@a@c@xBSp@HPLf@v@pENr@L^L^Xp@Vb@\\d@b@b@j@`@f@Vd@NbEnA_@fBe@~Bc@bCUxAGb@AJG^O|B",
         "priority": 3
@@ -217,7 +217,7 @@
     },
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "South Station",
         "polyline": "}iqaGfgnpLVs@Vy@HYF[@QAWDUBOVk@xBi@xGwA??nDu@HEFKFO@Q?OAOIUMMQGI?w@P??iOjDY@YAUG[Is@u@WUoBcBSUQUOYIMKIICa@?EA_@B??iAFQBMFEBENYv@Ub@_@h@]^e@b@e@Ta@Nq@FQBG@EDIJEFO\\ITaBvE??}ArEGR@TBPFJLNLDRBfACx@CN?PDVPJHHJHT?DDT@T?XA`@Ab@Gv@[fB]|AKd@Sz@Uv@]`AY`AKj@Ib@I~@A^Ab@@j@Df@Hb@Nj@P^PXVZ^Tb@Rj@Fb@?h@IVMTMRSTYRg@t@sBL]Pa@P]T_@bAuA^e@^_@p@g@d@Y^SVG??NEh@KZE|@Ix@Gp@@|AFbCRzKbAxGn@t@LvAVr@N`B`@p@Rl@TrB`AvFvC`EvBfPrIp@^bAn@x@j@~AnArAnAv@t@pAxA`BxBl@|@j@z@j@bAl@pAbAzBp@`Bx@bC`@vA\\bBRdALbAH`ADl@???HArDE~AI|@ObAg@`CMj@w@`DoA~DiAbDS^QVQNQLYDWOOMQSIQCMAK?S`A}C??|@sC|AgFVy@\\mAPkAD_BBaB?o@CW\\Q`@BJDFHNZBxA?l@???t@GnAG`AaAdD{C~J??CDe@nA]f@qAvAo@XcG`@GBs@f@m@h@e@j@[n@_EdKo@jB?@??i@bBQ`AOvAKrAmAnPAnCDvAHzAf@`CNh@n@nBXl@Zj@",
         "priority": 3
@@ -282,7 +282,7 @@
     },
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "South Station",
         "polyline": "}swaGdgrpLl@yE|Gek@??pBwPFUNo@X{AXsAV}@T{@DM??Rw@\\oAPo@l@}@|@{@\\_@\\[XUZS~F}Ch@YVS\\Yj@e@dM}E????tBZNqApDwB~A}@`B_A|Am@f@Ev@Hv@PbA\\l@X\\Rl@`@b@`@hAjAT\\jA}BNGBAJNbDtDJAjEpFbJdGHFFBB@nAkC\\RxAp@lDnEX\\HP\\r@JRTX|CtDJJLHb@LrAH@`@BLh@f@JJ??fAdAd@P~@TN@REd@ONKPK~AuAh@g@f@k@z@gAbCcDr@w@j@e@n@_@RMRGRCV?PDTLPNd@x@JXLRTVr@n@xAnAdAx@XNTFNBL?VAPCRGLIVSNQPa@Pc@d@yAMG[WGOAWD[Ro@Xu@\\q@lAiBV]d@m@v@q@XS\\QZM??DCVI`AUdBW",
         "priority": 3
@@ -347,7 +347,7 @@
     },
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "South Station",
         "polyline": "qpjaGfqzpLaEqDo@u@}@eAkAwAe@i@aA}@a@_@MKYOc@UOG[S??uAy@o@i@[a@s@cA}AaBGGeAsA??MQ_EkFkAcB??OUKOwA{BaBeCQ]??iAgBcBiCmAqB??KQsC_FwAgCaBsCq@kAiA_CUo@Oe@K_@??q@kCK]Qi@MYYg@U_@iCkDi@q@c@m@e@m@SSo@_@[O??OIuCaBs@_@cCkA??WK]Oq@Ow@Oe@GqCe@_BUsB]gCe@iA[oBy@??sAi@g@Yy@]g@OiAYSG_AOmAQ??SC?e@EiAAYG_BCy@I}A?mB?y@FuAPwCL}Bp@mDFkAh@_D",
         "priority": 3
@@ -420,7 +420,7 @@
     },
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
         "name": "South Station",
         "polyline": "cmmaGr{ppLG{LEqJ??CqJ??CoDBUDODKJOPKFAL?f@???n@?Vxk@qBBk@@G{LiA{@Qf@??uAzD}AnEuAvD??yB`PCJALAlA",
         "priority": 3

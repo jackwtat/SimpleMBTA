@@ -2,7 +2,7 @@ package jackwtat.simplembta.model.routes;
 
 import jackwtat.simplembta.map.markers.CommuterRailStopMarkerFactory;
 
-public class CommuterRail extends Route {
+public class CommuterRail extends RailRoute {
     public CommuterRail(String id) {
         super(id);
         setPrimaryColor("80276C");

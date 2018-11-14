@@ -2,7 +2,64 @@
   "data": [
     {
       "attributes": {
-        "direction_id": -1,
+        "direction_id": 0,
+        "name": "Mattapan",
+        "polyline": "_k~`G|c|pL??YeDCWCIKSKWEm@E{@Cw@C{A?w@Bm@Du@^_DPmADU??Fi@L{@LoABs@@k@?s@Ai@E{@MiAQkAUuAmBcMMu@??AG[mBg@cD_@_C[wBy@kFQkA_@{BWeBKy@Iq@MaBQ}CO{CG{@???CCSASGoA]}FEoACkAAqCAkHCoA@[?Y?M???e@Ao@?MG{@UwBYsAWgAOm@Oq@_@gAEOEKg@eAoA_CaA_B_A_B??AAo@iAaBmCkAqB_AcB_A_Bs@kA]c@OO[SSOUMUKg@OQC_@Gm@Ce@@a@Fk@LmBh@IBsG`BWHSJk@P_@Nq@Xe@VGDy@d@C@??C@uC`B_Al@}Az@yAz@wChBaAh@uAp@u@^a@T[RUNg@V",
+        "priority": 1
+      },
+      "id": "899_0005",
+      "links": {
+        "self": "/shapes/899_0005"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Mattapan",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-asmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-cedgr",
+              "type": "stop"
+            },
+            {
+              "id": "place-butlr",
+              "type": "stop"
+            },
+            {
+              "id": "place-miltt",
+              "type": "stop"
+            },
+            {
+              "id": "place-cenav",
+              "type": "stop"
+            },
+            {
+              "id": "place-valrd",
+              "type": "stop"
+            },
+            {
+              "id": "place-capst",
+              "type": "stop"
+            },
+            {
+              "id": "place-matt",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
         "name": "Ashmont",
         "polyline": "_k~`G|c|pL??YeDCWCIKSKWEm@E{@Cw@C{A?w@Bm@Du@^_DPmADU??Fi@L{@LoABs@@k@?s@Ai@E{@MiAQkAUuAmBcMMu@??AG[mBg@cD_@_C[wBy@kFQkA_@{BWeBKy@Iq@MaBQ}CO{CG{@???CCSASGoA]}FEoACkAAqCAkHCoA@[?Y?M???e@Ao@?MG{@UwBYsAWgAOm@Oq@_@gAEOEKg@eAoA_CaA_B_A_B??AAo@iAaBmCkAqB_AcB_A_Bs@kA]c@OO[SSOUMUKg@OQC_@Gm@Ce@@a@Fk@LmBh@IBsG`BWHSJk@P_@Nq@Xe@VGDy@d@C@??C@uC`B_Al@}Az@yAz@wChBaAh@uAp@u@^a@T[RUNg@V",
         "priority": 1

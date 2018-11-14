@@ -2,7 +2,7 @@ package jackwtat.simplembta.model.routes;
 
 import jackwtat.simplembta.map.markers.RedLineStopMarkerFactory;
 
-public class RedLine extends Route {
+public class RedLine extends RailRoute {
     public RedLine(String id) {
         super(id);
         setPrimaryColor("da291c");

@@ -106,7 +106,7 @@ public class Route implements Comparable<Route>, Serializable {
         ArrayList<Shape> directionalShapes = new ArrayList<>();
 
         for (Shape s : shapes) {
-            if (s.getDirection() == directionId || s.getDirection() == -1) {
+            if (s.getDirection() == directionId) {
                 directionalShapes.add(s);
             }
         }
