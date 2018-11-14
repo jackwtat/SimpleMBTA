@@ -11,52 +11,25 @@
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"
         android:orientation="horizontal"
-        android:padding="24dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/enroute_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:minWidth="75sp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/time_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="4dp"
-                    android:textSize="@dimen/small_header_text_size"
-                    android:textStyle="bold"
-                    tools:text="99:99" />
-
-                <TextView
-                    android:id="@+id/minute_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/body_text_size"
-                    android:textStyle="bold"
-                    tools:text="pm" />
-            </LinearLayout>
+                android:src="@drawable/ic_enroute_arrow" />
 
             <TextView
-                android:id="@+id/live_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@drawable/rounded_border"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="@string/live"
-                android:textSize="@dimen/body_text_size"
-                android:textStyle="bold"
-                android:visibility="invisible" />
+                android:textSize="@dimen/small_header_text_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,22 +42,70 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/small_header_text_size"
-                android:textStyle="bold"
                 tools:text="Malden Center" />
 
-            <TextView
-                android:id="@+id/drop_off_text_view"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/rounded_background"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="@string/drop_off"
-                android:textSize="@dimen/body_text_size"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/time_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="4dp"
+                        android:textSize="@dimen/small_header_text_size"
+                        android:textStyle="bold"
+                        tools:text="99:99" />
+
+                    <TextView
+                        android:id="@+id/minute_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/body_text_size"
+                        android:textStyle="bold"
+                        tools:text="pm" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/live_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/live_border"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/live"
+                    android:textColor="@color/livePrediction"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/drop_off_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/dropoff_background"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/drop_off"
+                    android:textColor="@color/HighlightedText"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <View

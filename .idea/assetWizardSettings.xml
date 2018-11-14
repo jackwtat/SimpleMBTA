@@ -55,7 +55,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_back_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_forward_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -65,9 +65,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_activity_back_arrow_black" />
+                            <entry key="color" value="606060" />
+                            <entry key="height" value="18" />
+                            <entry key="outputName" value="ic_enroute_arrow" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\jackw" />
+                            <entry key="width" value="18" />
                           </map>
                         </option>
                       </PersistentState>

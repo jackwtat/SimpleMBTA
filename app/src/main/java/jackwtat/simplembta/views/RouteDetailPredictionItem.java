@@ -2,9 +2,9 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +21,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
     TextView liveIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
+    ImageView enrouteIcon;
 
     String min;
 
@@ -60,9 +61,10 @@ public class RouteDetailPredictionItem extends LinearLayout {
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {
             dropOffIndicator.setVisibility(VISIBLE);
-        }
-        if (prediction.isLive()) {
+            liveIndicator.setVisibility(GONE);
+        } else if (prediction.isLive()) {
             liveIndicator.setVisibility(VISIBLE);
+            dropOffIndicator.setVisibility(GONE);
         }
 
         destinationTextView.setText(prediction.getDestination());
@@ -83,15 +85,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
         liveIndicator = rootView.findViewById(R.id.live_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
-
-        int liveColor = context.getResources().getColor(R.color.livePrediction);
-        int dropOffColor = context.getResources().getColor(R.color.dropOffPrediction);
-
-        liveIndicator.setTextColor(liveColor);
-        dropOffIndicator.setTextColor(context.getResources().getColor(R.color.HighlightedText));
-        DrawableCompat.setTint(liveIndicator.getBackground(), liveColor);
-        DrawableCompat.setTint(dropOffIndicator.getBackground(), dropOffColor);
-
+        enrouteIcon = rootView.findViewById(R.id.enroute_icon);
         min = context.getResources().getString(R.string.min);
     }
 }
