@@ -12,6 +12,5 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:textColor="@color/PrimaryText"
-        android:textStyle="bold"
         tools:text="Northbound" />
 </LinearLayout>

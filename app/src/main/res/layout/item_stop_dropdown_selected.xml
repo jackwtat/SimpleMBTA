@@ -11,6 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:textColor="@color/PrimaryText"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/spinner_selected_text_size"
+        android:textStyle="bold"
         tools:text="Washington St @ Massachusetts Avenue" />
 </LinearLayout>

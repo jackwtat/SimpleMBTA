@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -18,6 +19,8 @@ public class StopSelectorView extends LinearLayout implements AdapterView.OnItem
     private View rootView;
     private Spinner directionSpinner;
     private Spinner stopSpinner;
+    private DirectionsSpinnerAdapter directionsAdapter;
+    private StopsSpinnerAdapter stopsAdapter;
 
     private Direction[] directions = {};
     private Stop[] stops = {};
@@ -50,14 +53,14 @@ public class StopSelectorView extends LinearLayout implements AdapterView.OnItem
 
     public void populateDirectionSpinner(Direction[] directions) {
         this.directions = directions;
-        DirectionsSpinnerAdapter adapter = new DirectionsSpinnerAdapter(getContext(), directions);
-        directionSpinner.setAdapter(adapter);
+        directionsAdapter = new DirectionsSpinnerAdapter(getContext(), directions);
+        directionSpinner.setAdapter(directionsAdapter);
     }
 
     public void populateStopSpinner(Stop[] stops) {
         this.stops = stops;
-        StopsSpinnerAdapter adapter = new StopsSpinnerAdapter(getContext(), stops);
-        stopSpinner.setAdapter(adapter);
+        stopsAdapter = new StopsSpinnerAdapter(getContext(), stops);
+        stopSpinner.setAdapter(stopsAdapter);
     }
 
     public void selectDirection(int directionId) {
@@ -96,10 +99,12 @@ public class StopSelectorView extends LinearLayout implements AdapterView.OnItem
         switch (parent.getId()) {
             case R.id.direction_spinner:
                 Direction selectedDirection = (Direction) parent.getItemAtPosition(position);
+                directionsAdapter.setSelectedDirection(selectedDirection);
                 onDirectionSelectedListener.onDirectionSelected(selectedDirection);
                 break;
             case R.id.stop_spinner:
                 Stop selectedStop = (Stop) parent.getItemAtPosition(position);
+                stopsAdapter.setSelectedStop(selectedStop);
                 onStopSelectedListener.onStopSelected(selectedStop);
                 break;
         }
