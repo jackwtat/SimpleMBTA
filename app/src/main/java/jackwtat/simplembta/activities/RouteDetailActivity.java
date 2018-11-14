@@ -140,11 +140,25 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get MBTA realTime API key
         realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
-        // Get values passed from calling activity/fragment
-        Intent intent = getIntent();
-        route = (Route) intent.getSerializableExtra("route");
-        selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
-        refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
+        // Get data saved from previous session
+        if (savedInstanceState != null) {
+            route = (Route) savedInstanceState.getSerializable("route");
+            selectedDirectionId = savedInstanceState.getInt("direction");
+            refreshTime = savedInstanceState.getLong("refreshTime");
+
+            if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
+                for (Direction d : route.getAllDirections()) {
+                    route.clearPredictions(d.getId());
+                }
+            }
+
+            // Get values passed from calling activity/fragment
+        } else {
+            Intent intent = getIntent();
+            route = (Route) intent.getSerializableExtra("route");
+            selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
+            refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
+        }
 
         // Get network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(this);
@@ -384,6 +398,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("route", route);
+        outState.putInt("direction", selectedDirectionId);
+        outState.putLong("refreshTime", refreshTime);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -654,7 +677,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void refreshVehicles() {
-        if (!userIsScrolling) {
+        if (!userIsScrolling && mapReady) {
             clearVehicleMarkers();
 
             for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
@@ -824,12 +847,21 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         if (selectedStopMarker != null) {
             selectedStopMarker.setIcon(route.getStopMarkerIcon());
         }
-        selectedStopMarker = stopMarkers.get(selectedStop.getId());
-        selectedStopMarker.setIcon(
-                BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
 
-        // Center the map on the selected stop
-        gMap.animateCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
+        if(mapReady) {
+            selectedStopMarker = stopMarkers.get(selectedStop.getId());
+
+            if (selectedStopMarker == null) {
+                selectedStopMarker = drawStopMarker(selectedStop);
+                stopMarkers.put(selectedStop.getId(), selectedStopMarker);
+            }
+
+            selectedStopMarker.setIcon(
+                    BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
+
+            // Center the map on the selected stop
+            gMap.animateCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
+        }
     }
 
     private void backgroundUpdate() {
