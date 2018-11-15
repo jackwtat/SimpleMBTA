@@ -294,11 +294,7 @@ public class Route implements Comparable<Route>, Serializable {
         int directionId = prediction.getDirection();
 
         if (directionId == 0 || directionId == 1) {
-            Stop stop = nearestStops[directionId];
-            if (stop.equals(prediction.getStop()) || stop.isParentOf(prediction.getStopId()) ||
-                    prediction.getStop().isParentOf(stop.getId())) {
-                predictions.get(directionId).add(prediction);
-            }
+            predictions.get(directionId).add(prediction);
         }
     }
 

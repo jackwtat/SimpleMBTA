@@ -18,25 +18,17 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
     private OnPostExecuteListener onPostExecuteListener;
 
     private Route route;
-    private String stopIds;
+    private int directionId;
+
     private HashMap<String, Prediction> predictions = new HashMap<>();
 
     public RouteDetailPredictionsAsyncTask(String realTimeApiKey,
                                            Route route,
+                                           int directionId,
                                            OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.route = route;
-
-        if (route.getNearestStop(0) != null) {
-            stopIds = route.getNearestStop(0).getId();
-
-            if (route.getNearestStop(1) != null) {
-                stopIds += "," + route.getNearestStop(1).getId();
-            }
-        } else {
-            stopIds = route.getNearestStop(1).getId();
-        }
-
+        this.directionId = directionId;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
@@ -47,7 +39,8 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         // Get live predictions
         String[] predictionsArgs = {
                 "filter[route]=" + route.getId(),
-                "filter[stop]=" + stopIds,
+                "filter[direction_id]=" + directionId,
+                "filter[stop]=" + route.getNearestStop(directionId).getId(),
                 "include=route,trip,stop,schedule"
         };
 
@@ -60,7 +53,8 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
             // Get non-live scheduled predictions
             String[] scheduleArgs = {
                     "filter[route]=" + route.getId(),
-                    "filter[stop]=" + stopIds,
+                    "filter[direction_id]=" + directionId,
+                    "filter[stop]=" + route.getNearestStop(directionId).getId(),
                     "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                     "filter[min_time]=" + DateUtil.getMbtaTime(0),
                     "include=route,trip,stop,prediction"

@@ -454,7 +454,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 predictionsAsyncTask.cancel(true);
             }
 
-            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route, this);
+            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, route,
+                    selectedDirectionId, this);
             predictionsAsyncTask.execute();
 
         } else {
@@ -810,8 +811,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         populateStopSpinner(route.getStops(selectedDirectionId));
 
-        refreshPredictions(true);
-
         if (shapesLoaded) {
             refreshShapes();
             refreshVehicles();
@@ -820,33 +819,29 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onStopSelected(Stop selectedStop) {
-        // If already have the predictions for this stop, then just display those predictions
-        if (selectedStop.equals(route.getNearestStop(selectedDirectionId))) {
-            refreshPredictions(true);
-        } else {
-            // Otherwise set the nearest stop to the selected stop
-            route.setNearestStop(selectedDirectionId, selectedStop);
+        // Otherwise set the nearest stop to the selected stop
+        route.setNearestStop(selectedDirectionId, selectedStop);
 
-            // Find the nearest stop in the opposite direction
-            Stop nearestOppositeStop = null;
-            float oppositeStopDistance = 0;
-            int oppositeDirectionId = (selectedDirectionId + 1) % 2;
+        // Find the nearest stop in the opposite direction
+        Stop nearestOppositeStop = null;
+        float oppositeStopDistance = 0;
+        int oppositeDirectionId = (selectedDirectionId + 1) % 2;
 
-            for (Stop s : route.getStops(oppositeDirectionId)) {
-                float dist = s.getLocation().distanceTo(selectedStop.getLocation());
-                if (nearestOppositeStop == null || dist < oppositeStopDistance) {
-                    nearestOppositeStop = s;
-                    oppositeStopDistance = dist;
-                }
+        for (Stop s : route.getStops(oppositeDirectionId)) {
+            float dist = s.getLocation().distanceTo(selectedStop.getLocation());
+            if (nearestOppositeStop == null || dist < oppositeStopDistance) {
+                nearestOppositeStop = s;
+                oppositeStopDistance = dist;
             }
-
-            route.setNearestStop(oppositeDirectionId, nearestOppositeStop);
-
-            // Clear the current predictions and get the predictions for the selected stop
-            recyclerViewAdapter.clear();
-            swipeRefreshLayout.setRefreshing(true);
-            getPredictions();
         }
+
+        route.setNearestStop(oppositeDirectionId, nearestOppositeStop);
+
+        // Clear the current predictions and get the predictions for the selected stop
+        recyclerViewAdapter.clear();
+        swipeRefreshLayout.setRefreshing(true);
+        getPredictions();
+
 
         // Update the stop markers on the map
         if (selectedStopMarker != null) {

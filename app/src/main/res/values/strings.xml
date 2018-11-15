@@ -1,7 +1,11 @@
 <resources>
-    <string name="app_name">Simple MBTA</string>
+    <string name="app_name">Simple MBTA App</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+
+    <!-- Activity Titles -->
+    <string name="main_activity_title">Simple MBTA</string>
+    <string name="route_detail_activity_title">Route Detail</string>
 
     <!-- Fragment Title -->
     <string name="nearby_fragment_title">Nearby</string>
