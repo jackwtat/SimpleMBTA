@@ -821,12 +821,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onStopSelected(Stop selectedStop) {
         // If already have the predictions for this stop, then just display those predictions
-        if (selectedStop.equals(route.getNearestStop(0)) ||
-                selectedStop.equals(route.getNearestStop(1))) {
+        if (selectedStop.equals(route.getNearestStop(selectedDirectionId))) {
             refreshPredictions(true);
         } else {
             // Otherwise set the nearest stop to the selected stop
-            route.setNearestStop(selectedDirectionId, selectedStop, true);
+            route.setNearestStop(selectedDirectionId, selectedStop);
 
             // Find the nearest stop in the opposite direction
             Stop nearestOppositeStop = null;
@@ -841,7 +840,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 }
             }
 
-            route.setNearestStop(oppositeDirectionId, nearestOppositeStop, true);
+            route.setNearestStop(oppositeDirectionId, nearestOppositeStop);
 
             // Clear the current predictions and get the predictions for the selected stop
             recyclerViewAdapter.clear();

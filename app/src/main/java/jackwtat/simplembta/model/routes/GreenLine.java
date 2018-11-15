@@ -24,11 +24,11 @@ public class GreenLine extends RailRoute {
         } else {
             if (getNearestStop(0) != null &&
                     getNearestStop(0).equals(prediction.getStop())) {
-                setNearestStop(0, null, true);
+                setNearestStop(0, null);
             }
             if (getNearestStop(1) != null &&
                     getNearestStop(1).equals(prediction.getStop())) {
-                setNearestStop(1, null, true);
+                setNearestStop(1, null);
             }
         }
     }

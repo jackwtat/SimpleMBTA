@@ -10,7 +10,7 @@ public class RailRoute extends Route {
     @Override
     public Stop getNearestStop(int directionId) {
         if (super.getNearestStop(directionId) == null)
-            setNearestStop(directionId, super.getNearestStop((directionId + 1) % 2), true);
+            setNearestStop(directionId, super.getNearestStop((directionId + 1) % 2));
 
         return super.getNearestStop(directionId);
     }

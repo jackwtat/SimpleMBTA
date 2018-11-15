@@ -283,11 +283,9 @@ public class Route implements Comparable<Route>, Serializable {
         serviceAlerts.clear();
     }
 
-    public void setNearestStop(int direction, Stop stop, boolean clearPredictions) {
+    public void setNearestStop(int direction, Stop stop) {
         if (direction == 0 || direction == 1) {
-            if (clearPredictions) {
-                predictions.get(direction).clear();
-            }
+            predictions.get(direction).clear();
             nearestStops[direction] = stop;
         }
     }
@@ -296,7 +294,11 @@ public class Route implements Comparable<Route>, Serializable {
         int directionId = prediction.getDirection();
 
         if (directionId == 0 || directionId == 1) {
-            predictions.get(directionId).add(prediction);
+            Stop stop = nearestStops[directionId];
+            if (stop.equals(prediction.getStop()) || stop.isParentOf(prediction.getStopId()) ||
+                    prediction.getStop().isParentOf(stop.getId())) {
+                predictions.get(directionId).add(prediction);
+            }
         }
     }
 

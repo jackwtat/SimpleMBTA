@@ -39,58 +39,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.CollapsingToolbarLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-                <LinearLayout
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_map_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:layout_collapseMode="parallax"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-                    <android.support.design.widget.CollapsingToolbarLayout
-                        android:id="@+id/collapsing_map_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_collapseMode="parallax">
-
-                            <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-                                android:id="@+id/map_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:layout_collapseMode="parallax" />
-
-                            <ProgressBar
-                                android:id="@+id/map_progress_bar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:indeterminateTint="@color/map_artifact"
-                                android:indeterminateTintMode="src_atop" />
-                        </RelativeLayout>
-                    </android.support.design.widget.CollapsingToolbarLayout>
-
-                    <android.support.design.widget.CollapsingToolbarLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+                        app:layout_collapseMode="parallax">
 
-                        <jackwtat.simplembta.views.ServiceAlertsIndicatorView
-                            android:id="@+id/service_alerts_indicator_view"
+                        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/map_view"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <ProgressBar
+                            android:id="@+id/map_progress_bar"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_collapseMode="pin" />
-                    </android.support.design.widget.CollapsingToolbarLayout>
-                </LinearLayout>
-            </android.support.design.widget.CollapsingToolbarLayout>
+                            android:layout_centerInParent="true"
+                            android:indeterminateTint="@color/map_artifact"
+                            android:indeterminateTintMode="src_atop" />
+                    </RelativeLayout>
+                </android.support.design.widget.CollapsingToolbarLayout>
+
+                <jackwtat.simplembta.views.ServiceAlertsIndicatorView
+                    android:id="@+id/service_alerts_indicator_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="pin" />
+            </LinearLayout>
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout

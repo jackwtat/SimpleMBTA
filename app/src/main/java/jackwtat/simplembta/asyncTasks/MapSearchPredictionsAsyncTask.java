@@ -205,7 +205,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
 
                     // If route does not have predictions in this prediction's direction
                 } else if (!routes.get(routeId).hasPredictions(direction)) {
-                    routes.get(routeId).setNearestStop(direction, stop, true);
+                    routes.get(routeId).setNearestStop(direction, stop);
                     routes.get(routeId).addPrediction(prediction);
 
                     // If this prediction's stop is closer than route's current nearest stop
@@ -213,7 +213,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                         routes.get(routeId).getNearestStop(direction).getLocation()
                                 .distanceTo(targetLocation)
                         && prediction.willPickUpPassengers()) {
-                    routes.get(routeId).setNearestStop(direction, stop, true);
+                    routes.get(routeId).setNearestStop(direction, stop);
                     routes.get(routeId).addPrediction(prediction);
                 }
             }
