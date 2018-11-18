@@ -727,10 +727,16 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
 
             for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
-                if (vehicleMarkers.containsKey(vehicle.getId())) {
-                    vehicleMarkers.get(vehicle.getId()).setPosition(new LatLng(
+                Marker vMarker = vehicleMarkers.get(vehicle.getId());
+                if (vMarker != null) {
+                    vMarker.setPosition(new LatLng(
                             vehicle.getLocation().getLatitude(),
                             vehicle.getLocation().getLongitude()));
+                    vMarker.setRotation(vehicle.getLocation().getBearing());
+
+                    if (vehicle.getDestination() != null) {
+                        vMarker.setSnippet("To " + vehicle.getDestination());
+                    }
                 } else {
                     vehicleMarkers.put(vehicle.getId(), drawVehicleMarker(vehicle));
                 }
@@ -829,7 +835,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 .zIndex(20)
                 .flat(true)
                 .title(vehicle.getTitle())
-                .snippet("")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))
         );
 
