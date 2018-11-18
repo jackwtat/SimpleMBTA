@@ -2,6 +2,7 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class RouteDetailRecyclerViewAdapter
         extends RecyclerView.Adapter<RouteDetailRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Prediction> predictions;
+
+    private OnItemClickListener onItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         RouteDetailPredictionItem predictionView;
@@ -37,13 +40,28 @@ public class RouteDetailRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull RouteDetailRecyclerViewAdapter.ViewHolder holder, int position) {
+        final int i = position;
+
         holder.predictionView.clear();
         holder.predictionView.setPrediction(predictions.get(position));
+
+        holder.predictionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(i);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return predictions.size();
+    }
+
+    public Prediction getPrediction(int position) {
+        return predictions.get(position);
     }
 
     public void setPredictions(List<Prediction> predictions) {
@@ -63,5 +81,13 @@ public class RouteDetailRecyclerViewAdapter
     public void clear() {
         this.predictions.clear();
         notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int i);
     }
 }

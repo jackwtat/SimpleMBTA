@@ -104,6 +104,7 @@ public class PredictionsJsonParser {
                         }
                         prediction.setStop(stop);
 
+
                         try {
                             // Retrieve schedule data
                             String scheduleId = jRelationships
@@ -120,6 +121,7 @@ public class PredictionsJsonParser {
                             }
                         } catch (JSONException e) {
                         }
+
 
                         // Retrieve route data
                         String routeId = jRelationships
@@ -180,6 +182,7 @@ public class PredictionsJsonParser {
                         }
                         prediction.setRoute(route);
 
+
                         // Retrieve trip data
                         String tripId = jRelationships
                                 .getJSONObject("trip")
@@ -194,6 +197,19 @@ public class PredictionsJsonParser {
                             prediction.setDirection(jTripAttr.getInt("direction_id"));
                             prediction.setDestination(jTripAttr.getString("headsign"));
                             prediction.setTripName(jTripAttr.getString("name"));
+                        }
+
+
+                        // Retrive vehicle data
+                        try {
+                            String vehicleId = jRelationships
+                                    .getJSONObject("vehicle")
+                                    .getJSONObject("data")
+                                    .getString("id");
+                            prediction.setVehicleId(vehicleId);
+
+                        } catch (JSONException e) {
+                            prediction.setVehicleId(null);
                         }
 
                         // If we don't already have a prediction with the same ID

@@ -24,7 +24,8 @@ public class VehiclesAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] routeArgs = {
-                "filter[route]=" + routeId
+                "filter[route]=" + routeId,
+                "include=trip"
         };
 
         return VehiclesJsonParser.parse(realTimeApiClient.get("vehicles", routeArgs));

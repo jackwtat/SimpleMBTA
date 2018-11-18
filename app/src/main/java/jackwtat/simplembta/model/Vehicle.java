@@ -8,6 +8,7 @@ public class Vehicle implements Serializable {
     private String id;
     private String label;
     private String route;
+    private String destination;
     private int direction;
     private double latitude;
     private double longitude;
@@ -29,6 +30,10 @@ public class Vehicle implements Serializable {
         return route;
     }
 
+    public String getDestination() {
+        return destination;
+    }
+
     public int getDirection() {
         return direction;
     }
@@ -41,6 +46,19 @@ public class Vehicle implements Serializable {
         return location;
     }
 
+    public String getTitle() {
+        String title;
+
+        if (label.substring(0, 1).equals("y")) {
+            title = label.substring(1, label.length());
+        } else {
+            title = label;
+        }
+
+        title = "Vehicle # " + title;
+
+        return title;
+    }
 
     public void setLabel(String label) {
         this.label = label;
@@ -48,6 +66,10 @@ public class Vehicle implements Serializable {
 
     public void setRoute(String route) {
         this.route = route;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
     public void setDirection(int direction) {

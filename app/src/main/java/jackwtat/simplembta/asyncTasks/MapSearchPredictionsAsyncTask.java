@@ -78,7 +78,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
         String[] predictionsArgs = {
                 "filter[latitude]=" + Double.toString(targetLocation.getLatitude()),
                 "filter[longitude]=" + Double.toString(targetLocation.getLongitude()),
-                "include=route,trip,stop,schedule"
+                "include=route,trip,stop,schedule,vehicle"
         };
 
         processPredictions(PredictionsJsonParser
@@ -104,7 +104,7 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                     "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                     "filter[min_time]=" + DateUtil.getMbtaTime(0),
                     "filter[max_time]=" + DateUtil.getMbtaTime(6),
-                    "include=route,trip,stop,prediction"
+                    "include=route,trip,stop,prediction,vehicle"
             };
 
             processPredictions(SchedulesJsonParser

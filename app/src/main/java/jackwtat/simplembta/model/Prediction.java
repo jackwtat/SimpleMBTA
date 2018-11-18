@@ -47,6 +47,9 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     private String destination = "null";
     private String tripName = "null";
 
+    // Vehicle data
+    private String vehicleId = null;
+
     public Prediction(String id) {
         this.id = id;
     }
@@ -132,6 +135,11 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         return tripName;
     }
 
+    // Vehicle data gettings
+    public String getVehicleId() {
+        return vehicleId;
+    }
+
     // Prediction data setters
     public void setId(String id) {
         this.id = id;
@@ -185,6 +193,11 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     public void setTripName(String tripName) {
         this.tripName = tripName;
+    }
+
+    // Vehicle data setters
+    public void setVehicleId(String vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
     @Override

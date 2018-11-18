@@ -69,6 +69,7 @@ public class SchedulesJsonParser {
                     // Get IDs of related objects
                     JSONObject jRelationships = jSchedule.getJSONObject("relationships");
 
+
                     // Retrieve stop data
                     String stopId = jRelationships
                             .getJSONObject("stop")
@@ -91,7 +92,6 @@ public class SchedulesJsonParser {
                         stop.setLocation(location);
 
                         // Get the parent stop id
-                        // Get the parent stop id
                         try {
                             stop.setParentId(jStop.getJSONObject("relationships")
                                     .getJSONObject("parent_station")
@@ -103,6 +103,7 @@ public class SchedulesJsonParser {
 
                     }
                     schedule.setStop(stop);
+
 
                     // Retrieve route data
                     String routeId = jRelationships
@@ -164,6 +165,7 @@ public class SchedulesJsonParser {
                     }
                     schedule.setRoute(route);
 
+
                     // Retrieve trip data
                     String tripId = jRelationships
                             .getJSONObject("trip")
@@ -191,6 +193,7 @@ public class SchedulesJsonParser {
                             schedules.put(id, schedule);
                         }
                     }
+
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Unable to parse Schedule at position " + i);
                 }

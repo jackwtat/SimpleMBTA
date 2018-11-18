@@ -129,8 +129,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private int selectedDirectionId;
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
-    private ArrayList<Marker> vehicleMarkers = new ArrayList<>();
+    private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
     private Marker selectedStopMarker;
+    private Marker selectedVehicleMarker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -266,6 +267,25 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Set the onClick listener
+        recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Prediction prediction = recyclerViewAdapter.getPrediction(position);
+
+                if (selectedVehicleMarker != null) {
+                    selectedVehicleMarker.hideInfoWindow();
+                }
+
+                Marker vehicleMarker = vehicleMarkers.get(prediction.getVehicleId());
+
+                if (vehicleMarker != null) {
+                    selectedVehicleMarker = vehicleMarker;
+                    selectedVehicleMarker.showInfoWindow();
+                }
+            }
+        });
     }
 
     @Override
@@ -295,6 +315,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     Stop selectedStop = (Stop) marker.getTag();
 
                     stopSelectorView.selectStop(selectedStop.getId());
+                } else if (marker.getTag() instanceof Vehicle) {
+                    if (selectedVehicleMarker != null)
+                        selectedVehicleMarker.hideInfoWindow();
+
+                    selectedVehicleMarker = marker;
+
+                    selectedVehicleMarker.showInfoWindow();
                 }
 
                 return true;
@@ -679,10 +706,34 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void refreshVehicles() {
         if (!userIsScrolling && mapReady) {
-            clearVehicleMarkers();
+            ArrayList<String> trackedVehicleIds = new ArrayList<>();
+            ArrayList<String> expiredVehicleIds = new ArrayList<>();
+
+            // Get all vehicles moving in selected direction
+            for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
+                trackedVehicleIds.add(vehicle.getId());
+            }
+
+            // Find the currently displayed vehicles that are no longer being tracked/now expired
+            for (String vehicleId : vehicleMarkers.keySet()) {
+                if (!trackedVehicleIds.contains(vehicleId))
+                    expiredVehicleIds.add(vehicleId);
+            }
+
+            // Removed the expired vehicles
+            for (String vehicleId : expiredVehicleIds) {
+                vehicleMarkers.get(vehicleId).remove();
+                vehicleMarkers.remove(vehicleId);
+            }
 
             for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
-                vehicleMarkers.add(drawVehicleMarker(vehicle));
+                if (vehicleMarkers.containsKey(vehicle.getId())) {
+                    vehicleMarkers.get(vehicle.getId()).setPosition(new LatLng(
+                            vehicle.getLocation().getLatitude(),
+                            vehicle.getLocation().getLongitude()));
+                } else {
+                    vehicleMarkers.put(vehicle.getId(), drawVehicleMarker(vehicle));
+                }
             }
         }
     }
@@ -719,7 +770,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void clearVehicleMarkers() {
-        for (Marker vm : vehicleMarkers) {
+        for (Marker vm : vehicleMarkers.values()) {
             vm.remove();
         }
         vehicleMarkers.clear();
@@ -777,9 +828,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 .anchor(0.5f, 0.5f)
                 .zIndex(20)
                 .flat(true)
-                .title(vehicle.getLabel())
+                .title(vehicle.getTitle())
+                .snippet("")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))
         );
+
+        if (vehicle.getDestination() != null) {
+            vehicleMarker.setSnippet("To " + vehicle.getDestination());
+        }
 
         vehicleMarker.setTag(vehicle);
 

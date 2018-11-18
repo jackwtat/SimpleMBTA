@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jackwtat.simplembta.model.Vehicle;
 
@@ -24,6 +25,14 @@ public class VehiclesJsonParser {
 
         try {
             JSONObject jRoot = new JSONObject(jsonResponse);
+
+            // Get array related data, organized in a HashMap for easy searching by ID
+            HashMap<String, JSONObject> includedData;
+            if (jRoot.has("included")) {
+                includedData = jsonArrayToHashMap(jRoot.getJSONArray("included"));
+            } else {
+                includedData = new HashMap<>();
+            }
 
             JSONArray jData = jRoot.getJSONArray("data");
 
@@ -41,6 +50,7 @@ public class VehiclesJsonParser {
                             .getJSONObject("route")
                             .getJSONObject("data")
                             .getString("id");
+
                 } catch (JSONException e) {
                     routeId = "";
                 }
@@ -58,6 +68,23 @@ public class VehiclesJsonParser {
                 location.setBearing((float) jAttributes.getDouble("bearing"));
                 vehicle.setLocation(location);
 
+                // Get the vehicle destination
+                String tripId;
+                try {
+                    tripId = jRelationships
+                            .getJSONObject("trip")
+                            .getJSONObject("data")
+                            .getString("id");
+
+                    JSONObject jTrip = includedData.get("trip" + tripId);
+                    if (jTrip != null) {
+                        JSONObject jTripAttr = jTrip.getJSONObject("attributes");
+                        vehicle.setDestination(jTripAttr.getString("headsign"));
+                    }
+                } catch (JSONException e) {
+                    vehicle.setDestination(null);
+                }
+
                 vehicles.add(vehicle);
             }
 
@@ -66,5 +93,25 @@ public class VehiclesJsonParser {
         }
 
         return vehicles.toArray(new Vehicle[vehicles.size()]);
+    }
+
+    private static HashMap<String, JSONObject> jsonArrayToHashMap(JSONArray jRelated) {
+        HashMap<String, JSONObject> data = new HashMap<>();
+
+        for (int i = 0; i < jRelated.length(); i++) {
+            try {
+                JSONObject jObj = jRelated.getJSONObject(i);
+
+                String id = jObj.getString("id");
+                String type = jObj.getString("type").toLowerCase();
+                String key = type + id;
+
+                data.put(key, jObj);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "Unable to parse related data at position " + i);
+            }
+        }
+
+        return data;
     }
 }

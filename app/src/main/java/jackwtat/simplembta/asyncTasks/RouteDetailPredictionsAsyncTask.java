@@ -41,7 +41,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                 "filter[route]=" + route.getId(),
                 "filter[direction_id]=" + directionId,
                 "filter[stop]=" + route.getNearestStop(directionId).getId(),
-                "include=route,trip,stop,schedule"
+                "include=route,trip,stop,schedule,vehicle"
         };
 
         for (Prediction prediction : PredictionsJsonParser
@@ -57,7 +57,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                     "filter[stop]=" + route.getNearestStop(directionId).getId(),
                     "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                     "filter[min_time]=" + DateUtil.getMbtaTime(0),
-                    "include=route,trip,stop,prediction"
+                    "include=route,trip,stop,prediction,vehicle"
             };
 
             for (Prediction prediction : SchedulesJsonParser
