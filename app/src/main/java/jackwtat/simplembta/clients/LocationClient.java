@@ -81,7 +81,7 @@ public class LocationClient {
                                 callbacks.onSuccess();
                             } else {
                                 lastLocation = null;
-                                callbacks.onSuccess();
+                                callbacks.onFailure();
                             }
                         }
                     })
