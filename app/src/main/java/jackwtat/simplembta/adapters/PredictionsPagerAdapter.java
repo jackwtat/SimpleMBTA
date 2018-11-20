@@ -11,14 +11,16 @@ import jackwtat.simplembta.fragments.MapSearchFragment;
  */
 
 public class PredictionsPagerAdapter extends FragmentPagerAdapter {
-    final private int PAGE_COUNT = 1;
-    final private String[] TAB_TITLES = {"Map"};
+    final private int PAGE_COUNT = 2;
+    final private String[] TAB_TITLES = {"Map", "Search"};
 
     private Fragment[] fragments = new Fragment[2];
 
-    public PredictionsPagerAdapter(FragmentManager fm, MapSearchFragment mapSearchFragment) {
+    public PredictionsPagerAdapter(FragmentManager fm, Fragment mapSearchFragment,
+                                   Fragment manualSearchFragment) {
         super(fm);
         fragments[0] = mapSearchFragment;
+        fragments[1] = manualSearchFragment;
     }
 
     @Override

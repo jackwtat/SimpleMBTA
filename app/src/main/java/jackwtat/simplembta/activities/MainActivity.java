@@ -1,5 +1,6 @@
 package jackwtat.simplembta.activities;
 
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import jackwtat.simplembta.clients.LocationClient;
+import jackwtat.simplembta.fragments.ManualSearchFragment;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager(),
-                new MapSearchFragment());
+                new MapSearchFragment(), new ManualSearchFragment());
 
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
@@ -43,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         viewPager.setPageMargin((int) (getResources().getDimension(R.dimen.fragment_pager_spacing) *
                 getResources().getDisplayMetrics().density));
 
-        /*
+
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        */
+
 
         errorTextView = findViewById(R.id.error_message_text_view);
 

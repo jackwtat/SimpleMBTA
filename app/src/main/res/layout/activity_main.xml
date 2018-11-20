@@ -24,7 +24,6 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <!--
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
@@ -33,8 +32,6 @@
             app:tabIndicatorHeight="4dp"
             app:tabSelectedTextColor="@color/TabSelectedText"
             app:tabTextColor="@color/TabText" />
-            -->
-
     </android.support.design.widget.AppBarLayout>
 
     <TextView
