@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Direction;
@@ -23,12 +24,12 @@ import jackwtat.simplembta.model.routes.SilverLine;
 public class RoutesJsonParser {
     public static final String LOG_TAG = "RoutesJsonParser";
 
-    public static HashMap<String, Route> parse(String jsonResponse) {
+    public static Route[] parse(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
-            return new HashMap<>();
+            return new Route[0];
         }
 
-        HashMap<String, Route> routes = new HashMap<>();
+        ArrayList<Route> routes = new ArrayList<>();
 
         try {
             JSONObject jRoot = new JSONObject(jsonResponse);
@@ -96,7 +97,7 @@ public class RoutesJsonParser {
 
                     }
 
-                    routes.put(id, route);
+                    routes.add(route);
 
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Unable to parse Route at position " + i);
@@ -106,6 +107,6 @@ public class RoutesJsonParser {
             Log.e(LOG_TAG, "Unable to parse Routes JSON response");
         }
 
-        return routes;
+        return routes.toArray(new Route[routes.size()]);
     }
 }

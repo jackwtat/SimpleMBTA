@@ -32,8 +32,8 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
     public final Location targetLocation;
     public final OnPostExecuteListener onPostExecuteListener;
 
-    private HashMap<String, Route> routes;
-    private HashMap<String, Stop> stops;
+    private HashMap<String, Route> routes = new HashMap<>();
+    private HashMap<String, Stop> stops = new HashMap<>();
     private HashMap<String, Prediction> predictions = new HashMap<>();
 
     public MapSearchPredictionsAsyncTask(String realTimeApiKey,
@@ -55,7 +55,9 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
                 "include=child_stops"
         };
 
-        stops = StopsJsonParser.parse(realTimeApiClient.get("stops", stopArgs));
+        for(Stop stop:StopsJsonParser.parse(realTimeApiClient.get("stops", stopArgs))){
+            stops.put(stop.getId(), stop);
+        }
 
         if (stops.size() == 0) {
             return new ArrayList<>();
@@ -68,7 +70,9 @@ public class MapSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Ro
         }
         String[] routesArgs = {"filter[stop]=" + stopArgBuilder.toString()};
 
-        routes = RoutesJsonParser.parse(realTimeApiClient.get("routes", routesArgs));
+        for (Route route : RoutesJsonParser.parse(realTimeApiClient.get("routes", routesArgs))) {
+            routes.put(route.getId(), route);
+        }
 
         if (routes.size() == 0) {
             return new ArrayList<>();

@@ -1,4 +1,4 @@
-package jackwtat.simplembta.adapters;
+package jackwtat.simplembta.adapters.spinners;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -26,7 +26,7 @@ public class DirectionsSpinnerAdapter extends ArrayAdapter<Direction> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return createItemView(directions[position], parent, R.layout.item_direction_selected);
+        return createItemView(directions[position], parent, R.layout.spinner_item_direction_selected);
     }
 
     @Override
@@ -35,9 +35,9 @@ public class DirectionsSpinnerAdapter extends ArrayAdapter<Direction> {
         Direction direction = directions[position];
 
         if (direction.equals(selectedDirection)) {
-            listItem = createItemView(direction, parent, R.layout.item_direction_dropdown_selected);
+            listItem = createItemView(direction, parent, R.layout.spinner_item_direction_dropdown_selected);
         } else {
-            listItem = createItemView(direction, parent, R.layout.item_direction_dropdown);
+            listItem = createItemView(direction, parent, R.layout.spinner_item_direction_dropdown);
         }
 
         return listItem;

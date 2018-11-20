@@ -1,7 +1,6 @@
-package jackwtat.simplembta.adapters;
+package jackwtat.simplembta.adapters.spinners;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ public class StopsSpinnerAdapter extends ArrayAdapter<Stop> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return createItemView(stops[position], parent, R.layout.item_stop_selected);
+        return createItemView(stops[position], parent, R.layout.spinner_item_stop_selected);
     }
 
     @Override
@@ -36,9 +35,9 @@ public class StopsSpinnerAdapter extends ArrayAdapter<Stop> {
         Stop stop = stops[position];
 
         if (stop.equals(selectedStop)) {
-            listItem = createItemView(stop, parent, R.layout.item_stop_dropdown_selected);
+            listItem = createItemView(stop, parent, R.layout.spinner_item_stop_dropdown_selected);
         } else {
-            listItem = createItemView(stop, parent, R.layout.item_stop_dropdown);
+            listItem = createItemView(stop, parent, R.layout.spinner_item_stop_dropdown);
         }
 
         return listItem;

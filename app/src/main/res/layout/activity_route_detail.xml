@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <jackwtat.simplembta.views.RouteDetailSpinnersView
-        android:id="@+id/stop_selector_view"
+    <jackwtat.simplembta.views.RouteDetailSpinners
+        android:id="@+id/route_detail_spinners"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -9,12 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.DirectionsSpinnerAdapter;
-import jackwtat.simplembta.adapters.StopsSpinnerAdapter;
+import jackwtat.simplembta.adapters.spinners.DirectionsSpinnerAdapter;
+import jackwtat.simplembta.adapters.spinners.StopsSpinnerAdapter;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Stop;
 
-public class RouteDetailSpinnersView extends LinearLayout implements AdapterView.OnItemSelectedListener {
+public class RouteDetailSpinners extends LinearLayout implements AdapterView.OnItemSelectedListener {
     private View rootView;
     private Spinner directionSpinner;
     private Spinner stopSpinner;
@@ -27,25 +27,27 @@ public class RouteDetailSpinnersView extends LinearLayout implements AdapterView
     private OnDirectionSelectedListener onDirectionSelectedListener;
     private OnStopSelectedListener onStopSelectedListener;
 
-    public RouteDetailSpinnersView(Context context) {
+    public RouteDetailSpinners(Context context) {
         super(context);
         init(context);
     }
 
-    public RouteDetailSpinnersView(Context context, @Nullable AttributeSet attrs) {
+    public RouteDetailSpinners(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public RouteDetailSpinnersView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RouteDetailSpinners(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        rootView = inflate(context, R.layout.route_detail_spinners_view, this);
+        rootView = inflate(context, R.layout.spinners_route_detail, this);
+
         directionSpinner = rootView.findViewById(R.id.direction_spinner);
         directionSpinner.setOnItemSelectedListener(this);
+
         stopSpinner = rootView.findViewById(R.id.stop_spinner);
         stopSpinner.setOnItemSelectedListener(this);
     }

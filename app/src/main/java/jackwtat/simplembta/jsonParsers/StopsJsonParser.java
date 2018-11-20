@@ -16,12 +16,12 @@ import jackwtat.simplembta.model.Stop;
 public class StopsJsonParser {
     public static final String LOG_TAG = "StopsJsonParser";
 
-    public static HashMap<String, Stop> parse(String jsonResponse) {
+    public static Stop[] parse(String jsonResponse) {
         if (TextUtils.isEmpty(jsonResponse)) {
-            return new HashMap<>();
+            return new Stop[0];
         }
 
-        HashMap<String, Stop> stops = new HashMap<>();
+        ArrayList<Stop> stops = new ArrayList<>();
 
         try {
             JSONObject jRoot = new JSONObject(jsonResponse);
@@ -75,7 +75,7 @@ public class StopsJsonParser {
                         location.setLongitude(jAttributes.getDouble("longitude"));
                         stop.setLocation(location);
 
-                        stops.put(stop.getId(), stop);
+                        stops.add(stop);
                     }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, "Unable to parse Stop at position " + i);
@@ -86,6 +86,6 @@ public class StopsJsonParser {
             Log.e(LOG_TAG, "Unable to parse Stops JSON response");
         }
 
-        return stops;
+        return stops.toArray(new Stop[stops.size()]);
     }
 }
