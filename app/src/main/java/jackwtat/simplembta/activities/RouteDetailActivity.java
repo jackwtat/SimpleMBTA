@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -70,13 +69,13 @@ import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
-import jackwtat.simplembta.views.StopSelectorView;
+import jackwtat.simplembta.views.RouteDetailSpinnersView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
         ShapesAsyncTask.OnPostExecuteListener, ServiceAlertsAsyncTask.OnPostExecuteListener,
         VehiclesAsyncTask.OnPostExecuteListener,
-        StopSelectorView.OnDirectionSelectedListener, StopSelectorView.OnStopSelectedListener {
+        RouteDetailSpinnersView.OnDirectionSelectedListener, RouteDetailSpinnersView.OnStopSelectedListener {
     public static final String LOG_TAG = "RouteDetailActivity";
 
     // Predictions auto update rate
@@ -106,7 +105,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
-    private StopSelectorView stopSelectorView;
+    private RouteDetailSpinnersView routeDetailSpinnersView;
 
     private String realTimeApiKey;
     private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
@@ -216,7 +215,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         mapProgressBar = findViewById(R.id.map_progress_bar);
 
         // Get the stop selector view
-        stopSelectorView = findViewById(R.id.stop_selector_view);
+        routeDetailSpinnersView = findViewById(R.id.stop_selector_view);
         populateDirectionSpinner(route.getAllDirections());
 
         // Populate the stops spinner with the nearest stop until we query the shapes
@@ -225,8 +224,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             populateStopSpinner(selectedStopArray);
         }
 
-        stopSelectorView.setOnDirectionSelectedListener(this);
-        stopSelectorView.setOnStopSelectedListener(this);
+        routeDetailSpinnersView.setOnDirectionSelectedListener(this);
+        routeDetailSpinnersView.setOnStopSelectedListener(this);
 
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
@@ -314,7 +313,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 if (marker.getTag() instanceof Stop) {
                     Stop selectedStop = (Stop) marker.getTag();
 
-                    stopSelectorView.selectStop(selectedStop.getId());
+                    routeDetailSpinnersView.selectStop(selectedStop.getId());
                 } else if (marker.getTag() instanceof Vehicle) {
                     if (selectedVehicleMarker != null)
                         selectedVehicleMarker.hideInfoWindow();
@@ -710,7 +709,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             ArrayList<String> expiredVehicleIds = new ArrayList<>();
 
             // Get all vehicles moving in selected direction
-            for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
+            for (Vehicle vehicle : route.getAllVehicles()) {
                 trackedVehicleIds.add(vehicle.getId());
             }
 
@@ -726,7 +725,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 vehicleMarkers.remove(vehicleId);
             }
 
-            for (Vehicle vehicle : route.getVehicles(selectedDirectionId)) {
+            for (Vehicle vehicle : route.getAllVehicles()) {
                 Marker vMarker = vehicleMarkers.get(vehicle.getId());
                 if (vMarker != null) {
                     vMarker.setPosition(new LatLng(
@@ -854,15 +853,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             directions[1] = d;
         }
 
-        stopSelectorView.populateDirectionSpinner(directions);
-        stopSelectorView.selectDirection(selectedDirectionId);
+        routeDetailSpinnersView.populateDirectionSpinner(directions);
+        routeDetailSpinnersView.selectDirection(selectedDirectionId);
     }
 
     private void populateStopSpinner(Stop[] stops) {
-        stopSelectorView.populateStopSpinner(stops);
+        routeDetailSpinnersView.populateStopSpinner(stops);
 
         if (route.getNearestStop(selectedDirectionId) != null) {
-            stopSelectorView.selectStop(route.getNearestStop(selectedDirectionId).getId());
+            routeDetailSpinnersView.selectStop(route.getNearestStop(selectedDirectionId).getId());
         }
     }
 

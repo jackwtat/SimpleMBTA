@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -15,7 +14,7 @@ import jackwtat.simplembta.adapters.StopsSpinnerAdapter;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Stop;
 
-public class StopSelectorView extends LinearLayout implements AdapterView.OnItemSelectedListener {
+public class RouteDetailSpinnersView extends LinearLayout implements AdapterView.OnItemSelectedListener {
     private View rootView;
     private Spinner directionSpinner;
     private Spinner stopSpinner;
@@ -28,23 +27,23 @@ public class StopSelectorView extends LinearLayout implements AdapterView.OnItem
     private OnDirectionSelectedListener onDirectionSelectedListener;
     private OnStopSelectedListener onStopSelectedListener;
 
-    public StopSelectorView(Context context) {
+    public RouteDetailSpinnersView(Context context) {
         super(context);
         init(context);
     }
 
-    public StopSelectorView(Context context, @Nullable AttributeSet attrs) {
+    public RouteDetailSpinnersView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public StopSelectorView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RouteDetailSpinnersView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        rootView = inflate(context, R.layout.stop_selector_view, this);
+        rootView = inflate(context, R.layout.route_detail_spinners_view, this);
         directionSpinner = rootView.findViewById(R.id.direction_spinner);
         directionSpinner.setOnItemSelectedListener(this);
         stopSpinner = rootView.findViewById(R.id.stop_spinner);
