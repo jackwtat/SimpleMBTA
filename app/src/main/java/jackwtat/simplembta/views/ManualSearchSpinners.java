@@ -80,6 +80,18 @@ public class ManualSearchSpinners extends LinearLayout implements AdapterView.On
         stopSpinner.setAdapter(stopsAdapter);
     }
 
+    public void clearRoutes() {
+        populateRouteSpinner(new Route[0]);
+    }
+
+    public void clearDirections() {
+        populateDirectionSpinner(new Direction[0]);
+    }
+
+    public void clearStops() {
+        populateStopSpinner(new Stop[0]);
+    }
+
     public void selectedRoute(String routeId) {
         for (int i = 0; i < routes.length; i++) {
             if (routes[i].getId().equals(routeId)) {

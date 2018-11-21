@@ -42,13 +42,9 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
         viewPager.setAdapter(predictionsPagerAdapter);
-        viewPager.setPageMargin((int) (getResources().getDimension(R.dimen.fragment_pager_spacing) *
-                getResources().getDisplayMetrics().density));
-
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
 
         errorTextView = findViewById(R.id.error_message_text_view);
 

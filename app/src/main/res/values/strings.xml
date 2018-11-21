@@ -40,6 +40,7 @@
     <string name="no_predictions_this_stop_p1">No</string>
     <string name="no_predictions_this_stop_p2">predictions at this stop</string>
     <string name="select_stop">Select a stop to see predictions</string>
+    <string name="no_stops">No stops in this direction</string>
 
     <!-- Route Names -->
     <string name="red_line_long_name">Red Line</string>
@@ -109,6 +110,7 @@
 
     <!-- SharedPreferences Keys -->
     <string name="saved_map_search_latlon">savedMapSearchLatLon</string>
+    <string name="saved_manual_search_route">savedManualSearchRoute</string>
 
     <!-- Miscellaneous -->
     <string name="train">Train</string>

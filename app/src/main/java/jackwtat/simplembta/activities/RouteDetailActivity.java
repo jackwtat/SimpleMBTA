@@ -142,7 +142,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Get data saved from previous session
         if (savedInstanceState != null) {
-            selectedRoute= (Route) savedInstanceState.getSerializable("route");
+            selectedRoute = (Route) savedInstanceState.getSerializable("route");
             selectedDirectionId = savedInstanceState.getInt("direction");
             refreshTime = savedInstanceState.getLong("refreshTime");
 
@@ -155,7 +155,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             // Get values passed from calling activity/fragment
         } else {
             Intent intent = getIntent();
-            selectedRoute= (Route) intent.getSerializableExtra("route");
+            selectedRoute = (Route) intent.getSerializableExtra("route");
             selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
         }
@@ -285,8 +285,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 }
             }
         });
-
-        // Set predictions adapter
     }
 
     @Override
@@ -401,6 +399,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         super.onPause();
         mapView.onPause();
 
+        refreshing = false;
+
+        swipeRefreshLayout.setRefreshing(false);
+
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
         }
@@ -413,7 +415,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             vehiclesAsyncTask.cancel(true);
         }
 
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override
@@ -472,24 +476,32 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void getPredictions() {
-        if (networkConnectivityClient.isConnected() &&
-                selectedRoute.getNearestStop(selectedDirectionId) != null) {
-            errorManager.setNetworkError(false);
+        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+            if (networkConnectivityClient.isConnected()) {
+                errorManager.setNetworkError(false);
 
-            refreshing = true;
+                refreshing = true;
 
-            if (predictionsAsyncTask != null) {
-                predictionsAsyncTask.cancel(true);
+                if (predictionsAsyncTask != null) {
+                    predictionsAsyncTask.cancel(true);
+                }
+
+                predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, selectedRoute,
+                        selectedDirectionId, this);
+                predictionsAsyncTask.execute();
+
+            } else {
+                errorManager.setNetworkError(true);
+                refreshing = false;
+                swipeRefreshLayout.setRefreshing(false);
             }
-
-            predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, selectedRoute,
-                    selectedDirectionId, this);
-            predictionsAsyncTask.execute();
-
         } else {
-            errorManager.setNetworkError(true);
-            refreshing = false;
-            swipeRefreshLayout.setRefreshing(false);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refreshPredictions(true);
+                }
+            });
         }
     }
 
@@ -622,26 +634,31 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void refreshPredictions(boolean returnToTop) {
         if (!userIsScrolling) {
-            recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
-            swipeRefreshLayout.setRefreshing(false);
+            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+                recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
+                swipeRefreshLayout.setRefreshing(false);
 
-            if (recyclerViewAdapter.getItemCount() == 0) {
-                if (selectedRoute.getNearestStop(selectedDirectionId) == null) {
-                    noPredictionsTextView.setText(getResources().getString(R.string.select_stop));
+                if (recyclerViewAdapter.getItemCount() == 0) {
+                    noPredictionsTextView.setText(getResources()
+                            .getString(R.string.no_predictions_this_stop));
+                    noPredictionsTextView.setVisibility(View.VISIBLE);
+
+                    appBarLayout.setExpanded(true);
+                    recyclerView.setNestedScrollingEnabled(false);
                 } else {
-                    noPredictionsTextView.setText(getResources().getString(R.string.no_predictions_this_stop));
+                    noPredictionsTextView.setVisibility(View.GONE);
+                    recyclerView.setNestedScrollingEnabled(true);
                 }
 
-                noPredictionsTextView.setVisibility(View.VISIBLE);
-                appBarLayout.setExpanded(true);
-                recyclerView.setNestedScrollingEnabled(false);
+                if (returnToTop) {
+                    recyclerView.scrollToPosition(0);
+                }
             } else {
-                noPredictionsTextView.setVisibility(View.GONE);
-                recyclerView.setNestedScrollingEnabled(true);
-            }
+                noPredictionsTextView.setText(getResources().getString(R.string.no_stops));
+                noPredictionsTextView.setVisibility(View.VISIBLE);
 
-            if (returnToTop) {
-                recyclerView.scrollToPosition(0);
+                recyclerView.setNestedScrollingEnabled(false);
+                swipeRefreshLayout.setRefreshing(false);
             }
         }
     }

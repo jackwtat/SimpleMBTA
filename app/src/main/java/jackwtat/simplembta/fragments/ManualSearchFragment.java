@@ -1,9 +1,11 @@
 package jackwtat.simplembta.fragments;
 
-
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,15 +18,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.adapters.RouteDetailRecyclerViewAdapter;
+import jackwtat.simplembta.asyncTasks.RouteDetailPredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.BlueLine;
@@ -42,6 +51,8 @@ public class ManualSearchFragment extends Fragment implements
         ErrorManager.OnErrorChangedListener,
         RoutesAsyncTask.OnPostExecuteListener,
         ShapesAsyncTask.OnPostExecuteListener,
+        ServiceAlertsAsyncTask.OnPostExecuteListener,
+        RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
         ManualSearchSpinners.OnRouteSelectedListener,
         ManualSearchSpinners.OnDirectionSelectedListener,
         ManualSearchSpinners.OnStopSelectedListener {
@@ -53,7 +64,10 @@ public class ManualSearchFragment extends Fragment implements
     // Predictions auto update rate
     public static final long PREDICTIONS_UPDATE_RATE = 15000;
 
-    private View rootView;
+    // Service alerts auto update rate
+    public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
+
+    private AppBarLayout appBarLayout;
     private ManualSearchSpinners searchSpinners;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -65,18 +79,21 @@ public class ManualSearchFragment extends Fragment implements
     private RoutesAsyncTask routesAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
+    private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
     private ErrorManager errorManager;
+    private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
     private boolean refreshing = false;
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
-    private long onPauseTime = 0;
 
     private Route[] routes;
     private Route selectedRoute;
     private int selectedDirectionId = Direction.INBOUND;
-    private Stop selectedStop;
+
+    private String savedRouteId;
+    private String savedStopId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,19 +104,29 @@ public class ManualSearchFragment extends Fragment implements
 
         // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
+
+        // Get the route and stop the user last viewed
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                getResources().getString(R.string.saved_manual_search_route), Context.MODE_PRIVATE);
+        savedRouteId = sharedPreferences.getString("routeId", null);
+        savedStopId = sharedPreferences.getString("stopId", null);
+        selectedDirectionId = sharedPreferences.getInt("directionId", Direction.INBOUND);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_manual_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_manual_search, container, false);
 
         // Get the spinner
         searchSpinners = rootView.findViewById(R.id.manual_search_spinners);
         searchSpinners.setOnRouteSelectedListener(this);
         searchSpinners.setOnDirectionSelectedListener(this);
         searchSpinners.setOnStopSelectedListener(this);
+
+        // Get app bar
+        appBarLayout = rootView.findViewById(R.id.app_bar_layout);
 
         // Get service alerts indicator
         serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
@@ -119,18 +146,25 @@ public class ManualSearchFragment extends Fragment implements
         // Set recycler view layout
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
+        // Disable recycler view scrolling until predictions loaded;
+        recyclerView.setNestedScrollingEnabled(false);
+
         // Add onScrollListener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions();
+                    refreshPredictions(false);
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
                 }
             }
         });
+
+        // Create and set the recycler view adapter
+        recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
+        recyclerView.setAdapter(recyclerViewAdapter);
 
         return rootView;
     }
@@ -151,11 +185,67 @@ public class ManualSearchFragment extends Fragment implements
         if (routes == null || routes.length == 0) {
             getRoutes();
         }
+
+        // Refresh the activity to update UI so that the predictions and service alerts are accurate
+        // as of the last update
+        refreshPredictions(false);
+        refreshServiceAlerts();
+
+        // If too much time has elapsed since last refresh, then clear predictions and force update
+        if (new Date().getTime() - refreshTime > MAX_PREDICTION_AGE) {
+            clearPredictions();
+            swipeRefreshLayout.setRefreshing(true);
+            forceUpdate();
+
+            // If there are no predictions displayed in the recycler view, then force a refresh
+        } else if (recyclerViewAdapter.getItemCount() < 1) {
+            swipeRefreshLayout.setRefreshing(true);
+            forceUpdate();
+
+            // Otherwise, background update
+        } else {
+            backgroundUpdate();
+        }
+
+        timer = new Timer();
+        timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
+        timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        refreshing = false;
+
+        swipeRefreshLayout.setRefreshing(false);
+
+        if (routesAsyncTask != null) {
+            routesAsyncTask.cancel(true);
+        }
+
+        if (shapesAsyncTask != null) {
+            shapesAsyncTask.cancel(true);
+        }
+
+        if (predictionsAsyncTask != null) {
+            predictionsAsyncTask.cancel(true);
+        }
+
+        if (timer != null) {
+            timer.cancel();
+        }
+
+        // Save the location the user last viewed
+        if (selectedRoute != null) {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                    getResources().getString(R.string.saved_manual_search_route), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("routeId", selectedRoute.getId());
+            editor.putInt("directionId", selectedDirectionId);
+            editor.putString("stopId", selectedRoute.getNearestStop(selectedDirectionId).getId());
+            editor.apply();
+        }
     }
 
     @Override
@@ -164,8 +254,25 @@ public class ManualSearchFragment extends Fragment implements
     }
 
     @Override
-    public void onErrorChanged() {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    public void onErrorChanged() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (errorManager.hasNetworkError()) {
+                    selectedRoute.clearPredictions(Direction.INBOUND);
+                    selectedRoute.clearPredictions(Direction.OUTBOUND);
+                    selectedRoute.clearServiceAlerts();
+
+                    refreshPredictions(true);
+                    refreshServiceAlerts();
+                }
+            }
+        });
     }
 
     private void getRoutes() {
@@ -185,60 +292,111 @@ public class ManualSearchFragment extends Fragment implements
     }
 
     private void getShapes() {
-        // Hard coding to save the user time and data
-        if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
-            if (BlueLine.isBlueLine(selectedRoute.getId())) {
-                selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_blue));
+        if (selectedRoute != null) {
+            // Hard coding to save the user time and data
+            if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
+                if (BlueLine.isBlueLine(selectedRoute.getId())) {
+                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_blue));
 
-            } else if (OrangeLine.isOrangeLine(selectedRoute.getId())) {
-                selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_orange));
+                } else if (OrangeLine.isOrangeLine(selectedRoute.getId())) {
+                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_orange));
 
-            } else if (RedLine.isRedLine(selectedRoute.getId()) && !RedLine.isMattapanLine(selectedRoute.getId())) {
-                selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_red));
+                } else if (RedLine.isRedLine(selectedRoute.getId()) && !RedLine.isMattapanLine(selectedRoute.getId())) {
+                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_red));
 
-            } else if (RedLine.isRedLine(selectedRoute.getId()) && RedLine.isMattapanLine(selectedRoute.getId())) {
-                selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_mattapan));
+                } else if (RedLine.isRedLine(selectedRoute.getId()) && RedLine.isMattapanLine(selectedRoute.getId())) {
+                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_mattapan));
 
-            } else if (GreenLine.isGreenLine(selectedRoute.getId())) {
-                if (GreenLineCombined.isGreenLineCombined(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_combined));
-                } else if (GreenLine.isGreenLineB(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_b));
+                } else if (GreenLine.isGreenLine(selectedRoute.getId())) {
+                    if (GreenLineCombined.isGreenLineCombined(selectedRoute.getId())) {
+                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_combined));
+                    } else if (GreenLine.isGreenLineB(selectedRoute.getId())) {
+                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_b));
 
-                } else if (GreenLine.isGreenLineC(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_c));
+                    } else if (GreenLine.isGreenLineC(selectedRoute.getId())) {
+                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_c));
 
-                } else if (GreenLine.isGreenLineD(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_d));
+                    } else if (GreenLine.isGreenLineD(selectedRoute.getId())) {
+                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_d));
 
-                } else if (GreenLine.isGreenLineE(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_e));
+                    } else if (GreenLine.isGreenLineE(selectedRoute.getId())) {
+                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_e));
 
+                    }
                 }
+
+                refreshShapes();
+
+            } else if (networkConnectivityClient.isConnected()) {
+                errorManager.setNetworkError(false);
+
+                if (shapesAsyncTask != null) {
+                    shapesAsyncTask.cancel(true);
+                }
+
+                shapesAsyncTask = new ShapesAsyncTask(
+                        realTimeApiKey,
+                        selectedRoute.getId(),
+                        this);
+                shapesAsyncTask.execute();
+
+            } else {
+                errorManager.setNetworkError(true);
             }
-
-            refreshShapes();
-
-        } else if (networkConnectivityClient.isConnected()) {
-            errorManager.setNetworkError(false);
-
-            if (shapesAsyncTask != null) {
-                shapesAsyncTask.cancel(true);
-            }
-
-            shapesAsyncTask = new ShapesAsyncTask(
-                    realTimeApiKey,
-                    selectedRoute.getId(),
-                    this);
-            shapesAsyncTask.execute();
-
-        } else {
-            errorManager.setNetworkError(true);
         }
     }
 
-    private void getPredictions(){
-        // TODO: getPredictions
+    private void getServiceAlerts() {
+        if (selectedRoute != null) {
+            if (networkConnectivityClient.isConnected()) {
+                errorManager.setNetworkError(false);
+
+                if (serviceAlertsAsyncTask != null) {
+                    serviceAlertsAsyncTask.cancel(true);
+                }
+
+                serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
+                        realTimeApiKey,
+                        selectedRoute.getId(),
+                        this);
+                serviceAlertsAsyncTask.execute();
+
+            } else {
+                errorManager.setNetworkError(true);
+            }
+        }
+    }
+
+    private void getPredictions() {
+        if (selectedRoute != null) {
+            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+                if (networkConnectivityClient.isConnected()) {
+                    errorManager.setNetworkError(false);
+
+                    refreshing = true;
+
+                    if (predictionsAsyncTask != null) {
+                        predictionsAsyncTask.cancel(true);
+                    }
+
+                    predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey,
+                            selectedRoute, selectedDirectionId, this);
+                    predictionsAsyncTask.execute();
+
+                } else {
+                    errorManager.setNetworkError(true);
+                    refreshing = false;
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            } else {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshPredictions(true);
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -256,20 +414,87 @@ public class ManualSearchFragment extends Fragment implements
         refreshShapes();
     }
 
+    @Override
+    public void onPostExecute(ServiceAlert[] serviceAlerts) {
+        selectedRoute.clearServiceAlerts();
+        selectedRoute.addAllServiceAlerts(serviceAlerts);
+
+        refreshServiceAlerts();
+    }
+
+    @Override
+    public void onPostExecute(List<Prediction> predictions) {
+        refreshing = false;
+        refreshTime = new Date().getTime();
+
+        selectedRoute.clearPredictions(0);
+        selectedRoute.clearPredictions(1);
+        selectedRoute.addAllPredictions(predictions);
+
+        refreshPredictions(false);
+    }
+
     private void refreshRoutes() {
         populateRouteSpinner(routes);
     }
 
     private void refreshShapes() {
-        populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
+        if (selectedRoute != null) {
+            populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
+        }
     }
 
-    private void refreshPredictions() {
-        // TODO: refreshPredictions
+    private void refreshServiceAlerts() {
+        if (selectedRoute != null) {
+            if (!userIsScrolling) {
+                if (selectedRoute.getServiceAlerts().size() > 0) {
+                    serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);
+                    serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
+
+                } else {
+                    serviceAlertsIndicatorView.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
-    private void clearPredictions(){
-        // TODO: clearPredictions
+    private void refreshPredictions(boolean returnToTop) {
+        if (!userIsScrolling) {
+            if (selectedRoute != null) {
+                if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+                    recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    if (recyclerViewAdapter.getItemCount() == 0) {
+                        noPredictionsTextView.setText(getResources()
+                                .getString(R.string.no_predictions_this_stop));
+                        noPredictionsTextView.setVisibility(View.VISIBLE);
+
+                        recyclerView.setNestedScrollingEnabled(false);
+                    } else {
+                        noPredictionsTextView.setVisibility(View.GONE);
+                        recyclerView.setNestedScrollingEnabled(true);
+                    }
+
+                    if (returnToTop) {
+                        recyclerView.scrollToPosition(0);
+                    }
+                } else {
+                    noPredictionsTextView.setText(getResources().getString(R.string.no_stops));
+                    noPredictionsTextView.setVisibility(View.VISIBLE);
+
+                    recyclerView.setNestedScrollingEnabled(false);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        }
+    }
+
+    private void clearPredictions() {
+        recyclerViewAdapter.clear();
+        noPredictionsTextView.setVisibility(View.GONE);
+        appBarLayout.setExpanded(true);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private Shape[] getShapesFromJson(int jsonFile) {
@@ -278,6 +503,13 @@ public class ManualSearchFragment extends Fragment implements
 
     private void populateRouteSpinner(Route[] routes) {
         searchSpinners.populateRouteSpinner(routes);
+
+        if (selectedRoute != null) {
+            searchSpinners.selectedRoute(selectedRoute.getId());
+
+        } else if (savedRouteId != null) {
+            searchSpinners.selectedRoute(savedRouteId);
+        }
     }
 
     private void populateDirectionSpinner(Direction[] directions) {
@@ -293,11 +525,32 @@ public class ManualSearchFragment extends Fragment implements
 
     private void populateStopSpinner(Stop[] stops) {
         searchSpinners.populateStopSpinner(stops);
+
+        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+            searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
+        } else if (savedStopId != null) {
+            searchSpinners.selectStop(savedStopId);
+        }
     }
 
     @Override
     public void onRouteSelected(Route route) {
         selectedRoute = route;
+
+        if (shapesAsyncTask != null) {
+            shapesAsyncTask.cancel(true);
+        }
+
+        if (serviceAlertsAsyncTask != null) {
+            serviceAlertsAsyncTask.cancel(true);
+        }
+
+        if (predictionsAsyncTask != null) {
+            predictionsAsyncTask.cancel(true);
+        }
+
+        refreshServiceAlerts();
+        getServiceAlerts();
 
         populateDirectionSpinner(selectedRoute.getAllDirections());
     }
@@ -309,7 +562,8 @@ public class ManualSearchFragment extends Fragment implements
         clearPredictions();
 
         if (selectedRoute.getShapes(selectedDirectionId).length == 0) {
-            populateStopSpinner(new Stop[0]);
+            searchSpinners.clearStops();
+            swipeRefreshLayout.setRefreshing(true);
             getShapes();
         } else {
             populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
@@ -318,6 +572,35 @@ public class ManualSearchFragment extends Fragment implements
 
     @Override
     public void onStopSelected(Stop stop) {
-        selectedStop = stop;
+        selectedRoute.setNearestStop(selectedDirectionId, stop);
+
+        // Clear the current predictions and get the predictions for the selected stop
+        clearPredictions();
+        swipeRefreshLayout.setRefreshing(true);
+        forceUpdate();
+    }
+
+    private void backgroundUpdate() {
+        if (!refreshing) {
+            getPredictions();
+        }
+    }
+
+    private void forceUpdate() {
+        getPredictions();
+    }
+
+    private class PredictionsUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            backgroundUpdate();
+        }
+    }
+
+    private class ServiceAlertsUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            getServiceAlerts();
+        }
     }
 }
