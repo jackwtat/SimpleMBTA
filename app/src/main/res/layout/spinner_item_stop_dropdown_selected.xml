@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/selected_spinner_item"
     android:orientation="horizontal"
     android:padding="8dp">
 
@@ -11,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:textColor="@android:color/black"
+        android:textColor="@color/PrimaryText"
         android:textSize="@dimen/spinner_selected_text_size"
         android:textStyle="bold"
         tools:text="Washington St @ Massachusetts Avenue" />

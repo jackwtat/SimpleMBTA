@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,10 +89,10 @@ public class ManualSearchFragment extends Fragment implements
 
     private Route[] routes;
     private Route selectedRoute;
-    private int selectedDirectionId = Direction.INBOUND;
+    private int selectedDirectionId;
 
     private String savedRouteId;
-    private String savedStopId;
+    private String[] savedStopIds = new String[2];
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +108,8 @@ public class ManualSearchFragment extends Fragment implements
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(
                 getResources().getString(R.string.saved_manual_search_route), Context.MODE_PRIVATE);
         savedRouteId = sharedPreferences.getString("routeId", null);
-        savedStopId = sharedPreferences.getString("stopId", null);
+        savedStopIds[0] = sharedPreferences.getString("stopId_0", null);
+        savedStopIds[1] = sharedPreferences.getString("stopId_1", null);
         selectedDirectionId = sharedPreferences.getInt("directionId", Direction.INBOUND);
     }
 
@@ -243,7 +243,13 @@ public class ManualSearchFragment extends Fragment implements
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("routeId", selectedRoute.getId());
             editor.putInt("directionId", selectedDirectionId);
-            editor.putString("stopId", selectedRoute.getNearestStop(selectedDirectionId).getId());
+
+            for(int i = 0; i < 2; i++){
+                if(selectedRoute.getNearestStop(i)!=null){
+                    editor.putString("stopId_" + i, selectedRoute.getNearestStop(i).getId());
+                }
+            }
+
             editor.apply();
         }
     }
@@ -528,8 +534,8 @@ public class ManualSearchFragment extends Fragment implements
 
         if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
             searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
-        } else if (savedStopId != null) {
-            searchSpinners.selectStop(savedStopId);
+        } else if (savedStopIds != null) {
+            searchSpinners.selectStop(savedStopIds[selectedDirectionId]);
         }
     }
 
