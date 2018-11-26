@@ -7,10 +7,14 @@
     <string name="main_activity_title">Simple MBTA</string>
     <string name="route_detail_activity_title">Route Detail</string>
 
-    <!-- Fragment Title -->
-    <string name="nearby_fragment_title">Nearby</string>
-    <string name="map_fragment_title">Map</string>
-    <string name="favorites_fragment_title">Favorites</string>
+    <!-- Tab Titles -->
+    <string name="map_title">Map</string>
+    <string name="search_title">Search</string>
+    <string name="favorites_title">Favorites</string>
+
+    <!-- Spinner Titles -->
+    <string name="direction">Direction</string>
+    <string name="from">From</string>
 
     <!-- Service Alerts -->
     <string name="service_advisory">Service Advisory</string>
