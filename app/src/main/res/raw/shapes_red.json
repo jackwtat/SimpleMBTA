@@ -118,6 +118,10 @@
               "type": "stop"
             },
             {
+              "id": "place-wlsta",
+              "type": "stop"
+            },
+            {
               "id": "place-qnctr",
               "type": "stop"
             },
@@ -205,6 +209,10 @@
             },
             {
               "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-wlsta",
               "type": "stop"
             },
             {
