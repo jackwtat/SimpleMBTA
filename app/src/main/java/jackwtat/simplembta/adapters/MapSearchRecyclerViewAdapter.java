@@ -118,7 +118,7 @@ public class MapSearchRecyclerViewAdapter
         return adapterItems.get(position);
     }
 
-    public void setData(Location targetLocation, List<Route> routes) {
+    public void setData(Location targetLocation, Route[] routes) {
         adapterItems.clear();
 
         this.targetLocation = targetLocation;

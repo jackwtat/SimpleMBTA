@@ -1,6 +1,7 @@
 package jackwtat.simplembta.activities;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,14 +15,14 @@ import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.fragments.ManualSearchFragment;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.PredictionsPagerAdapter;
+import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
 
 
 public class MainActivity extends AppCompatActivity implements ErrorManager.OnErrorChangedListener {
     public final static String LOG_TAG = "MainActivity";
 
-    private PredictionsPagerAdapter predictionsPagerAdapter;
+    private FragmentsPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private ErrorManager errorManager;
     private TextView errorTextView;
@@ -34,14 +35,24 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        predictionsPagerAdapter = new PredictionsPagerAdapter(getSupportFragmentManager(),
-                new MapSearchFragment(), new ManualSearchFragment());
+        Fragment[] fragments = {new MapSearchFragment(),
+                new ManualSearchFragment()};
+
+        /*Fragment[] fragments = {new MapSearchFragment(),
+                new ManualSearchFragment(),
+                new FavoritesFragment()};*/
+
+        String[] tabTitles = {getResources().getString(R.string.map_title),
+                getResources().getString(R.string.search_title),
+                getResources().getString(R.string.favorites_title)};
+
+        pagerAdapter = new FragmentsPagerAdapter(getSupportFragmentManager(),
+                fragments, tabTitles);
 
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.fragment_container);
-        viewPager.setAdapter(predictionsPagerAdapter);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);

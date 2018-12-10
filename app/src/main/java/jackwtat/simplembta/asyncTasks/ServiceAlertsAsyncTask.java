@@ -8,23 +8,33 @@ import jackwtat.simplembta.jsonParsers.ServiceAlertsJsonParser;
 
 public class ServiceAlertsAsyncTask extends AsyncTask<Void, Void, ServiceAlert[]> {
     private String realTimeApiKey;
-    private String routeId;
+    private String[] routeIds;
     private OnPostExecuteListener onPostExecuteListener;
 
     public ServiceAlertsAsyncTask(String realTimeApiKey,
-                                  String routeId,
+                                  String[] routeIds,
                                   OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
-        this.routeId = routeId;
+        this.routeIds = routeIds;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
     @Override
     protected ServiceAlert[] doInBackground(Void... voids) {
+        if (routeIds.length == 0) {
+            return new ServiceAlert[0];
+        }
+
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
+        StringBuilder routeArgBuilder = new StringBuilder();
+
+        for (String routeId : routeIds) {
+            routeArgBuilder.append(routeId).append(",");
+        }
+
         String[] routeArgs = {
-                "filter[route]=" + routeId,
+                "filter[route]=" + routeArgBuilder.toString(),
                 "include=stops"
         };
 

@@ -252,7 +252,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
                     refreshPredictions(false);
-                    refreshServiceAlertsView();
+                    refreshServiceAlerts();
                     if (!shapesLoaded) {
                         refreshShapes();
                     }
@@ -364,7 +364,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Refresh the activity to update UI so that the predictions and service alerts are accurate
         // as of the last update
         refreshPredictions(false);
-        refreshServiceAlertsView();
+        refreshServiceAlerts();
         refreshVehicles();
 
         // Get the route shapes if there aren't any
@@ -405,6 +405,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
+        }
+
+        if (serviceAlertsAsyncTask != null) {
+            serviceAlertsAsyncTask.cancel(true);
         }
 
         if (shapesAsyncTask != null) {
@@ -465,7 +469,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     clearVehicleMarkers();
 
                     refreshPredictions(true);
-                    refreshServiceAlertsView();
+                    refreshServiceAlerts();
                     refreshVehicles();
 
                 } else if (!errorManager.hasNetworkError()) {
@@ -513,9 +517,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 serviceAlertsAsyncTask.cancel(true);
             }
 
+            String[] routeId = {selectedRoute.getId()};
+
             serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
                     realTimeApiKey,
-                    selectedRoute.getId(),
+                    routeId,
                     this);
             serviceAlertsAsyncTask.execute();
 
@@ -614,7 +620,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         selectedRoute.clearServiceAlerts();
         selectedRoute.addAllServiceAlerts(serviceAlerts);
 
-        refreshServiceAlertsView();
+        refreshServiceAlerts();
     }
 
     @Override
@@ -663,7 +669,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void refreshServiceAlertsView() {
+    private void refreshServiceAlerts() {
         if (!userIsScrolling) {
             if (selectedRoute.getServiceAlerts().size() > 0) {
                 serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);

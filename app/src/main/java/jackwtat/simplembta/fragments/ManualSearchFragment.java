@@ -1,5 +1,6 @@
 package jackwtat.simplembta.fragments;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -244,8 +245,8 @@ public class ManualSearchFragment extends Fragment implements
             editor.putString("routeId", selectedRoute.getId());
             editor.putInt("directionId", selectedDirectionId);
 
-            for(int i = 0; i < 2; i++){
-                if(selectedRoute.getNearestStop(i)!=null){
+            for (int i = 0; i < 2; i++) {
+                if (selectedRoute.getNearestStop(i) != null) {
                     editor.putString("stopId_" + i, selectedRoute.getNearestStop(i).getId());
                 }
             }
@@ -361,9 +362,11 @@ public class ManualSearchFragment extends Fragment implements
                     serviceAlertsAsyncTask.cancel(true);
                 }
 
+                String[] routeId = {selectedRoute.getId()};
+
                 serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
                         realTimeApiKey,
-                        selectedRoute.getId(),
+                        routeId,
                         this);
                 serviceAlertsAsyncTask.execute();
 

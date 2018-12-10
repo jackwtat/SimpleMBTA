@@ -16,6 +16,8 @@ import jackwtat.simplembta.model.Stop;
 
 public class RouteDetailSpinners extends LinearLayout implements AdapterView.OnItemSelectedListener {
     private View rootView;
+    private LinearLayout directionLayout;
+    private LinearLayout stopLayout;
     private Spinner directionSpinner;
     private Spinner stopSpinner;
     private DirectionsSpinnerAdapter directionsAdapter;
@@ -50,6 +52,22 @@ public class RouteDetailSpinners extends LinearLayout implements AdapterView.OnI
 
         stopSpinner = rootView.findViewById(R.id.stop_spinner);
         stopSpinner.setOnItemSelectedListener(this);
+
+        directionLayout = rootView.findViewById(R.id.direction_spinner_layout);
+        directionLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                directionSpinner.performClick();
+            }
+        });
+
+        stopLayout = rootView.findViewById(R.id.stop_spinner_layout);
+        stopLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopSpinner.performClick();
+            }
+        });
     }
 
     public void populateDirectionSpinner(Direction[] directions) {

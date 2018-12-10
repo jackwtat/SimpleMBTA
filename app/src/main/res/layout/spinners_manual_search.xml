@@ -4,14 +4,43 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/route_spinner"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingLeft="4dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp" />
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/route_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp" />
+
+        <RelativeLayout
+            android:id="@+id/favorite_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingRight="12dp">
+
+            <ImageView
+                android:id="@+id/favorite_true_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_false"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/favorite_false_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_true"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -24,6 +53,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/direction_spinner_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
@@ -33,6 +63,7 @@
             android:paddingBottom="8dp">
 
             <TextView
+                android:id="@+id/direction_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
@@ -51,6 +82,7 @@
             android:background="#CCCCCC" />
 
         <LinearLayout
+            android:id="@+id/stop_spinner_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.67"
@@ -60,6 +92,7 @@
             android:paddingBottom="8dp">
 
             <TextView
+                android:id="@+id/stop_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"

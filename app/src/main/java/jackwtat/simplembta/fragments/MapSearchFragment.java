@@ -49,11 +49,23 @@ import java.util.TimerTask;
 import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter.OnItemClickListener;
-import jackwtat.simplembta.asyncTasks.MapSearchPredictionsAsyncTask;
+import jackwtat.simplembta.asyncTasks.PredictionsByLocationAsyncTask;
+import jackwtat.simplembta.asyncTasks.RoutesByStopsAsyncTask;
+import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
+import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
+import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.LocationClient.LocationClientCallbacks;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.routes.BlueLine;
+import jackwtat.simplembta.model.routes.CommuterRail;
+import jackwtat.simplembta.model.routes.CommuterRailNorthSide;
+import jackwtat.simplembta.model.routes.CommuterRailOldColony;
+import jackwtat.simplembta.model.routes.CommuterRailSouthSide;
+import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
@@ -67,7 +79,12 @@ import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
-        MapSearchPredictionsAsyncTask.OnPostExecuteListener, LocationClientCallbacks,
+        StopsByLocationAsyncTask.OnPostExecuteListener,
+        RoutesByStopsAsyncTask.OnPostExecuteListener,
+        PredictionsByLocationAsyncTask.OnPostExecuteListener,
+        SchedulesAsyncTask.OnPostExecuteListener,
+        ServiceAlertsAsyncTask.OnPostExecuteListener,
+        LocationClientCallbacks,
         ErrorManager.OnErrorChangedListener {
     public static final String LOG_TAG = "MapSearchFragment";
 
@@ -108,10 +125,15 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
     private LocationClient locationClient;
-    private MapSearchPredictionsAsyncTask predictionsAsyncTask;
     private MapSearchRecyclerViewAdapter recyclerViewAdapter;
     private ErrorManager errorManager;
     private Timer timer;
+
+    private StopsByLocationAsyncTask stopsAsyncTask;
+    private RoutesByStopsAsyncTask routesAsyncTask;
+    private PredictionsByLocationAsyncTask predictionsAsyncTask;
+    private SchedulesAsyncTask schedulesAsyncTask;
+    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
 
     private boolean refreshing = false;
     private boolean mapReady = false;
@@ -122,7 +144,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private long refreshTime = 0;
     private long onPauseTime = 0;
 
-    private List<Route> currentRoutes;
+    private HashMap<String, Stop> currentStops;
+    private HashMap<String, Route> currentRoutes;
+
     private Location userLocation = new Location("");
     private Location targetLocation = new Location("");
     private Marker selectedStopMarker = null;
@@ -228,7 +252,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions();
+
+                    if (!refreshing)
+                        refreshPredictionViews();
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
                 }
@@ -441,9 +467,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         refreshing = false;
 
-        if (predictionsAsyncTask != null) {
-            predictionsAsyncTask.cancel(true);
-        }
+        cancelAsyncTasks();
 
         if (timer != null) {
             timer.cancel();
@@ -533,13 +557,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onPostExecute(List<Route> routes) {
-        refreshing = false;
-        currentRoutes = new ArrayList<>(routes);
-        refreshPredictions();
-    }
-
-    @Override
     public void onErrorChanged() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -548,11 +565,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         errorManager.hasNetworkError()) {
                     if (currentRoutes != null) {
                         currentRoutes.clear();
-                        refreshPredictions();
+                        forceUpdate();
                     }
 
                     if (mapReady) {
-                        Log.i(LOG_TAG, "Error found");
                         UiSettings mapUiSettings = gMap.getUiSettings();
                         mapUiSettings.setMyLocationButtonEnabled(false);
                         mapTargetView.setVisibility(View.VISIBLE);
@@ -570,41 +586,239 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void backgroundUpdate() {
         if (!refreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
-            getPredictions();
+            update();
         }
     }
 
     private void forceUpdate() {
-        getPredictions();
+        update();
     }
 
-    private void getPredictions() {
+    private void update() {
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
             refreshing = true;
+
             refreshTime = new Date().getTime();
 
-            if (predictionsAsyncTask != null) {
-                predictionsAsyncTask.cancel(true);
-            }
-
-            predictionsAsyncTask = new MapSearchPredictionsAsyncTask(
-                    realTimeApiKey, targetLocation, this);
-            predictionsAsyncTask.execute();
+            getStops();
         } else {
             errorManager.setNetworkError(true);
+
             refreshing = false;
+
             swipeRefreshLayout.setRefreshing(false);
-            if (currentRoutes != null) {
+
+            if (currentRoutes != null)
                 currentRoutes.clear();
+        }
+    }
+
+    private void cancelAsyncTasks() {
+        if (stopsAsyncTask != null)
+            stopsAsyncTask.cancel(true);
+
+        if (routesAsyncTask != null)
+            routesAsyncTask.cancel(true);
+
+        if (predictionsAsyncTask != null)
+            predictionsAsyncTask.cancel(true);
+
+        if (schedulesAsyncTask != null)
+            schedulesAsyncTask.cancel(true);
+
+        if (serviceAlertsAsyncTask != null)
+            serviceAlertsAsyncTask.cancel(true);
+    }
+
+    private void getStops() {
+        if (stopsAsyncTask != null)
+            stopsAsyncTask.cancel(true);
+
+        stopsAsyncTask = new StopsByLocationAsyncTask(realTimeApiKey, targetLocation, this);
+
+        stopsAsyncTask.execute();
+    }
+
+    private void getRoutes() {
+        if (routesAsyncTask != null)
+            routesAsyncTask.cancel(true);
+
+        String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
+
+        routesAsyncTask = new RoutesByStopsAsyncTask(realTimeApiKey, stopIds, this);
+
+        routesAsyncTask.execute();
+    }
+
+    private void getPredictions() {
+        if (predictionsAsyncTask != null)
+            predictionsAsyncTask.cancel(true);
+
+        predictionsAsyncTask = new PredictionsByLocationAsyncTask(realTimeApiKey, targetLocation,
+                this);
+
+        predictionsAsyncTask.execute();
+    }
+
+    private void getSchedules() {
+        if (schedulesAsyncTask != null)
+            schedulesAsyncTask.cancel(true);
+
+        ArrayList<String> routeIds = new ArrayList<>();
+
+        // We'll only query routes that don't already have live pick-ups in this direction
+        // Light rail and heavy rail (Green, Red, Blue, and Orange Lines) on-time performances
+        // are too erratic and unreliable for scheduled predictions to be reliable
+        for (Route route : currentRoutes.values()) {
+            if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
+                routeIds.add(route.getId());
+            }
+        }
+
+        String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
+
+        schedulesAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
+                routeIds.toArray(new String[routeIds.size()]), stopIds, this);
+
+        schedulesAsyncTask.execute();
+    }
+
+    private void getServiceAlerts() {
+        if (serviceAlertsAsyncTask != null)
+            serviceAlertsAsyncTask.cancel(true);
+
+        serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
+                currentRoutes.keySet().toArray(new String[currentRoutes.size()]),
+                this);
+
+        serviceAlertsAsyncTask.execute();
+    }
+
+    @Override
+    public void onPostExecute(Stop[] stops) {
+        currentStops = new HashMap<>();
+
+        for (Stop stop : stops) {
+            currentStops.put(stop.getId(), stop);
+        }
+
+        getRoutes();
+    }
+
+    @Override
+    public void onPostExecute(Route[] routes) {
+        currentRoutes = new HashMap<>();
+
+        for (Route route : routes) {
+            currentRoutes.put(route.getId(), route);
+        }
+
+        getPredictions();
+        getServiceAlerts();
+    }
+
+    @Override
+    public void onPostExecute(Prediction[] predictions, boolean live) {
+        for (Prediction prediction : predictions) {
+            // Replace prediction's stop ID with its parent stop ID
+            if (currentStops.containsKey(prediction.getParentStopId())) {
+                prediction.setStop(currentStops.get(prediction.getParentStopId()));
+            }
+
+            // If the prediction is for the eastbound Green Line, then replace the route
+            // with the Green Line Grouped route. This is to reduce the maximum number of
+            // prediction cards displayed and reduces UI clutter.
+            if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
+                    prediction.getDirection() == Direction.EASTBOUND &&
+                    GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
+                prediction.setRoute(new GreenLineCombined());
+            }
+
+            // If the prediction is for the inbound Commuter Rail, then replace the route
+            // with the Commuter Rail Grouped route. This is to reduce the maximum number
+            // of prediction cards displayed and reduces UI clutter.
+            if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                    prediction.getDirection() == Direction.INBOUND &&
+                    CommuterRail.isCommuterRailHub(prediction.getStopId(), false)) {
+
+                if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {
+                    prediction.setRoute(new CommuterRailNorthSide());
+
+                } else if (CommuterRailSouthSide.isSouthSideCommuterRail(prediction.getRoute().getId())) {
+                    prediction.setRoute(new CommuterRailSouthSide());
+
+                } else if (CommuterRailOldColony.isOldColonyCommuterRail(prediction.getRoute().getId())) {
+                    prediction.setRoute(new CommuterRailOldColony());
+                }
+            }
+
+            // Add route to routes list if not already there
+            if (!currentRoutes.containsKey(prediction.getRouteId())) {
+                currentRoutes.put(prediction.getRouteId(), prediction.getRoute());
+            }
+
+            // Add stop to stops list if not already there
+            if (!currentStops.containsKey(prediction.getStopId())) {
+                currentStops.put(prediction.getStopId(), prediction.getStop());
+            }
+
+            // Add prediction to its respective route
+            int direction = prediction.getDirection();
+            String routeId = prediction.getRouteId();
+            Stop stop = currentStops.get(prediction.getStopId());
+
+            // If this prediction's stop is the route's nearest stop
+            if (stop.equals(currentRoutes.get(routeId).getNearestStop(direction))) {
+                currentRoutes.get(routeId).addPrediction(prediction);
+
+                // If route does not have predictions in this prediction's direction
+            } else if (!currentRoutes.get(routeId).hasPredictions(direction)) {
+                currentRoutes.get(routeId).setNearestStop(direction, stop);
+                currentRoutes.get(routeId).addPrediction(prediction);
+
+                // If this prediction's stop is closer than route's current nearest stop
+            } else if (stop.getLocation().distanceTo(targetLocation) <
+                    currentRoutes.get(routeId).getNearestStop(direction).getLocation()
+                            .distanceTo(targetLocation)
+                    && prediction.willPickUpPassengers()) {
+                currentRoutes.get(routeId).setNearestStop(direction, stop);
+                currentRoutes.get(routeId).addPrediction(prediction);
+            }
+        }
+
+        if (live) {
+            getSchedules();
+
+        } else {
+            refreshing = false;
+
+            refreshPredictionViews();
+        }
+    }
+
+    @Override
+    public void onPostExecute(ServiceAlert[] serviceAlerts) {
+        for (ServiceAlert alert : serviceAlerts) {
+            for (Route route : currentRoutes.values()) {
+                if (alert.affectsMode(route.getMode())) {
+                    route.addServiceAlert(alert);
+                } else {
+                    for (String affectedRouteId : alert.getAffectedRoutes()) {
+                        if (route.equals(affectedRouteId)) {
+                            route.addServiceAlert(alert);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
 
-    private void refreshPredictions() {
+    private void refreshPredictionViews() {
         if (!userIsScrolling && currentRoutes != null) {
-            recyclerViewAdapter.setData(targetLocation, currentRoutes);
+            recyclerViewAdapter.setData(targetLocation, currentRoutes.values().toArray(new Route[currentRoutes.size()]));
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
