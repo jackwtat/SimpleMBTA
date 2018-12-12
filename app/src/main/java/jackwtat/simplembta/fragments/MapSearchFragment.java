@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +56,7 @@ import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.LocationClient.LocationClientCallbacks;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.map.markers.StopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -144,12 +144,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private long refreshTime = 0;
     private long onPauseTime = 0;
 
-    private HashMap<String, Stop> currentStops;
-    private HashMap<String, Route> currentRoutes;
+    private HashMap<String, Stop> currentStops = new HashMap<>();
+    private HashMap<String, Route> currentRoutes = new HashMap<>();
 
     private Location userLocation = new Location("");
     private Location targetLocation = new Location("");
+
     private Marker selectedStopMarker = null;
+    private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private HashMap<String, Marker> keyStopMarkers = new HashMap<>();
     private Route[] keyRoutes = {
             new BlueLine("Blue"),
@@ -312,7 +314,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Draw the key routes
         for (int i = 0; i < keyRoutes.length; i++) {
             drawRouteShapes(keyRoutes[i], keyRoutes.length - i);
-            drawStopMarkers(keyRoutes[i]);
+            drawKeyStopMarkers(keyRoutes[i]);
         }
 
         // Set the action listeners
@@ -366,6 +368,16 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             } else {
                                 selectedStopMarker.showInfoWindow();
                             }
+                        }
+                    }
+
+                    if (gMap.getCameraPosition().zoom >= DEFAULT_MAP_ZOOM_LEVEL) {
+                        for (Marker marker : stopMarkers.values()) {
+                            marker.setVisible(false);
+                        }
+                    } else {
+                        for (Marker marker : stopMarkers.values()) {
+                            marker.setVisible(true);
                         }
                     }
                 }
@@ -698,10 +710,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPostExecute(Stop[] stops) {
-        currentStops = new HashMap<>();
+        currentStops.clear();
 
         for (Stop stop : stops) {
             currentStops.put(stop.getId(), stop);
+
         }
 
         getRoutes();
@@ -709,7 +722,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPostExecute(Route[] routes) {
-        currentRoutes = new HashMap<>();
+        currentRoutes.clear();
 
         for (Route route : routes) {
             currentRoutes.put(route.getId(), route);
@@ -845,6 +858,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerView.setNestedScrollingEnabled(false);
     }
 
+    private void clearStopMarkers() {
+        for (Marker marker : stopMarkers.values()) {
+            marker.remove();
+        }
+        stopMarkers.clear();
+    }
+
     private Shape[] getShapesFromJson(int jsonFile) {
         return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
@@ -876,7 +896,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void drawStopMarkers(Route route) {
+    private void drawKeyStopMarkers(Route route) {
         HashMap<String, Marker> markers = new HashMap<>();
 
         for (Shape shape : route.getAllShapes()) {
@@ -900,6 +920,19 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
 
         keyStopMarkers.putAll(markers);
+    }
+
+    private void drawStopMarker(Stop stop) {
+        Marker stopMarker = gMap.addMarker(new StopMarkerFactory().createMarkerOptions()
+                .position(new LatLng(
+                        stop.getLocation().getLatitude(),
+                        stop.getLocation().getLongitude()))
+                .zIndex(20)
+                .title(stop.getName()));
+
+        stopMarker.setTag(stop);
+
+        stopMarkers.put(stop.getId(), stopMarker);
     }
 
     private class LocationUpdateTimerTask extends TimerTask {
