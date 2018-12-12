@@ -107,7 +107,16 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final long LOCATION_UPDATE_RESTART_TIME = 300000;
 
     // Default level of zoom for the map
-    public static final int DEFAULT_MAP_ZOOM_LEVEL = 15;
+    public static final int DEFAULT_MAP_ZOOM_LEVEL = 16;
+
+    // Zoom level where stop markers become visible
+    public static final int STOP_MARKER_VISIBILITY_LEVEL = 15;
+
+    // Zoom level where key stop markers become visible
+    public static final int KEY_STOP_MARKER_VISIBILITY_LEVEL = 12;
+
+    // Distance in meters from last target location before visible refresh
+    public static final int DISTANCE_TO_FORCE_REFRESH = 200;
 
     // Map interaction statuses
     private static final int USER_HAS_NOT_MOVED_MAP = 0;
@@ -337,20 +346,26 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     // If the user has moved the map, then force a predictions update
                     if (mapState == USER_HAS_MOVED_MAP) {
-                        targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
-                        targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
-                        swipeRefreshLayout.setRefreshing(true);
-                        forceUpdate();
+                        Location newLocation = new Location("");
 
+                        newLocation.setLatitude(gMap.getCameraPosition().target.latitude);
+                        newLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+
+                        if (newLocation.distanceTo(targetLocation) > DISTANCE_TO_FORCE_REFRESH) {
+                            targetLocation.setLatitude(newLocation.getLatitude());
+                            targetLocation.setLongitude(newLocation.getLongitude());
+
+                            cancelUpdate();
+
+                            swipeRefreshLayout.setRefreshing(true);
+
+                            forceUpdate();
+                        }
                     } else if (mapTargetView.getVisibility() == View.VISIBLE) {
                         mapTargetView.setVisibility(View.GONE);
                     }
 
-                    if (gMap.getCameraPosition().zoom <= 11) {
-                        for (Marker marker : keyStopMarkers.values()) {
-                            marker.setVisible(false);
-                        }
-                    } else {
+                    if (gMap.getCameraPosition().zoom >= KEY_STOP_MARKER_VISIBILITY_LEVEL) {
                         for (Marker marker : keyStopMarkers.values()) {
                             marker.setVisible(true);
                         }
@@ -362,23 +377,22 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             markerLocation.setLatitude(markerPosition.latitude);
                             markerLocation.setLongitude(markerPosition.longitude);
 
-                            if (markerLocation.distanceTo(targetLocation) > 200) {
+                            if (markerLocation.distanceTo(targetLocation) > DISTANCE_TO_FORCE_REFRESH) {
                                 selectedStopMarker.hideInfoWindow();
                                 selectedStopMarker = null;
                             } else {
                                 selectedStopMarker.showInfoWindow();
                             }
                         }
-                    }
-
-                    if (gMap.getCameraPosition().zoom >= DEFAULT_MAP_ZOOM_LEVEL) {
-                        for (Marker marker : stopMarkers.values()) {
+                    } else {
+                        for (Marker marker : keyStopMarkers.values()) {
                             marker.setVisible(false);
                         }
-                    } else {
-                        for (Marker marker : stopMarkers.values()) {
-                            marker.setVisible(true);
-                        }
+                    }
+
+                    for (Marker marker : stopMarkers.values()) {
+                        marker.setVisible(
+                                gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL);
                     }
                 }
             }
@@ -479,7 +493,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         refreshing = false;
 
-        cancelAsyncTasks();
+        cancelUpdate();
 
         if (timer != null) {
             timer.cancel();
@@ -544,8 +558,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                 }
 
-                if (targetLocation.distanceTo(userLocation) > 400) {
+                if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH) {
                     targetLocation = userLocation;
+                    swipeRefreshLayout.setRefreshing(true);
                     forceUpdate();
                 } else {
                     targetLocation = userLocation;
@@ -627,7 +642,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void cancelAsyncTasks() {
+    private void cancelUpdate() {
         if (stopsAsyncTask != null)
             stopsAsyncTask.cancel(true);
 
@@ -715,6 +730,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         for (Stop stop : stops) {
             currentStops.put(stop.getId(), stop);
 
+        }
+
+        // Draw stop markers
+        String[] stopMarkerIds = stopMarkers.keySet().toArray(new String[stopMarkers.size()]);
+        String selectedStopId = "";
+        if (selectedStopMarker != null)
+            selectedStopId = ((Stop) selectedStopMarker.getTag()).getId();
+
+        for (String stopId : stopMarkerIds) {
+            if (!currentStops.containsKey(stopId) && !stopId.equals(selectedStopId)) {
+                stopMarkers.get(stopId).remove();
+                stopMarkers.remove(stopId);
+            }
+        }
+
+        for (Stop stop : currentStops.values()) {
+            if (!stopMarkers.containsKey(stop.getId()) && !keyStopMarkers.containsKey(stop.getId())) {
+                stopMarkers.put(stop.getId(), drawStopMarker(stop));
+            }
         }
 
         getRoutes();
@@ -858,13 +892,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerView.setNestedScrollingEnabled(false);
     }
 
-    private void clearStopMarkers() {
-        for (Marker marker : stopMarkers.values()) {
-            marker.remove();
-        }
-        stopMarkers.clear();
-    }
-
     private Shape[] getShapesFromJson(int jsonFile) {
         return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
@@ -922,7 +949,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         keyStopMarkers.putAll(markers);
     }
 
-    private void drawStopMarker(Stop stop) {
+
+    private Marker drawStopMarker(Stop stop) {
         Marker stopMarker = gMap.addMarker(new StopMarkerFactory().createMarkerOptions()
                 .position(new LatLng(
                         stop.getLocation().getLatitude(),
@@ -932,7 +960,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         stopMarker.setTag(stop);
 
-        stopMarkers.put(stop.getId(), stopMarker);
+        stopMarker.setVisible(gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL);
+
+        return stopMarker;
     }
 
     private class LocationUpdateTimerTask extends TimerTask {
