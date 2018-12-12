@@ -47,8 +47,8 @@ public class ServiceAlertsListView extends RelativeLayout {
         listDownArrow = rootView.findViewById(R.id.alerts_list_down_arrow);
         listUpArrow = rootView.findViewById(R.id.alerts_list_up_arrow);
 
-        alertsArrayAdapter = new ServiceAlertsListAdapter(context, new ArrayList<ServiceAlert>());
-        alertsArrayAdapter.addAll(alerts);
+        alertsArrayAdapter = new ServiceAlertsListAdapter(context, alerts);
+        //alertsArrayAdapter.addAll(alerts);
         alertsListView.setAdapter(alertsArrayAdapter);
 
         alertsListView.setOnScrollListener(new AbsListView.OnScrollListener() {

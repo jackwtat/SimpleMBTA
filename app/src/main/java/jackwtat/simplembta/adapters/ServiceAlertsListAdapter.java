@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -22,8 +22,7 @@ import jackwtat.simplembta.model.ServiceAlert;
 public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
     final private String LOG_TAG = "ServiceAlertListAdapter";
 
-    public ServiceAlertsListAdapter(
-            @NonNull Context context, ArrayList<ServiceAlert> alerts) {
+    public ServiceAlertsListAdapter(@NonNull Context context, List<ServiceAlert> alerts) {
         super(context, 0, alerts);
     }
 
