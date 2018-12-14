@@ -48,6 +48,7 @@ import java.util.TimerTask;
 import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter.OnItemClickListener;
+import jackwtat.simplembta.asyncTasks.PredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.PredictionsByLocationAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
@@ -121,6 +122,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Map interaction statuses
     private static final int USER_HAS_NOT_MOVED_MAP = 0;
     private static final int USER_HAS_MOVED_MAP = 1;
+    private static final int USER_HAS_SELECTED_STOP = 2;
 
     private View rootView;
     private AppBarLayout appBarLayout;
@@ -140,8 +142,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private StopsByLocationAsyncTask stopsAsyncTask;
     private RoutesByStopsAsyncTask routesAsyncTask;
-    private PredictionsByLocationAsyncTask predictionsAsyncTask;
-    private SchedulesAsyncTask schedulesAsyncTask;
+    private PredictionsAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
 
     private boolean refreshing = false;
@@ -150,6 +151,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private boolean userIsScrolling = false;
     private boolean staleLocation = true;
     private int mapState = USER_HAS_NOT_MOVED_MAP;
+    private int cameraMoveReason = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
     private long refreshTime = 0;
     private long onPauseTime = 0;
 
@@ -160,6 +162,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private Location targetLocation = new Location("");
 
     private Marker selectedStopMarker = null;
+    private Stop selectedStop = null;
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private HashMap<String, Marker> keyStopMarkers = new HashMap<>();
     private Route[] keyRoutes = {
@@ -331,6 +334,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onCameraMoveStarted(int reason) {
                 cameraIsMoving = true;
+                cameraMoveReason = reason;
 
                 if (reason == REASON_GESTURE) {
                     mapState = USER_HAS_MOVED_MAP;
@@ -345,54 +349,42 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     cameraIsMoving = false;
 
                     // If the user has moved the map, then force a predictions update
-                    if (mapState == USER_HAS_MOVED_MAP) {
-                        Location newLocation = new Location("");
+                    if (mapState == USER_HAS_MOVED_MAP &&
+                            cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                        clearSelectedStop();
 
-                        newLocation.setLatitude(gMap.getCameraPosition().target.latitude);
-                        newLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+                        targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
+                        targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
 
-                        if (newLocation.distanceTo(targetLocation) > DISTANCE_TO_FORCE_REFRESH) {
-                            targetLocation.setLatitude(newLocation.getLatitude());
-                            targetLocation.setLongitude(newLocation.getLongitude());
+                        swipeRefreshLayout.setRefreshing(true);
 
-                            cancelUpdate();
+                        cancelUpdate();
 
-                            swipeRefreshLayout.setRefreshing(true);
-
-                            forceUpdate();
-                        }
-                    } else if (mapTargetView.getVisibility() == View.VISIBLE) {
-                        mapTargetView.setVisibility(View.GONE);
+                        forceUpdate();
                     }
 
+                    // If the user has changed the zoom, then change key stop markers visibilities
                     if (gMap.getCameraPosition().zoom >= KEY_STOP_MARKER_VISIBILITY_LEVEL) {
                         for (Marker marker : keyStopMarkers.values()) {
                             marker.setVisible(true);
                         }
-
-                        if (selectedStopMarker != null) {
-                            LatLng markerPosition = selectedStopMarker.getPosition();
-
-                            Location markerLocation = new Location("");
-                            markerLocation.setLatitude(markerPosition.latitude);
-                            markerLocation.setLongitude(markerPosition.longitude);
-
-                            if (markerLocation.distanceTo(targetLocation) > DISTANCE_TO_FORCE_REFRESH) {
-                                selectedStopMarker.hideInfoWindow();
-                                selectedStopMarker = null;
-                            } else {
-                                selectedStopMarker.showInfoWindow();
-                            }
-                        }
                     } else {
                         for (Marker marker : keyStopMarkers.values()) {
-                            marker.setVisible(false);
+                            if (!marker.equals(selectedStopMarker))
+                                marker.setVisible(false);
                         }
                     }
 
-                    for (Marker marker : stopMarkers.values()) {
-                        marker.setVisible(
-                                gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL);
+                    // If the user has changed the zoom, then change stop markers visibilities
+                    if (gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL) {
+                        for (Marker marker : stopMarkers.values()) {
+                            marker.setVisible(true);
+                        }
+                    } else {
+                        for (Marker marker : stopMarkers.values()) {
+                            if (!marker.equals(selectedStopMarker))
+                                marker.setVisible(false);
+                        }
                     }
                 }
             }
@@ -400,34 +392,86 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                selectedStopMarker = marker;
-                mapState = USER_HAS_MOVED_MAP;
-                mapTargetView.setVisibility(View.VISIBLE);
-                gMap.animateCamera(CameraUpdateFactory.newLatLng(
-                        new LatLng(marker.getPosition().latitude, marker.getPosition().longitude)
-                ));
-                selectedStopMarker.showInfoWindow();
+                if (marker.getTag() instanceof Stop) {
+                    selectedStopMarker = marker;
+                    selectedStop = (Stop) marker.getTag();
 
-                return false;
+                    targetLocation.setLatitude(marker.getPosition().latitude);
+                    targetLocation.setLongitude(marker.getPosition().longitude);
+
+                    mapState = USER_HAS_SELECTED_STOP;
+
+                    mapTargetView.setVisibility(View.GONE);
+
+                    selectedStopMarker.showInfoWindow();
+
+                    swipeRefreshLayout.setRefreshing(true);
+
+                    cancelUpdate();
+
+                    forceUpdate();
+                }
+
+                return true;
+            }
+        });
+        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (selectedStopMarker != null) {
+                    mapState = USER_HAS_MOVED_MAP;
+
+                    targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
+                    targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+
+                    mapTargetView.setVisibility(View.VISIBLE);
+
+                    clearSelectedStop();
+
+                    swipeRefreshLayout.setRefreshing(true);
+
+                    cancelUpdate();
+
+                    forceUpdate();
+                }
             }
         });
         gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
                 mapState = USER_HAS_NOT_MOVED_MAP;
-                swipeRefreshLayout.setRefreshing(true);
+
                 targetLocation = userLocation;
+
+                clearSelectedStop();
+
+                mapTargetView.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(true);
+
+                cancelUpdate();
+
+                forceUpdate();
+
                 gMap.animateCamera(CameraUpdateFactory.newLatLng(
                         new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude())));
-                forceUpdate();
             }
         });
         gMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
                 mapState = USER_HAS_NOT_MOVED_MAP;
-                swipeRefreshLayout.setRefreshing(true);
+
                 targetLocation = userLocation;
+
+                clearSelectedStop();
+
+                mapTargetView.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(true);
+
+                cancelUpdate();
+
                 forceUpdate();
 
                 return false;
@@ -652,9 +696,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (predictionsAsyncTask != null)
             predictionsAsyncTask.cancel(true);
 
-        if (schedulesAsyncTask != null)
-            schedulesAsyncTask.cancel(true);
-
         if (serviceAlertsAsyncTask != null)
             serviceAlertsAsyncTask.cancel(true);
     }
@@ -690,8 +731,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void getSchedules() {
-        if (schedulesAsyncTask != null)
-            schedulesAsyncTask.cancel(true);
+        if (predictionsAsyncTask != null)
+            predictionsAsyncTask.cancel(true);
 
         ArrayList<String> routeIds = new ArrayList<>();
 
@@ -706,10 +747,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
 
-        schedulesAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
+        predictionsAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
                 routeIds.toArray(new String[routeIds.size()]), stopIds, this);
 
-        schedulesAsyncTask.execute();
+        predictionsAsyncTask.execute();
     }
 
     private void getServiceAlerts() {
@@ -729,7 +770,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         for (Stop stop : stops) {
             currentStops.put(stop.getId(), stop);
-
         }
 
         // Draw stop markers
@@ -865,7 +905,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void refreshPredictionViews() {
         if (!userIsScrolling && currentRoutes != null) {
-            recyclerViewAdapter.setData(targetLocation, currentRoutes.values().toArray(new Route[currentRoutes.size()]));
+            recyclerViewAdapter.setData(targetLocation,
+                    currentRoutes.values().toArray(new Route[currentRoutes.size()]), selectedStop);
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
@@ -890,6 +931,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         noPredictionsTextView.setVisibility(View.GONE);
         appBarLayout.setExpanded(true);
         recyclerView.setNestedScrollingEnabled(false);
+    }
+
+    private void clearSelectedStop() {
+        if (selectedStopMarker != null) {
+            selectedStopMarker.hideInfoWindow();
+            selectedStopMarker = null;
+            selectedStop = null;
+        }
     }
 
     private Shape[] getShapesFromJson(int jsonFile) {
