@@ -271,12 +271,14 @@ public class ManualSearchFragment extends Fragment implements
             @Override
             public void run() {
                 if (errorManager.hasNetworkError()) {
-                    selectedRoute.clearPredictions(Direction.INBOUND);
-                    selectedRoute.clearPredictions(Direction.OUTBOUND);
-                    selectedRoute.clearServiceAlerts();
+                    if (selectedRoute != null) {
+                        selectedRoute.clearPredictions(Direction.INBOUND);
+                        selectedRoute.clearPredictions(Direction.OUTBOUND);
+                        selectedRoute.clearServiceAlerts();
 
-                    refreshPredictions(true);
-                    refreshServiceAlerts();
+                        refreshPredictions(true);
+                        refreshServiceAlerts();
+                    }
                 }
             }
         });
