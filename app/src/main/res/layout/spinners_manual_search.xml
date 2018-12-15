@@ -24,7 +24,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:paddingRight="12dp">
+            android:paddingRight="12dp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/favorite_true_icon"
