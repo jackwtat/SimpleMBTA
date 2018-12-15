@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="8dp"
-    android:background="@color/cardview_light_background"
-    android:elevation="2dp">
+    android:background="@color/cardview_light_background">
 
     <RelativeLayout
         android:id="@+id/route_header_layout"
@@ -85,4 +83,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#CCCCCC" />
 </RelativeLayout>

@@ -105,7 +105,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final long FASTEST_LOCATION_CLIENT_INTERVAL = 250;
 
     // Time since last onStop() before restarting the location
-    public static final long LOCATION_UPDATE_RESTART_TIME = 300000;
+    public static final long LOCATION_UPDATE_RESTART_TIME = 180000;
 
     // Default level of zoom for the map
     public static final int DEFAULT_MAP_ZOOM_LEVEL = 16;
@@ -120,9 +120,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final int DISTANCE_TO_FORCE_REFRESH = 200;
 
     // Map interaction statuses
-    private static final int USER_HAS_NOT_MOVED_MAP = 0;
-    private static final int USER_HAS_MOVED_MAP = 1;
-    private static final int USER_HAS_SELECTED_STOP = 2;
+    public static final int USER_HAS_NOT_MOVED_MAP = 0;
+    public static final int USER_HAS_MOVED_MAP = 1;
+    public static final int USER_HAS_SELECTED_STOP = 2;
 
     private View rootView;
     private AppBarLayout appBarLayout;
@@ -339,6 +339,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 if (reason == REASON_GESTURE) {
                     mapState = USER_HAS_MOVED_MAP;
                     mapTargetView.setVisibility(View.VISIBLE);
+                    clearSelectedStop();
                 }
             }
         });
@@ -351,8 +352,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     // If the user has moved the map, then force a predictions update
                     if (mapState == USER_HAS_MOVED_MAP &&
                             cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                        clearSelectedStop();
-
                         targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
                         targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
 
@@ -512,17 +511,21 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         boolean locationPermissionGranted = ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
         staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
                 onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
 
         if (locationPermissionGranted && staleLocation) {
             mapState = USER_HAS_NOT_MOVED_MAP;
+            clearSelectedStop();
+
             if (mapReady) {
                 mapTargetView.setVisibility(View.GONE);
             }
         } else {
             forceUpdate();
-            if (mapReady) {
+
+            if (mapReady && mapState == USER_HAS_MOVED_MAP) {
                 mapTargetView.setVisibility(View.VISIBLE);
             }
         }

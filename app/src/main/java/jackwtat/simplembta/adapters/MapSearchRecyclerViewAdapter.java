@@ -3,12 +3,13 @@ package jackwtat.simplembta.adapters;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.Route;
@@ -40,14 +41,46 @@ public class MapSearchRecyclerViewAdapter
     public void onBindViewHolder(@NonNull MapSearchRecyclerViewAdapter.ViewHolder holder, int position) {
         final int i = position;
 
-        holder.predictionView.clear();
-        holder.predictionView.setPredictions(
-                adapterItems.get(i).route,
-                adapterItems.get(i).getDirection());
+        Route thisRoute = adapterItems.get(i).route;
+        int thisDirection = adapterItems.get(i).direction;
+        Stop thisStop = thisRoute.getNearestStop(thisDirection);
 
-        if (selectedStop != null) {
+        Route nextRoute;
+        int nextDirection;
+        Stop nextStop = null;
 
+        if (i + 1 <= adapterItems.size() - 1) {
+            nextRoute = adapterItems.get(i + 1).route;
+            nextDirection = adapterItems.get(i + 1).direction;
+            nextStop = nextRoute.getNearestStop(nextDirection);
         }
+
+        MapSearchPredictionItem predictionItem = holder.predictionView;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        predictionItem.clear();
+        predictionItem.setPredictions(thisRoute, thisDirection);
+
+        int bottomMargin;
+        if (selectedStop != null &&
+                thisStop != null && thisStop.getId().equals(selectedStop.getId()) &&
+                nextStop != null && !nextStop.getId().equals(selectedStop.getId())) {
+            bottomMargin = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    16,
+                    predictionItem.getContext().getResources().getDisplayMetrics());
+
+        } else {
+            bottomMargin = 0;
+        }
+
+        layoutParams.setMargins(
+                layoutParams.leftMargin,
+                layoutParams.topMargin,
+                layoutParams.rightMargin,
+                bottomMargin);
+        predictionItem.setLayoutParams(layoutParams);
 
         holder.predictionView.setOnClickListener(new View.OnClickListener() {
             @Override
