@@ -57,7 +57,6 @@ public class SchedulesAsyncTask extends PredictionsAsyncTask {
 
     @Override
     protected void onPostExecute(Prediction[] predictions) {
-        Log.i("SchedulesAsyncTask", "Count - " + predictions.length);
         onPostExecuteListener.onPostExecute(predictions, false);
     }
 }

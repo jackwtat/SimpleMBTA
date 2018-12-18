@@ -49,7 +49,7 @@ import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter.OnItemClickListener;
 import jackwtat.simplembta.asyncTasks.PredictionsAsyncTask;
-import jackwtat.simplembta.asyncTasks.PredictionsByLocationAsyncTask;
+import jackwtat.simplembta.asyncTasks.PredictionsByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
@@ -82,8 +82,7 @@ import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         StopsByLocationAsyncTask.OnPostExecuteListener,
         RoutesByStopsAsyncTask.OnPostExecuteListener,
-        PredictionsByLocationAsyncTask.OnPostExecuteListener,
-        SchedulesAsyncTask.OnPostExecuteListener,
+        PredictionsAsyncTask.OnPostExecuteListener,
         ServiceAlertsAsyncTask.OnPostExecuteListener,
         LocationClientCallbacks,
         ErrorManager.OnErrorChangedListener {
@@ -727,7 +726,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (predictionsAsyncTask != null)
             predictionsAsyncTask.cancel(true);
 
-        predictionsAsyncTask = new PredictionsByLocationAsyncTask(realTimeApiKey, targetLocation,
+        String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
+
+        predictionsAsyncTask = new PredictionsByStopsAsyncTask(realTimeApiKey, stopIds,
                 this);
 
         predictionsAsyncTask.execute();

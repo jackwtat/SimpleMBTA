@@ -180,7 +180,11 @@ public class MapSearchRecyclerViewAdapter
             } else if (otherStop == null) {
                 return -1;
             } else if (!thisStop.equals(otherStop)) {
-                if (thisStop.getLocation().distanceTo(targetLocation) <
+                if (thisStop.equals(selectedStop)) {
+                    return -1;
+                } else if (otherStop.equals(selectedStop)) {
+                    return 1;
+                } else if (thisStop.getLocation().distanceTo(targetLocation) <
                         otherStop.getLocation().distanceTo(targetLocation)) {
                     return -1;
                 } else if (thisStop.getLocation().distanceTo(targetLocation) >

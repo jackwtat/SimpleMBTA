@@ -521,7 +521,7 @@
         "latitude": 42.333005,
         "location_type": 0,
         "longitude": -71.080884,
-        "name": "Washington St @ Melnea Cass Blvd - Silver Line",
+        "name": "Washington St @ Melnea Cass Blvd",
         "platform_code": null,
         "platform_name": "South Station/Downtown Crossing",
         "wheelchair_boarding": 1
@@ -666,7 +666,7 @@
         "latitude": 42.347120,
         "location_type": 0,
         "longitude": -71.038878,
-        "name": "Silver Line Way before Manulife Building",
+        "name": "Silver Line Way",
         "platform_code": null,
         "platform_name": "South Station",
         "wheelchair_boarding": 1
@@ -1014,7 +1014,7 @@
         "latitude": 42.347120,
         "location_type": 0,
         "longitude": -71.038878,
-        "name": "Silver Line Way after Manulife Building",
+        "name": "Silver Line Way",
         "platform_code": null,
         "platform_name": "Airport/Design Center/Chelsea",
         "wheelchair_boarding": 1
@@ -1246,7 +1246,7 @@
         "latitude": 42.346490,
         "location_type": 0,
         "longitude": -71.034920,
-        "name": "Northern Ave opp Harbor St",
+        "name": "Northern Ave @ Harbor St",
         "platform_code": null,
         "platform_name": "South Station",
         "wheelchair_boarding": 0

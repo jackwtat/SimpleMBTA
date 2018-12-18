@@ -16,6 +16,28 @@ public class Stop implements Comparable<Stop>, Serializable {
     public Stop(String id) {
         if (id.equals("64") || id.equals("64000"))
             this.id = "64,64000";
+        else if (id.equals("3") || id.equals("61"))
+            this.id = "3,61";
+        else if (id.equals("4") || id.equals("60"))
+            this.id = "4,60";
+        else if (id.equals("5") || id.equals("55"))
+            this.id = "5,55";
+        else if (id.equals("1787") || id.equals("15176"))
+            this.id = "1787,15176";
+        else if (id.equals("1788") || id.equals("19402"))
+            this.id = "1788,19402";
+        else if (id.equals("5093") || id.equals("5100"))
+            this.id = "5093,5100";
+        else if (id.equals("5095") || id.equals("5098"))
+            this.id = "5095,5098";
+        else if (id.equals("15095") || id.equals("49003"))
+            this.id = "15095,49003";
+        else if (id.equals("74614") || id.equals("74624"))
+            this.id = "74614,74624";
+        else if (id.equals("247") || id.equals("31256"))
+            this.id = "247,31256";
+        else if (id.equals("30249") || id.equals("31257"))
+            this.id = "30249,31257";
         else
             this.id = id;
 
@@ -66,12 +88,6 @@ public class Stop implements Comparable<Stop>, Serializable {
             if (childId.equals(id)) {
                 return true;
             }
-        }
-
-        // Special ID for Dudley Station
-        if ((this.id.equals("64") || this.id.equals("64,64000")) && id.equals("64000")) {
-            this.id = "64,64000";
-            return true;
         }
 
         return false;
