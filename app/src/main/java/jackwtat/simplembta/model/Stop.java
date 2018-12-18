@@ -14,7 +14,11 @@ public class Stop implements Comparable<Stop>, Serializable {
     private double longitude = 0.0;
 
     public Stop(String id) {
-        this.id = id;
+        if (id.equals("64") || id.equals("64000"))
+            this.id = "64,64000";
+        else
+            this.id = id;
+
     }
 
     public String getId() {
