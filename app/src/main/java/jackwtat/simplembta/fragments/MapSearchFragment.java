@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -335,7 +336,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 cameraIsMoving = true;
                 cameraMoveReason = reason;
 
-                if (reason == REASON_GESTURE) {
+                if (reason == REASON_GESTURE && selectedStop == null) {
                     mapState = USER_HAS_MOVED_MAP;
                     mapTargetView.setVisibility(View.VISIBLE);
                     clearSelectedStop();
@@ -417,6 +418,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onMapClick(LatLng latLng) {
                 if (selectedStopMarker != null) {
+                    Log.i(LOG_TAG, "onMapClick");
+
                     mapState = USER_HAS_MOVED_MAP;
 
                     targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
