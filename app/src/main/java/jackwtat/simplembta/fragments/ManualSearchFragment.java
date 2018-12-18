@@ -1,7 +1,7 @@
 package jackwtat.simplembta.fragments;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.RouteDetailRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.RouteDetailPredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesAsyncTask;
@@ -166,6 +167,18 @@ public class ManualSearchFragment extends Fragment implements
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Set the onClickListener listener
+        recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                intent.putExtra("route", selectedRoute);
+                intent.putExtra("direction", selectedDirectionId);
+                intent.putExtra("refreshTime", refreshTime);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
