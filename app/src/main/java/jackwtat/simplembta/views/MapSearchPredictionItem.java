@@ -76,7 +76,7 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
 
         // Set the route name
-        routeNameView.setRouteNameView(getContext(), route);
+        routeNameView.setRouteNameView(route);
 
         // Add predictions
         if (pickUps.size() > 0) {

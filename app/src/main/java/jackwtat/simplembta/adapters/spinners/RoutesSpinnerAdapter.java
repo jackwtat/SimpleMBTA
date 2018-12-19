@@ -52,7 +52,7 @@ public class RoutesSpinnerAdapter extends ArrayAdapter<Route> {
         TextView routeDescriptionTextView = listItem.findViewById(R.id.route_description_text_view);
 
         if (route != null) {
-            nameTextView.setRouteNameView(context, route);
+            nameTextView.setRouteNameView(route);
 
             if (route.getMode() == Route.BUS) {
                 routeDescriptionTextView.setText(route.getLongName());
@@ -61,7 +61,7 @@ public class RoutesSpinnerAdapter extends ArrayAdapter<Route> {
                 routeDescriptionTextView.setVisibility(View.GONE);
             }
         } else {
-            nameTextView.setRouteNameView(context, new Route("null"));
+            nameTextView.setRouteNameView(new Route("null"));
         }
 
         return listItem;

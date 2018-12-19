@@ -35,15 +35,15 @@ public class RouteNameView extends RelativeLayout {
     public RouteNameView(Context context, Route route) {
         super(context);
         initializeViews(context);
-        setRouteNameView(context, route);
+        setRouteNameView(route);
     }
 
-    public void setRouteNameView(Context context, Route route) {
+    public void setRouteNameView(Route route) {
         // Set text
         if (route.getMode() == Route.BUS) {
-            textView.setText(DisplayNameUtil.getShortDisplayName(context, route));
+            textView.setText(DisplayNameUtil.getShortDisplayName(getContext(), route));
         } else {
-            textView.setText(DisplayNameUtil.getLongDisplayName(context, route));
+            textView.setText(DisplayNameUtil.getLongDisplayName(getContext(), route));
         }
 
         // Set text color
