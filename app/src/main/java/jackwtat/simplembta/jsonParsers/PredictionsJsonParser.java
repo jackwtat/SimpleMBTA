@@ -200,7 +200,7 @@ public class PredictionsJsonParser {
                         }
 
 
-                        // Retrive vehicle data
+                        // Retrieve vehicle data
                         try {
                             String vehicleId = jRelationships
                                     .getJSONObject("vehicle")
@@ -213,12 +213,15 @@ public class PredictionsJsonParser {
                         }
 
                         // If we don't already have a prediction with the same ID
-                        // or if the existing prediction is for the child route of this route,
+                        // or if the existing prediction is for the child route of this route
+                        // and the destination is not null,
                         // then add this prediction
-                        if (!predictions.containsKey(id) || Bus.isParentOf(
-                                prediction.getRoute().getId(),
-                                predictions.get(id).getRouteId())) {
-                            predictions.put(id, prediction);
+                        if (!prediction.getDestination().equals("null")) {
+                            if (!predictions.containsKey(id) || Bus.isParentOf(
+                                    prediction.getRoute().getId(),
+                                    predictions.get(id).getRouteId())) {
+                                predictions.put(id, prediction);
+                            }
                         }
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, "Unable to parse Prediction " + id);
