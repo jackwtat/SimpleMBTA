@@ -67,6 +67,8 @@ public class MapSearchRecyclerViewAdapter
             if (i == 0 && thisStop.equals(selectedStop)) {
                 header.setText(thisStop.getName());
 
+                ArrayList<String> colors = new ArrayList<>();
+
                 for (int j = 0; j < adapterItems.size(); j++) {
                     Route thisColorRoute = adapterItems.get(j).getRoute();
                     Stop thisColorStop = thisColorRoute.getNearestStop(adapterItems.get(j).direction);
@@ -80,9 +82,17 @@ public class MapSearchRecyclerViewAdapter
                     if (!thisColor.equals(previousColor) &&
                             (thisColorRoute.getMode() != Route.BUS || SilverLine.isSilverLine(thisColorRoute.getId())) &&
                             thisColorStop != null && thisColorStop.equals(selectedStop)) {
-                        header.addSecondaryColor(Color.parseColor(thisColor));
+                        //header.addSecondaryColor(Color.parseColor(thisColor));
+                        colors.add(thisColor);
                     }
                 }
+
+                int[] secondarycolors = new int[colors.size()];
+                for (int k = 0; k < secondarycolors.length; k++) {
+                    secondarycolors[k] = Color.parseColor(colors.get(k));
+                }
+
+                header.setSecondaryColors(secondarycolors);
 
                 header.setVisibility(View.VISIBLE);
 
