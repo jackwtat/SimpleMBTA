@@ -1,20 +1,22 @@
 package jackwtat.simplembta.adapters;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
+import jackwtat.simplembta.views.StationNameView;
 
 public class MapSearchRecyclerViewAdapter
         extends RecyclerView.Adapter<MapSearchRecyclerViewAdapter.ViewHolder> {
@@ -41,46 +43,61 @@ public class MapSearchRecyclerViewAdapter
     public void onBindViewHolder(@NonNull MapSearchRecyclerViewAdapter.ViewHolder holder, int position) {
         final int i = position;
 
+        MapSearchPredictionItem predictionItem = holder.predictionView;
+        StationNameView header = predictionItem.findViewById(R.id.prediction_header);
+
         Route thisRoute = adapterItems.get(i).route;
         int thisDirection = adapterItems.get(i).direction;
         Stop thisStop = thisRoute.getNearestStop(thisDirection);
+        Stop previousStop = null;
 
-        Route nextRoute;
-        int nextDirection;
-        Stop nextStop = null;
+        if (i > 0) {
+            Route previousRoute = adapterItems.get(i - 1).route;
+            int previousDirection = adapterItems.get(i - 1).direction;
 
-        if (i + 1 <= adapterItems.size() - 1) {
-            nextRoute = adapterItems.get(i + 1).route;
-            nextDirection = adapterItems.get(i + 1).direction;
-            nextStop = nextRoute.getNearestStop(nextDirection);
+            previousStop = previousRoute.getNearestStop(previousDirection);
         }
-
-        MapSearchPredictionItem predictionItem = holder.predictionView;
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         predictionItem.clear();
         predictionItem.setPredictions(thisRoute, thisDirection);
 
-        int bottomMargin;
-        if (selectedStop != null &&
-                thisStop != null && thisStop.getId().equals(selectedStop.getId()) &&
-                nextStop != null && !nextStop.getId().equals(selectedStop.getId())) {
-            bottomMargin = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    16,
-                    predictionItem.getContext().getResources().getDisplayMetrics());
+        header.reset();
 
+        if (selectedStop != null && thisStop != null) {
+            if (i == 0 && thisStop.equals(selectedStop)) {
+                header.setText(thisStop.getName());
+
+                for (int j = 0; j < adapterItems.size(); j++) {
+                    Route thisColorRoute = adapterItems.get(j).getRoute();
+                    Stop thisColorStop = thisColorRoute.getNearestStop(adapterItems.get(j).direction);
+                    String thisColor = adapterItems.get(j).getRoute().getPrimaryColor();
+                    String previousColor = null;
+
+                    if (j > 0) {
+                        previousColor = adapterItems.get(j - 1).getRoute().getPrimaryColor();
+                    }
+
+                    if (!thisColor.equals(previousColor) &&
+                            (thisColorRoute.getMode() != Route.BUS || SilverLine.isSilverLine(thisColorRoute.getId())) &&
+                            thisColorStop != null && thisColorStop.equals(selectedStop)) {
+                        header.addSecondaryColor(Color.parseColor(thisColor));
+                    }
+                }
+
+                header.setVisibility(View.VISIBLE);
+
+            } else if (!thisStop.equals(selectedStop) &&
+                    previousStop != null && previousStop.equals(selectedStop)) {
+                header.setText("Other Nearby Routes");
+
+                header.setVisibility(View.VISIBLE);
+
+            } else {
+                header.setVisibility(View.GONE);
+            }
         } else {
-            bottomMargin = 0;
+            header.setVisibility(View.GONE);
         }
-
-        layoutParams.setMargins(
-                layoutParams.leftMargin,
-                layoutParams.topMargin,
-                layoutParams.rightMargin,
-                bottomMargin);
-        predictionItem.setLayoutParams(layoutParams);
 
         holder.predictionView.setOnClickListener(new View.OnClickListener() {
             @Override
