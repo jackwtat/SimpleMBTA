@@ -46,8 +46,8 @@ public class RouteDetailPredictionItem extends LinearLayout {
 
         long countdownTime = prediction.getCountdownTime();
 
-        if (countdownTime < 90 * 60000) {
-            timeText = (countdownTime / 60000) + "";
+        if (countdownTime < 90 * 90000) {
+            timeText = (countdownTime / 90000) + "";
             minuteText = min;
         } else {
             Date predictionTime = prediction.getPredictionTime();
