@@ -51,8 +51,8 @@ public class IndividualPredictionItem extends LinearLayout {
 
         long countdownTime = prediction.getCountdownTime();
 
-        if (countdownTime < 60 * 90000) {
-            timeText = (countdownTime / 90000) + "";
+        if (countdownTime < 90 * 60000) {
+            timeText = (countdownTime / 60000) + "";
             minuteText = min;
         } else {
             Date predictionTime = prediction.getPredictionTime();
