@@ -92,26 +92,18 @@ public class MapSearchPredictionItem extends LinearLayout {
                     }
                 }
 
-                // For buses, add first live, pick-up prediction or scheduled prediction if there
-                // are no live predictions
+                // For buses, add first prediction and second prediction if it is live or has a
+                // different destination
             } else if (route.getMode() == Route.BUS) {
-                boolean livePredictionFound = false;
+                predictionsListLayout.addView(
+                        new IndividualPredictionItem(getContext(), pickUps.get(0)));
 
-                // Search for the first live pick-up prediction
-                for (Prediction p : pickUps) {
-                    if (p.isLive()) {
+                if (pickUps.size() > 1)
+                    if (!pickUps.get(0).getDestination().equals(pickUps.get(1).getDestination()) ||
+                            (!pickUps.get(0).isLive() && pickUps.get(1).isLive()))
                         predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), p));
-                        livePredictionFound = true;
-                        break;
-                    }
-                }
+                                new IndividualPredictionItem(getContext(), pickUps.get(1)));
 
-                // If unable to locate a current, live pick-up prediction, then add first prediction
-                if (!livePredictionFound) {
-                    predictionsListLayout.addView(
-                            new IndividualPredictionItem(getContext(), pickUps.get(0)));
-                }
 
                 // For all other routes, add first prediction
             } else {
