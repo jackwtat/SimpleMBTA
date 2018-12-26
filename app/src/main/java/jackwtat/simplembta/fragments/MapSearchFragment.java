@@ -548,28 +548,29 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
                 onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
 
-        if (locationPermissionGranted && staleLocation) {
+        if (locationPermissionGranted && staleLocation && selectedStop == null) {
             mapState = USER_HAS_NOT_MOVED_MAP;
             clearSelectedStop();
 
-            if (mapReady) {
+            if (mapReady)
                 mapTargetView.setVisibility(View.GONE);
-            }
-        } else {
-            forceUpdate();
 
-            if (mapReady && mapState == USER_HAS_MOVED_MAP) {
+        } else {
+            if (mapReady && mapState == USER_HAS_MOVED_MAP && selectedStop == null) {
                 mapTargetView.setVisibility(View.VISIBLE);
+
             } else if (selectedStop != null) {
                 targetLocation.setLatitude(selectedStop.getLocation().getLatitude());
                 targetLocation.setLongitude(selectedStop.getLocation().getLongitude());
 
-                if (mapReady) {
+                if (mapReady)
                     gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
                             DEFAULT_MAP_ZOOM_LEVEL));
-                }
+
             }
+
+            forceUpdate();
         }
     }
 
