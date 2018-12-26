@@ -449,21 +449,21 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onMapClick(LatLng latLng) {
                 if (selectedStopMarker != null) {
-                    Log.i(LOG_TAG, "onMapClick");
+                    if (mapState == USER_HAS_MOVED_MAP) {
+                        targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
+                        targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
 
-                    mapState = USER_HAS_MOVED_MAP;
+                        mapTargetView.setVisibility(View.VISIBLE);
+                    } else {
+                        targetLocation.setLatitude(userLocation.getLatitude());
+                        targetLocation.setLongitude(userLocation.getLongitude());
 
-                    targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
-                    targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
-
-                    mapTargetView.setVisibility(View.VISIBLE);
+                        mapTargetView.setVisibility(View.GONE);
+                    }
 
                     clearSelectedStop();
-
                     swipeRefreshLayout.setRefreshing(true);
-
                     cancelUpdate();
-
                     forceUpdate();
                 }
             }
