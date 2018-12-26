@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,6 +41,8 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +125,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Map interaction statuses
     public static final int USER_HAS_NOT_MOVED_MAP = 0;
     public static final int USER_HAS_MOVED_MAP = 1;
-    public static final int USER_HAS_SELECTED_STOP = 2;
 
     private View rootView;
     private AppBarLayout appBarLayout;
@@ -155,15 +157,24 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private long refreshTime = 0;
     private long onPauseTime = 0;
 
-    private HashMap<String, Stop> currentStops = new HashMap<>();
-    private HashMap<String, Route> currentRoutes = new HashMap<>();
-
+    // Data surrounding the user's current location
     private Location userLocation = new Location("");
-    private Location targetLocation = new Location("");
 
-    private Marker selectedStopMarker = null;
+    // Data surrounding the targeted location
+    private Location targetLocation = new Location("");
+    private HashMap<String, Stop> targetStops = new HashMap<>();
+    private HashMap<String, Route> targetRoutes = new HashMap<>();
+
+    // Data surrounding the location displayed on the map
+    private Location displayedLocation = new Location("");
+    private HashMap<String, Stop> displayedStops = new HashMap<>();
+    private HashMap<String, Marker> displayedStopMarkers = new HashMap<>();
+
+    // Selected stop data
     private Stop selectedStop = null;
-    private HashMap<String, Marker> stopMarkers = new HashMap<>();
+    private Marker selectedStopMarker = null;
+
+    // Key stop/route data
     private HashMap<String, Marker> keyStopMarkers = new HashMap<>();
     private Route[] keyRoutes = {
             new BlueLine("Blue"),
@@ -336,10 +347,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 cameraIsMoving = true;
                 cameraMoveReason = reason;
 
-                if (reason == REASON_GESTURE && selectedStop == null) {
+                if (reason == REASON_GESTURE) {
                     mapState = USER_HAS_MOVED_MAP;
-                    mapTargetView.setVisibility(View.VISIBLE);
-                    clearSelectedStop();
+
+                    if (selectedStop == null) {
+                        mapTargetView.setVisibility(View.VISIBLE);
+                        clearSelectedStop();
+                    }
                 }
             }
         });
@@ -349,17 +363,36 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 if (cameraIsMoving) {
                     cameraIsMoving = false;
 
+                    displayedLocation.setLatitude(gMap.getCameraPosition().target.latitude);
+                    displayedLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+
                     // If the user has moved the map, then force a predictions update
-                    if (mapState == USER_HAS_MOVED_MAP &&
-                            cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                        targetLocation.setLatitude(gMap.getCameraPosition().target.latitude);
-                        targetLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+                    if (cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE &&
+                            mapState == USER_HAS_MOVED_MAP && selectedStop == null) {
+                        targetLocation.setLatitude(displayedLocation.getLatitude());
+                        targetLocation.setLongitude(displayedLocation.getLongitude());
 
                         swipeRefreshLayout.setRefreshing(true);
 
                         cancelUpdate();
 
                         forceUpdate();
+
+                    } else if (selectedStop != null) {
+                        if (stopsAsyncTask == null ||
+                                stopsAsyncTask.getStatus() != AsyncTask.Status.RUNNING) {
+
+                            stopsAsyncTask = new StopsByLocationAsyncTask(
+                                    realTimeApiKey, displayedLocation,
+                                    new StopsByLocationAsyncTask.OnPostExecuteListener() {
+                                        @Override
+                                        public void onPostExecute(Stop[] stops) {
+                                            refreshStopMarkers(stops);
+                                        }
+                                    });
+
+                            stopsAsyncTask.execute();
+                        }
                     }
 
                     // If the user has changed the zoom, then change key stop markers visibilities
@@ -376,11 +409,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     // If the user has changed the zoom, then change stop markers visibilities
                     if (gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL) {
-                        for (Marker marker : stopMarkers.values()) {
+                        for (Marker marker : displayedStopMarkers.values()) {
                             marker.setVisible(true);
                         }
                     } else {
-                        for (Marker marker : stopMarkers.values()) {
+                        for (Marker marker : displayedStopMarkers.values()) {
                             if (!marker.equals(selectedStopMarker))
                                 marker.setVisible(false);
                         }
@@ -397,8 +430,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     targetLocation.setLatitude(marker.getPosition().latitude);
                     targetLocation.setLongitude(marker.getPosition().longitude);
-
-                    mapState = USER_HAS_SELECTED_STOP;
 
                     mapTargetView.setVisibility(View.GONE);
 
@@ -529,6 +560,15 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             if (mapReady && mapState == USER_HAS_MOVED_MAP) {
                 mapTargetView.setVisibility(View.VISIBLE);
+            } else if (selectedStop != null) {
+                targetLocation.setLatitude(selectedStop.getLocation().getLatitude());
+                targetLocation.setLongitude(selectedStop.getLocation().getLongitude());
+
+                if (mapReady) {
+                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
+                            DEFAULT_MAP_ZOOM_LEVEL));
+                }
             }
         }
     }
@@ -639,8 +679,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void run() {
                 if (errorManager.hasLocationPermissionDenied() || errorManager.hasLocationError() ||
                         errorManager.hasNetworkError()) {
-                    if (currentRoutes != null) {
-                        currentRoutes.clear();
+                    if (targetRoutes != null) {
+                        targetRoutes.clear();
                         forceUpdate();
                     }
 
@@ -686,8 +726,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             swipeRefreshLayout.setRefreshing(false);
 
-            if (currentRoutes != null)
-                currentRoutes.clear();
+            if (targetRoutes != null)
+                targetRoutes.clear();
         }
     }
 
@@ -718,7 +758,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (routesAsyncTask != null)
             routesAsyncTask.cancel(true);
 
-        String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
+        String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
 
         routesAsyncTask = new RoutesByStopsAsyncTask(realTimeApiKey, stopIds, this);
 
@@ -729,7 +769,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (predictionsAsyncTask != null)
             predictionsAsyncTask.cancel(true);
 
-        String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
+        String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
 
         predictionsAsyncTask = new PredictionsByStopsAsyncTask(realTimeApiKey, stopIds,
                 this);
@@ -746,13 +786,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // We'll only query routes that don't already have live pick-ups in this direction
         // Light rail and heavy rail (Green, Red, Blue, and Orange Lines) on-time performances
         // are too erratic and unreliable for scheduled predictions to be reliable
-        for (Route route : currentRoutes.values()) {
+        for (Route route : targetRoutes.values()) {
             if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
                 routeIds.add(route.getId());
             }
         }
 
-        String[] stopIds = currentStops.keySet().toArray(new String[currentStops.size()]);
+        String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
 
         predictionsAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
                 routeIds.toArray(new String[routeIds.size()]), stopIds, this);
@@ -765,7 +805,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             serviceAlertsAsyncTask.cancel(true);
 
         serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
-                currentRoutes.keySet().toArray(new String[currentRoutes.size()]),
+                targetRoutes.keySet().toArray(new String[targetRoutes.size()]),
                 this);
 
         serviceAlertsAsyncTask.execute();
@@ -773,40 +813,27 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onPostExecute(Stop[] stops) {
-        currentStops.clear();
-
+        // Update the target stops
+        targetStops.clear();
         for (Stop stop : stops) {
-            currentStops.put(stop.getId(), stop);
+            targetStops.put(stop.getId(), stop);
         }
 
-        // Draw stop markers
-        String[] stopMarkerIds = stopMarkers.keySet().toArray(new String[stopMarkers.size()]);
-        String selectedStopId = "";
-        if (selectedStopMarker != null)
-            selectedStopId = ((Stop) selectedStopMarker.getTag()).getId();
-
-        for (String stopId : stopMarkerIds) {
-            if (!currentStops.containsKey(stopId) && !stopId.equals(selectedStopId)) {
-                stopMarkers.get(stopId).remove();
-                stopMarkers.remove(stopId);
-            }
+        // If there is no selected stop, then update the stop markers
+        if (selectedStop == null) {
+            refreshStopMarkers(stops);
         }
 
-        for (Stop stop : currentStops.values()) {
-            if (!stopMarkers.containsKey(stop.getId()) && !keyStopMarkers.containsKey(stop.getId())) {
-                stopMarkers.put(stop.getId(), drawStopMarker(stop));
-            }
-        }
-
+        // Update the target routes
         getRoutes();
     }
 
     @Override
     public void onPostExecute(Route[] routes) {
-        currentRoutes.clear();
+        targetRoutes.clear();
 
         for (Route route : routes) {
-            currentRoutes.put(route.getId(), route);
+            targetRoutes.put(route.getId(), route);
         }
 
         getPredictions();
@@ -817,8 +844,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onPostExecute(Prediction[] predictions, boolean live) {
         for (Prediction prediction : predictions) {
             // Replace prediction's stop ID with its parent stop ID
-            if (currentStops.containsKey(prediction.getParentStopId())) {
-                prediction.setStop(currentStops.get(prediction.getParentStopId()));
+            if (targetStops.containsKey(prediction.getParentStopId())) {
+                prediction.setStop(targetStops.get(prediction.getParentStopId()));
             }
 
             // If the prediction is for the eastbound Green Line, then replace the route
@@ -849,36 +876,36 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
 
             // Add route to routes list if not already there
-            if (!currentRoutes.containsKey(prediction.getRouteId())) {
-                currentRoutes.put(prediction.getRouteId(), prediction.getRoute());
+            if (!targetRoutes.containsKey(prediction.getRouteId())) {
+                targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
             }
 
             // Add stop to stops list if not already there
-            if (!currentStops.containsKey(prediction.getStopId())) {
-                currentStops.put(prediction.getStopId(), prediction.getStop());
+            if (!targetStops.containsKey(prediction.getStopId())) {
+                targetStops.put(prediction.getStopId(), prediction.getStop());
             }
 
             // Add prediction to its respective route
             int direction = prediction.getDirection();
             String routeId = prediction.getRouteId();
-            Stop stop = currentStops.get(prediction.getStopId());
+            Stop stop = targetStops.get(prediction.getStopId());
 
             // If this prediction's stop is the route's nearest stop
-            if (stop.equals(currentRoutes.get(routeId).getNearestStop(direction))) {
-                currentRoutes.get(routeId).addPrediction(prediction);
+            if (stop.equals(targetRoutes.get(routeId).getNearestStop(direction))) {
+                targetRoutes.get(routeId).addPrediction(prediction);
 
                 // If route does not have predictions in this prediction's direction
-            } else if (!currentRoutes.get(routeId).hasPredictions(direction)) {
-                currentRoutes.get(routeId).setNearestStop(direction, stop);
-                currentRoutes.get(routeId).addPrediction(prediction);
+            } else if (!targetRoutes.get(routeId).hasPredictions(direction)) {
+                targetRoutes.get(routeId).setNearestStop(direction, stop);
+                targetRoutes.get(routeId).addPrediction(prediction);
 
                 // If this prediction's stop is closer than route's current nearest stop
             } else if (stop.getLocation().distanceTo(targetLocation) <
-                    currentRoutes.get(routeId).getNearestStop(direction).getLocation()
+                    targetRoutes.get(routeId).getNearestStop(direction).getLocation()
                             .distanceTo(targetLocation)
                     && prediction.willPickUpPassengers()) {
-                currentRoutes.get(routeId).setNearestStop(direction, stop);
-                currentRoutes.get(routeId).addPrediction(prediction);
+                targetRoutes.get(routeId).setNearestStop(direction, stop);
+                targetRoutes.get(routeId).addPrediction(prediction);
             }
         }
 
@@ -895,7 +922,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPostExecute(ServiceAlert[] serviceAlerts) {
         for (ServiceAlert alert : serviceAlerts) {
-            for (Route route : currentRoutes.values()) {
+            for (Route route : targetRoutes.values()) {
                 if (alert.affectsMode(route.getMode())) {
                     route.addServiceAlert(alert);
                 } else {
@@ -910,14 +937,42 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void refreshStopMarkers(Stop[] stops) {
+        HashMap<String, Void> newStopIds = new HashMap<>();
+        for (Stop stop : stops) {
+            newStopIds.put(stop.getId(), null);
+        }
+
+        String[] displayedStopIds = displayedStops.keySet().toArray(new String[displayedStops.size()]);
+
+        // Remove existing stop markers that are not in the argument Stops array and are not selected
+        for (String displayedStopId : displayedStopIds) {
+            if (!newStopIds.containsKey(displayedStopId) &&
+                    (selectedStop == null || !selectedStop.getId().equals(displayedStopId))) {
+                displayedStops.remove(displayedStopId);
+                displayedStopMarkers.get(displayedStopId).remove();
+                displayedStopMarkers.remove(displayedStopId);
+            }
+        }
+
+        // Display the new stops
+        for (Stop stop : stops) {
+            String stopId = stop.getId();
+            if (!displayedStops.containsKey(stopId) && !keyStopMarkers.containsKey(stopId)) {
+                displayedStops.put(stopId, stop);
+                displayedStopMarkers.put(stopId, drawStopMarker(stop));
+            }
+        }
+    }
+
     private void refreshPredictionViews() {
-        if (!userIsScrolling && currentRoutes != null) {
+        if (!userIsScrolling && targetRoutes != null) {
             recyclerViewAdapter.setData(targetLocation,
-                    currentRoutes.values().toArray(new Route[currentRoutes.size()]), selectedStop);
+                    targetRoutes.values().toArray(new Route[targetRoutes.size()]), selectedStop);
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
-                if (currentRoutes.size() == 0) {
+                if (targetRoutes.size() == 0) {
                     noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_services));
                 } else {
                     noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_predictions));
