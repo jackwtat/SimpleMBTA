@@ -14,15 +14,14 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
-import jackwtat.simplembta.views.StationNameView;
+import jackwtat.simplembta.views.PredictionHeaderView;
 
 public class MapSearchRecyclerViewAdapter
         extends RecyclerView.Adapter<MapSearchRecyclerViewAdapter.ViewHolder> {
     public static final String LOG_TAG = "MSRVAdapter";
 
-    private ArrayList<adapterItem> adapterItems = new ArrayList<>();
+    private ArrayList<AdapterItem> adapterItems = new ArrayList<>();
 
     private Stop selectedStop;
 
@@ -44,7 +43,7 @@ public class MapSearchRecyclerViewAdapter
         final int i = position;
 
         MapSearchPredictionItem predictionItem = holder.predictionView;
-        StationNameView header = predictionItem.findViewById(R.id.prediction_header);
+        PredictionHeaderView header = predictionItem.findViewById(R.id.prediction_header);
 
         Route thisRoute = adapterItems.get(i).route;
         int thisDirection = adapterItems.get(i).direction;
@@ -63,42 +62,44 @@ public class MapSearchRecyclerViewAdapter
 
         header.reset();
 
-        if (selectedStop != null && thisStop != null) {
+        if (i == 0 && selectedStop == null) {
+            header.setText(header.getContext().getResources().getString(R.string.nearby_services));
+
+            header.setVisibility(View.VISIBLE);
+        } else if (thisStop != null) {
             if (i == 0 && thisStop.equals(selectedStop)) {
                 header.setText(thisStop.getName());
 
-                ArrayList<String> colors = new ArrayList<>();
+                ArrayList<String> colorStrings = new ArrayList<>();
 
-                for (int j = 0; j < adapterItems.size(); j++) {
-                    Route thisColorRoute = adapterItems.get(j).getRoute();
-                    Stop thisColorStop = thisColorRoute.getNearestStop(adapterItems.get(j).direction);
-                    String thisColor = adapterItems.get(j).getRoute().getPrimaryColor();
-                    String previousColor = null;
+                for (AdapterItem item : adapterItems) {
+                    Route route = item.getRoute();
+                    int direction = item.getDirection();
+                    int mode = route.getMode();
+                    Stop stop = route.getNearestStop(direction);
+                    String color = route.getPrimaryColor();
 
-                    if (j > 0) {
-                        previousColor = adapterItems.get(j - 1).getRoute().getPrimaryColor();
-                    }
-
-                    if (!thisColor.equals(previousColor) &&
-                            (thisColorRoute.getMode() != Route.BUS || SilverLine.isSilverLine(thisColorRoute.getId())) &&
-                            thisColorStop != null && thisColorStop.equals(selectedStop)) {
-                        //header.addSecondaryColor(Color.parseColor(thisColor));
-                        colors.add(thisColor);
+                    if ((colorStrings.size() == 0 || !color.equals(colorStrings.get(colorStrings.size() - 1))) &&
+                            stop != null && stop.equals(selectedStop) &&
+                            (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL ||
+                                    mode == Route.FERRY)) {
+                        colorStrings.add(route.getPrimaryColor());
                     }
                 }
 
-                int[] secondarycolors = new int[colors.size()];
-                for (int k = 0; k < secondarycolors.length; k++) {
-                    secondarycolors[k] = Color.parseColor(colors.get(k));
+                int[] colorInts = new int[colorStrings.size()];
+                for (int k = 0; k < colorInts.length; k++) {
+                    colorInts[k] = Color.parseColor(colorStrings.get(k));
                 }
 
-                header.setSecondaryColors(secondarycolors);
+                header.setSecondaryColors(colorInts);
 
                 header.setVisibility(View.VISIBLE);
 
             } else if (!thisStop.equals(selectedStop) &&
                     previousStop != null && previousStop.equals(selectedStop)) {
-                header.setText("Other Nearby Routes");
+                header.setText(header.getContext().getResources().getString(
+                        R.string.other_nearby_services));
 
                 header.setVisibility(View.VISIBLE);
 
@@ -124,7 +125,7 @@ public class MapSearchRecyclerViewAdapter
         return adapterItems.size();
     }
 
-    public adapterItem getAdapterItem(int position) {
+    public AdapterItem getAdapterItem(int position) {
         return adapterItems.get(position);
     }
 
@@ -141,20 +142,20 @@ public class MapSearchRecyclerViewAdapter
 
             if (hasInboundPickUps || hasOutboundPickUps) {
                 if (hasInboundPickUps) {
-                    adapterItems.add(new adapterItem(route, Direction.INBOUND));
+                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
                 }
                 if (hasOutboundPickUps) {
-                    adapterItems.add(new adapterItem(route, Direction.OUTBOUND));
+                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
                 }
             } else if (route.hasNearbyStops()) {
                 if (route.getNearestStop(Direction.INBOUND) != null) {
-                    adapterItems.add(new adapterItem(route, Direction.INBOUND));
+                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
                 }
                 if (route.getNearestStop(Direction.OUTBOUND) != null) {
-                    adapterItems.add(new adapterItem(route, Direction.OUTBOUND));
+                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
                 }
             } else {
-                adapterItems.add(new adapterItem(route, Direction.NULL_DIRECTION));
+                adapterItems.add(new AdapterItem(route, Direction.NULL_DIRECTION));
             }
         }
 
@@ -186,17 +187,17 @@ public class MapSearchRecyclerViewAdapter
         }
     }
 
-    public class adapterItem implements Comparable<adapterItem> {
+    public class AdapterItem implements Comparable<AdapterItem> {
         Route route;
         int direction;
 
-        adapterItem(Route route, int direction) {
+        AdapterItem(Route route, int direction) {
             this.route = route;
             this.direction = direction;
         }
 
         @Override
-        public int compareTo(@NonNull adapterItem otherAdapterItem) {
+        public int compareTo(@NonNull AdapterItem otherAdapterItem) {
             Stop thisStop = route.getNearestStop(direction);
             Stop otherStop = otherAdapterItem.route.getNearestStop(otherAdapterItem.direction);
 

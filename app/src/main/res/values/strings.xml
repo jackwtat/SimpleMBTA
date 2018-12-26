@@ -39,6 +39,10 @@
     <string name="select_stop">Select a stop to see predictions</string>
     <string name="no_stops">No stops in this direction</string>
 
+    <!-- Prediction Header Texts -->
+    <string name="nearby_services">Nearby Services</string>
+    <string name="other_nearby_services">Other Nearby Services</string>
+
     <!-- Route Names -->
     <string name="red_line_long_name">Red Line</string>
     <string name="orange_line_long_name">Orange Line</string>

@@ -12,30 +12,30 @@ import android.widget.TextView;
 
 import jackwtat.simplembta.R;
 
-public class StationNameView extends LinearLayout {
+public class PredictionHeaderView extends LinearLayout {
     View rootView;
+    TextView headerTextView;
     View[] secondaryColors;
-    TextView stationNameTextView;
 
     int defaultPrimaryColor;
 
-    public StationNameView(Context context) {
+    public PredictionHeaderView(Context context) {
         super(context);
         initializeViews(context);
     }
 
-    public StationNameView(Context context, @Nullable AttributeSet attrs) {
+    public PredictionHeaderView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initializeViews(context);
     }
 
-    public StationNameView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public PredictionHeaderView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initializeViews(context);
     }
 
     public void setText(String name) {
-        stationNameTextView.setText(name);
+        headerTextView.setText(name);
     }
 
     public void setSecondaryColors(int[] colors) {
@@ -60,12 +60,12 @@ public class StationNameView extends LinearLayout {
     }
 
     private void initializeViews(Context context) {
-        rootView = inflate(context, R.layout.station_name_view, this);
+        rootView = inflate(context, R.layout.prediction_header_view, this);
         secondaryColors = new View[3];
         secondaryColors[0] = rootView.findViewById((R.id.secondary_color_0));
         secondaryColors[1] = rootView.findViewById((R.id.secondary_color_1));
         secondaryColors[2] = rootView.findViewById((R.id.secondary_color_2));
-        stationNameTextView = rootView.findViewById(R.id.station_name_text_view);
+        headerTextView = rootView.findViewById(R.id.header_text_view);
         defaultPrimaryColor = ContextCompat.getColor(context, R.color.error_message_background);
     }
 }
