@@ -52,6 +52,22 @@ public class PredictionHeaderView extends LinearLayout {
         }
     }
 
+    public void addSecondaryColor(int color) {
+        int i = 0;
+
+        while (i < secondaryColors.length && secondaryColors[i].getVisibility() == VISIBLE) {
+            i++;
+        }
+
+        if (i < secondaryColors.length && secondaryColors[i].getVisibility() != VISIBLE) {
+            Drawable background = secondaryColors[i].getBackground();
+
+            DrawableCompat.setTint(background, color);
+
+            secondaryColors[i].setVisibility(VISIBLE);
+        }
+    }
+
     public void reset() {
         setText("");
         for (View v : secondaryColors) {

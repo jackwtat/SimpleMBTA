@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
@@ -62,50 +63,50 @@ public class MapSearchRecyclerViewAdapter
 
         header.reset();
 
-        if (i == 0 && selectedStop == null) {
-            header.setText(header.getContext().getResources().getString(R.string.nearby_services));
-
-            header.setVisibility(View.VISIBLE);
-        } else if (thisStop != null) {
-            if (i == 0 && thisStop.equals(selectedStop)) {
+        // If this is the first prediction
+        if (i == 0) {
+            // If this is a selected prediction
+            if (selectedStop != null && selectedStop.equals(thisStop)) {
+                // Set the header text as the stop name
                 header.setText(thisStop.getName());
 
-                ArrayList<String> colorStrings = new ArrayList<>();
-
+                // Add the secondary colors
+                HashMap<String, Void> colors = new HashMap<>();
                 for (AdapterItem item : adapterItems) {
                     Route route = item.getRoute();
-                    int direction = item.getDirection();
                     int mode = route.getMode();
-                    Stop stop = route.getNearestStop(direction);
+                    Stop stop = route.getNearestStop(item.getDirection());
                     String color = route.getPrimaryColor();
 
-                    if ((colorStrings.size() == 0 || !color.equals(colorStrings.get(colorStrings.size() - 1))) &&
-                            stop != null && stop.equals(selectedStop) &&
+                    if (stop == null || !stop.equals(selectedStop))
+                        break;
+
+                    if (!colors.containsKey(color) && stop.equals(selectedStop) &&
                             (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL ||
                                     mode == Route.FERRY)) {
-                        colorStrings.add(route.getPrimaryColor());
+                        header.addSecondaryColor(Color.parseColor(color));
+                        colors.put(color, null);
                     }
                 }
 
-                int[] colorInts = new int[colorStrings.size()];
-                for (int k = 0; k < colorInts.length; k++) {
-                    colorInts[k] = Color.parseColor(colorStrings.get(k));
-                }
-
-                header.setSecondaryColors(colorInts);
-
                 header.setVisibility(View.VISIBLE);
 
-            } else if (!thisStop.equals(selectedStop) &&
-                    previousStop != null && previousStop.equals(selectedStop)) {
-                header.setText(header.getContext().getResources().getString(
-                        R.string.other_nearby_services));
-
-                header.setVisibility(View.VISIBLE);
-
+                // If this is not a selected prediction
             } else {
-                header.setVisibility(View.GONE);
+                header.setText(header.getContext().getResources().getString(R.string.nearby_services));
+
+                header.setVisibility(View.VISIBLE);
             }
+
+            // If this is the first non-selected prediction
+        } else if (thisStop != null && !thisStop.equals(selectedStop) &&
+                previousStop != null && previousStop.equals(selectedStop)) {
+            header.setText(header.getContext().getResources().getString(
+                    R.string.other_nearby_services));
+
+            header.setVisibility(View.VISIBLE);
+
+            // Otherwise, hide the header
         } else {
             header.setVisibility(View.GONE);
         }
