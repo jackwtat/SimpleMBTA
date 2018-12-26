@@ -545,10 +545,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         boolean locationPermissionGranted = ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        staleLocation = mapState == USER_HAS_NOT_MOVED_MAP ||
+        staleLocation = (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) ||
                 onResumeTime - onPauseTime > LOCATION_UPDATE_RESTART_TIME;
 
-        if (locationPermissionGranted && staleLocation && selectedStop == null) {
+        if (locationPermissionGranted && staleLocation) {
             mapState = USER_HAS_NOT_MOVED_MAP;
             clearSelectedStop();
 
