@@ -567,7 +567,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
                             DEFAULT_MAP_ZOOM_LEVEL));
-
             }
 
             forceUpdate();
