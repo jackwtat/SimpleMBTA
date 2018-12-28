@@ -92,23 +92,38 @@ public class MapSearchPredictionItem extends LinearLayout {
                     }
                 }
 
-                // For buses, add first prediction and second prediction if it is live or has a
-                // different destination
+                // For buses, add the first live prediction
+                // If there are no live predictions, then add the first non-live prediction
             } else if (route.getMode() == Route.BUS) {
+                int i = 0;
+                while (i < pickUps.size() && !pickUps.get(i).isLive()) {
+                    i++;
+                }
+
+                if (i >= pickUps.size()) {
+                    i = 0;
+                }
+
+                predictionsListLayout.addView(
+                        new IndividualPredictionItem(getContext(), pickUps.get(i)));
+
+                if (i + 1 < pickUps.size()) {
+                    if (!pickUps.get(i).getDestination().equals(pickUps.get(i + 1).getDestination())) {
+                        predictionsListLayout.addView(
+                                new IndividualPredictionItem(getContext(), pickUps.get(i + 1)));
+                    }
+                }
+
+                // For all other routes, add first prediction and second if it has a different
+                // prediction
+            } else {
                 predictionsListLayout.addView(
                         new IndividualPredictionItem(getContext(), pickUps.get(0)));
 
                 if (pickUps.size() > 1)
-                    if (!pickUps.get(0).getDestination().equals(pickUps.get(1).getDestination()) ||
-                            (!pickUps.get(0).isLive() && pickUps.get(1).isLive()))
+                    if (!pickUps.get(0).getDestination().equals(pickUps.get(1).getDestination()))
                         predictionsListLayout.addView(
                                 new IndividualPredictionItem(getContext(), pickUps.get(1)));
-
-
-                // For all other routes, add first prediction
-            } else {
-                predictionsListLayout.addView(
-                        new IndividualPredictionItem(getContext(), pickUps.get(0)));
             }
 
             // Display appropriate message if there are no predictions
