@@ -374,8 +374,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                         swipeRefreshLayout.setRefreshing(true);
 
-                        cancelUpdate();
-
                         forceUpdate();
 
                     } else if (selectedStop != null) {
@@ -426,6 +424,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public boolean onMarkerClick(Marker marker) {
                 if (marker.getTag() instanceof Stop) {
                     selectedStopMarker = marker;
+                    selectedStopMarker.showInfoWindow();
                     selectedStop = (Stop) marker.getTag();
 
                     targetLocation.setLatitude(marker.getPosition().latitude);
@@ -433,11 +432,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     mapTargetView.setVisibility(View.GONE);
 
-                    selectedStopMarker.showInfoWindow();
-
                     swipeRefreshLayout.setRefreshing(true);
-
-                    cancelUpdate();
 
                     forceUpdate();
                 }
@@ -463,7 +458,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     clearSelectedStop();
                     swipeRefreshLayout.setRefreshing(true);
-                    cancelUpdate();
                     forceUpdate();
                 }
             }
@@ -480,8 +474,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 mapTargetView.setVisibility(View.GONE);
 
                 swipeRefreshLayout.setRefreshing(true);
-
-                cancelUpdate();
 
                 forceUpdate();
 
@@ -501,8 +493,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 mapTargetView.setVisibility(View.GONE);
 
                 swipeRefreshLayout.setRefreshing(true);
-
-                cancelUpdate();
 
                 forceUpdate();
 
@@ -626,7 +616,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (mapReady && !cameraIsMoving) {
             userLocation = locationClient.getLastLocation();
 
-            if (mapState == USER_HAS_NOT_MOVED_MAP) {
+            if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
+                targetLocation = userLocation;
+
                 if (staleLocation) {
                     // If the user is far outside the MBTA's operating area, then center to Boston
                     if (userLocation.getLatitude() < 41.3 ||
@@ -648,11 +640,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
                 if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH) {
-                    targetLocation = userLocation;
                     swipeRefreshLayout.setRefreshing(true);
                     forceUpdate();
                 } else {
-                    targetLocation = userLocation;
                     backgroundUpdate();
                 }
             }
@@ -707,6 +697,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void forceUpdate() {
+        cancelUpdate();
         update();
     }
 
