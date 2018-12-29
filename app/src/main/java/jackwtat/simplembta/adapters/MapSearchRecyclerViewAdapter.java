@@ -47,8 +47,8 @@ public class MapSearchRecyclerViewAdapter
         PredictionHeaderView header = predictionItem.findViewById(R.id.prediction_header);
 
         Route thisRoute = adapterItems.get(i).route;
+        Stop thisStop = adapterItems.get(i).stop;
         int thisDirection = adapterItems.get(i).direction;
-        Stop thisStop = thisRoute.getNearestStop(thisDirection);
         Stop previousStop = null;
 
         if (i > 0) {
@@ -68,35 +68,40 @@ public class MapSearchRecyclerViewAdapter
             // If this is a selected prediction
             if (selectedStop != null && selectedStop.equals(thisStop)) {
                 // Set the header text as the stop name
-                header.setText(thisStop.getName());
+                header.setText(selectedStop.getName());
 
-                // Add the secondary colors
-                HashMap<String, Void> colors = new HashMap<>();
-                for (AdapterItem item : adapterItems) {
-                    Route route = item.getRoute();
-                    int mode = route.getMode();
-                    Stop stop = route.getNearestStop(item.getDirection());
-                    String color = route.getPrimaryColor();
+                // Add the colors
+                if (thisRoute.getMode() != Route.LIGHT_RAIL &&
+                        thisRoute.getMode() != Route.HEAVY_RAIL)
+                    header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
+                else {
+                    HashMap<String, Void> colors = new HashMap<>();
 
-                    if (stop == null || !stop.equals(selectedStop))
-                        break;
+                    for (AdapterItem item : adapterItems) {
+                        int mode = item.getRoute().getMode();
+                        String color = item.getRoute().getPrimaryColor();
 
-                    if (!colors.containsKey(color) && stop.equals(selectedStop) &&
-                            (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL ||
-                                    mode == Route.FERRY)) {
-                        header.addSecondaryColor(Color.parseColor(color));
-                        colors.put(color, null);
+                        if (!selectedStop.equals(item.getStop())) {
+                            break;
+                        }
+
+                        if (!colors.containsKey(color) &&
+                                (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL)) {
+                            header.addSecondaryColor(Color.parseColor(color));
+                            colors.put(color, null);
+                        }
                     }
                 }
 
-                header.setVisibility(View.VISIBLE);
-
                 // If this is not a selected prediction
+            } else if (selectedStop != null && !selectedStop.equals(thisStop)) {
+                String headerText = header.getContext().getResources().getString(R.string.near_this_stop);
+                header.setText(headerText);
             } else {
                 header.setText(header.getContext().getResources().getString(R.string.nearby_services));
-
-                header.setVisibility(View.VISIBLE);
             }
+
+            header.setVisibility(View.VISIBLE);
 
             // If this is the first non-selected prediction
         } else if (thisStop != null && !thisStop.equals(selectedStop) &&
@@ -190,11 +195,26 @@ public class MapSearchRecyclerViewAdapter
 
     public class AdapterItem implements Comparable<AdapterItem> {
         Route route;
+        Stop stop;
         int direction;
 
         AdapterItem(Route route, int direction) {
             this.route = route;
+            this.stop = route.getNearestStop(direction);
             this.direction = direction;
+        }
+
+
+        public Route getRoute() {
+            return route;
+        }
+
+        public Stop getStop() {
+            return stop;
+        }
+
+        public int getDirection() {
+            return direction;
         }
 
         @Override
@@ -227,14 +247,6 @@ public class MapSearchRecyclerViewAdapter
             } else {
                 return otherAdapterItem.direction - this.direction;
             }
-        }
-
-        public Route getRoute() {
-            return route;
-        }
-
-        public int getDirection() {
-            return direction;
         }
     }
 }
