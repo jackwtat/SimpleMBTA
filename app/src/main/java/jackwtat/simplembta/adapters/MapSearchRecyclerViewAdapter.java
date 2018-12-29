@@ -65,7 +65,7 @@ public class MapSearchRecyclerViewAdapter
 
         // If this is the first prediction
         if (i == 0) {
-            // If this is a selected prediction
+            // First prediction is located at the selected stop
             if (selectedStop != null && selectedStop.equals(thisStop)) {
                 // Set the header text as the stop name
                 header.setText(selectedStop.getName());
@@ -93,12 +93,13 @@ public class MapSearchRecyclerViewAdapter
                     }
                 }
 
-                // If this is not a selected prediction
+                // First prediction is not located at the selected stop
             } else if (selectedStop != null && !selectedStop.equals(thisStop)) {
                 String headerText = header.getContext().getResources().getString(R.string.near_this_stop);
                 header.setText(headerText);
+                // There is no selected stop
             } else {
-                header.setText(header.getContext().getResources().getString(R.string.nearby_services));
+                header.setText(header.getContext().getResources().getString(R.string.nearby));
             }
 
             header.setVisibility(View.VISIBLE);
@@ -107,7 +108,7 @@ public class MapSearchRecyclerViewAdapter
         } else if (thisStop != null && !thisStop.equals(selectedStop) &&
                 previousStop != null && previousStop.equals(selectedStop)) {
             header.setText(header.getContext().getResources().getString(
-                    R.string.other_nearby_services));
+                    R.string.near_this_stop));
 
             header.setVisibility(View.VISIBLE);
 

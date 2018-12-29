@@ -40,7 +40,7 @@
     <string name="no_stops">No stops in this direction</string>
 
     <!-- Prediction Header Texts -->
-    <string name="nearby_services">Nearby</string>
+    <string name="nearby">Nearby</string>
     <string name="other_nearby_services">Other Nearby Services</string>
     <string name="near_this_stop">Near This Stop</string>
 
