@@ -129,10 +129,15 @@ public class MapSearchPredictionItem extends LinearLayout {
             // Display appropriate message if there are no predictions
         } else {
             StringBuilder stringBuilder = new StringBuilder();
+
+            String directionText = route.getDirection(direction).getName().toLowerCase();
+            if (!directionText.contains("bound"))
+                directionText += "bound";
+
             if (stop != null) {
                 stringBuilder.append(getContext().getResources().getString(R.string.no_predictions_this_stop_p1))
                         .append(" ")
-                        .append(route.getDirection(direction).getName().toLowerCase())
+                        .append(directionText)
                         .append(" ")
                         .append(getContext().getResources().getString(R.string.no_predictions_this_stop_p2));
             } else {
