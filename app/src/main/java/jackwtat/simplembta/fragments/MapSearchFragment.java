@@ -119,6 +119,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Zoom level where key stop markers become visible
     public static final int KEY_STOP_MARKER_VISIBILITY_LEVEL = 12;
 
+    // Distance in meters from last target location before target location can be updated
+    public static final int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
+
     // Distance in meters from last target location before visible refresh
     public static final int DISTANCE_TO_FORCE_REFRESH = 200;
 
@@ -617,8 +620,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             userLocation = locationClient.getLastLocation();
 
             if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
-                targetLocation = userLocation;
-
                 if (staleLocation) {
                     // If the user is far outside the MBTA's operating area, then center to Boston
                     if (userLocation.getLatitude() < 41.3 ||
@@ -639,7 +640,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                 }
 
-                if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH) {
+                boolean forceRefresh = targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH;
+
+                if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE)
+                    targetLocation = userLocation;
+
+                if (forceRefresh) {
                     swipeRefreshLayout.setRefreshing(true);
                     forceUpdate();
                 } else {
