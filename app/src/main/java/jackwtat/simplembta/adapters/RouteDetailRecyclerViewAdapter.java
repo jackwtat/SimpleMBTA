@@ -16,8 +16,8 @@ public class RouteDetailRecyclerViewAdapter
         extends RecyclerView.Adapter<RouteDetailRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Prediction> predictions;
-
     private OnItemClickListener onItemClickListener;
+    private boolean onClickAnimationEnabled = true;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         RouteDetailPredictionItem predictionView;
@@ -44,6 +44,8 @@ public class RouteDetailRecyclerViewAdapter
 
         holder.predictionView.clear();
         holder.predictionView.setPrediction(predictions.get(position));
+
+        holder.predictionView.enableOnClickAnimation(onClickAnimationEnabled);
 
         holder.predictionView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +83,10 @@ public class RouteDetailRecyclerViewAdapter
     public void clear() {
         this.predictions.clear();
         notifyDataSetChanged();
+    }
+
+    public void enableOnClickAnimation(boolean enabled) {
+        onClickAnimationEnabled = enabled;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

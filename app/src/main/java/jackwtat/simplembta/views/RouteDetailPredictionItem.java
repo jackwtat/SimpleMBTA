@@ -22,6 +22,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
     TextView dropOffIndicator;
     TextView destinationTextView;
     ImageView enrouteIcon;
+    View onClickAnimation;
 
     String min;
 
@@ -70,6 +71,14 @@ public class RouteDetailPredictionItem extends LinearLayout {
         destinationTextView.setText(prediction.getDestination());
     }
 
+    public void enableOnClickAnimation(boolean enabled) {
+        if (enabled)
+            onClickAnimation.setVisibility(VISIBLE);
+        else
+            onClickAnimation.setVisibility(GONE);
+
+    }
+
     public void clear() {
         timeTextView.setText("");
         minuteTextView.setText("");
@@ -86,6 +95,8 @@ public class RouteDetailPredictionItem extends LinearLayout {
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         enrouteIcon = rootView.findViewById(R.id.enroute_icon);
+        onClickAnimation = rootView.findViewById(R.id.on_click_animation);
+
         min = context.getResources().getString(R.string.min);
     }
 }

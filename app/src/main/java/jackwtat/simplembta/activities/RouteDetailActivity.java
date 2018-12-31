@@ -266,6 +266,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Disable recycler view onClick animation
+        recyclerViewAdapter.enableOnClickAnimation(false);
     }
 
     @Override
