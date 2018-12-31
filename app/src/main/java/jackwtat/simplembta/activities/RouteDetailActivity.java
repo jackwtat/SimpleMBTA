@@ -266,25 +266,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-
-        // Set the onClick listener
-        recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Prediction prediction = recyclerViewAdapter.getPrediction(position);
-
-                if (selectedVehicleMarker != null) {
-                    selectedVehicleMarker.hideInfoWindow();
-                }
-
-                Marker vehicleMarker = vehicleMarkers.get(prediction.getVehicleId());
-
-                if (vehicleMarker != null) {
-                    selectedVehicleMarker = vehicleMarker;
-                    selectedVehicleMarker.showInfoWindow();
-                }
-            }
-        });
     }
 
     @Override
