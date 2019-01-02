@@ -470,7 +470,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onMyLocationClick(@NonNull Location location) {
                 mapState = USER_HAS_NOT_MOVED_MAP;
 
-                targetLocation = userLocation;
+                targetLocation = location;
 
                 clearSelectedStop();
 
