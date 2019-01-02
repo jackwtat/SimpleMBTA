@@ -1,14 +1,18 @@
 package jackwtat.simplembta.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -276,6 +280,29 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         gMap = googleMap;
         mapReady = true;
 
+        // Move the map camera to the selected stop
+        Stop stop = selectedRoute.getNearestStop(selectedDirectionId);
+        LatLng latLng = (stop == null)
+                ? new LatLng(42.3604, -71.0580)
+                : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM_LEVEL));
+
+        // Set the map style
+        gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+        // Set the map UI settings
+        UiSettings mapUiSettings = gMap.getUiSettings();
+        mapUiSettings.setRotateGesturesEnabled(false);
+        mapUiSettings.setTiltGesturesEnabled(false);
+        mapUiSettings.setZoomControlsEnabled(true);
+
+        // Enable map location UI features
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            gMap.setMyLocationEnabled(true);
+            mapUiSettings.setMyLocationButtonEnabled(true);
+        }
+
         // Set the action listeners
         gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
@@ -310,22 +337,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 return true;
             }
         });
-
-        // Move the map camera to the selected stop
-        Stop stop = selectedRoute.getNearestStop(selectedDirectionId);
-        LatLng latLng = (stop == null)
-                ? new LatLng(42.3604, -71.0580)
-                : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM_LEVEL));
-
-        // Set the map style
-        gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
-
-        // Set the map UI settings
-        UiSettings mapUiSettings = gMap.getUiSettings();
-        mapUiSettings.setRotateGesturesEnabled(false);
-        mapUiSettings.setTiltGesturesEnabled(false);
-        mapUiSettings.setZoomControlsEnabled(true);
+        gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
+                gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                        new LatLng(location.getLatitude(), location.getLongitude())));
+            }
+        });
 
         // Load route shapes
         getShapes();
