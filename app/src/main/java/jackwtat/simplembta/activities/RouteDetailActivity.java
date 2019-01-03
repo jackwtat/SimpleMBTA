@@ -666,14 +666,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void refreshServiceAlerts() {
         if (!userIsScrolling) {
-            if (selectedRoute.getServiceAlerts().size() > 0) {// Set the service alerts view
+            if (selectedRoute.getServiceAlerts().size() > 0) {
                 recyclerViewAdapter.setServiceAlertsView(selectedRoute);
-                /*serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);
-                serviceAlertsIndicatorView.setVisibility(View.VISIBLE);*/
 
             } else {
                 recyclerViewAdapter.setServiceAlertsView(null);
-                /*serviceAlertsIndicatorView.setVisibility(View.GONE);*/
             }
         }
     }
