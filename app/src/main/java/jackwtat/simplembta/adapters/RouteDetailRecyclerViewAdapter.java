@@ -10,14 +10,15 @@ import java.util.Collections;
 import java.util.List;
 
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.views.RouteDetailPredictionItem;
 
 public class RouteDetailRecyclerViewAdapter
         extends RecyclerView.Adapter<RouteDetailRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Prediction> predictions;
-    private OnItemClickListener onItemClickListener;
-    private boolean onClickAnimationEnabled = true;
+    private OnItemClickListener onItemClickListener = null;
+    private Route routeServiceAlerts = null;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         RouteDetailPredictionItem predictionView;
@@ -40,21 +41,25 @@ public class RouteDetailRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull RouteDetailRecyclerViewAdapter.ViewHolder holder, int position) {
-        final int i = position;
-
         holder.predictionView.clear();
         holder.predictionView.setPrediction(predictions.get(position));
 
-        holder.predictionView.enableOnClickAnimation(onClickAnimationEnabled);
+        if (position == 0 && routeServiceAlerts != null && routeServiceAlerts.getServiceAlerts().size() > 0) {
+            holder.predictionView.setServiceAlerts(routeServiceAlerts);
+            holder.predictionView.enableOnClickAnimation(false);
 
-        holder.predictionView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onItemClickListener != null) {
+        } else if (onItemClickListener != null) {
+            final int i = position;
+
+            holder.predictionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     onItemClickListener.onItemClick(i);
                 }
-            }
-        });
+            });
+
+            holder.predictionView.enableOnClickAnimation(true);
+        }
     }
 
     @Override
@@ -85,8 +90,8 @@ public class RouteDetailRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
-    public void enableOnClickAnimation(boolean enabled) {
-        onClickAnimationEnabled = enabled;
+    public void setServiceAlertsView(Route route) {
+        routeServiceAlerts = route;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

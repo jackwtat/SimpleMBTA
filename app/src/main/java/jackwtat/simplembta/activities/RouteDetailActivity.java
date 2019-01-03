@@ -108,7 +108,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private TextView noPredictionsTextView;
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
-    private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private RouteDetailSpinners routeDetailSpinners;
 
     private String realTimeApiKey;
@@ -207,9 +206,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
         params.setBehavior(behavior);
 
-        // Get service alerts indicator
-        serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
-
         // Get and initialize map view
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
@@ -270,9 +266,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-
-        // Disable recycler view onClick animation
-        recyclerViewAdapter.enableOnClickAnimation(false);
     }
 
     @Override
@@ -673,12 +666,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void refreshServiceAlerts() {
         if (!userIsScrolling) {
-            if (selectedRoute.getServiceAlerts().size() > 0) {
-                serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);
-                serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
+            if (selectedRoute.getServiceAlerts().size() > 0) {// Set the service alerts view
+                recyclerViewAdapter.setServiceAlertsView(selectedRoute);
+                /*serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);
+                serviceAlertsIndicatorView.setVisibility(View.VISIBLE);*/
 
             } else {
-                serviceAlertsIndicatorView.setVisibility(View.GONE);
+                recyclerViewAdapter.setServiceAlertsView(null);
+                /*serviceAlertsIndicatorView.setVisibility(View.GONE);*/
             }
         }
     }

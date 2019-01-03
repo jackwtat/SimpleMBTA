@@ -13,9 +13,12 @@ import java.util.Date;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.routes.Route;
 
 public class RouteDetailPredictionItem extends LinearLayout {
     View rootView;
+    View mainContent;
+    ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     TextView timeTextView;
     TextView minuteTextView;
     TextView liveIndicator;
@@ -71,6 +74,11 @@ public class RouteDetailPredictionItem extends LinearLayout {
         destinationTextView.setText(prediction.getDestination());
     }
 
+    public void setServiceAlerts(Route route) {
+        serviceAlertsIndicatorView.setServiceAlerts(route);
+        serviceAlertsIndicatorView.setVisibility(VISIBLE);
+    }
+
     public void enableOnClickAnimation(boolean enabled) {
         if (enabled)
             onClickAnimation.setVisibility(VISIBLE);
@@ -80,6 +88,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
     }
 
     public void clear() {
+        serviceAlertsIndicatorView.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
         liveIndicator.setVisibility(INVISIBLE);
@@ -89,6 +98,8 @@ public class RouteDetailPredictionItem extends LinearLayout {
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_route_detail_prediction, this);
+        mainContent = rootView.findViewById(R.id.main_content);
+        serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
