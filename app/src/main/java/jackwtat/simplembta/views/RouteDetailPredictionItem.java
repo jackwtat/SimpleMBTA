@@ -72,11 +72,15 @@ public class RouteDetailPredictionItem extends LinearLayout {
         }
 
         destinationTextView.setText(prediction.getDestination());
+
+        serviceAlertsIndicatorView.setVisibility(GONE);
     }
 
     public void setServiceAlerts(Route route) {
         serviceAlertsIndicatorView.setServiceAlerts(route);
         serviceAlertsIndicatorView.setVisibility(VISIBLE);
+
+        mainContent.setVisibility(GONE);
     }
 
     public void enableOnClickAnimation(boolean enabled) {

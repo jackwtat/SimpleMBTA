@@ -16,21 +16,11 @@ import jackwtat.simplembta.views.RouteDetailPredictionItem;
 public class RouteDetailRecyclerViewAdapter
         extends RecyclerView.Adapter<RouteDetailRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<Prediction> predictions;
+    private ArrayList<Prediction> predictions = new ArrayList<>();
     private OnItemClickListener onItemClickListener = null;
     private Route routeServiceAlerts = null;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        RouteDetailPredictionItem predictionView;
-
-        ViewHolder(RouteDetailPredictionItem v) {
-            super(v);
-            predictionView = v;
-        }
-    }
-
     public RouteDetailRecyclerViewAdapter() {
-        predictions = new ArrayList<>();
     }
 
     @NonNull
@@ -40,35 +30,36 @@ public class RouteDetailRecyclerViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RouteDetailRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RouteDetailRecyclerViewAdapter.ViewHolder holder, int i) {
+        final int position = routeServiceAlerts == null ?
+                i :
+                i - 1;
+
         holder.predictionView.clear();
-        holder.predictionView.setPrediction(predictions.get(position));
 
-        if (position == 0 && routeServiceAlerts != null && routeServiceAlerts.getServiceAlerts().size() > 0) {
+        if (position == -1) {
             holder.predictionView.setServiceAlerts(routeServiceAlerts);
-            holder.predictionView.enableOnClickAnimation(false);
 
-        } else if (onItemClickListener != null) {
-            final int i = position;
+        } else {
+            holder.predictionView.setPrediction(predictions.get(position));
 
-            holder.predictionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemClickListener.onItemClick(i);
-                }
-            });
-
-            holder.predictionView.enableOnClickAnimation(true);
+            if (onItemClickListener != null) {
+                holder.predictionView.enableOnClickAnimation(true);
+                holder.predictionView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onItemClickListener.onItemClick(position);
+                    }
+                });
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return predictions.size();
-    }
-
-    public Prediction getPrediction(int position) {
-        return predictions.get(position);
+        return routeServiceAlerts == null ?
+                predictions.size() :
+                predictions.size() + 1;
     }
 
     public void setPredictions(List<Prediction> predictions) {
@@ -100,5 +91,14 @@ public class RouteDetailRecyclerViewAdapter
 
     public interface OnItemClickListener {
         void onItemClick(int i);
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        RouteDetailPredictionItem predictionView;
+
+        ViewHolder(RouteDetailPredictionItem v) {
+            super(v);
+            predictionView = v;
+        }
     }
 }

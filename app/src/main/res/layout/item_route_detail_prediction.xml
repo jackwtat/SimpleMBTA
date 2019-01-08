@@ -119,7 +119,8 @@
         android:id="@+id/on_click_animation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground" />
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
