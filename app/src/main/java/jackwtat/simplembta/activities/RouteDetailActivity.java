@@ -877,10 +877,18 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void populateStopSpinner(Stop[] stops) {
+        List<Stop> stopsList = Arrays.asList(stops);
+        Stop selectedStop = selectedRoute.getNearestStop(selectedDirectionId);
+
+        if (selectedStop != null && !stopsList.contains(selectedStop)) {
+            stopsList.add(selectedStop);
+            stops = stopsList.toArray(new Stop[0]);
+        }
+
         routeDetailSpinners.populateStopSpinner(stops);
 
-        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-            routeDetailSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
+        if (selectedStop != null) {
+            routeDetailSpinners.selectStop(selectedStop.getId());
         }
     }
 
