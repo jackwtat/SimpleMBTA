@@ -849,7 +849,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             // with the Green Line Grouped route. This is to reduce the maximum number of
             // prediction cards displayed and reduces UI clutter.
             if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
-                    prediction.getDirection() == Direction.EASTBOUND &&
                     GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
                 prediction.setRoute(new GreenLineCombined());
             }
