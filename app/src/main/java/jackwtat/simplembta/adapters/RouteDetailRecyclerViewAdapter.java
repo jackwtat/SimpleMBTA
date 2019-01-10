@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.views.RouteDetailPredictionItem;
@@ -40,6 +41,12 @@ public class RouteDetailRecyclerViewAdapter
         if (position == -1) {
             holder.predictionView.setServiceAlerts(routeServiceAlerts);
 
+        } else if (position == predictions.size()) {
+            if (predictions.size() == 0)
+                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_predictions_this_stop));
+            else
+                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_further_predictions));
+
         } else {
             holder.predictionView.setPrediction(predictions.get(position));
 
@@ -58,8 +65,8 @@ public class RouteDetailRecyclerViewAdapter
     @Override
     public int getItemCount() {
         return routeServiceAlerts == null ?
-                predictions.size() :
-                predictions.size() + 1;
+                predictions.size() + 1 :
+                predictions.size() + 2;
     }
 
     public void setPredictions(List<Prediction> predictions) {

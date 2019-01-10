@@ -19,12 +19,14 @@ public class RouteDetailPredictionItem extends LinearLayout {
     View rootView;
     View mainContent;
     ServiceAlertsIndicatorView serviceAlertsIndicatorView;
+    TextView noPredictionsTextView;
     TextView timeTextView;
     TextView minuteTextView;
     TextView liveIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
     ImageView enrouteIcon;
+    View bottomDivider;
     View onClickAnimation;
 
     String min;
@@ -73,7 +75,10 @@ public class RouteDetailPredictionItem extends LinearLayout {
 
         destinationTextView.setText(prediction.getDestination());
 
+        mainContent.setVisibility(VISIBLE);
+        bottomDivider.setVisibility(VISIBLE);
         serviceAlertsIndicatorView.setVisibility(GONE);
+        noPredictionsTextView.setVisibility(GONE);
     }
 
     public void setServiceAlerts(Route route) {
@@ -81,6 +86,17 @@ public class RouteDetailPredictionItem extends LinearLayout {
         serviceAlertsIndicatorView.setVisibility(VISIBLE);
 
         mainContent.setVisibility(GONE);
+        bottomDivider.setVisibility(GONE);
+        noPredictionsTextView.setVisibility(GONE);
+    }
+
+    public void setNoPredictionsTextView(String message) {
+        noPredictionsTextView.setText(message);
+        noPredictionsTextView.setVisibility(VISIBLE);
+
+        mainContent.setVisibility(GONE);
+        bottomDivider.setVisibility(GONE);
+        serviceAlertsIndicatorView.setVisibility(GONE);
     }
 
     public void enableOnClickAnimation(boolean enabled) {
@@ -88,11 +104,12 @@ public class RouteDetailPredictionItem extends LinearLayout {
             onClickAnimation.setVisibility(VISIBLE);
         else
             onClickAnimation.setVisibility(GONE);
-
     }
 
     public void clear() {
         serviceAlertsIndicatorView.setVisibility(GONE);
+        noPredictionsTextView.setVisibility(GONE);
+        noPredictionsTextView.setText("");
         timeTextView.setText("");
         minuteTextView.setText("");
         liveIndicator.setVisibility(INVISIBLE);
@@ -104,12 +121,14 @@ public class RouteDetailPredictionItem extends LinearLayout {
         rootView = inflate(context, R.layout.item_route_detail_prediction, this);
         mainContent = rootView.findViewById(R.id.main_content);
         serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
+        noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         enrouteIcon = rootView.findViewById(R.id.enroute_icon);
+        bottomDivider = rootView.findViewById(R.id.bottom_divider);
         onClickAnimation = rootView.findViewById(R.id.on_click_animation);
 
         min = context.getResources().getString(R.string.min);

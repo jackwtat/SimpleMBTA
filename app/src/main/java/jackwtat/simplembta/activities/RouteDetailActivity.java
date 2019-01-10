@@ -105,7 +105,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private TextView noPredictionsTextView;
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
     private RouteDetailSpinners routeDetailSpinners;
@@ -233,9 +232,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 R.color.colorAccent));
         swipeRefreshLayout.setEnabled(false);
 
-        // Get the no predictions indicator
-        noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
-
         // Get recycler view
         recyclerView = findViewById(R.id.predictions_recycler_view);
 
@@ -243,7 +239,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
         // Disable recycler view scrolling until predictions loaded;
-        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setNestedScrollingEnabled(true);
 
         // Add on scroll listener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -639,27 +635,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (recyclerViewAdapter.getItemCount() == 0) {
-                    noPredictionsTextView.setText(getResources()
-                            .getString(R.string.no_predictions_this_stop));
-                    noPredictionsTextView.setVisibility(View.VISIBLE);
-
-                    appBarLayout.setExpanded(true);
-                    recyclerView.setNestedScrollingEnabled(false);
-                } else {
-                    noPredictionsTextView.setVisibility(View.GONE);
-                    recyclerView.setNestedScrollingEnabled(true);
-                }
-
                 if (returnToTop) {
                     recyclerView.scrollToPosition(0);
                 }
-            } else {
-                noPredictionsTextView.setText(getResources().getString(R.string.no_stops));
-                noPredictionsTextView.setVisibility(View.VISIBLE);
-
-                recyclerView.setNestedScrollingEnabled(false);
-                swipeRefreshLayout.setRefreshing(false);
             }
         }
     }
@@ -764,7 +742,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void clearPredictions() {
         recyclerViewAdapter.clear();
-        noPredictionsTextView.setVisibility(View.GONE);
         appBarLayout.setExpanded(true);
         recyclerView.setNestedScrollingEnabled(false);
     }

@@ -36,6 +36,7 @@
     <string name="no_predictions_this_stop">No predictions at this stop</string>
     <string name="no_predictions_this_stop_p1">No</string>
     <string name="no_predictions_this_stop_p2">predictions at this stop</string>
+    <string name="no_further_predictions">No more predictions</string>
     <string name="select_stop">Select a stop to see predictions</string>
     <string name="no_stops">No stops in this direction</string>
 

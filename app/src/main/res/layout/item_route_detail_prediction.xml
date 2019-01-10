@@ -115,6 +115,18 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/no_predictions_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="24dp"
+        android:text="@string/no_predictions_this_stop"
+        android:textSize="@dimen/small_header_text_size"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <View
         android:id="@+id/on_click_animation"
         android:layout_width="match_parent"
@@ -123,6 +135,7 @@
         android:visibility="gone" />
 
     <View
+        android:id="@+id/bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/main_content"
