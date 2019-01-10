@@ -21,6 +21,8 @@ public class RouteDetailRecyclerViewAdapter
     private OnItemClickListener onItemClickListener = null;
     private Route routeServiceAlerts = null;
 
+    private boolean cleared = true;
+
     public RouteDetailRecyclerViewAdapter() {
     }
 
@@ -42,11 +44,14 @@ public class RouteDetailRecyclerViewAdapter
             holder.predictionView.setServiceAlerts(routeServiceAlerts);
 
         } else if (position == predictions.size()) {
-            if (predictions.size() == 0)
-                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_predictions_this_stop));
-            else
-                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_further_predictions));
-
+            if (!cleared) {
+                if (predictions.size() == 0)
+                    holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_predictions_this_stop));
+                else
+                    holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_further_predictions));
+            } else {
+                holder.predictionView.setNoPredictionsTextView("");
+            }
         } else {
             holder.predictionView.setPrediction(predictions.get(position));
 
@@ -71,6 +76,7 @@ public class RouteDetailRecyclerViewAdapter
 
     public void setPredictions(List<Prediction> predictions) {
         this.predictions.clear();
+        cleared = false;
 
         for (Prediction prediction : predictions) {
             if (prediction.getPredictionTime() != null && prediction.getCountdownTime() >= 0) {
@@ -85,6 +91,8 @@ public class RouteDetailRecyclerViewAdapter
 
     public void clear() {
         this.predictions.clear();
+        cleared = true;
+
         notifyDataSetChanged();
     }
 
