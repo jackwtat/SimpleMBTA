@@ -314,6 +314,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     Stop selectedStop = (Stop) marker.getTag();
 
                     routeDetailSpinners.selectStop(selectedStop.getId());
+
                 } else if (marker.getTag() instanceof Vehicle) {
                     if (selectedVehicleMarker != null)
                         selectedVehicleMarker.hideInfoWindow();
@@ -922,6 +923,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
             selectedStopMarker.setIcon(
                     BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
+            selectedStopMarker.showInfoWindow();
 
             // Center the map on the selected stop
             gMap.animateCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
