@@ -238,7 +238,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Set recycler view layout
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
-        // Disable recycler view scrolling until predictions loaded;
+        // Enable nested scrolling
         recyclerView.setNestedScrollingEnabled(true);
 
         // Add on scroll listener
@@ -744,7 +744,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private void clearPredictions() {
         recyclerViewAdapter.clear();
         appBarLayout.setExpanded(true);
-        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private void clearShapes() {
