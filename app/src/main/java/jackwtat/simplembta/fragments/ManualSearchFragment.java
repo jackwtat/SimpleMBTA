@@ -126,6 +126,16 @@ public class ManualSearchFragment extends Fragment implements
         searchSpinners.setOnRouteSelectedListener(this);
         searchSpinners.setOnDirectionSelectedListener(this);
         searchSpinners.setOnStopSelectedListener(this);
+        searchSpinners.setOnMapIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                intent.putExtra("route", selectedRoute);
+                intent.putExtra("direction", selectedDirectionId);
+                intent.putExtra("refreshTime", refreshTime);
+                startActivity(intent);
+            }
+        });
 
         // Get app bar
         appBarLayout = rootView.findViewById(R.id.app_bar_layout);
@@ -167,18 +177,6 @@ public class ManualSearchFragment extends Fragment implements
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-
-        // Set the onClickListener listener
-        recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                intent.putExtra("route", selectedRoute);
-                intent.putExtra("direction", selectedDirectionId);
-                intent.putExtra("refreshTime", refreshTime);
-                startActivity(intent);
-            }
-        });
 
         return rootView;
     }

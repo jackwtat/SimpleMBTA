@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -23,6 +24,7 @@ public class ManualSearchSpinners extends LinearLayout implements AdapterView.On
     private Spinner routeSpinner;
     private Spinner directionSpinner;
     private Spinner stopSpinner;
+    private ImageView mapIcon;
 
     private RoutesSpinnerAdapter routesAdapter;
     private DirectionsSpinnerAdapter directionsAdapter;
@@ -78,6 +80,8 @@ public class ManualSearchSpinners extends LinearLayout implements AdapterView.On
                 stopSpinner.performClick();
             }
         });
+
+        mapIcon = rootView.findViewById(R.id.map_icon);
     }
 
     public void populateRouteSpinner(Route[] routes) {
@@ -145,6 +149,10 @@ public class ManualSearchSpinners extends LinearLayout implements AdapterView.On
 
     public void setOnStopSelectedListener(OnStopSelectedListener onStopSelectedListener) {
         this.onStopSelectedListener = onStopSelectedListener;
+    }
+
+    public void setOnMapIconClickListener(OnClickListener onClickListener) {
+        mapIcon.setOnClickListener(onClickListener);
     }
 
     @Override
