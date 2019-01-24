@@ -850,9 +850,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             // prediction cards displayed and reduces UI clutter.
             if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
                     GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
-                targetRoutes.remove(prediction.getRouteId());
+                if (targetRoutes.get(prediction.getRouteId()) != null &&
+                        !targetRoutes.get(prediction.getRouteId()).hasPickUps(0) &&
+                        !targetRoutes.get(prediction.getRouteId()).hasPickUps(1)) {
+                    targetRoutes.remove(prediction.getRouteId());
+                }
+
                 prediction.setRoute(new GreenLineCombined());
-                targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
             }
 
             // If the prediction is for the inbound Commuter Rail, then replace the route
