@@ -28,6 +28,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Prediction data
     private String id;
+    private int stopSequence = -1;
     private String trackNumber = "null";
     private Date arrivalTime = null;
     private Date departureTime = null;
@@ -57,6 +58,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     // Prediction data getters
     public String getId() {
         return id;
+    }
+
+    public int getStopSequence() {
+        return stopSequence;
     }
 
     public String getTrackNumber() {
@@ -143,6 +148,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     // Prediction data setters
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setStopSequence(int stopSequence) {
+        this.stopSequence = stopSequence;
     }
 
     public void setTrackNumber(String trackNumber) {

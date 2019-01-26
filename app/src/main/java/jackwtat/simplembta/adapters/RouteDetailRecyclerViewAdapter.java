@@ -74,6 +74,10 @@ public class RouteDetailRecyclerViewAdapter
                 predictions.size() + 2;
     }
 
+    public Prediction getPrediction(int position) {
+        return predictions.get(position);
+    }
+
     public void setPredictions(List<Prediction> predictions) {
         this.predictions.clear();
         cleared = false;

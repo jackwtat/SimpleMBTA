@@ -63,6 +63,7 @@ public class PredictionsJsonParser {
                         // Get prediction attributes
                         JSONObject jAttributes = jPrediction.getJSONObject("attributes");
 
+                        prediction.setStopSequence(jAttributes.getInt("stop_sequence"));
                         prediction.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
                         prediction.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
                         prediction.setIsLive(true);

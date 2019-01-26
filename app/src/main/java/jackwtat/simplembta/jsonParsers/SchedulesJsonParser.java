@@ -61,6 +61,7 @@ public class SchedulesJsonParser {
                     // Get schedule attributes
                     JSONObject jAttributes = jSchedule.getJSONObject("attributes");
 
+                    schedule.setStopSequence(jAttributes.getInt("stop_sequence"));
                     schedule.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
                     schedule.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
                     schedule.setIsLive(false);
