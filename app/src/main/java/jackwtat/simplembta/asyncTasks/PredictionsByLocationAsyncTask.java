@@ -36,8 +36,4 @@ public class PredictionsByLocationAsyncTask extends PredictionsAsyncTask {
     protected void onPostExecute(Prediction[] predictions) {
         onPostExecuteListener.onPostExecute(predictions, true);
     }
-
-    public interface OnPostExecuteListener {
-        void onPostExecute(Prediction[] predictions, boolean live);
-    }
 }
