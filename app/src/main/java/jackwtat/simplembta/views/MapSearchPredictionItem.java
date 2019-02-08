@@ -22,7 +22,6 @@ public class MapSearchPredictionItem extends LinearLayout {
     RouteNameView routeNameView;
     LinearLayout predictionsListLayout;
     TextView noPredictionsView;
-    TextView stopNameView;
     ImageView serviceAlertIndicatorView;
     ImageView serviceAdvisoryIndicatorView;
 
@@ -57,12 +56,6 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
 
         Collections.sort(pickUps);
-
-        // Set the stop name
-        if (stop != null) {
-            stopNameView.setText(stop.getName());
-            stopNameView.setVisibility(VISIBLE);
-        }
 
         // Set the indicator for service alerts
         if (route.getServiceAlerts().size() > 0) {
@@ -152,8 +145,6 @@ public class MapSearchPredictionItem extends LinearLayout {
     public void clear() {
         predictionsListLayout.removeAllViews();
         noPredictionsView.setVisibility(GONE);
-        stopNameView.setText("");
-        stopNameView.setVisibility(GONE);
         serviceAlertIndicatorView.setVisibility(GONE);
         serviceAdvisoryIndicatorView.setVisibility(GONE);
     }
@@ -164,7 +155,6 @@ public class MapSearchPredictionItem extends LinearLayout {
         routeNameView = rootView.findViewById(R.id.route_name_view);
         predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
         noPredictionsView = rootView.findViewById(R.id.no_predictions_text_view);
-        stopNameView = rootView.findViewById(R.id.stop_text_view);
         serviceAlertIndicatorView = rootView.findViewById(R.id.service_alert_image_view);
         serviceAdvisoryIndicatorView = rootView.findViewById(R.id.service_advisory_image_view);
     }

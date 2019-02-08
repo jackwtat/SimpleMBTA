@@ -56,7 +56,7 @@
         android:layout_below="@id/route_header_layout"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:id="@+id/no_predictions_text_view"
@@ -74,17 +74,6 @@
             android:orientation="vertical" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/stop_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/predictions_layout"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="16dp"
-        android:textSize="@dimen/body_text_size"
-        tools:text="Salem St @ Sprague St" />
-
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -95,4 +84,5 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="#CCCCCC" />
+
 </RelativeLayout>

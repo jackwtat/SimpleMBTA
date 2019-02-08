@@ -1,6 +1,7 @@
 package jackwtat.simplembta.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -177,6 +180,39 @@ public class ManualSearchFragment extends Fragment implements
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Set the onClickListener listener
+        recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Prediction prediction = recyclerViewAdapter.getPrediction(position);
+
+                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+
+                TextView testTextView = new TextView(getContext());
+
+                String testText = "";
+
+                testText += "Trip: " + prediction.getTripId();
+                testText += "\nVehicle: " + prediction.getVehicleId();
+                testText += "\nDestination: " + prediction.getDestination();
+                testText += "\nDeparture: " + new SimpleDateFormat("h:mm:ss").format(prediction.getPredictionTime());
+
+                testTextView.setText(testText);
+
+                dialog.setView(testTextView);
+
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                dialog.show();
+            }
+        });
 
         return rootView;
     }

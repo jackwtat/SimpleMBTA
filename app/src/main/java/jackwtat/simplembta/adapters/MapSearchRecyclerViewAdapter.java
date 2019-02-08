@@ -50,6 +50,7 @@ public class MapSearchRecyclerViewAdapter
         Stop thisStop = adapterItems.get(i).stop;
         int thisDirection = adapterItems.get(i).direction;
         Stop previousStop = null;
+        Stop nextStop = null;
 
         if (i > 0) {
             Route previousRoute = adapterItems.get(i - 1).route;
@@ -58,58 +59,49 @@ public class MapSearchRecyclerViewAdapter
             previousStop = previousRoute.getNearestStop(previousDirection);
         }
 
+        if (i + 1 < adapterItems.size()) {
+            nextStop = adapterItems.get(i + 1).getStop();
+        }
+
         predictionItem.clear();
         predictionItem.setPredictions(thisRoute, thisDirection);
 
         header.reset();
 
-        // If this is the first prediction
-        if (i == 0) {
-            // First prediction is located at the selected stop
-            if (selectedStop != null && selectedStop.equals(thisStop)) {
-                // Set the header text as the stop name
-                header.setText(selectedStop.getName());
+        if ((thisStop != null && i == 0) ||
+                (thisStop != null && previousStop != null && !thisStop.equals(previousStop))) {
+            // Set the header text as the stop name
+            header.setText(thisStop.getName());
 
-                // Add the colors
-                if (thisRoute.getMode() != Route.LIGHT_RAIL &&
-                        thisRoute.getMode() != Route.HEAVY_RAIL)
-                    header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
-                else {
-                    HashMap<String, Void> colors = new HashMap<>();
+            // Add the colors
+            if (thisRoute.getMode() != Route.LIGHT_RAIL &&
+                    thisRoute.getMode() != Route.HEAVY_RAIL)
+                header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
+            else {
+                HashMap<String, Void> colors = new HashMap<>();
 
-                    for (AdapterItem item : adapterItems) {
-                        int mode = item.getRoute().getMode();
-                        String color = item.getRoute().getPrimaryColor();
+                for (int j = i + 1; j < adapterItems.size(); j++) {
+                    AdapterItem item = adapterItems.get(j);
+                    int mode = item.getRoute().getMode();
+                    String color = item.getRoute().getPrimaryColor();
 
-                        if (!selectedStop.equals(item.getStop())) {
-                            break;
-                        }
+                    if (item.getStop() == null || !thisStop.equals(item.getStop())) {
+                        break;
+                    }
 
-                        if (!colors.containsKey(color) &&
-                                (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL)) {
-                            header.addSecondaryColor(Color.parseColor(color));
-                            colors.put(color, null);
-                        }
+                    if (!colors.containsKey(color) &&
+                            (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL)) {
+                        header.addSecondaryColor(Color.parseColor(color));
+                        colors.put(color, null);
                     }
                 }
-
-                // First prediction is not located at the selected stop
-            } else if (selectedStop != null && !selectedStop.equals(thisStop)) {
-                String headerText = header.getContext().getResources().getString(R.string.near_this_stop);
-                header.setText(headerText);
-                // There is no selected stop
-            } else {
-                header.setText(header.getContext().getResources().getString(R.string.nearby));
             }
 
             header.setVisibility(View.VISIBLE);
 
-            // If this is the first non-selected prediction
-        } else if (thisStop != null && !thisStop.equals(selectedStop) &&
-                previousStop != null && previousStop.equals(selectedStop)) {
-            header.setText(header.getContext().getResources().getString(
-                    R.string.near_this_stop));
-
+        } else if (thisStop == null && (i == 0 || previousStop != null)) {
+            header.setText(
+                    header.getContext().getResources().getString(R.string.no_nearby_predictions));
             header.setVisibility(View.VISIBLE);
 
             // Otherwise, hide the header
