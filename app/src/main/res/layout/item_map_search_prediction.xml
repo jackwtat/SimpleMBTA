@@ -64,8 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:textSize="@dimen/small_header_text_size"
-            android:textStyle="bold" />
+            android:textSize="@dimen/small_header_text_size" />
 
         <LinearLayout
             android:id="@+id/predictions_list_layout"
