@@ -1,0 +1,2603 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Haverhill",
+        "polyline": "euqaGrkvpLGFG@O@MBIDgAhAqBpBuAnA]^kAlBUb@i@z@_BbCSXEJEHm@bAGLGHqAtBk@|@oEdHCBABEF}@rA]j@]f@y@jAIJMNGFm@t@sVn[{@dA]`@u@n@YV]T{@f@w@XuAb@}@NYFGD_@L[Fe@@O?cA?iBIk@AmHGsCC{CCmBC_CA}@?U?U?G?Q?aA?U?G?C?[?[@gABY@aEHeAAkABoADaA@qFAeCDaADuADcERcAHu@@mB@cEAkH?}GCwCGoACeGM}DMm@AaCAO?yFAwA?M?I?Y?mK?_@AaDIiCG}DCeA?qEAA?eB?uDAgAA_ECaA?m@JM?eKE}FAkABo@?sA@}DGsF_@yASsEy@YG_AWiF{A}Bs@gEoAmEuAeBg@??IEkCy@}DoAmIgCkA]kDiA_Dy@KCQGoBm@oBm@wAW}AW}@McD]OCSCmIw@oEK_FU{AIaGU}GM_CMuDY_@A{@GkUkA{P}@kCQq@C??c@Co@CgEUgDMa@AsCCeA?uCHeAFyD`@gARgB`@wCp@??WF_Bd@{AZ{ATq@NcCPs@@eA@kACkAIMAy@MkB[gCi@eBc@iFqA_Ck@wDaAoBe@sBg@w@U??_@KuCs@aDy@_IkB_ImBuEmAiASw@UaBa@eAUgAWkASaAMKAE?GAe@Cs@C}@@oAH}@L_AP_ATqA`@eAd@uAf@uAl@}Al@_CbA??gAd@a@NuF|BcBr@{ClAcAZeBd@aARuATcBTaAHoAD{ABU?yBAE?IAG?U?uA?uAAgD@kABoAHyALyANmBXoB\\qBd@a@LcAX_DnAcBz@{CnBwC|BoHhG{HnG}@v@uBdB??QNiB|AaBpAwM|KaClB{BlByAtAaAbAoAzA_ApA}@pAgBlCuDnFCDCDiHjKmBrCiBxC_BbDCFiBxEcBlEKVOj@MZsApEyFrP[|@_BvEeAbDeCrH_@fAuEhNeAjD{@tCENa@nAqCnIc@fAQf@i@bBmBvF??uCtIENe@nAeBlFm@dBmArDa@pA}DpLc@lA_@`A{@jBEHEH[p@a@v@g@~@uBhDi@t@m@~@mFjIe@t@s@bAwBhDuChEc@t@IJe@t@wD|FuCnEaFtHuBfDkBtCkC|Dw@dAi@n@eAjAOPSTm@j@gDvCi@`@sFrEa@Zg@b@_BpAYReCtBeBrAYTKHoAdAk@f@{ApAmBxAsAjAcBtAeDlCa@`@YP[XUP_@\\iElD_Ax@y@p@wCdCkA~@}ChC{G~FcCnBoGlF_PzMiB|AwGvFaG~E{DfDmCvBgBxAmHdG_H|FuD|CyE~DqD|CcH|FgGhFs@j@m@f@??yM|KuWrT??sBdBkA`AqFzD}DfBiEzA}D`@qENuBE_Im@_Gk@sC[}BSoJaAyAIw@KuD]uBWwBQqD][EEAOCgDY_@EA?WCi@GiFe@qKeAsAO]C_@CsFo@oFc@kRkBeAIcD_@}AMoOwA{BWoCUcD_@iD[}B[wBg@sBk@kDcAuDeAuFcBcBe@aMqDu@QgBi@_Bc@w@UgAS_Dg@sD[eGQkEDuDZeHr@I?i@Fo@H????gCVoI|@_DZqBJeC@eEIsBQqDo@qDy@yC_AcFmBqBcAmBaAoCeBsMsIwGiE}GuE}H_FuHaFqCkBo@c@wEyCaG_EsA{@wCmB}HgFmGaE{BwAwCsAoAe@[KoA]_B_@ICKCmAY??uBg@{Be@}D{@qEeAA?}A]iA[yA[uBg@??A?uE_Aw@Q}@SyAYwB_@iAOyDY}AGkA@eAB{AFw@Fy@Je@JcBZ{AZgBb@_Cf@_AX}Bt@oCdASJ{Az@wAt@oAn@cB~@a@X{BvAs@f@aBzA_@VeJbH}DvCkDjC[TKHWROJIH}C~BgEdDwAdAwB`B{DtCMLyCvBiF~DoDpC{CvBwCzBiDnCuDrC_EtC}BfBaLpIyDpCa@Ta@Rm@Rk@PIBaANcAB{BAWEc@E}@Mw@Sy@WcAc@k@]y@i@kAgAc@g@q@aAWc@EIi@eAi@oAY_AW{@GYMg@g@sCYmBKuAY_HWsGAWAYE_A???MOqFIgCM{COsDQuDMwCO}CMaDG{BOwDG{@KmCCy@KeBCu@G}@IqASkBK{@Mk@CO?EAIKo@EUKi@?ECMMk@I_@UkAESq@{BSq@Um@Yy@w@oBa@{@k@gA]k@_A}A_@g@a@i@i@k@gBcBc@a@a@_@YUq@_AQQu@s@y@q@SMkBoA_Ai@s@Wy@[m@SgAW}@Sq@G{@GeBIgDLoDf@qHnAuDn@mBXyCh@uDh@iC`@}@Hc@@_CIu@GmAOmBg@u@[_By@y@o@g@c@eBeBuA_B_IyI{NaPqByBoB}BSU_CmCgEsEiBoBkAsAi@i@_CiCoA{AwCcD}@aA{HwIkBsBs@y@}FqGuAqAaBiAu@e@s@]sDwAuCcA}@]i@ScCw@uAa@cC}@wCaAaC}@wFmBqC_A}CgAwGgCcAY{B{@oBq@aC}@aF{AKEOGUKYKSEyBaAyAg@_Ac@o@[sBoAa@_@s@q@i@q@u@y@SWk@s@q@cAiAoBKQeCqEiBwCgAmBaBoCg@y@uAgCaFuIq@eAmFiJeByCyJyPqDiGqBgDm@iAe@y@yCiFsBmDg@w@??}@uAw@gAeBmBk@k@mAeA{@m@o@[IEo@SWG_@IoBMiBAcDE{GGY?cA@aADG@",
+        "priority": 2
+      },
+      "id": "9820002",
+      "links": {
+        "self": "/shapes/9820002"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Haverhill",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "place-mlmnl",
+              "type": "stop"
+            },
+            {
+              "id": "Wyoming Hill",
+              "type": "stop"
+            },
+            {
+              "id": "Melrose Cedar Park",
+              "type": "stop"
+            },
+            {
+              "id": "Melrose Highlands",
+              "type": "stop"
+            },
+            {
+              "id": "Greenwood",
+              "type": "stop"
+            },
+            {
+              "id": "Wakefield",
+              "type": "stop"
+            },
+            {
+              "id": "Reading",
+              "type": "stop"
+            },
+            {
+              "id": "North Wilmington",
+              "type": "stop"
+            },
+            {
+              "id": "Ballardvale",
+              "type": "stop"
+            },
+            {
+              "id": "Andover",
+              "type": "stop"
+            },
+            {
+              "id": "Lawrence",
+              "type": "stop"
+            },
+            {
+              "id": "Bradford",
+              "type": "stop"
+            },
+            {
+              "id": "Haverhill",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Lowell",
+        "polyline": "euqaGrkvpLGFq@p@{D|D}A|AUVUZ_@n@_@p@m@z@_@p@g@t@q@fACDGFCDe@t@INGHS^c@`Ae@r@{EtHABCBEH}@vAa@n@uAlBGJMNGJSTs@z@wAhBuD|EoCtDyPbUSVGHUZKPKRIPO\\O^K`@Qv@Kt@M~AAdA@`BLrEF|CFjC@nB?tAGnAKx@Mz@Sv@_@hAm@tAy@`Bi@fA}AxCe@n@eAjA_@^qAnAcGfG}@x@IJKJg@b@wApAWR_BlA]RSPUNwA|AaA`A_A`Ak@t@i@p@{@jAGNEJw@xAg@jA]x@e@vAUf@Sf@}AvEyAxDENGNcAvCaAjC_ApCs@rBGLCJcAvCq@pBGNCHqAjDs@dBo@jAyAfCe@n@YXy@~@eAfAs@n@OLIFKHi@^yA~@uA~@mBrAQJqCnB}DjCaBfAABE@MJ{DlCcEnC[T_@VgHxE_LvHeAr@}AdAuBxA_An@oGhE_EnCe@ZIDMHGD}B|AmBvAiB~AoAtA}AlBeEtFmEvFILKJe@r@eC`DaLbOGHGFuCvDkB`CgDjEe@n@cAtAw@dA_CxCeB|Be@l@kBfCiCjDiB~B[`@??wAlBkO~RwL|OkDnEcCbDGFMPk@v@w@~@y@hAeAnA_AfAgAbAsAdAwA~@iB`AcA`@yAh@uA`@yATgAN{ANaCLqER{ABqAAuAC{@EkAIqAQaAQgAYkA_@gAa@_Ae@c@WWOaBiAaAw@y@w@}@aAsCcDmAqAkAeAw@q@iAw@k@]WOqAq@WM??[Mk@UyBm@yA_@oUqG}F}AgBi@IC_AW_AY??g@OgAYoA]y@SmNyD}@WsA_@kDaAeHoBkHoByC{@_HkBuCy@yA_@cEiAgEkAcBe@uA_@aA[_A]m@YiBy@}Aw@uE{BeFgC{E_C{KkFyCwA_Bs@aA_@w@Ua@K]MmASiBUeAGsAE_@Ai@?W@y@@m@B}BTcDb@ODQB}A`@o@RiAb@kAf@s@^wBnAw@p@o@j@iDdDo@p@k@f@cA`A{B|BsBnBgAbAaBnAsA~@}Av@_Bl@yAd@KBQHkB^iBTs@HsBJs@?{@CsGYm@AoA?_AFq@FcALo@HiAVeAVmBd@cE`AcCj@wFtAIBOBc@Pk@N{Bz@iDnAo@VeC~@_AZUHc@R[Ly@\\uAf@{@\\UHUHyAh@cEtAaElA_Cp@sCz@gEpAgBn@qAh@yAx@eCpAwHdEoAt@_Af@aRvJmE|BaM`HuBfA{Ax@cCvA??QJk@\\_G~CaCrAgDfBsJhF_Aj@cFxDwCjCsK`LIHA@IHoArAkD~DcMnPmDxEMP??ORmHrJyDlFwIjLGFeEtF}BzCuCvDsFpH{K`OwBpCsAbBcB|Bs@x@GFA@???@EDc@d@[XSTMJk@j@{ErDeE|CgDjCoIrGgB`BMLGH}@~@q@|@kCdEiFtIcExGIJkBfDuBbDKNKNW`@sCrEiDpFyEzHsDhGy@vAc@z@oAtCa@jAk@fB{B`Ig@bByAvF}E`QI^}DlN}GjVENGPeAvDsBlHcK|ZqDnK{AjE}@nCGLu@|B{EpNeCpHoJbYiD`KoEvMcBbFGNCH}Oje@gKvZeEfM{DfLiBhF{GfSkH`TCNGV_AtC]tAc@pBe@fCUdBKz@KxAU|CIbBSbGArD@xAD~AFtAHpAPvBhCfTRjBLpAFv@NdDDlC@pAAbBCfACZ?TATEbAKfBK|@Gt@UhBSxASdA_@pBg@nB[hA]bAUp@g@jAoBdE}@xAeBzB_AhAiAlAcA|@w@n@g@^MH{Av@yAr@????gA^aAZoIbCqEnAsBj@oCt@_IxBwF|A}GlBMDqNvD_I~BmAVy@TeEhAoAZQFw@TiCr@_AXqGdBmHrB]Hq@RmAb@w@\\u@ZuC|AmBpAs@h@kAbAaBbBqA|Am@v@ORMR_@j@_@h@w@tAi@`Au@`B}DnJkAvC}@lBi@lA[n@]l@qAvB}ArB}AjByHbKMNIJIJmA`BgDxEkCzDkA~A_BxBq@bAy@tA}AxCyBjEg@`A]n@gAlBu@hAyB`C}DrEiCrCm@j@WTeBxAsClBa@VgAn@aE`CSHgD~A",
+        "priority": 2
+      },
+      "id": "9830006",
+      "links": {
+        "self": "/shapes/9830006"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Lowell",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "West Medford",
+              "type": "stop"
+            },
+            {
+              "id": "Wedgemere",
+              "type": "stop"
+            },
+            {
+              "id": "Winchester Center",
+              "type": "stop"
+            },
+            {
+              "id": "Mishawum",
+              "type": "stop"
+            },
+            {
+              "id": "Anderson/ Woburn",
+              "type": "stop"
+            },
+            {
+              "id": "Wilmington",
+              "type": "stop"
+            },
+            {
+              "id": "North Billerica",
+              "type": "stop"
+            },
+            {
+              "id": "Lowell",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "North Station",
+        "polyline": "gfvbG`|ouLyCaFaGeIcOaGgYwBsd@eKcHwEu`Ak}AwYs`A{AmR`BoO`JyWnHe_@jAgl@??Pk@Pg@Vi@Vg@Xe@f@q@zB{BjCiCb@_@d@]f@[h@W^Q`@O`@Mn@Q^If@K`@GdAK`BKB?rAOZGFAFAh@QVI^Q^Q\\U^W\\Y\\[\\a@\\a@z@oAV_@`AaBn@oAXk@l@yAVu@Vu@h@gBb@eB`@mBLu@T}ATqBTiC\\eEPiCv@}JbAuMRiCZ_EZ_ERaCNaBR}AXmB^qBd@mBj@kBn@iBnA{C|@kBvByEnMyXnD_IrKmU~@oBx@sAt@oAf@q@l@w@|@gAdAeAdAaAnAaArA}@dCuAjB_A^Q`CkAfB_ApMkGpAq@jCcBpD_Cb@[xKcIhI_GxUyPfJ{G`LcIhCiBjBsA??`BkAbKoHfJwGlMgJxJeHHGfEyCdE_Dr@g@pC}BhAeAbAcAr@y@PQdCgDhAiBfAmB~@gB`AwBfAkC~@iCv@mCn@cCl@kC\\kBZcBdAaIlBcO`@mDTqBFwADqAAoACmAMgBGc@Ge@Kq@[uA]qAg@uAw@_By@oAyBoBeEuBoO}GiD}AyJmEaCaAsDeBkIqDMG}A}@iAu@q@c@}@w@oAoAeAoA{@iA}@}Am@oAEM??GMc@_AUa@iFgLkFyLuEkKkAuCk@}AUs@U}@o@iDy@iFaBmLOcAeB}LoD_VUoB{BkOsCaSU{AWeB_@wCG{@MgAQyDYwHOoEIsCAy@@sAb@wV?CVwM\\sRB{ADgAFs@Du@R{BfA_LP}AXeDJuBF}D@YAcCIcBOmCa@mFm@wIEg@??aAiNKyAe@}DYcBYcBa@mBq@kDq@gDmAqFcEcSwAyGmAuF_CcLuCeNcCoLcCsLqBoJaCyKyAgHq@oDq@}DcCuOqB{LaBsKuBwM{CiRwFm^Ig@QcAuB{M[iCO{BKmBC_CAwC@qE@uI@_C?cA@eC?cE??@eC@eD@}@BsBHqBNkCB]D]?EF_@Hy@Jq@f@iD~@sFd@qCrDkTLu@v@wEpB}L\\}APgALaAPwANyAH_ALsC@wAD}A?iAA_BEwAIuB?Mq@}OYeIeA}V}@mTOmEeAkW_@eJ}@wTIaBYcIWyGSoGEkE@mADaBFcALuBPsAPqAPgARcATiAd@cBXaAb@iA\\}@|@gB`@u@z@iAbGcI`EmFnD}EnHsJPWR]hB_CtBoCnBmCdDkEpLyO`CeDfB{BpCyD~CaExCaEvEkGnFeHzByChHwJdAkAVW|AyAdBqAnA{@lAq@x@]tBaAhAc@~IgDpNwF|DyAvFwBxUiJRING~@[NIDALGjFqBfLsEpGaC??z@[fGeCTILGRITItAi@fXiKpBy@~@e@hAo@vA{@dE}ChSuN~RkNPK`JmGpHmFdIuFzDoBxCwAdKcFfB{@rDcBFC`Ag@vFmCzDqBdD{AdDaBbAo@dGkE`MiK|BiBjCwB~CiCdFoEzBoBRQpB_BtBaBfBmAbCwAjB}@vCqAlEiB\\OpAk@tAc@r@Ur@QdDeAbDcA`IkCjKgDnAe@nBm@hFeBrDkAfAa@pC}@dBo@FC~@_@|Ay@dAs@lBwA`AaAp@s@nAaBnAkBn@iAr@wAv@kB`@gA`@qAr@oCl@oCL}@NcANkAR{BNeCT}EVmE@S??HeBT{DFiBD_ADsD?Q?C?SBqD@{A@y@LaMDmCD{ALyB^uFNoBToBViB\\qBPs@f@sBd@eBrAeE`AsCbAcDfAeD~@_D^wADSLc@nAsF^}B`AkGFg@TwBVaCPiBLiBLqBJ}BJ}CFgF@oBAkBAiBK{DKuCKyBWaEK}AcAuP[iGAcACcC@mADgBb@{KZmJLaDPsF^mKVgH@G?K`@kLJoEHaAByBAuCI{CI{Aa@aEcAcJ[eCs@mGa@eDw@qGw@oGIw@YcC??i@cFIu@YeCYyBWwBmAgKQ_CEaAGiBI}BCuAAw@?aDBaB@cGD}H?W@]?SPw^DiIDqKN}XFiMB}EJkODeCH{BHiALmANgARiAXuAXaANi@`@iAXs@??JSrAwC`@s@Te@b@o@Zc@~AeBpAeAf@[z@a@~@a@fFuBrCcAhBu@xBy@zFyBhGcClM{E|Ak@LGRILGd@Sp@]|A{@nBkArBwAbBmAtD}ClC{BbCuB`DqCtM{KnMaL|T{RvBiBp@e@~@m@z@o@hFoD|AcAPKLIjAw@lFsDlE{CfCaBdFmDpL}HfFoD~B}AFElMsI~F{D~DmC~DgC`@YVQ??~BaBrCiBvEaDdLsHnBuAhCsAfBw@h@ShAW|AS~AKdBElA?t@Bj@Bx@@J?`@Dp@?bAE`@Et@KvAYnBo@d@Uv@e@v@i@~@u@bAgAf@q@z@kAf@{@v@gB\\_ATs@Pq@ZeANu@PoAVuAb@_Dl@}DxCyRbBeL`@iC\\mBVkBb@wCxAoJRoAbAuGBKBMD[r@qEZaCZoBh@uCZuAd@gBv@eCbA}Bl@oA^o@^m@j@{@h@u@`@i@BCDETWlAmAv@s@l@i@tC}Bf@a@bHwFdBsArC}B|D}CbDiCbBwAPM??rB}A~BqB|EwD~AuA`AcAjAqA~CoDzCqD`CkCl@s@dAqA??X]z@_A^c@zAaBlCkDl@_A|AkC~B{EpCqGHQ`AoBn@{AdA_CN[b@y@pAsB`@e@l@q@n@i@bAw@p@e@|@k@bGgDtCeBjCyAJINGl@_@FCFEz@g@~BsAb@WlBeAj@]^UVO`@Wn@a@d@WtCgBpBgAj@c@r@k@d@e@fAmAZ_@x@sAf@iARi@j@{Ah@gBZoAZ{Ab@wB~@_GHs@NgAJoABg@B{A?[A[@eA?????WAi@Ay@M{BMmAOoAWwAYqAa@}A[eA[u@]w@]u@eAgC}AsD{@sBM]kAqCeAiC_BoDcGuN{@iBiAmBw@gA}@iASS_@]u@w@{@u@o@m@aA{@KIsAgA}@y@a@]s@w@qAaBw@gA_@q@aAmBw@eBuAiDuA_Eu@mCs@sCa@kBCKMy@M}@WsCMuAWyCO{A??]}D_@iDg@eFi@oFCMAIm@{Eu@gFCMCO[wBa@oAk@iB{AgEqAcDiBqEYq@[s@Y{@c@cAgDgI_AcCaA_Cm@gBSm@w@_EeAwFc@qBeAwFYiBQmA{@yGwAcKQiAgAyIc@_DU}A[wBiAeIiDgRoA}GYaByA}HmCuNs@{Dw@aEqAqHUgAWkA]wAa@wAGYM]YaA??IYO_@M[a@_AoAwCgCuFaAaCyAeDwDuImAwCqAqC}@iBa@s@e@s@eA{AkB{B{AaBg@g@sBkBKI_A_A_@e@_@g@Yc@a@y@_@}@Ss@[iASkAMaAAOEs@I}ACwACm@?U?K??BoH@mP@cKB{L@wI@mDBuWD_I?yD@cIB{GDgADsAHiALsAJeAVsBzA}JJm@Je@^cBVy@X{@dAqCZs@J]`BkEl@kB\\sAZsA\\eBVaBPaBj@mFp@iHBQ@QXyCRyBX{CRqBNaBHcAZsCn@yGVoC\\mD`@eE@IR}BZsD^iDb@uETmC\\eDX{C|@wJHo@@MBQ@OXoCZaEXmCz@gJLgANaA???ADUF[NcATo@Ng@p@_BtAwCfAuBp@wANYJUt@{A~CsGlCmFnC_F??~E_Jv@}Aj@sAnAiD|@eDh@wBl@iDp@gEf@aD@MBQ~@iGpB}MV}AVgA^kARo@Pe@NWJWp@{AlAmCvC}GLYBERe@h@iAFMFM|@sBd@wAh@eB`@}A`@_BJs@Jo@X}BJ}@Fg@P_CZiFJ_BXoELsBHaADi@LmCBY@[TaDPeD\\_GBQ@SBW@SBU@SHoAFi@Js@N}@Pk@FWNs@He@PwABe@NsCz@yNNcCR}DBeA?iA@oCF{@Ju@BMJ_@Lg@Rg@fAgBVYjAcBVi@DKJSDIj@iA`@cAZo@v@iAFI@CBE`A_BfC_EVa@Vk@b@aAR_@FIHOd@u@BEFGBEp@gAf@u@^q@l@{@^q@^o@T[TW|A}AzD}Dp@q@FG",
+        "priority": 2
+      },
+      "id": "9840003",
+      "links": {
+        "self": "/shapes/9840003"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Fitchburg",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Wachusett",
+              "type": "stop"
+            },
+            {
+              "id": "Fitchburg",
+              "type": "stop"
+            },
+            {
+              "id": "North Leominster",
+              "type": "stop"
+            },
+            {
+              "id": "Shirley",
+              "type": "stop"
+            },
+            {
+              "id": "Ayer",
+              "type": "stop"
+            },
+            {
+              "id": "Littleton / Rte 495",
+              "type": "stop"
+            },
+            {
+              "id": "South Acton",
+              "type": "stop"
+            },
+            {
+              "id": "West Concord",
+              "type": "stop"
+            },
+            {
+              "id": "Concord",
+              "type": "stop"
+            },
+            {
+              "id": "Lincoln",
+              "type": "stop"
+            },
+            {
+              "id": "Silver Hill",
+              "type": "stop"
+            },
+            {
+              "id": "Hastings",
+              "type": "stop"
+            },
+            {
+              "id": "Kendal Green",
+              "type": "stop"
+            },
+            {
+              "id": "Brandeis/ Roberts",
+              "type": "stop"
+            },
+            {
+              "id": "Waltham",
+              "type": "stop"
+            },
+            {
+              "id": "Waverley",
+              "type": "stop"
+            },
+            {
+              "id": "Belmont",
+              "type": "stop"
+            },
+            {
+              "id": "place-portr",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "North Station",
+        "polyline": "sefcGjrgrLfD_BRI`EaCfAo@`@WrCmBdByAVUl@k@hCsC|DsExBaCt@iAfAmB\\o@f@aAxBkE|AyCx@uAp@cA~AyBjA_BjC{DfDyElAaBHKHKLOxHcK|AkB|AsBpAwB\\m@Zo@h@mA|@mBjAwC|DoJt@aBh@aAv@uA^i@^k@LSNSl@w@pA}A`BcBjAcAr@i@lBqAtC}At@[v@]lAc@p@S\\IlHsBpGeB~@YhCs@v@UPGnA[dEiAx@UlAW~H_CpNwDLE|GmBvF}A~HyBnCu@rBk@pEoAnIcC`A[fA_@????xAs@zAw@LIf@_@v@o@bA}@hAmA~@iAdB{B|@yAnBeEf@kATq@\\cAZiAf@oB^qBReARyATiBFu@J}@JgBDcA@U?UB[BgA@cBAqAEmCOeDGw@MqASkBiCgTQwBIqAGuAE_BAyA@sDRcGHcBT}CJyAJ{@TeBd@gCb@qB\\uA~@uCFWBOjHaTzGgShBiFzDgLdEgMfKwZ|Oke@BIFObBcFnEwMhDaKnJcYdCqHzEqNt@}BFM|@oCzAkEpDoKbK}ZrBmHdAwDFQDO|GkV|DmNH_@|EaQxAwFf@cBzBaIj@gB`@kAnAuCb@{@x@wArDiGxE{HhDqFrCsEVa@JOJOtBcDjBgDHKbEyGhFuIjCeEp@}@|@_AFILMfBaBnIsGfDkCdE}CzEsDj@k@LKRUZYb@e@DE?A??@AFGr@y@bB}BrAcBvBqCzKaOrFqHtCwD|B{CdEuFFGvIkLxDmFlHsJNS??LQlDyEbMoPjD_EnAsAHI@AHIrKaLvCkCbFyD~@k@rJiFfDgB`CsA~F_Dj@]PK??bCwAzAy@tBgA`MaHlE}B`RwJ~@g@nAu@vHeEdCqAxAy@pAi@fBo@fEqArC{@~Bq@`EmAbEuAxAi@TITIz@]tAg@x@]ZMb@STI~@[dC_An@WhDoAzB{@j@Ob@QNCHCvFuAbCk@bEaAlBe@dAWhAWn@IbAMp@G~@GnA?l@@rGXz@Br@?rBKr@IhBUjB_@PIJCxAe@~Am@|Aw@rA_A`BoAfAcArBoBzB}BbAaAj@g@n@q@hDeDn@k@v@q@vBoAr@_@jAg@hAc@n@S|Aa@PCNEbDc@|BUl@Cx@AVAh@?^@rADdAFhBTlAR\\L`@Jv@T`A^~Ar@xCvAzKjFzE~BdFfCtEzB|Av@hBx@l@X~@\\`AZtA^bBd@fEjAbEhAxA^tCx@~GjBxCz@jHnBdHnBjD`ArA^|@VlNxDx@RnA\\fAXf@N??~@X~@VHBfBh@|F|AnUpGxA^xBl@j@TZL??VLpAp@VNj@\\hAv@v@p@jAdAlApArCbD|@`Ax@v@`Av@`BhAVNb@V~@d@fA`@jA^fAX`APpAPjAHz@DtABpA@zACpES`CMzAOfAOxAUtAa@xAi@bAa@hBaAvA_ArAeAfAcA~@gAdAoAx@iAv@_Aj@w@LQFGbCcDjDoEvL}OjO_SvAmB??Za@hB_ChCkDjBgCd@m@dB}B~ByCv@eAbAuAd@o@fDkEjBaCtCwDFGFI`LcOdCaDd@s@JKHMlEwFdEuF|AmBnAuAhB_BlBwA|B}AFELIHEd@[~DoCnGiE~@o@tByA|AeAdAs@~KwHfHyE^WZUbEoCzDmCLKDA@C`BgA|DkCpCoBPKlBsAtA_AxA_Ah@_@JIHGNMr@o@dAgAx@_AXYd@o@xAgCn@kAr@eBpAkDBIFOp@qBbAwCBKFMr@sB~@qC`AkCbAwCFODOxAyD|AwERg@Tg@d@wA\\y@f@kAv@yADKFOz@kAh@q@j@u@~@aA`AaAvA}ATORQ\\S~AmAVSvAqAf@c@JKHK|@y@bGgGpAoA^_@dAkAd@o@|AyCh@gAx@aBl@uA^iARw@L{@Jy@FoA?uAAoBGkCG}CMsEAaB@eAL_BJu@Pw@Ja@N_@N]HQJSJQT[FIRWxPcUnCuDtD}EvAiBr@{@RUFKLOFKtAmB`@o@|@wADIBC@CzEuHd@s@b@aAR_@FIHOd@u@BEFGBEp@gAf@u@^q@l@{@^q@^o@T[TW|A}AzD}Dp@q@FG",
+        "priority": 2
+      },
+      "id": "9830005",
+      "links": {
+        "self": "/shapes/9830005"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Lowell",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Lowell",
+              "type": "stop"
+            },
+            {
+              "id": "North Billerica",
+              "type": "stop"
+            },
+            {
+              "id": "Wilmington",
+              "type": "stop"
+            },
+            {
+              "id": "Anderson/ Woburn",
+              "type": "stop"
+            },
+            {
+              "id": "Mishawum",
+              "type": "stop"
+            },
+            {
+              "id": "Winchester Center",
+              "type": "stop"
+            },
+            {
+              "id": "Wedgemere",
+              "type": "stop"
+            },
+            {
+              "id": "West Medford",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "North Station",
+        "polyline": "wdadGb`{pLFA`AEbAAX?zGFbDDhB@nBL^HVFn@RHDn@Zz@l@lAdAj@j@dBlBv@fA|@tA??f@v@rBlDxChFd@x@l@hApBfDpDhGxJxPdBxClFhJp@dA`FtItAfCf@x@`BnCfAlBhBvCdCpEJPhAnBp@bAj@r@RVt@x@h@p@r@p@`@^rBnAn@Z~@b@xAf@xB`ARDXJTJNFJD`FzA`C|@nBp@zBz@bAXvGfC|CfApC~@vFlB`C|@vC`AbC|@tA`@bCv@h@R|@\\tCbArDvAr@\\t@d@`BhAtApA|FpGr@x@jBrBzHvI|@`AvCbDnAzA~BhCh@h@jArAhBnBfErE~BlCRTnB|BpBxBzN`P~HxItA~AdBdBf@b@x@n@~Ax@t@ZlBf@lANt@F~BHb@A|@IhCa@tDi@xCi@lBYtDo@pHoAnDg@fDMdBHz@Fp@F|@RfAVl@Rx@Zr@V~@h@jBnARLx@p@t@r@PPp@~@XT`@^b@`@fBbBh@j@`@h@^f@~@|A\\j@j@fA`@z@v@nBXx@Tl@Rp@p@zBDRTjAH^Lj@BL?DJh@DTJn@@H?DBNLj@Jz@RjBHpAF|@Bt@JdBBx@JlCFz@NvDFzBL`DN|CLvCPtDNrDLzCHfCNpF?L??D~@@X@VVrGX~GJtAXlBf@rCLf@FXVz@X~@h@nAh@dADHVb@p@`Ab@f@jAfAx@h@j@\\bAb@x@Vv@R|@Lb@DVDzB@bAC`AOHCj@Ql@S`@S`@UxDqC`LqI|BgB~DuCtDsChDoCvC{BzCwBnDqChF_ExCwBLMzDuCvBaBvAeAfEeD|C_CHINKVSJIZUjDkC|DwCdJcH^W`B{Ar@g@zBwA`@YbB_AnAo@vAu@zA{@RKnCeA|Bu@~@Y~Bg@fBc@zA[bB[d@Kx@Kv@GzAGdACjAA|AFxDXhANvB^xAX|@Rv@PtE~@@???tBf@xAZhAZ|A\\@?pEdA|Dz@zBd@tBf@??lAXJBHB~A^nA\\ZJnAd@vCrAzBvAlG`E|HfFvClBrAz@`G~DvExCn@b@pCjBtH`F|H~E|GtEvGhErMrInCdBlB`ApBbAbFlBxC~@pDx@pDn@rBPdEHdCApBK~C[nI}@fCW????n@Ih@GH?dHs@tD[jEEdGPrDZ~Cf@fARv@T~Ab@fBh@t@P`MpDbBd@tFbBtDdAjDbArBj@vBf@|BZhDZbD^nCTzBVnOvA|ALbD^dAHjRjBnFb@rFn@^B\\BrANpKdAhFd@h@FVB@?^DfDXNBD@ZDpD\\vBPtBVtD\\v@JxAHnJ`A|BRrCZ~Fj@~Hl@tBDpEO|Da@hE{A|DgBpF{DjAaArBeB??tWsTxM}K??l@g@r@k@fGiFbH}FpD}CxE_EtD}C~G}FlHeGfByAlCwBzDgD`G_FvGwFhB}A~O{MnGmFbCoBzG_G|CiCjA_AvCeCx@q@~@y@hEmD^]TQZYXQ`@a@dDmCbBuArAkAlByAzAqAj@g@nAeAJIXUdBsAdCuBXS~AqAf@c@`@[rFsEh@a@fDwCl@k@RUNQdAkAh@o@v@eAjC}DjBuCtBgD`FuHtCoEvD}Fd@u@HKb@u@tCiEvBiDr@cAd@u@lFkIl@_Ah@u@tBiDf@_A`@w@Zq@DIDIz@kB^aAb@mA|DqL`@qAlAsDl@eBdBmFd@oADOtCuI??lBwFh@cBPg@b@gApCoI`@oADOz@uCdAkDtEiN^gAdCsHdAcD~AwEZ}@xFsPrAqEL[Nk@JWbBmEhByEBG~AcDhByClBsChHkKBEBEtDoFfBmC|@qA~@qAnA{A`AcAxAuAzBmB`CmBvM}K`BqAhB}APO??tBeB|@w@zHoGnHiGvC}BzCoBbB{@~CoAbAY`@MpBe@nB]lBYxAOxAMnAIjACfDAtA@tA?T?F?H@D?xB@T?zACnAE`AIbBUtAU`ASdBe@bA[zCmAbBs@tF}B`@OfAe@??~BcA|Am@tAm@tAg@dAe@pAa@~@U~@Q|@MnAI|@Ar@Bd@BF@D?J@`ALjARfAVdAT`B`@v@ThARtElA~HlB~HjB`Dx@tCr@^J??v@TrBf@nBd@vD`A~Bj@hFpAdBb@fCh@jBZx@LL@jAHjABdAAr@AbCQp@OzAUzA[~Ae@VG??vCq@fBa@fASxDa@dAGtCIdA?rCB`@@fDLfETn@Bb@B??p@BjCPzP|@jUjAz@F^@tDX~BL|GL`GTzAH~ETnEJlIv@RBNBbD\\|@L|AVvAVnBl@nBl@PFJB~Cx@jDhAjA\\lIfC|DnAjCx@HD??dBf@lEtAfEnA|Br@hFzA~@VXFrEx@xARrF^|DFrAAn@?jAC|F@dKDL?l@K`A?~DBfA@tD@dB?@?pE@dA?|DBhCF`DH^@lK?X?H?L?vA?xF@N?`C@l@@|DLdGLnABvCF|GBjH?bE@lBAt@AbAIbEStAE`AEdCEpF@`AAnAEjACdA@`EIXAfACZAZ?B?F?T?`A?P?F?T?T?|@?~B@lBBzCBrCBlHFj@@hBHbA?N?d@AZG^MFEXG|@OtAc@v@Yz@g@\\UXWt@o@\\a@z@eArVo[l@u@FGLOHKx@kA\\g@\\k@|@sADG@CBCnEeHj@}@pAuBFIFMl@cADIDKRY~AcCh@{@Tc@jAmB\\_@tAoApBqBfAiAHELCNAFAFG",
+        "priority": 2
+      },
+      "id": "9820001",
+      "links": {
+        "self": "/shapes/9820001"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Haverhill",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Haverhill",
+              "type": "stop"
+            },
+            {
+              "id": "Bradford",
+              "type": "stop"
+            },
+            {
+              "id": "Lawrence",
+              "type": "stop"
+            },
+            {
+              "id": "Andover",
+              "type": "stop"
+            },
+            {
+              "id": "Ballardvale",
+              "type": "stop"
+            },
+            {
+              "id": "North Wilmington",
+              "type": "stop"
+            },
+            {
+              "id": "Reading",
+              "type": "stop"
+            },
+            {
+              "id": "Wakefield",
+              "type": "stop"
+            },
+            {
+              "id": "Greenwood",
+              "type": "stop"
+            },
+            {
+              "id": "Melrose Highlands",
+              "type": "stop"
+            },
+            {
+              "id": "Melrose Cedar Park",
+              "type": "stop"
+            },
+            {
+              "id": "Wyoming Hill",
+              "type": "stop"
+            },
+            {
+              "id": "place-mlmnl",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Rockport",
+        "polyline": "_gjcGjfanLtE`FtAvAnAtAbCnC\\`@hHnIdAjATXnAzArAzAfAfAjAx@bAl@NHbAd@|Ab@~AVnCTbCNpCRbC^rBl@`DrA~K~EbBz@jBnA~AzArAhBnArBnCtG~BtFxCbHlHnQ`DnH^|@t@xAx@zAnCfE~@tA`AbBp@pAf@hA^jA\\hA~@rDfAlEh@hBr@nBhLdYbFbMdD~HP\\NZT\\p@z@r@p@v@h@ZRXLx@XZH^Fn@FR?R?N?h@?`@AD?F?vHE~OSpFE`@?dAJb@LXNb@XFBZ^r@|@f@bAPf@Pl@DNJf@JvA@p@?n@C|@Ex@Kz@[tBEV??i@dEkBbMWbBK|@AFAJWrBIz@Gx@A`AAbA?x@BdDLjP?fAVt`@FdHD`CFvAR|B^hDb@~CfBtLj@tET~BbBbT@P`@zFd@hGJ~@J~@Jr@Ll@ZbBTz@Pn@JZVx@d@lAb@bAb@|@^p@f@t@j@v@z@fA~GlI??lB~Bf@l@VV`@`@r@p@rDlC~@n@h@^nAbAl@j@p@t@t@z@p@`Al@|@\\l@p@nAn@xAtAlDTp@p@zA|@|A`@l@dAtA`@d@pAzAnt@ly@hE~E|BpCrBdCx@dA~AzBrBbDdAlBl@lAn@pA`AjBdAvBxBjEjAtBdBfDhD`HlFtK~@fBFJl@hAxA|CjFlKbAjB~@jB|@pBz@rBl@rBd@tB^vBb@xClApJ\\nC^`Cb@~Bf@rBPj@Tr@p@lBx@hBh@`AhCxEfClElBjDjCrEdBxCdBzC`@p@v@nAn@rAlAxCb@jAZbAb@|ANp@f@jCTbBNdALpA^xD`A|JLv@J`BXnCb@xD^zBTnA|@xDNf@??DL`A~D|BtIx@vCHV~@xDbAtDrA~E^zAn@vBd@xAj@zA^v@Zl@FJlArB|@lAz@`AlCdCjDxC|@fARXn@bA`AdBn@pAFLPl@@N@HBJHXZp@b@~A`@pB`@|BLdAThCJlAFxA\\jINtEN~FHtCTxCLzAXfCXrCX`CTtBxC`ZJt@f@~Ez@pIZlDd@bERjBl@rFh@xFvArMb@hE??TxBPrAHjAv@rHdBdQZlDlAjOXjEv@|LL|A@NPdC??b@jGr@zKNfBLzBLdC@z@BnBCnCEjBIpAOlBSvASzA]fBUfA]tAc@vAu@tBuAfDyCzHwBlFsCtHk@|Au@pBwCjIsA`Em@pBa@vA]fB]lBM~@_@~DGx@IhBCxACnB?jCBnAR|G^hP^hMRbENlBx@fIn@vEZdBjAdGpE~Sv@lDx@zD??H^nBvJlB~Ir@zC|@jDbApDdAjDrAtDnBzEx@fBzAvCbBzCnB`DnBrCvAlB~AlBVl@jAvA~AfAnBd@xATxABjDAd@?pFAlBA`IVzAL`BLr@L??dDf@`BXzBh@xD~@`Dp@JBHBnD~@nG|A~KlCtG~AjEdArAXhBf@|A\\zAZnCr@zAd@`@Nj@RFBHDXLpCrAhC|ArExCfAp@vH|Ed@VvA`AxBtA~BvApCfBfBhAd@Rn@TfAX????|@NbAHF?L?R?lAA`JEpTM\\?jE\\p@FbAHlFd@hQjAlDVrAAH?z@BdA?n@Lj@Fl@Lh@Lx@XrBz@j@PvGlDbEzBbDjBtGnDRJFDHD~XpOdEzBpFzCtDxB~BjAlAp@zA|@l@`@|AfA~ApAl@f@j@h@b@`@bGpFxArAvHbHt@p@|@v@ZV\\Xn@f@~B|AnC`Bf@XpB~@bBp@nAb@pAb@dAZt@PxA\\|AZpBb@fB`@`B`@x@VnBp@|@Zv@\\RJl@Xb@R\\PZNPHJFJDn@b@b@Xf@\\p@`@hClBfA|@~BxBVVd@f@ZZx@|@X^XXV^tAjB|@rAHJxAbC~@`BJR|@|ALX??~A`Dv@fB|@xBf@zA`@dAlAlDvGvQtAxDfAvCjAdDVp@xCjIz@zB\\~@N`@hBbFN`@`BrEfDfJFNFNn@hB~C`Ix@zBbAtCxBdG`@fAnAfDjBbF??Zz@lAfDLZJTr@pB|@nCh@bBv@bCfB`FlAbD^|@lAfD`D`J`HhR`AxCFLHTJRlBfFrAvDzAzDr@dBx@pBbAdCv@hBv@zAz@`Bx@xApBhDv@hAxBbD`C|C`AjAxA`BbBfB??HJfAdAlAfAlB~AjAz@jJtG`C|AhCfBbGdEpFtDt@d@vPhLnXfRlXhR`MnInGlEvHjFbJhG~OrKxLrIzBxALH@@LJbFnDpL`IlFtDvE~C|DpChD|BtGpEf@^??d@ZjD`CxA`A|BbBzBhBRPZThA|@vBvBj@p@f@r@`@n@JNFLRZv@bBjBzEjBbFJVBHBJ`E|Kz@vBpAhD|@bCnBrF|AlEBD@F`DfIp@hBrBlFfBzEnE|LjAzClCjHt@lBn@nBZhA\\rA^pB^nCRvBNfCD~A@`BG~DIxAKfAE^Ed@WzBcAhICPCRMhAi@tE??OrAM|@CPIn@EV[vCo@nFaAdI[nC_@~Cc@tCSzBYjC]nCq@|FaAdI_A|HOnASpAa@|Bq@pCY`AiD|Le@`Be@dBg@fBmAlEa@~A_@bBW`BSvAK`AKpAMfDC~A@nB@t@?T@R@l@Dv@@R@PDt@T~B^hCNz@b@lBTz@X`AXx@\\z@b@`A`@v@lAjB|@jA|AjBpA|AzAjBpChDrCnDlFtGbApAjBlChBzCr@pA~B~Dt@jAb@n@bAnA\\^h@b@\\Xv@h@t@b@p@\\n@Tp@Rt@Pl@Ln@Hj@Fl@Bv@@nFBtA?|@Bp@?~DKzPL^?z@@z@???p@@dB@hA@hB@bBNr@?Z?z@C\\If@GXG|@OtAc@v@Yz@g@\\UXWt@o@\\a@z@eArVo[l@u@FGLOHKx@kA\\g@\\k@|@sADG@CBCnEeHj@}@pAuBFIFMl@cADIDKRY~AcCh@{@Tc@jAmB\\_@tAoApBqBfAiAHELCNAFAFG",
+        "priority": 2
+      },
+      "id": "9810006",
+      "links": {
+        "self": "/shapes/9810006"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Newburyport",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Rockport",
+              "type": "stop"
+            },
+            {
+              "id": "Gloucester",
+              "type": "stop"
+            },
+            {
+              "id": "West Gloucester",
+              "type": "stop"
+            },
+            {
+              "id": "Manchester",
+              "type": "stop"
+            },
+            {
+              "id": "Beverly Farms",
+              "type": "stop"
+            },
+            {
+              "id": "Prides Crossing",
+              "type": "stop"
+            },
+            {
+              "id": "Montserrat",
+              "type": "stop"
+            },
+            {
+              "id": "Beverly",
+              "type": "stop"
+            },
+            {
+              "id": "Salem",
+              "type": "stop"
+            },
+            {
+              "id": "Swampscott",
+              "type": "stop"
+            },
+            {
+              "id": "Lynn",
+              "type": "stop"
+            },
+            {
+              "id": "River Works / GE Employees Only",
+              "type": "stop"
+            },
+            {
+              "id": "Chelsea",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Rockport",
+        "polyline": "euqaGrkvpLGFG@O@MBIDgAhAqBpBuAnA]^kAlBUb@i@z@_BbCSXEJEHm@bAGLGHqAtBk@|@oEdHCBABEF}@rA]j@]f@y@jAIJMNGFm@t@sVn[{@dA]`@u@n@YV]T{@f@w@XuAb@}@NYFg@F]H{@B[?s@?cBOiBAiAAeBAq@A??{@?{@A_@?{PM_EJq@?}@CuA?oFCw@Am@Ck@Go@Im@Mu@Qq@So@Uq@]u@c@w@i@]Yi@c@]_@cAoAc@o@u@kA_C_Es@qAiB{CkBmCcAqAmFuGsCoDqCiD{AkBqA}A}AkB}@kAmAkBa@w@c@aA]{@Yy@YaAU{@c@mBO{@_@iCU_CEu@AQASEw@Am@AS?UAu@AoBB_BLgDJqAJaARwAVaB^cB`@_BlAmEf@gBd@eBd@aBhD}LXaAp@qC`@}BRqANoA~@}H`AeIp@}F\\oCXkCR{Bb@uC^_DZoC`AeIn@oFZwCDWHo@BQL}@NsA??h@uELiABSBQbAiIV{BDe@D_@JgAHyAF_EAaBE_BOgCSwB_@oC_@qB]sA[iAo@oBu@mBmCkHkA{CoE}LgB{EsBmFq@iBaDgIAGCE}AmEoBsF}@cCqAiD{@wBaE}KCKCIKWkBcFkB{Ew@cBS[GMKOa@o@g@s@k@q@wBwBiA}@[USQ{BiB}BcByAaAkDaCe@[??g@_@uGqEiD}B}DqCwE_DmFuDqLaIcFoDMKAAMI{ByAyLsI_PsKcJiGwHkFoGmEaMoImXiRoXgRwPiLu@e@qFuDcGeEiCgBaC}AkJuGkA{@mB_BmAgAgAeAIK??cBgByAaBaAkAaC}CyBcDw@iAqBiDy@yA{@aBw@{Aw@iBcAeCy@qBs@eB{A{DsAwDmBgFKSIUGMaAyCaHiRaDaJmAgD_@}@mAcDgBaFw@cCi@cB}@oCs@qBKUM[mAgD[{@??kBcFoAgDa@gAyBeGcAuCy@{B_DaIo@iBGOGOgDgJaBsEOa@iBcFOa@]_A{@{ByCkIWq@kAeDgAwCuAyDwGwQmAmDa@eAg@{A}@yBw@gB_BaD??MY}@}AKS_AaByAcCIK}@sAuAkBW_@YYY_@y@}@[[e@g@WW_CyBgA}@iCmBq@a@g@]c@Yo@c@KEKGQI[O]Qc@Sm@YSKw@]}@[oBq@y@WaBa@gBa@qBc@}A[yA]u@QeA[qAc@oAc@cBq@qB_Ag@YoCaB_C}Ao@g@]Y[W}@w@u@q@wHcHyAsAcGqFc@a@k@i@m@g@_BqA}AgAm@a@{A}@mAq@_CkAuDyBqF{CeE{B_YqOIEGESKuGoDcDkBcE{BwGmDk@QsB{@y@Yi@Mm@Mk@Go@MeA?{@CI?sA@mDWiQkAmFe@cAIq@GkE]]?qTLaJDmA@S?M?G?cAI}@O????gAYo@Ue@SgBiAqCgB_CwAyBuAwAaAe@WwH}EgAq@sEyCiC}AqCsAYMIEGCk@Sa@O{Ae@oCs@{A[}A]iBg@sAYkEeAuG_B_LmCoG}AoD_AICKCaDq@yD_A{Bi@aBYeDg@??s@MaBM{AMaIWmB@qF@e@?kD@yACyAUoBe@_BgAkAwAWm@_BmBwAmBoBsCoBaDcB{C{AwCy@gBoB{EsAuDeAkDcAqD}@kDs@{CmB_JoBwJI_@??y@{Dw@mDqE_TkAeG[eBo@wEy@gIOmBScE_@iM_@iPS}GCoA?kCBoBByAHiBFy@^_EL_A\\mB\\gB`@wAl@qBrAaEvCkIt@qBj@}ArCuHvBmFxC{HtAgDt@uBb@wA\\uATgA\\gBR{ARwANmBHqADkBBoCCoBA{@MeCM{BOgBs@{Kc@kG??QeCAOM}Aw@}LYkEmAkO[mDeBeQw@sHIkAQsAUyB??c@iEwAsMi@yFm@sFSkBe@cE[mD{@qIg@_FKu@yCaZUuBYaCYsCYgCM{AUyCIuCO_GOuE]kIGyAKmAUiCMeAa@}Ba@qBc@_B[q@IYCKAIAOQm@GMo@qAaAeBo@cASY}@gAkDyCmCeC{@aA}@mAmAsBGK[m@_@w@k@{Ae@yAo@wB_@{AsA_FcAuD_AyDIWy@wC}BuIaA_EEM??Og@}@yDUoA_@{Bc@yDYoCKaBMw@aA}J_@yDMqAOeAUcBg@kCOq@c@}A[cAc@kAmAyCo@sAw@oAa@q@eB{CeByCkCsEmBkDgCmEiCyEi@aAy@iBq@mBUs@Qk@g@sBc@_C_@aC]oCmAqJc@yC_@wBe@uBm@sB{@sB}@qB_AkBcAkBkFmKyA}Cm@iAGK_AgBmFuKiDaHeBgDkAuByBkEeAwBaAkBo@qAm@mAeAmBsBcD_B{By@eAsBeC}BqCiE_Fot@my@qA{Aa@e@eAuAa@m@}@}Aq@{AUq@uAmDo@yAq@oA]m@m@}@q@aAu@{@q@u@m@k@oAcAi@_@_Ao@sDmCs@q@a@a@WWg@m@mB_C??_HmI{@gAk@w@g@u@_@q@c@}@c@cAe@mAWy@K[Qo@U{@[cBMm@Ks@K_AK_Ae@iGa@{FAQcBcTU_Ck@uEgBuLc@_D_@iDS}BGwAEaCGeHWu`@?gAMkPCeD?y@@cA@aAFy@H{@VsB@K@GJ}@VcBjBcMh@eE??DWZuBJ{@Dy@B}@?o@Aq@KwAKg@EOQm@Qg@g@cAs@}@[_@GCc@YYOc@MeAKa@?qFD_PRwHDG?E?a@@i@?O?S?S?o@G_@G[Iy@YYM[Sw@i@s@q@q@{@U]O[Q]eD_IcFcMiLeYs@oBi@iBgAmE_AsD]iA_@kAg@iAq@qAaAcB_AuAoCgEy@{Au@yA_@}@aDoHmHoQyCcH_CuFoCuGoAsBsAiB_B{AkBoAcB{@_L_FaDsAsBm@cC_@qCScCOoCU_BW}Ac@cAe@OIcAm@kAy@gAgAsA{AoA{AUYeAkAiHoI]a@cCoCoAuAuAwAuEaF",
+        "priority": 2
+      },
+      "id": "9810007",
+      "links": {
+        "self": "/shapes/9810007"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Newburyport",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "Chelsea",
+              "type": "stop"
+            },
+            {
+              "id": "River Works / GE Employees Only",
+              "type": "stop"
+            },
+            {
+              "id": "Lynn",
+              "type": "stop"
+            },
+            {
+              "id": "Swampscott",
+              "type": "stop"
+            },
+            {
+              "id": "Salem",
+              "type": "stop"
+            },
+            {
+              "id": "Beverly",
+              "type": "stop"
+            },
+            {
+              "id": "Montserrat",
+              "type": "stop"
+            },
+            {
+              "id": "Prides Crossing",
+              "type": "stop"
+            },
+            {
+              "id": "Beverly Farms",
+              "type": "stop"
+            },
+            {
+              "id": "Manchester",
+              "type": "stop"
+            },
+            {
+              "id": "West Gloucester",
+              "type": "stop"
+            },
+            {
+              "id": "Gloucester",
+              "type": "stop"
+            },
+            {
+              "id": "Rockport",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Wachusett",
+        "polyline": "euqaGrkvpLGFq@p@{D|D}A|AUVUZ_@n@_@p@m@z@_@p@g@t@q@fACDGFCDe@t@INGHS^c@`AWj@W`@gC~DaA~ACDABGHw@hA[n@a@bAk@hAEHKREJWh@kAbBWXgAfBSf@Mf@K^CLKt@Gz@AnC?hACdAS|DObC{@xNOrCCd@QvAId@Or@GVQj@O|@Kr@Gh@InAARCTARCVARCP]~FQdDU`DAZCXMlCEh@I`AMrBYnEK~A[hFQ~BGf@K|@Y|BKn@Kr@a@~Aa@|Ai@dBe@vA}@rBGLGLi@hASd@CDMXwC|GmAlCq@zAKVOVQd@Sn@_@jAWfAW|AqB|M_AhGCPALg@`Dq@fEm@hDi@vB}@dDoAhDk@rAw@|A_F~I??oC~EmClF_DrGu@zAKTOXq@vAgAtBuAvCq@~AOf@Un@ObAGZET?@??O`AMfA{@fJYlC[`EYnCANCPALIn@}@vJYzC]dDUlCc@tE_@hD[rDS|BAHa@dE]lDWnCo@xG[rCIbAO`BSpBYzCSxBYxCAPCPq@hHk@lFQ`BW`B]dB[rA]rAm@jBaBjEK\\[r@eApCYz@Wx@_@bBKd@Kl@{A|JWrBKdAMrAIhAErAEfACzGAbI?xDE~HCtWAlDAvICzLAbKAlPCnH???J?TBl@BvAH|ADr@@NL`ARjAZhARr@^|@`@x@Xb@^f@^d@~@~@JHrBjBf@f@zA`BjBzBdAzAd@r@`@r@|@hBpApClAvCvDtIxAdD`A`CfCtFnAvC`@~@LZN^HX??X`AL\\FX`@vA\\vAVjATfApApHv@`Er@zDlCtNxA|HX`BnA|GhDfRhAdIZvBT|Ab@~CfAxIPhAvAbKz@xGPlAXhBdAvFb@pBdAvFv@~DRl@l@fB`A~B~@bCfDfIb@bAXz@Zr@Xp@hBpEpAbDzAfEj@hB`@nAZvBBNBLt@fFl@zE@HBLh@nFf@dF^hD\\|D??NzAVxCLtAVrCL|@Lx@BJ`@jBr@rCt@lCtA~DtAhDv@dB`AlB^p@v@fApA`Br@v@`@\\|@x@rAfAJH`Az@n@l@z@t@t@v@^\\RR|@hAv@fAhAlBz@hBbGtN~AnDdAhCjApCL\\z@rB|ArDdAfC\\t@\\v@Zt@ZdA`@|AXpAVvANnALlALzB@x@@h@?V????AdA@Z?ZCzACf@KnAOfAIr@_A~Fc@vB[zA[nAi@fBk@zASh@g@hAy@rA[^gAlAe@d@s@j@k@b@qBfAuCfBe@Vo@`@a@VWN_@Tk@\\mBdAc@V_CrA{@f@GDGBm@^OFKHkCxAuCdBcGfD}@j@q@d@cAv@o@h@m@p@a@d@qArBc@x@OZeA~Bo@zAaAnBIPqCpG_CzE}AjCm@~@mCjD{A`B_@b@{@~@Y\\??eApAm@r@aCjC{CpD_DnDkApAaAbA_BtA}EvD_CpBsB|A??QLcBvAcDhC}D|CsC|BeBrAcHvFg@`@uC|Bm@h@w@r@mAlAUVEDCBa@h@i@t@k@z@_@l@_@n@m@nAcA|Bw@dCe@fB[tAi@tC[nB[`Cs@pEEZCLCJcAtGSnAyAnJc@vCWjB]lBa@hCcBdLyCxRm@|Dc@~CWtAQnAOt@[dAQp@Ur@]~@w@fBg@z@{@jAg@p@cAfA_At@w@h@w@d@e@ToBn@wAXu@Ja@DcADq@?a@EK?y@Ak@Cu@CmA?eBD_BJ}ARiAVi@RgBv@iCrAoBtAeLrHwE`DsChB_C`B??WPa@X_EfC_ElC_GzDmMrIGD_C|AgFnDqL|HeFlDgC`BmEzCmFrDkAv@MHQJ}AbAiFnD{@n@_Al@q@d@wBhB}TzRoM`LuMzKaDpCcCtBmCzBuD|CcBlAsBvAoBjA}Az@q@\\e@RMFSHMF}Aj@mMzEiGbC{FxByBx@iBt@sCbAgFtB_A`@{@`@g@ZqAdA_BdB[b@c@n@Ud@a@r@sAvCKR??Yr@a@hAOh@Y`AYtAShAOfAMlAIhAIzBEdCKjOC|EGhMO|XEpKEhIQv^?RA\\?VE|HAbGC`B?`D@v@BtAH|BFhBD`AP~BlAfKVvBXxBXdCHt@h@bF??XbCHv@v@nGv@pG`@dDr@lGZdCbAbJ`@`EHzAHzC@tCCxBI`AKnEa@jL?JAFWfH_@lKQrFM`D[lJc@zKEfBAlABbC@bAZhGbAtPJ|AV`EJxBJtCJzD@hB@jBAnBGfFK|CK|BMpBMhBQhBW`CUvBGf@aAjG_@|BoArFMb@ER_@vA_A~CgAdDcAbDaArCsAdEe@dBg@rBQr@]pBWhBUnBOnB_@tFMxBEzAElCM`MAx@AzACpD?R?B?PErDE~@GhBUzDIdB??ARWlEU|EOdCSzBOjAObAM|@m@nCs@nCa@pAa@fAw@jBs@vAo@hAoAjBoA`Bq@r@aA`AmBvAeAr@}Ax@_A^GBeBn@qC|@gA`@sDjAiFdBoBl@oAd@kKfDaIjCcDbAeDdAs@Ps@TuAb@qAj@]NmEhBwCpAkB|@cCvAgBlAuB`BqB~ASP{BnBeFnE_DhCkCvB}BhBaMhKeGjEcAn@eD`BeDzA{DpBwFlCaAf@GBsDbBgBz@eKbFyCvA{DnBeItFqHlFaJlGQJ_SjNiStNeE|CwAz@iAn@_Ad@qBx@gXhKuAh@UHSHMFUHgGdC{@Z??qG`CgLrEkFpBMFE@OH_AZOFSHyUhJwFvB}DxAqNvF_JfDiAb@uB`Ay@\\mAp@oAz@eBpA}AxAWVeAjAiHvJ{BxCoFdHwEjGyC`E_D`EqCxDgBzBaCdDqLxOeDjEoBlCuBnCiB~BS\\QVoHrJoD|EaElFcGbI{@hAa@t@}@fB]|@c@hAY`Ae@bBUhASbAQfAQpAQrAMtBGbAE`BAlADjERnGVxGXbIH`B|@vT^dJdAjWNlE|@lTdA|VXdIp@|O?LHtBDvA@~A?hAE|AAvAMrCI~@OxAQvAM`AQfA]|AqB|Lw@vEMt@sDjTe@pC_ArFg@hDKp@Ix@G^?DE\\C\\OjCIpBCrBA|@AdDAdC???bEAdC?bAA~BAtIApE@vCB~BJlBNzBZhCtBzMPbAHf@vFl^zChRtBvM`BrKpBzLbCtOp@|Dp@nDxAfH`CxKpBnJbCrLbCnLtCdN~BbLlAtFvAxGbEbSlApFp@fDp@jD`@lBXbBXbBd@|DJxA`AhN??Df@l@vI`@lFNlCHbB@bCAXG|DKtBYdDQ|AgA~KSzBEt@Gr@EfACzA]rRWvM?Bc@vVArA@x@HrCNnEXvHPxDLfAFz@^vCVdBTzArC`SzBjOTnBnD~UdB|LNbA`BlLx@hFn@hDT|@Tr@j@|AjAtCtEjKjFxLhFfLT`@b@~@FL??DLl@nA|@|Az@hAdAnAnAnA|@v@p@b@hAt@|A|@LFjIpDrDdB`C`AxJlEhD|AnO|GdEtBxBnBx@nAv@~Af@tA\\pAZtAJp@Fd@Fb@LfBBlA@nAEpAGvAUpBa@lDmBbOeA`I[bB]jBm@jCo@bCw@lC_AhCgAjCaAvB_AfBgAlBiAhBeCfDQPs@x@cAbAiAdAqC|Bs@f@eE~CgExCIFyJdHmMfJgJvGcKnHaBjA??kBrAiChBaLbIgJzGyUxPiI~FyKbIc@ZqD~BkCbBqAp@qMjGgB~@aCjA_@PkB~@eCtAsA|@oA`AeA`AeAdA}@fAm@v@g@p@u@nAy@rA_AnBsKlUoD~HoMxXwBxE}@jBoAzCo@hBk@jBe@lB_@pBYlBS|AO`BS`C[~D[~DShCcAtMw@|JQhC]dEUhCUpBU|AMt@a@lBc@dBi@fBWt@Wt@m@xAYj@o@nAaA`BW^{@nA]`@]`@]Z]X_@V]T_@P_@PWHi@PG@G@[FsANC?aBJeAJa@Fg@J_@Ho@Pa@La@N_@Pi@Vg@Ze@\\c@^kChC{BzBg@p@Yd@Wf@Wh@Qf@Qj@??kAfl@oHd_@aJxWaBnOzAlRvYr`At`Aj}AbHvErd@dKfYvBbO`G`GdIxC`F",
+        "priority": 2
+      },
+      "id": "9840004",
+      "links": {
+        "self": "/shapes/9840004"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Fitchburg",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "place-portr",
+              "type": "stop"
+            },
+            {
+              "id": "Belmont",
+              "type": "stop"
+            },
+            {
+              "id": "Waverley",
+              "type": "stop"
+            },
+            {
+              "id": "Waltham",
+              "type": "stop"
+            },
+            {
+              "id": "Brandeis/ Roberts",
+              "type": "stop"
+            },
+            {
+              "id": "Kendal Green",
+              "type": "stop"
+            },
+            {
+              "id": "Hastings",
+              "type": "stop"
+            },
+            {
+              "id": "Silver Hill",
+              "type": "stop"
+            },
+            {
+              "id": "Lincoln",
+              "type": "stop"
+            },
+            {
+              "id": "Concord",
+              "type": "stop"
+            },
+            {
+              "id": "West Concord",
+              "type": "stop"
+            },
+            {
+              "id": "South Acton",
+              "type": "stop"
+            },
+            {
+              "id": "Littleton / Rte 495",
+              "type": "stop"
+            },
+            {
+              "id": "Ayer",
+              "type": "stop"
+            },
+            {
+              "id": "Shirley",
+              "type": "stop"
+            },
+            {
+              "id": "North Leominster",
+              "type": "stop"
+            },
+            {
+              "id": "Fitchburg",
+              "type": "stop"
+            },
+            {
+              "id": "Wachusett",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Newburyport",
+        "polyline": "w_fdGzkroLtH_C~@_@hB_@lDo@z@Sr@Kl@Ij@OjBa@~B]vCi@bHkAbOgChWsEzOgCZEbCa@NCf@Ip@KlHsA~JeBrLuBhLiBrB]f`@yGFAtTwDhRaDvN}BtI}A~@QvTsDrRcDzAYxJiBpJcBpOiCrN_C`TqDLCBAJAfY_Fp\\yFdBY??`GcAdQuCtU_Exh@aJpNaCfIuAxSoDja@uHzFeA|GoAlJgBfUoH|FwBnHmCFCl@SdC{@pDaB`EaCnEuCRMzAiAh@_@nCyB|F_FDE`DmC|BgBlByAf@Wn@]v@Yv@Sn@Kf@Ej@A\\@^?r@Dd@FH@ZH??r@RzBx@tB~@z_@rOpX|KzGpCt@VRJf@PvHvCvQzH`C|@vBr@dCt@~Bf@D@D@|Cj@nFbAxE|@bF~@zJpBzA^jCt@xAh@FBpBt@v@`@n@\\|@d@|DpB|DtBpBfA~IzEzQrJdKnFjBbAlJdFhPpIpKzF@@@?vAt@z\\bQxGjDjCtApCdBlDhBfB|@hHrClExAn@RXH`Bj@lRxFlCv@hBl@r@Px@RlCz@vA`@vBp@|Bn@jAZl@PpBj@`I~B??D@`A\\jFzAnF~AzF`B|FdBhBj@fGfB|JrCbI`CdI|B|EvA`FvA`B`@jHbBfRrDjHlA|OfClC^??RBxCX|B^zBVbJz@jNdAlLf@fPt@vBF~JF|H@|FEtk@WtOE`ICfQGjDAd@?pFAlBA`IVzAL`BLr@L??dDf@`BXzBh@xD~@`Dp@JBHBnD~@nG|A~KlCtG~AjEdArAXhBf@|A\\zAZnCr@zAd@`@Nj@RFBHDXLpCrAhC|ArExCfAp@vH|Ed@VvA`AxBtA~BvApCfBfBhAd@Rn@TfAX????|@NbAHF?L?R?lAA`JEpTM\\?jE\\p@FbAHlFd@hQjAlDVrAAH?z@BdA?n@Lj@Fl@Lh@Lx@XrBz@j@PvGlDbEzBbDjBtGnDRJFDHD~XpOdEzBpFzCtDxB~BjAlAp@zA|@l@`@|AfA~ApAl@f@j@h@b@`@bGpFxArAvHbHt@p@|@v@ZV\\Xn@f@~B|AnC`Bf@XpB~@bBp@nAb@pAb@dAZt@PxA\\|AZpBb@fB`@`B`@x@VnBp@|@Zv@\\RJl@Xb@R\\PZNPHJFJDn@b@b@Xf@\\p@`@hClBfA|@~BxBVVd@f@ZZx@|@X^XXV^tAjB|@rAHJxAbC~@`BJR|@|ALX??~A`Dv@fB|@xBf@zA`@dAlAlDvGvQtAxDfAvCjAdDVp@xCjIz@zB\\~@N`@hBbFN`@`BrEfDfJFNFNn@hB~C`Ix@zBbAtCxBdG`@fAnAfDjBbF??Zz@lAfDLZJTr@pB|@nCh@bBv@bCfB`FlAbD^|@lAfD`D`J`HhR`AxCFLHTJRlBfFrAvDzAzDr@dBx@pBbAdCv@hBv@zAz@`Bx@xApBhDv@hAxBbD`C|C`AjAxA`BbBfB??HJfAdAlAfAlB~AjAz@jJtG`C|AhCfBbGdEpFtDt@d@vPhLnXfRlXhR`MnInGlEvHjFbJhG~OrKxLrIzBxALH@@LJbFnDpL`IlFtDvE~C|DpChD|BtGpEf@^??d@ZjD`CxA`A|BbBzBhBRPZThA|@vBvBj@p@f@r@`@n@JNFLRZv@bBjBzEjBbFJVBHBJ`E|Kz@vBpAhD|@bCnBrF|AlEBD@F`DfIp@hBrBlFfBzEnE|LjAzClCjHt@lBn@nBZhA\\rA^pB^nCRvBNfCD~A@`BG~DIxAKfAE^Ed@WzBcAhICPCRMhAi@tE??OrAM|@CPIn@EV[vCo@nFaAdI[nC_@~Cc@tCSzBYjC]nCq@|FaAdI_A|HOnASpAa@|Bq@pCY`AiD|Le@`Be@dBg@fBmAlEa@~A_@bBW`BSvAK`AKpAMfDC~A@nB@t@?T@R@l@Dv@@R@PDt@T~B^hCNz@b@lBTz@X`AXx@\\z@b@`A`@v@lAjB|@jA|AjBpA|AzAjBpChDrCnDlFtGbApAjBlChBzCr@pA~B~Dt@jAb@n@bAnA\\^h@b@\\Xv@h@t@b@p@\\n@Tp@Rt@Pl@Ln@Hj@Fl@Bv@@nFBtA?|@Bp@?~DKzPL^?z@@z@???p@@dB@hA@hB@bBNr@?Z?z@C\\If@GXG|@OtAc@v@Yz@g@\\UXWt@o@\\a@z@eArVo[l@u@FGLOHKx@kA\\g@\\k@|@sADG@CBCnEeHj@}@pAuBFIFMl@cADIDKRY~AcCh@{@Tc@jAmB\\_@tAoApBqBfAiAHELCNAFA",
+        "priority": 1
+      },
+      "id": "9810001",
+      "links": {
+        "self": "/shapes/9810001"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Newburyport",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Newburyport",
+              "type": "stop"
+            },
+            {
+              "id": "Rowley",
+              "type": "stop"
+            },
+            {
+              "id": "Ipswich",
+              "type": "stop"
+            },
+            {
+              "id": "Hamilton/ Wenham",
+              "type": "stop"
+            },
+            {
+              "id": "North Beverly",
+              "type": "stop"
+            },
+            {
+              "id": "Beverly",
+              "type": "stop"
+            },
+            {
+              "id": "Salem",
+              "type": "stop"
+            },
+            {
+              "id": "Swampscott",
+              "type": "stop"
+            },
+            {
+              "id": "Lynn",
+              "type": "stop"
+            },
+            {
+              "id": "River Works / GE Employees Only",
+              "type": "stop"
+            },
+            {
+              "id": "Chelsea",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Newburyport",
+        "polyline": "muqaGzkvpLG@O@MBIDgAhAqBpBuAnA]^kAlBUb@i@z@_BbCSXEJEHm@bAGLGHqAtBk@|@oEdHCBABEF}@rA]j@]f@y@jAIJMNGFm@t@sVn[{@dA]`@u@n@YV]T{@f@w@XuAb@}@NYFg@F]H{@B[?s@?cBOiBAiAAeBAq@A??{@?{@A_@?{PM_EJq@?}@CuA?oFCw@Am@Ck@Go@Im@Mu@Qq@So@Uq@]u@c@w@i@]Yi@c@]_@cAoAc@o@u@kA_C_Es@qAiB{CkBmCcAqAmFuGsCoDqCiD{AkBqA}A}AkB}@kAmAkBa@w@c@aA]{@Yy@YaAU{@c@mBO{@_@iCU_CEu@AQASEw@Am@AS?UAu@AoBB_BLgDJqAJaARwAVaB^cB`@_BlAmEf@gBd@eBd@aBhD}LXaAp@qC`@}BRqANoA~@}H`AeIp@}F\\oCXkCR{Bb@uC^_DZoC`AeIn@oFZwCDWHo@BQL}@NsA??h@uELiABSBQbAiIV{BDe@D_@JgAHyAF_EAaBE_BOgCSwB_@oC_@qB]sA[iAo@oBu@mBmCkHkA{CoE}LgB{EsBmFq@iBaDgIAGCE}AmEoBsF}@cCqAiD{@wBaE}KCKCIKWkBcFkB{Ew@cBS[GMKOa@o@g@s@k@q@wBwBiA}@[USQ{BiB}BcByAaAkDaCe@[??g@_@uGqEiD}B}DqCwE_DmFuDqLaIcFoDMKAAMI{ByAyLsI_PsKcJiGwHkFoGmEaMoImXiRoXgRwPiLu@e@qFuDcGeEiCgBaC}AkJuGkA{@mB_BmAgAgAeAIK??cBgByAaBaAkAaC}CyBcDw@iAqBiDy@yA{@aBw@{Aw@iBcAeCy@qBs@eB{A{DsAwDmBgFKSIUGMaAyCaHiRaDaJmAgD_@}@mAcDgBaFw@cCi@cB}@oCs@qBKUM[mAgD[{@??kBcFoAgDa@gAyBeGcAuCy@{B_DaIo@iBGOGOgDgJaBsEOa@iBcFOa@]_A{@{ByCkIWq@kAeDgAwCuAyDwGwQmAmDa@eAg@{A}@yBw@gB_BaD??MY}@}AKS_AaByAcCIK}@sAuAkBW_@YYY_@y@}@[[e@g@WW_CyBgA}@iCmBq@a@g@]c@Yo@c@KEKGQI[O]Qc@Sm@YSKw@]}@[oBq@y@WaBa@gBa@qBc@}A[yA]u@QeA[qAc@oAc@cBq@qB_Ag@YoCaB_C}Ao@g@]Y[W}@w@u@q@wHcHyAsAcGqFc@a@k@i@m@g@_BqA}AgAm@a@{A}@mAq@_CkAuDyBqF{CeE{B_YqOIEGESKuGoDcDkBcE{BwGmDk@QsB{@y@Yi@Mm@Mk@Go@MeA?{@CI?sA@mDWiQkAmFe@cAIq@GkE]]?qTLaJDmA@S?M?G?cAI}@O????gAYo@Ue@SgBiAqCgB_CwAyBuAwAaAe@WwH}EgAq@sEyCiC}AqCsAYMIEGCk@Sa@O{Ae@oCs@{A[}A]iBg@sAYkEeAuG_B_LmCoG}AoD_AICKCaDq@yD_A{Bi@aBYeDg@??s@MaBM{AMaIWmB@qF@e@?kD@gQFaIBuODuk@V}FD}HA_KGwBGgPu@mLg@kNeAcJ{@{BW}B_@yCYSC??mC_@}OgCkHmAgRsDkHcBaBa@aFwA}EwAeI}BcIaC}JsCgGgBiBk@}FeB{FaBoF_BkF{AaA]EA??aI_CqBk@m@QkA[}Bo@wBq@wAa@mC{@y@Ss@QiBm@mCw@mRyFaBk@YIo@SmEyAiHsCgB}@mDiBqCeBkCuAyGkD{\\cQwAu@A?AAqK{FiPqImJeFkBcAeKoF{QsJ_J{EqBgA}DuB}DqB}@e@o@]w@a@qBu@GCyAi@kCu@{A_@{JqBcF_AyE}@oFcA}Ck@EAEA_Cg@eCu@wBs@aC}@wQ{HwHwCg@QSKu@W{GqCqX}K{_@sOuB_A{By@s@S??[IIAe@Gs@E_@?]Ak@@g@Do@Jw@Rw@Xo@\\g@VmBxA}BfBaDlCED}F~EoCxBi@^{AhASLoEtCaE`CqD`BeCz@m@RGBoHlC}FvBgUnHmJfB}GnA{FdAka@tHySnDgItAqN`Cyh@`JuU~DeQtCaGbA??eBXq\\xFgY~EK@C@MBaTpDsN~BqOhCqJbByJhB{AXsRbDwTrD_APuI|AwN|BiR`DuTvDG@g`@xGsB\\iLhBsLtB_KdBmHrAq@Jg@HOBcC`@[D{OfCiWrEcOfCcHjAwCh@_C\\kB`@k@Nm@Hs@J{@RmDn@iB^_A^uH~B",
+        "priority": 1
+      },
+      "id": "9810002",
+      "links": {
+        "self": "/shapes/9810002"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Newburyport",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "Chelsea",
+              "type": "stop"
+            },
+            {
+              "id": "River Works / GE Employees Only",
+              "type": "stop"
+            },
+            {
+              "id": "Lynn",
+              "type": "stop"
+            },
+            {
+              "id": "Swampscott",
+              "type": "stop"
+            },
+            {
+              "id": "Salem",
+              "type": "stop"
+            },
+            {
+              "id": "Beverly",
+              "type": "stop"
+            },
+            {
+              "id": "North Beverly",
+              "type": "stop"
+            },
+            {
+              "id": "Hamilton/ Wenham",
+              "type": "stop"
+            },
+            {
+              "id": "Ipswich",
+              "type": "stop"
+            },
+            {
+              "id": "Rowley",
+              "type": "stop"
+            },
+            {
+              "id": "Newburyport",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "North Station",
+        "polyline": "wdadGb`{pLFA`AEbAAX?zGFbDDhB@nBL^HVFn@RHDn@Zz@l@lAdAj@j@dBlBv@fA|@tA??f@v@rBlDxChFd@x@l@hApBfDpDhGxJxPdBxClFhJp@dA`FtItAfCf@x@`BnCfAlBhBvCdCpEJPhAnBp@bAj@r@RVt@x@h@p@r@p@`@^rBnAn@Z~@b@xAf@xB`ARDXJTJNFJD`FzA`C|@nBp@zBz@bAXvGfC|CfApC~@vFlB`C|@vC`AbC|@tA`@bCv@h@R|@\\tCbArDvAr@\\t@d@`BhAtApA|FpGr@x@jBrBzHvI|@`AvCbDnAzA~BhCh@h@jArAhBnBfErE~BlCRTnB|BpBxBzN`P~HxItA~AdBdBf@b@x@n@~Ax@t@ZlBf@lANt@F~BHb@A|@IhCa@tDi@xCi@lBYtDo@pHoAnDg@fDMdBHz@Fp@F|@RfAVl@Rx@Zr@V~@h@jBnARLx@p@t@r@PPp@~@XT`@^b@`@fBbBh@j@`@h@^f@~@|A\\j@j@fA`@z@v@nBXx@Tl@Rp@p@zBDRTjAH^Lj@BL?DJh@DTJn@@H?DBNLj@Jz@RjBHpAF|@Bt@JdBBx@JlCFz@NvDFzBL`DN|CLvCPtDNrDLzCHfCNpF?L??D~@@X@VVrGX~GJtAXlBf@rCLf@FXVz@X~@h@nAh@dADHVb@p@`Ab@f@jAfAx@h@j@\\bAb@x@Vv@R|@Lb@DVDzB@bAC`AOHCj@Ql@S`@S`@UxDqC`LqI|BgB~DuCtDsChDoCvC{BzCwBnDqChF_ExCwBLMzDuCvBaBvAeAfEeD|C_CHINKVSJIZUjDkC|DwCdJcH^W`B{Ar@g@zBwA`@YbB_AnAo@vAu@zA{@RKnCeA|Bu@~@Y~Bg@fBc@zA[bB[d@Kx@Kv@GzAGdACjAA|AFxDXhANvB^xAX|@Rv@PtE~@@???tBf@xAZhAZ|A\\@?pEdA|Dz@zBd@tBf@??lAXJBHB~A^nA\\ZJnAd@vCrAzBvAlG`E|HfFvClBrAz@`G~DvExCn@b@pCjBtH`F|H~E|GtEvGhErMrInCdBlB`ApBbAbFlBxC~@pDx@pDn@rBPdEHdCApBK~C[nI}@fCW????n@Ih@GH?dHs@tD[jEEdGPrDZ~Cf@fARv@T~Ab@fBh@t@P`MpDbBd@tFbBtDdAjDbArBj@vBf@|BZhDZbD^nCTzBVnOvA|ALbD^dAHjRjBnFb@rFn@^B\\BrANpKdAhFd@h@FVB@?^DfDXNBD@ZDpD\\vBPtBVtD\\v@Jz@JpCn@jATlARZDnBPhBT~Eb@|CZbBPfE`@x@Fv@BfA@pD@`ADpAJxAPrLhA??zCVjHv@p@FrBPxJ`AnCTvKdAlD^rK`AxBV|Ht@lCPhEd@~Iz@jBVbANhAPzAXjB`@zEfA`Ex@bFfAhIhBvE`Az@PZFxJtBrDv@rAVl@Df@@\\Aj@E`AQjBk@tByAr@]RUZYb@e@DE?A??@AFGr@y@bB}BrAcBvBqCzKaOrFqHtCwD|B{CdEuFFGvIkLxDmFlHsJNS??LQlDyEbMoPjD_EnAsAHI@AHIrKaLvCkCbFyD~@k@rJiFfDgB`CsA~F_Dj@]tCcBzAy@tBgA`MaHlE}B`RwJ~@g@nAu@vHeEdCqAxAy@pAi@fBo@fEqArC{@~Bq@`EmAbEuAxAi@TITIz@]tAg@x@]ZMb@STI~@[dC_An@WhDoAzB{@j@Ob@QNCHCvFuAbCk@bEaAlBe@dAWhAWn@IbAMp@G~@GnA?l@@rGXz@Br@?rBKr@IhBUjB_@PIJCxAe@~Am@|Aw@rA_A`BoAfAcArBoBzB}BbAaAj@g@n@q@hDeDn@k@v@q@vBoAr@_@jAg@hAc@n@S|Aa@PCNEbDc@|BUl@Cx@AVAh@?^@rADdAFhBTlAR\\L`@Jv@T`A^~Ar@xCvAzKjFzE~BdFfCtEzB|Av@hBx@l@X~@\\`AZtA^bBd@fEjAbEhAxA^tCx@~GjBxCz@jHnBdHnBjD`ArA^|@VlNxDx@RnA\\fAXfBh@~@VHBfBh@|F|AnUpGxA^xBl@j@Tr@ZpAp@VNj@\\hAv@v@p@jAdAlApArCbD|@`Ax@v@`Av@`BhAVNb@V~@d@fA`@jA^fAX`APpAPjAHz@DtABpA@zACpES`CMzAOfAOxAUtAa@xAi@bAa@hBaAvA_ArAeAfAcA~@gAdAoAx@iAv@_Aj@w@LQFGbCcDjDoEvL}OjO_SrBoChB_ChCkDjBgCd@m@dB}B~ByCv@eAbAuAd@o@fDkEjBaCtCwDFGFI`LcOdCaDd@s@JKHMlEwFdEuF|AmBnAuAhB_BlBwA|B}AFELIHEd@[~DoCnGiE~@o@tByA|AeAdAs@~KwHfHyE^WZUbEoCzDmCLKDA@C`BgA|DkCpCoBPKlBsAtA_AxA_Ah@_@JIHGNMr@o@dAgAx@_AXYd@o@xAgCn@kAr@eBpAkDBIFOp@qBbAwCBKFMr@sB~@qC`AkCbAwCFODOxAyD|AwERg@Tg@d@wA\\y@f@kAv@yADKFOz@kAh@q@j@u@~@aA`AaAvA}ATORQ\\S~AmAVSvAqAf@c@JKHK|@y@bGgGpAoA^_@dAkAd@o@|AyCh@gAx@aBl@uA^iARw@L{@Jy@FoA?uAAoBGkCG}CMsEAaB@eAL_BJu@Pw@Ja@N_@N]HQJSJQT[FIRWxPcUnCuDtD}EvAiBr@{@RUFKLOFKtAmB`@o@|@wADIBC@CzEuHd@s@b@aAR_@FIHOd@u@BEFGBEp@gAf@u@^q@l@{@^q@^o@T[TW|A}AzD}Dp@q@FG",
+        "priority": 1
+      },
+      "id": "9820003",
+      "links": {
+        "self": "/shapes/9820003"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Haverhill",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Haverhill",
+              "type": "stop"
+            },
+            {
+              "id": "Bradford",
+              "type": "stop"
+            },
+            {
+              "id": "Lawrence",
+              "type": "stop"
+            },
+            {
+              "id": "Andover",
+              "type": "stop"
+            },
+            {
+              "id": "Ballardvale",
+              "type": "stop"
+            },
+            {
+              "id": "place-north",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Haverhill",
+        "polyline": "euqaGrkvpLGFq@p@{D|D}A|AUVUZ_@n@_@p@m@z@_@p@g@t@q@fACDGFCDe@t@INGHS^c@`Ae@r@{EtHABCBEH}@vAa@n@uAlBGJMNGJSTs@z@wAhBuD|EoCtDyPbUSVGHUZKPKRIPO\\O^K`@Qv@Kt@M~AAdA@`BLrEF|CFjC@nB?tAGnAKx@Mz@Sv@_@hAm@tAy@`Bi@fA}AxCe@n@eAjA_@^qAnAcGfG}@x@IJKJg@b@wApAWR_BlA]RSPUNwA|AaA`A_A`Ak@t@i@p@{@jAGNEJw@xAg@jA]x@e@vAUf@Sf@}AvEyAxDENGNcAvCaAjC_ApCs@rBGLCJcAvCq@pBGNCHqAjDs@dBo@jAyAfCe@n@YXy@~@eAfAs@n@OLIFKHi@^yA~@uA~@mBrAQJqCnB}DjCaBfAABE@MJ{DlCcEnC[T_@VgHxE_LvHeAr@}AdAuBxA_An@oGhE_EnCe@ZIDMHGD}B|AmBvAiB~AoAtA}AlBeEtFmEvFILKJe@r@eC`DaLbOGHGFuCvDkB`CgDjEe@n@cAtAw@dA_CxCeB|Be@l@kBfCiCjDiB~BsBnCkO~RwL|OkDnEcCbDGFMPk@v@w@~@y@hAeAnA_AfAgAbAsAdAwA~@iB`AcA`@yAh@uA`@yATgAN{ANaCLqER{ABqAAuAC{@EkAIqAQaAQgAYkA_@gAa@_Ae@c@WWOaBiAaAw@y@w@}@aAsCcDmAqAkAeAw@q@iAw@k@]WOqAq@s@[k@UyBm@yA_@oUqG}F}AgBi@IC_AWgBi@gAYoA]y@SmNyD}@WsA_@kDaAeHoBkHoByC{@_HkBuCy@yA_@cEiAgEkAcBe@uA_@aA[_A]m@YiBy@}Aw@uE{BeFgC{E_C{KkFyCwA_Bs@aA_@w@Ua@K]MmASiBUeAGsAE_@Ai@?W@y@@m@B}BTcDb@ODQB}A`@o@RiAb@kAf@s@^wBnAw@p@o@j@iDdDo@p@k@f@cA`A{B|BsBnBgAbAaBnAsA~@}Av@_Bl@yAd@KBQHkB^iBTs@HsBJs@?{@CsGYm@AoA?_AFq@FcALo@HiAVeAVmBd@cE`AcCj@wFtAIBOBc@Pk@N{Bz@iDnAo@VeC~@_AZUHc@R[Ly@\\uAf@{@\\UHUHyAh@cEtAaElA_Cp@sCz@gEpAgBn@qAh@yAx@eCpAwHdEoAt@_Af@aRvJmE|BaM`HuBfA{Ax@uCbBk@\\_G~CaCrAgDfBsJhF_Aj@cFxDwCjCsK`LIHA@IHoArAkD~DcMnPmDxEMP??ORmHrJyDlFwIjLGFeEtF}BzCuCvDsFpH{K`OwBpCsAbBcB|Bs@x@GFA@???@EDc@d@[XSTs@\\uBxAkBj@aAPk@D]@g@Am@EsAWsDw@yJuB[G{@QwEaAiIiBcFgAaEy@{EgAkBa@{AYiAQcAOkBW_J{@iEe@mCQ}Hu@yBWsKaAmD_@wKeAoCUyJaAsBQq@GkHw@{CW??sLiAyAQqAKaAEqDAgAAw@Cy@GgEa@cBQ}C[_Fc@iBUoBQ[EmASkAUqCo@{@Kw@KuD]uBWwBQqD][EEAOCgDY_@EA?WCi@GiFe@qKeAsAO]C_@CsFo@oFc@kRkBeAIcD_@}AMoOwA{BWoCUcD_@iD[}B[wBg@sBk@kDcAuDeAuFcBcBe@aMqDu@QgBi@_Bc@w@UgAS_Dg@sD[eGQkEDuDZeHr@I?i@Fo@H????gCVoI|@_DZqBJeC@eEIsBQqDo@qDy@yC_AcFmBqBcAmBaAoCeBsMsIwGiE}GuE}H_FuHaFqCkBo@c@wEyCaG_EsA{@wCmB}HgFmGaE{BwAwCsAoAe@[KoA]_B_@ICKCmAY??uBg@{Be@}D{@qEeAA?}A]iA[yA[uBg@??A?uE_Aw@Q}@SyAYwB_@iAOyDY}AGkA@eAB{AFw@Fy@Je@JcBZ{AZgBb@_Cf@_AX}Bt@oCdASJ{Az@wAt@oAn@cB~@a@X{BvAs@f@aBzA_@VeJbH}DvCkDjC[TKHWROJIH}C~BgEdDwAdAwB`B{DtCMLyCvBiF~DoDpC{CvBwCzBiDnCuDrC_EtC}BfBaLpIyDpCa@Ta@Rm@Rk@PIBaANcAB{BAWEc@E}@Mw@Sy@WcAc@k@]y@i@kAgAc@g@q@aAWc@EIi@eAi@oAY_AW{@GYMg@g@sCYmBKuAY_HWsGAWAYE_A???MOqFIgCM{COsDQuDMwCO}CMaDG{BOwDG{@KmCCy@KeBCu@G}@IqASkBK{@Mk@CO?EAIKo@EUKi@?ECMMk@I_@UkAESq@{BSq@Um@Yy@w@oBa@{@k@gA]k@_A}A_@g@a@i@i@k@gBcBc@a@a@_@YUq@_AQQu@s@y@q@SMkBoA_Ai@s@Wy@[m@SgAW}@Sq@G{@GeBIgDLoDf@qHnAuDn@mBXyCh@uDh@iC`@}@Hc@@_CIu@GmAOmBg@u@[_By@y@o@g@c@eBeBuA_B_IyI{NaPqByBoB}BSU_CmCgEsEiBoBkAsAi@i@_CiCoA{AwCcD}@aA{HwIkBsBs@y@}FqGuAqAaBiAu@e@s@]sDwAuCcA}@]i@ScCw@uAa@cC}@wCaAaC}@wFmBqC_A}CgAwGgCcAY{B{@oBq@aC}@aF{AKEOGUKYKSEyBaAyAg@_Ac@o@[sBoAa@_@s@q@i@q@u@y@SWk@s@q@cAiAoBKQeCqEiBwCgAmBaBoCg@y@uAgCaFuIq@eAmFiJeByCyJyPqDiGqBgDm@iAe@y@yCiFsBmDg@w@??}@uAw@gAeBmBk@k@mAeA{@m@o@[IEo@SWG_@IoBMiBAcDE{GGY?cA@aADG@",
+        "priority": -1
+      },
+      "id": "9820004",
+      "links": {
+        "self": "/shapes/9820004"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Haverhill",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-north",
+              "type": "stop"
+            },
+            {
+              "id": "West Medford",
+              "type": "stop"
+            },
+            {
+              "id": "Wedgemere",
+              "type": "stop"
+            },
+            {
+              "id": "Winchester Center",
+              "type": "stop"
+            },
+            {
+              "id": "Anderson/ Woburn",
+              "type": "stop"
+            },
+            {
+              "id": "Wilmington",
+              "type": "stop"
+            },
+            {
+              "id": "Ballardvale",
+              "type": "stop"
+            },
+            {
+              "id": "Andover",
+              "type": "stop"
+            },
+            {
+              "id": "Lawrence",
+              "type": "stop"
+            },
+            {
+              "id": "Bradford",
+              "type": "stop"
+            },
+            {
+              "id": "Haverhill",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": "Common St and Concord Ave, Belmont, MA 02478",
+        "description": null,
+        "latitude": 42.395896,
+        "location_type": 0,
+        "longitude": -71.17619,
+        "name": "Belmont",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Belmont",
+      "links": {
+        "self": "/stops/Belmont"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Belmont"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "195 Andover St, Andover, MA 01810",
+        "description": null,
+        "latitude": 42.627356,
+        "location_type": 0,
+        "longitude": -71.159962,
+        "name": "Ballardvale",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Ballardvale",
+      "links": {
+        "self": "/stops/Ballardvale"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Ballardvale"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "100 Atlantic Ave, Woburn, MA 01801",
+        "description": null,
+        "latitude": 42.516987,
+        "location_type": 0,
+        "longitude": -71.144475,
+        "name": "Anderson/Woburn",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Anderson/ Woburn",
+      "links": {
+        "self": "/stops/Anderson%2F%20Woburn"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Anderson%2F%20Woburn"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "160 Lincoln Rd, Lincoln, MA 01773",
+        "description": null,
+        "latitude": 42.414229,
+        "location_type": 0,
+        "longitude": -71.325344,
+        "name": "Lincoln",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Lincoln",
+      "links": {
+        "self": "/stops/Lincoln"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Lincoln"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "10 Park St, Beverly, MA 01915",
+        "description": null,
+        "latitude": 42.547276,
+        "location_type": 0,
+        "longitude": -70.885432,
+        "name": "Beverly",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Beverly",
+      "links": {
+        "self": "/stops/Beverly"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Beverly"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "325 Broad St, Lynn, MA 01901",
+        "description": null,
+        "latitude": 42.462953,
+        "location_type": 0,
+        "longitude": -70.945421,
+        "name": "Lynn",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Lynn",
+      "links": {
+        "self": "/stops/Lynn"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Lynn"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "35 Lincoln St, Reading, MA 01867",
+        "description": null,
+        "latitude": 42.52148,
+        "location_type": 0,
+        "longitude": -71.10744,
+        "name": "Reading",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Reading",
+      "links": {
+        "self": "/stops/Reading"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Reading"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "90 Thoreau St, Concord, MA 01742",
+        "description": null,
+        "latitude": 42.456565,
+        "location_type": 0,
+        "longitude": -71.357677,
+        "name": "Concord",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Concord",
+      "links": {
+        "self": "/stops/Concord"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Concord"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Enon St and Dodge St, Beverly, MA 01915",
+        "description": null,
+        "latitude": 42.583779,
+        "location_type": 0,
+        "longitude": -70.883851,
+        "name": "North Beverly",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "North Beverly",
+      "links": {
+        "self": "/stops/North%20Beverly"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=North%20Beverly"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commercial St and Pleasant St, Malden, MA 02148",
+        "description": null,
+        "latitude": 42.426632,
+        "location_type": 1,
+        "longitude": -71.07411,
+        "name": "Malden Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-mlmnl",
+      "links": {
+        "self": "/stops/place-mlmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-mlmnl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "405 Main St, Wilmington, MA 01887",
+        "description": null,
+        "latitude": 42.546624,
+        "location_type": 0,
+        "longitude": -71.174334,
+        "name": "Wilmington",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Wilmington",
+      "links": {
+        "self": "/stops/Wilmington"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Wilmington"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Burrill St and Railroad Ave, Swampscott, MA 01907",
+        "description": null,
+        "latitude": 42.473743,
+        "location_type": 0,
+        "longitude": -70.922537,
+        "name": "Swampscott",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Swampscott",
+      "links": {
+        "self": "/stops/Swampscott"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Swampscott"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1 Washington Ave, Haverhill, MA 01832",
+        "description": null,
+        "latitude": 42.773474,
+        "location_type": 0,
+        "longitude": -71.086237,
+        "name": "Haverhill",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Haverhill",
+      "links": {
+        "self": "/stops/Haverhill"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Haverhill"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Commonwealth Ave and Main St, West Concord, MA 01742",
+        "description": null,
+        "latitude": 42.457043,
+        "location_type": 0,
+        "longitude": -71.392892,
+        "name": "West Concord",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "West Concord",
+      "links": {
+        "self": "/stops/West%20Concord"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=West%20Concord"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1000 Western Ave, Lynn, MA 01910 (General Electric employees only)",
+        "description": "GE Employees Only",
+        "latitude": 42.449927,
+        "location_type": 0,
+        "longitude": -70.969848,
+        "name": "River Works",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "River Works / GE Employees Only",
+      "links": {
+        "self": "/stops/River%20Works%20%2F%20GE%20Employees%20Only"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=River%20Works%20%2F%20GE%20Employees%20Only"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "25 Mystic Valley Pkwy, Winchester, MA 01890",
+        "description": null,
+        "latitude": 42.444948,
+        "location_type": 0,
+        "longitude": -71.140169,
+        "name": "Wedgemere",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Wedgemere",
+      "links": {
+        "self": "/stops/Wedgemere"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Wedgemere"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "75 Carter St, Waltham, MA 02453",
+        "description": null,
+        "latitude": 42.374269,
+        "location_type": 0,
+        "longitude": -71.235598,
+        "name": "Waltham",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Waltham",
+      "links": {
+        "self": "/stops/Waltham"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Waltham"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "29 Waterfield Rd, Winchester, MA 01890",
+        "description": null,
+        "latitude": 42.451088,
+        "location_type": 0,
+        "longitude": -71.13783,
+        "name": "Winchester Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Winchester Center",
+      "links": {
+        "self": "/stops/Winchester%20Center"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Winchester%20Center"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Bay Rd and Walnut Rd, Hamilton, MA 01982",
+        "description": null,
+        "latitude": 42.609212,
+        "location_type": 0,
+        "longitude": -70.874801,
+        "name": "Hamilton/Wenham",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Hamilton/ Wenham",
+      "links": {
+        "self": "/stops/Hamilton%2F%20Wenham"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Hamilton%2F%20Wenham"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "150 Main St, Fitchburg, MA 01420",
+        "description": null,
+        "latitude": 42.58072,
+        "location_type": 0,
+        "longitude": -71.792611,
+        "name": "Fitchburg",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Fitchburg",
+      "links": {
+        "self": "/stops/Fitchburg"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Fitchburg"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "4 Central St, Acton, MA 01720",
+        "description": null,
+        "latitude": 42.460574,
+        "location_type": 0,
+        "longitude": -71.457804,
+        "name": "South Acton",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "South Acton",
+      "links": {
+        "self": "/stops/South%20Acton"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=South%20Acton"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Silver Hill Rd and Merriam St, Weston, MA 02493",
+        "description": null,
+        "latitude": 42.395625,
+        "location_type": 0,
+        "longitude": -71.302357,
+        "name": "Silver Hill",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Silver Hill",
+      "links": {
+        "self": "/stops/Silver%20Hill"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Silver%20Hill"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "10 Railroad Ave, Bradford, MA 01835",
+        "description": null,
+        "latitude": 42.766912,
+        "location_type": 0,
+        "longitude": -71.088411,
+        "name": "Bradford",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Bradford",
+      "links": {
+        "self": "/stops/Bradford"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Bradford"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1899 Massachusetts Ave, Cambridge, MA 02140",
+        "description": null,
+        "latitude": 42.3884,
+        "location_type": 1,
+        "longitude": -71.119149,
+        "name": "Porter",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-portr",
+      "links": {
+        "self": "/stops/place-portr"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-portr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "290 Essex Ave, Gloucester, MA 01930",
+        "description": null,
+        "latitude": 42.611933,
+        "location_type": 0,
+        "longitude": -70.705417,
+        "name": "West Gloucester",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "West Gloucester",
+      "links": {
+        "self": "/stops/West%20Gloucester"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=West%20Gloucester"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "497 Franklin St, Melrose, MA 02176",
+        "description": null,
+        "latitude": 42.469464,
+        "location_type": 0,
+        "longitude": -71.068297,
+        "name": "Melrose Highlands",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Melrose Highlands",
+      "links": {
+        "self": "/stops/Melrose%20Highlands"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Melrose%20Highlands"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "525 Trapelo Rd, Belmont, MA 02478",
+        "description": null,
+        "latitude": 42.3876,
+        "location_type": 0,
+        "longitude": -71.190744,
+        "name": "Waverley",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Waverley",
+      "links": {
+        "self": "/stops/Waverley"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Waverley"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Cedar Park and W Emerson St, Melrose, MA 02176",
+        "description": null,
+        "latitude": 42.458768,
+        "location_type": 0,
+        "longitude": -71.069789,
+        "name": "Melrose Cedar Park",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Melrose Cedar Park",
+      "links": {
+        "self": "/stops/Melrose%20Cedar%20Park"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Melrose%20Cedar%20Park"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Ruggles St and Station St, North Billerica, MA 01862",
+        "description": null,
+        "latitude": 42.593248,
+        "location_type": 0,
+        "longitude": -71.280995,
+        "name": "North Billerica",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "North Billerica",
+      "links": {
+        "self": "/stops/North%20Billerica"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=North%20Billerica"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "25 Boston Way, Newburyport, MA 01950",
+        "description": null,
+        "latitude": 42.797837,
+        "location_type": 0,
+        "longitude": -70.87797,
+        "name": "Newburyport",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Newburyport",
+      "links": {
+        "self": "/stops/Newburyport"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Newburyport"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "252 Bridge St, Salem, MA 01970",
+        "description": null,
+        "latitude": 42.524792,
+        "location_type": 0,
+        "longitude": -70.895876,
+        "name": "Salem",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Salem",
+      "links": {
+        "self": "/stops/Salem"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Salem"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "17 Railroad St, Andover, MA 01810",
+        "description": null,
+        "latitude": 42.658336,
+        "location_type": 0,
+        "longitude": -71.144502,
+        "name": "Andover",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Andover",
+      "links": {
+        "self": "/stops/Andover"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Andover"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "198 Church St, Weston, MA",
+        "description": null,
+        "latitude": 42.37897,
+        "location_type": 0,
+        "longitude": -71.282411,
+        "name": "Kendal Green",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Kendal Green",
+      "links": {
+        "self": "/stops/Kendal%20Green"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Kendal%20Green"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1 Oak St, Beverly, MA 01915",
+        "description": null,
+        "latitude": 42.561651,
+        "location_type": 0,
+        "longitude": -70.811405,
+        "name": "Beverly Farms",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Beverly Farms",
+      "links": {
+        "self": "/stops/Beverly%20Farms"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Beverly%20Farms"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "481 High St, Medford, MA 02155",
+        "description": null,
+        "latitude": 42.421184,
+        "location_type": 0,
+        "longitude": -71.132468,
+        "name": "West Medford",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "West Medford",
+      "links": {
+        "self": "/stops/West%20Medford"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=West%20Medford"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Arlington St and 6th St, Chelsea, MA 02150",
+        "description": null,
+        "latitude": 42.395689,
+        "location_type": 0,
+        "longitude": -71.034281,
+        "name": "Chelsea",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Chelsea",
+      "links": {
+        "self": "/stops/Chelsea"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Chelsea"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "4 Peatfield St, Ipswich, MA 01938",
+        "description": null,
+        "latitude": 42.676921,
+        "location_type": 0,
+        "longitude": -70.840589,
+        "name": "Ipswich",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Ipswich",
+      "links": {
+        "self": "/stops/Ipswich"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Ipswich"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1 Sawyer Rd, Waltham, MA 02453",
+        "description": null,
+        "latitude": 42.361728,
+        "location_type": 0,
+        "longitude": -71.260854,
+        "name": "Brandeis/Roberts",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Brandeis/ Roberts",
+      "links": {
+        "self": "/stops/Brandeis%2F%20Roberts"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Brandeis%2F%20Roberts"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "225 North Ave, Wakefield, MA 01880",
+        "description": null,
+        "latitude": 42.502126,
+        "location_type": 0,
+        "longitude": -71.075566,
+        "name": "Wakefield",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Wakefield",
+      "links": {
+        "self": "/stops/Wakefield"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Wakefield"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "75 Railroad Ave, Gloucester, MA 01930",
+        "description": null,
+        "latitude": 42.616799,
+        "location_type": 0,
+        "longitude": -70.668345,
+        "name": "Gloucester",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Gloucester",
+      "links": {
+        "self": "/stops/Gloucester"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Gloucester"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "105 Viles St, Weston, MA 02493",
+        "description": null,
+        "latitude": 42.385755,
+        "location_type": 0,
+        "longitude": -71.289203,
+        "name": "Hastings",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Hastings",
+      "links": {
+        "self": "/stops/Hastings"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Hastings"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "55 Authority Dr, Fitchburg, MA 01420",
+        "description": null,
+        "latitude": 42.553477,
+        "location_type": 0,
+        "longitude": -71.848488,
+        "name": "Wachusett",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Wachusett",
+      "links": {
+        "self": "/stops/Wachusett"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Wachusett"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "S Union St and Merrimack St, Lawrence, MA 01843",
+        "description": null,
+        "latitude": 42.701806,
+        "location_type": 0,
+        "longitude": -71.15198,
+        "name": "Lawrence",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Lawrence",
+      "links": {
+        "self": "/stops/Lawrence"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Lawrence"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "40 Beach St, Manchester, MA 01944",
+        "description": null,
+        "latitude": 42.573687,
+        "location_type": 0,
+        "longitude": -70.77009,
+        "name": "Manchester",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Manchester",
+      "links": {
+        "self": "/stops/Manchester"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Manchester"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "907 Main St, Wakefield, MA 01880",
+        "description": null,
+        "latitude": 42.483005,
+        "location_type": 0,
+        "longitude": -71.067247,
+        "name": "Greenwood",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Greenwood",
+      "links": {
+        "self": "/stops/Greenwood"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Greenwood"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "44 Nashua St, Leominster, MA, 01453",
+        "description": null,
+        "latitude": 42.539017,
+        "location_type": 0,
+        "longitude": -71.739186,
+        "name": "North Leominster",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "North Leominster",
+      "links": {
+        "self": "/stops/North%20Leominster"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=North%20Leominster"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Ayer Rd and Phoenix St, Shirley, MA 01464",
+        "description": null,
+        "latitude": 42.545089,
+        "location_type": 0,
+        "longitude": -71.648004,
+        "name": "Shirley",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Shirley",
+      "links": {
+        "self": "/stops/Shirley"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Shirley"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "70 Railroad Ave, Rowley, MA 01969",
+        "description": null,
+        "latitude": 42.726845,
+        "location_type": 0,
+        "longitude": -70.859034,
+        "name": "Rowley",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Rowley",
+      "links": {
+        "self": "/stops/Rowley"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Rowley"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "250 Mishawum Rd, Woburn, MA 01801",
+        "description": null,
+        "latitude": 42.504402,
+        "location_type": 0,
+        "longitude": -71.137618,
+        "name": "Mishawum",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Mishawum",
+      "links": {
+        "self": "/stops/Mishawum"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Mishawum"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "600 Hale St, Beverly, MA 01915",
+        "description": null,
+        "latitude": 42.559446,
+        "location_type": 0,
+        "longitude": -70.825541,
+        "name": "Prides Crossing",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Prides Crossing",
+      "links": {
+        "self": "/stops/Prides%20Crossing"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Prides%20Crossing"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "101 Thorndike St, Lowell, MA 01852",
+        "description": null,
+        "latitude": 42.63535,
+        "location_type": 0,
+        "longitude": -71.314543,
+        "name": "Lowell",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Lowell",
+      "links": {
+        "self": "/stops/Lowell"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Lowell"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "370 Middlesex Ave, Wilmington, MA 01887",
+        "description": null,
+        "latitude": 42.569661,
+        "location_type": 0,
+        "longitude": -71.159696,
+        "name": "North Wilmington",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "North Wilmington",
+      "links": {
+        "self": "/stops/North%20Wilmington"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=North%20Wilmington"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "135 Causeway St, Boston MA 02114",
+        "description": null,
+        "latitude": 42.365577,
+        "location_type": 1,
+        "longitude": -71.06129,
+        "name": "North Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-north",
+      "links": {
+        "self": "/stops/place-north"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-north"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "70 Main St, Ayer, MA 01432",
+        "description": null,
+        "latitude": 42.559074,
+        "location_type": 0,
+        "longitude": -71.588476,
+        "name": "Ayer",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Ayer",
+      "links": {
+        "self": "/stops/Ayer"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Ayer"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "17 Railroad Ave, Rockport, MA 01966",
+        "description": null,
+        "latitude": 42.655491,
+        "location_type": 0,
+        "longitude": -70.627055,
+        "name": "Rockport",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Rockport",
+      "links": {
+        "self": "/stops/Rockport"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Rockport"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Grimes Ln and Foster St, Littleton, MA 01460",
+        "description": null,
+        "latitude": 42.519236,
+        "location_type": 0,
+        "longitude": -71.502643,
+        "name": "Littleton/Rte 495",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Littleton / Rte 495",
+      "links": {
+        "self": "/stops/Littleton%20%2F%20Rte%20495"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Littleton%20%2F%20Rte%20495"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "40 W Wyoming Ave, Melrose, MA 02176",
+        "description": null,
+        "latitude": 42.451731,
+        "location_type": 0,
+        "longitude": -71.069379,
+        "name": "Wyoming Hill",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 2
+      },
+      "id": "Wyoming Hill",
+      "links": {
+        "self": "/stops/Wyoming%20Hill"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Wyoming%20Hill"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "180 Essex St, Beverly, MA 01915",
+        "description": null,
+        "latitude": 42.562171,
+        "location_type": 0,
+        "longitude": -70.869254,
+        "name": "Montserrat",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Montserrat",
+      "links": {
+        "self": "/stops/Montserrat"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Montserrat"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

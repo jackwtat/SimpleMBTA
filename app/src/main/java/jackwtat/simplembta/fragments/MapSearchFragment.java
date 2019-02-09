@@ -119,6 +119,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Zoom level where key stop markers become visible
     public static final int KEY_STOP_MARKER_VISIBILITY_LEVEL = 12;
 
+    // Zoom level where commuter rail stop markers become visible
+    public static final int COMMUTER_STOP_MARKER_VISIBILITY_LEVEL = 10;
+
     // Distance in meters from last target location before target location can be updated
     public static final int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
 
@@ -179,6 +182,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     // Key stop/route data
     private HashMap<String, Marker> keyStopMarkers = new HashMap<>();
+    private HashMap<String, Marker> commuterStopMarkers = new HashMap<>();
     private Route[] keyRoutes = {
             new BlueLine("Blue"),
             new OrangeLine("Orange"),
@@ -186,6 +190,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             new RedLine("Mattapan"),
             new GreenLineCombined(),
             new SilverLineCombined()};
+    private Route[] commuterRoutes = {
+            new CommuterRailNorthSide(),
+            new CommuterRailSouthSide(),
+            new CommuterRailOldColony()};
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -207,17 +216,30 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         locationClient = new LocationClient(getContext(), LOCATION_CLIENT_INTERVAL,
                 FASTEST_LOCATION_CLIENT_INTERVAL);
 
-        // Add the key (permanent) routes shapes
-        Shape[][] shapes = {
+        // Add the key routes shapes
+        Shape[][] keyShapes = {
                 getShapesFromJson(R.raw.shapes_blue),
                 getShapesFromJson(R.raw.shapes_orange),
                 getShapesFromJson(R.raw.shapes_red),
                 getShapesFromJson(R.raw.shapes_green_combined),
                 getShapesFromJson(R.raw.shapes_silver),
                 getShapesFromJson(R.raw.shapes_mattapan)};
-
-        for (Shape[] s : shapes) {
+        for (Shape[] s : keyShapes) {
             for (Route r : keyRoutes) {
+                if (r.equals(s[0].getRouteId())) {
+                    r.setShapes(s);
+                    break;
+                }
+            }
+        }
+
+        // Add the commuter rail route shapes
+        Shape[][] commuterShapes = {
+                getShapesFromJson(R.raw.shapes_commuter_north),
+                getShapesFromJson(R.raw.shapes_commuter_south),
+                getShapesFromJson(R.raw.shapes_commuter_old_colony)};
+        for (Shape[] s : commuterShapes) {
+            for (Route r : commuterRoutes) {
                 if (r.equals(s[0].getRouteId())) {
                     r.setShapes(s);
                     break;
@@ -339,8 +361,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         // Draw the key routes
         for (int i = 0; i < keyRoutes.length; i++) {
-            drawRouteShapes(keyRoutes[i], keyRoutes.length - i);
+            drawRouteShapes(keyRoutes[i], keyRoutes.length + commuterRoutes.length - i);
             drawKeyStopMarkers(keyRoutes[i]);
+        }
+
+        // Draw the commuter rail routes
+        for (int i = 0; i < commuterRoutes.length; i++) {
+            drawRouteShapes(commuterRoutes[i], commuterRoutes.length - i);
+            drawCommuterRailStopMarkers(commuterRoutes[i]);
         }
 
         // Set the action listeners
@@ -396,7 +424,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         }
                     }
 
-                    // If the user has changed the zoom, then change key stop markers visibilities
+                    // If the user has changed the zoom level,
+                    // then change key stop markers visibilities
                     if (gMap.getCameraPosition().zoom >= KEY_STOP_MARKER_VISIBILITY_LEVEL) {
                         for (Marker marker : keyStopMarkers.values()) {
                             marker.setVisible(true);
@@ -408,7 +437,21 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         }
                     }
 
-                    // If the user has changed the zoom, then change stop markers visibilities
+                    // If the user has changed the zoom level,
+                    // then change the commuter rail stop marker visibilities
+                    if (gMap.getCameraPosition().zoom >= COMMUTER_STOP_MARKER_VISIBILITY_LEVEL) {
+                        for (Marker marker : commuterStopMarkers.values()) {
+                            marker.setVisible(true);
+                        }
+                    } else {
+                        for (Marker marker : commuterStopMarkers.values()) {
+                            if (!marker.equals(selectedStopMarker))
+                                marker.setVisible(false);
+                        }
+                    }
+
+                    // If the user has changed the zoom level,
+                    // then change stop markers visibilities
                     if (gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL) {
                         for (Marker marker : displayedStopMarkers.values()) {
                             marker.setVisible(true);
@@ -960,7 +1003,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Display the new stops
         for (Stop stop : stops) {
             String stopId = stop.getId();
-            if (!displayedStops.containsKey(stopId) && !keyStopMarkers.containsKey(stopId)) {
+            if (!displayedStops.containsKey(stopId) && !keyStopMarkers.containsKey(stopId)
+                    && !commuterStopMarkers.containsKey(stopId)) {
                 displayedStops.put(stopId, stop);
                 displayedStopMarkers.put(stopId, drawStopMarker(stop));
             }
@@ -1010,6 +1054,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawRouteShapes(Route route, int zIndex) {
+        int lineWidth;
+        int paddingWidth;
+
+        if (route.getMode() == Route.COMMUTER_RAIL) {
+            lineWidth = 6;
+            paddingWidth = 10;
+        } else {
+            lineWidth = 8;
+            paddingWidth = 14;
+        }
+
         for (Shape s : route.getShapes(0)) {
 
             List<LatLng> coordinates = PolyUtil.decode(s.getPolyline());
@@ -1022,7 +1077,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     .jointType(JointType.ROUND)
                     .startCap(new RoundCap())
                     .endCap(new RoundCap())
-                    .width(14));
+                    .width(paddingWidth));
 
             // Draw primary polyline
             gMap.addPolyline(new PolylineOptions()
@@ -1032,7 +1087,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     .jointType(JointType.ROUND)
                     .startCap(new RoundCap())
                     .endCap(new RoundCap())
-                    .width(8));
+                    .width(lineWidth));
         }
     }
 
@@ -1062,6 +1117,31 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         keyStopMarkers.putAll(markers);
     }
 
+    private void drawCommuterRailStopMarkers(Route route) {
+        HashMap<String, Marker> markers = new HashMap<>();
+
+        for (Shape shape : route.getAllShapes()) {
+            for (Stop stop : shape.getStops()) {
+                if (keyStopMarkers.containsKey(stop.getId())) {
+                    keyStopMarkers.get(stop.getId()).setIcon(
+                            BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
+                } else if (!markers.containsKey(stop.getId())) {
+                    Marker stopMarker = gMap.addMarker(route.getStopMarkerOptions()
+                            .position(new LatLng(
+                                    stop.getLocation().getLatitude(),
+                                    stop.getLocation().getLongitude()))
+                            .zIndex(20)
+                            .title(stop.getName()));
+
+                    stopMarker.setTag(stop);
+
+                    markers.put(stop.getId(), stopMarker);
+                }
+            }
+        }
+
+        commuterStopMarkers.putAll(markers);
+    }
 
     private Marker drawStopMarker(Stop stop) {
         Marker stopMarker = gMap.addMarker(new StopMarkerFactory().createMarkerOptions()

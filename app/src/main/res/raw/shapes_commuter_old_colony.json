@@ -1,0 +1,1168 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Greenbush",
+        "polyline": "qxnaGp|tpLxVtJdUtLbFfCrBd@vBLrFAtGQjPq@tg@_AvC_@dC}@lEgCnU{[hDqCnBq@bCYvFm@zEYhEFtUg@xCPzCv@p_@zKf\\jFjCLtBGtBSlBq@vDeBbC{BtKgMvYc]xYa]xPkS|FaHdGyG|ImKfDqCfB_AnBq@vEkAnDaAfDoBpH{Hh}@{aA|w@yz@`FaGpJyJvG}D|GyDnJwD`BYnAAjA@lI~@vKvAdXrEdi@lInGTdCSfFeApFsBpDoBtPcKzPeKf@m@b@cAVyA@{@EaA]yBgA}Fa@_CYaCWyDSmFEmECoJAmIBwGr@s]nA}p@@iRVsCdAkHRkCCqCQ}B]}Be@yBeBiF{LaWaMkWeMyWyA}DuAmFg@_De@gDQkCU{EAyIBqg@@iCNeCVoB`@mBh@eBr@_BvA{BhBkB`FkEdMsK`EqDfBwBbBgCvRg`@t@mBr@_D`@eEFwBEwBUcDUeB]aBkAmD_BuCaEyFy]cf@wEqGgIeLoGaJwC}DoBuBiA{@iAq@_DkAwEu@iGk@sEe@q@QmGcBeB}@_Au@m@q@o@aAg@aAs@gBc@qB{@gF{ByJs@wDa@wEI}CBwIAmBIgBe@}CeAcF_@oDWuEq@}EuBsIaEyQi@yDWaEE{COs_C?kK\\iM?aDGeBUoEk@mLAwDDsCLuCp@eOdBm_@xOsfDbBg^^uHXaD^eBj@_Bx@iA~@}@z@a@zCeAjBqAbBoBrEkGrBqBfCaB~CsAtCgBxH_EtG_DxM_ExLsDn]eR~AiApAgBnBoDbBkEt@gCh@oCTiClH{}@x@sIv@kEzAgGtP_n@tAiEvA}D~AuDzT}d@rQe_@hN_]jAiCv@qAhA{ApAuArDsC~BoBhCcBnCsAdCy@nBe@fAQtFq@~OeBhJaA|BYjAMjBCxFu@jA?jADlBVfA^zAv@nA|@`KpJ`JnIzGlGp@f@|@j@nCdAfCh@rBX",
+        "priority": 2
+      },
+      "id": "9900002",
+      "links": {
+        "self": "/shapes/9900002"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Greenbush",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "Weymouth Landing/ East Braintree",
+              "type": "stop"
+            },
+            {
+              "id": "East Weymouth",
+              "type": "stop"
+            },
+            {
+              "id": "West Hingham",
+              "type": "stop"
+            },
+            {
+              "id": "Nantasket Junction",
+              "type": "stop"
+            },
+            {
+              "id": "Cohasset",
+              "type": "stop"
+            },
+            {
+              "id": "North Scituate",
+              "type": "stop"
+            },
+            {
+              "id": "Greenbush",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Middleborough/Lakeville",
+        "polyline": "ksnaGn{tpL~An@~An@|Ax@zAz@zA|@zAz@zA|@zA|@vAfAzA|@zA|@zA|@zAz@zA|@xA~@|At@~Ap@dBVdBHdB?dBAfBEdBCdBEdBEfBCdBCdBBdBBfBBdBCdBMbBWdB[bBWdBKfBGdBGdBGdBGfBCdBCdBCbB]`Bg@|Aw@xAcAnAwAjAyAjA}AhAaBhA_BfAaBhA_BhAaBfAaBjA{AtAmAxA_A`Bk@bBYdBOdBQdBOdBKdBKdBCfBCdBAdB?fB?dBGdBGdBVdB@dBDdBT`B`@bBf@`Bf@`Bf@`Bf@`Bh@`Bf@`Bh@`Bf@bBb@bB^bBZbBXdBXbBXbBXdBTdBXbB^bBXbBXdBJfB?dBIbB[`Bg@|Aw@xAaArAoApAuAlAwAnAyAlAuAtAoAlAwAnAwAlAwAnAwAnAwAlAyAnAwAlAyAlAwAnAyAlAwAlAyAnAwAlAyAnAyAlAwAlAyAnAwAlAwAnAwAlAyAlAyAlAyAnAyAlAyAlAwAnAuApAuApAuAlAuAnAyAnAuAlAyAlAyAlAyAnAyAlAwAlAyAnAyAjAyAnAwAtAkAvAeA~Au@`Bg@bB_@`Bc@`Bg@`Bm@|Ay@rAkArAqApAqApAsApAqApAsApAuAnAwAlAwAlAyAnAwAlAyAnAwAnAuAnAuApAsApAsApAsAnAwAnAuAnAwAnAuAnAuAnAwApAuAnAuAnAuAnAwAnAuArAqApAqApAsAnAuAnAuApAuAnAuApAsAnAwAnAuAnAuApAuApAoApAuApAuAnAuAnAuApAsAnAwAnAuApAsAnAuApAsApAuAnAuAnAuAnAwAlAwArAsArAmAvAcA`Bi@zA{@zA_A|Aw@|Ay@zA{@|Ay@|Aq@`Bk@dBQdB?dBJdBRdBRdBTdBRbBTdBZbBXdBXbBXdBXbBXbBXdBZbBXdBXbBXdBXbBXdBXbBZdBXbBXbBXdBXbBXdBVdBTbBTfBHdBBdBCfBKdBMdBMbBa@zAw@tAkAnAuAvAgAzA}@zA}@|Ay@zA{@zA{@|A{@zAy@|A{@zAy@|A{@zA}@xAcAvAcAxAgAzAw@`Bi@bB_@bB_@dB]dBOdB?dBJdBVdBLdBLdBLdBPdBNdBLdBNdBLfBLdBNdBLdBLdBJdBJdBPdBNdBNfBLdBNdBPdBPdBNdBNdBRdBPbBTdBTbB\\bBd@|Ap@|Az@zA~@xA`AzAz@~Ar@`Bf@bBXfBLdBJdBJdBHfBHdBNdBPdBRbBRdBRdBPdBRdBRdBRdBTbBXbB^bBf@|Ar@zAz@vAhArAnAlAxAjAzAfAbBdAbBfAbBfAbBfAbBdAbBfAbBfAbBfAbBdAbBfA`BfAbBfAbBfAbBdAbBfAbBhA`BjAzApApAvAhAzA~@zAz@~An@`Bj@`Bd@bBd@`Bb@bBd@bBb@`Bb@bBd@`Bd@bBb@`Bd@bBd@`Bd@bBb@bBd@`Bd@bBb@`Bd@bBd@`Bb@bBd@`Bd@bBb@`Bd@bBd@bBb@`Bd@bBd@`Bb@bBd@`Bb@bBb@bBd@`Bd@bBb@`Bd@bBd@`Bd@bBd@`Bb@bBd@bBb@`Bd@bBb@`Bd@bBd@`Bb@bBd@bBd@`Bb@bBb@bB^bBZdBTdBPdBNfBFdBHdBBfBBdB?fBCdBKdBMdBSdBWbB[bB_@bBc@`Bi@`Bi@`Bi@`Bk@`Be@bBa@bB]dBWdBSdBOdBIfBEdBAfB@dBDfBDdBDdBFfBDdBDfBFdBHdBFfBFdBHfBFdBHdBFfBFdBBfBCdBEdBKdBMfBQbBSdBWdBWdBWbBUdBWdBWdBWbBUdBWdBWdBUbBUdBWdBUdBWbBUdBWdBWdBUbBWdBWdBWdBWbBUdBUdBWdBUdBWbB[bB]bBa@`Bi@~Aq@~Au@zAy@zA_AzA_AxAaAzA_AxAaAzA}@zA_AxA_AzA_AzA}@xAcAzA_AzA}@zA{@~Au@~Ak@bBe@bBa@bBWfBQdBKdBEfBCdBAfBIdBCfBCdBAfBAdBAfBAdBCfBAdBCdB?fBCdBAfBAdB@fB@dBAfBAdBCfBAdBAfBAdBCfBAdBCfBAdBCfBCdBCfBEdBCfBAdBCfBAdBCfBGdBBfB@dBAfBCdBCfBGdBKdBSdBUbB[dB[bBYdB[bB[dB[bBYdB[bB[dB]bB[dB[bB[dB[bB]`Be@`Bm@|Au@~Aw@xAaAtAiArAsArAkAvAkArAkAtAmAtAoArAmArAoAvAiApAqAtAmArAmAtAmAtAmArAmAtAmArAmAtAmAtAmArAmAtAoAtAkAtAkAtAmApAoArAoAtAoAtAmArAmAtAmArAmAtAkAtAmAtAmArAmAtAoArAkAtAmAtAmArAmAtAmAtAmArAoAtAkAtAmArAmArAoAtAmAtAmAtAkArAmArAqArAmAtAmAtAkAtAoArAoArAoAtAkAtAmArAmAtAmArAmAtAmArAoAtAmArAmAtAmAtAmAtAkAvAgAxAaA|A{@|Au@`Bm@`Bg@bB_@dB[dBUdBOdBOdBUdBQdBSdBQdBSdBSdBQfBQdBQdBSdBQdBQdBQdBQfBMdBIdBCfB@fB?dBBfB@dB@fB@dBBfB@dB?fBDfBBdB?fB@dBBfB@dB?fBCdBGfBIdBKdBMfBKdBIfBKdBIfBIdBKdBMdBQdBWdB]`Bi@~Ak@`Bq@~As@|As@|Ay@|A{@zA}@xAaAzAaAxAcAvAeAvAgAxAeArAmAtAmArAoArAoArAqArAqApAqArAqArAoArAoArAoArAqApAqArAsArAoApAqAtAoApAqArAqApAqArAoArAqArAoArAqArAqApAqArAqArAqApAqAtAoArAmAtAmAtAkAvAiAvAcAzAaAzA}@zA{@|A}@zA{@|Aw@~Au@|Au@~Au@~Aq@~Aq@`Bm@~Ao@`Bo@~Ao@~Aq@`Bm@`Bm@~Ao@~Ao@`Bo@~Aq@~Ao@`Bo@~Ao@`Bq@~Ao@~Ao@`Bo@~Ao@~Ao@`Bq@~Ao@`Bo@~Ao@~Ao@`Bo@~Aq@`Bo@~Ao@~Ao@`Bo@~Am@`Bo@~Ao@`Bo@~Ao@~Aq@`Bo@~Ao@~Ao@`Bo@~Ao@`Bq@~Ao@~Ao@`Bo@~Ao@`Bo@~Ao@~Aq@`Bo@~Ao@`Bo@~Ao@~Ao@`Bo@~Ao@`Bo@~Aq@~Ao@`Bo@`Bm@~Aq@~Ao@~Aq@~Aq@`Bo@~Aq@~Aq@`Bo@~Ao@~Aq@`Bo@~Ao@`Bo@~Ao@~Ao@`Bo@~Ao@`Bo@~Ao@`Bo@~Ao@~Aq@`Bo@~Aq@`Bm@~Am@`Bm@`Bm@~Am@`Bo@~Ao@`Bo@~Aq@~Ao@`Bo@~Aq@~Aq@`Bq@~Am@`Bm@~Am@`Bo@~Ao@`Bo@~Aq@`Bo@~Ao@~Ao@`Bq@~Ao@~Aq@`Bo@~Ao@~Aq@`Bo@~Am@`Bo@`Bo@~Ao@~Ao@`Bo@~Ao@`Bo@~Ao@`Bo@~Ao@~Ao@`Bq@~Ao@`Bo@~Ao@`Bo@~Ao@`Bo@~Ao@~Ao@`Bq@~Ao@`Bo@~Aq@~Ao@`Bo@~Ao@`Bo@~Ao@`Bo@~Am@`Bk@`Bk@bBg@`Bg@bBc@bBe@bB_@bBc@bBe@bB_@bBa@bB_@bBa@dBa@bB_@bBa@bB_@bBa@bB_@dBa@bB_@bB[fBQdBGfBBdBLdBZ`Bd@bBj@~An@~An@~Ap@`Bl@`Bj@bBd@dBVdBPfBDdB@fBAfBGdBSdBYbB_@`Bi@~Ao@~Aw@zA{@xAcAvAiArAoArAsAjA{AhA_B",
+        "priority": 2
+      },
+      "id": "9800002",
+      "links": {
+        "self": "/shapes/9800002"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Middleborough",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-brntn",
+              "type": "stop"
+            },
+            {
+              "id": "Holbrook/ Randolph",
+              "type": "stop"
+            },
+            {
+              "id": "Montello",
+              "type": "stop"
+            },
+            {
+              "id": "Brockton",
+              "type": "stop"
+            },
+            {
+              "id": "Campello",
+              "type": "stop"
+            },
+            {
+              "id": "Bridgewater",
+              "type": "stop"
+            },
+            {
+              "id": "Middleborough/ Lakeville",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Plymouth",
+        "polyline": "gqnaGp|tpLzAn@|Ap@vAx@xAz@xAz@vAz@xAx@vA`AtA`AvAz@xAz@xAx@xAz@vA|@xAx@xAt@|Aj@bBP`BHbBAbBAbBE`BCbBEbBCbBE`BEbBDbBBbBB`BAbBK`BU`BY`BW`BObBIbBGbBG`BEbBEbBCbBC`BK~Aa@|Am@xAy@rAgAjAuAjAwAfA{AfA}AdA}AfA_BdA}AfA}AdA}AhAyArAkAtA_A|Ai@`B[bBO`BO`BObBKbBK`BGbBCbBAbB?bB?`BCbBGbBF`BJbB?`BN`BX~Ab@~Ad@~Af@|Ad@~Ad@|Ah@~Af@~Af@|Af@~A`@`B\\`BX`BX`BX~AX`BVbBT`BV~A\\`BZ`BV`BNbBBbBG`BS~Ac@|Ao@vA{@rAgAnAqAlAsAjAuAjAuAnAoAnAqAjAuAlAuAjAsAlAuAjAuAlAuAjAuAjAwAjAuAlAuAjAuAjAwAjAuAjAuAlAuAjAwAjAuAjAuAlAuAjAuAlAuAhAwAjAuAjAwAjAuAlAwAjAsAnAsAlAqAlAsAjAuAlAsAjAuAlAwAjAuAjAwAjAuAjAwAjAuAjAuAhAyAnAqArAiAtAaAzAq@~Ag@~A_@~Ac@~Ac@|Am@zAu@rAeAnAoAnAoAnAoAnAqAnAoAnAqAjAuAlAuAjAuAjAuAjAuAlAwAjAuAlAqAnAqAnAqAlAqAnAqAjAsAlAsAlAuAlAsAlAsAlAsAlAsAlAqAlAsAlAuAlAqAnAoApAoAlAqAlAsAlAsAlAqAnAsAlAqAlAsAlAuAlAqAlAsAnAoAnAoAnAqAlAsAlAsAlAsAlAqAlAuAlAqAnAqAlAsAnAoAlAsAlAsAlAsAlAsAjAuAnAoApAkAvA_A|Ag@xA{@vA}@zAu@xAw@xAy@zAy@zAq@|Ak@`BWbBC`BHbBP`BP`BTbBR`BR`BV`BX`BX`BX`BV`BX`BX`BX`BV`BX`BX`BX`BV`BX`BX`BX`BX`BV`BX`BX`BV`BV`BT`BRbBLbBBbB?`BKbBObBG~A[|Ao@tA_AnAqAnAqAvA{@xA{@xAy@xAy@xAy@xAy@xAw@xAy@zAy@xAy@xAw@vA}@vAaAtAcAtAcAzAu@|Ae@`B_@~A_@`B[bBO`BAbBF`BXbBL`BLbBJbBN`BNbBN`BLbBLbBL`BLbBN`BLbBJbBH`BNbBNpDNbBL`BP`BRbBLbBN`BLbBL`BT`BRbBP`BRbBHbB@`BS`B_@|Ae@zAw@vAaApAiAjAwAbAaB|@iBt@qBn@sBj@wBd@}Bd@{Bd@}Bf@{Bf@yBf@{Bd@{Bd@{Bb@}Bd@{Bf@{Bh@yBh@{Bp@sBt@oB`AeBdA_BhAyApAkAtAeAtAcAtAeArAgAjAuAfA}A|@gBv@oBn@uBf@{BZ_CTcCPcCPcCPeCRcCRcCXaC^_Cb@{Bj@yBn@uBp@sB|@iB~@eBbAcBfA{AlAuApAmAtAcAtAcAtAaAtAcAvAcAtAcAtAcAtAcAtAcAvAaAtAaAtAcAvAaAtAcAtAaAvAcAtAcAtAcAtAcAtAaAvAaAtAcAtAaAvAcAtAcAtAcAtAcAtAcAtAcAtAaAvAcAtAcAvA_AvA_AxAy@zAu@xAu@|Ao@|Ao@|Ag@~Ae@`B]`B]`B[~A[`B[`B[`B[`B[~A]`BY`B[`B[`B]`B[`B[~A[`Ba@|Ak@|Am@xAw@xA{@xAy@xAy@xAy@xAy@zAw@xAu@zAw@xAw@xAy@xAy@zAy@xAw@xAy@xAw@zAw@xAy@xAw@zAy@xAw@xAw@zAy@xAw@xAw@zAy@xAw@xAy@xAw@zAw@zAs@|Am@|Ai@~Ag@~Ac@`B_@~A_@`B]`B[`B[~A]`B[`B]`B[`B[~A[`B]`B[`B[`B[`B[~A]`B[`B[`B_@`B[`B[~A[`B[`B[`B]`B[~A]`B[`B]`B[`B[`B[~A]`B]`B[`B]~A_@`B]`B]~A[`B[`BY`BY`B]`B]`BY`B[~A]`B]`B]`B]~A_@~Ac@`Bc@~Ac@~Ac@~Ae@~Ac@~Aa@~Ac@`Bc@~Ac@~Ac@~Ac@~Ac@`Ba@~Ac@|Ak@~Ag@~Aa@`B_@~Aa@~Ac@~Ae@~Aa@~Ae@~Ac@`Ba@~Ac@~Ac@~Ac@`Bc@~Ac@~Ac@~Ae@~Ac@~Aa@`Bc@~Ac@~Ac@~Ac@~Ae@~Ac@~Ac@`Bc@~Ae@~Aa@~Ac@~Ac@~Ac@`Bc@~Aa@~Aa@`Ba@~Ae@~Ae@~Ae@~Ac@~Ae@|Ak@|Am@zAs@xA{@vA_AtAcAvAaAtAaAvAaAtAaAvAaAvAaAtAcAtAcAtAaAvAcAtAcAtAcAtAeAtAcAvA_AvA}@vAcAtAcAtAcAtAcAvAaAtAcAvAaAtAaAtAaAvAcAtAcAvAaAtAaAvAaAtAcAtAcAvAaAtAcAtAcAvAaAtAcAtAaAvAcAtAaAvAaAtAcAtAcAvAaAtAcAtAcAvAaAtAcAvA_AtAcAvAaAtAcAtAeArAgApAkApAkAnAqAlAsAjAyAjAwAhAyAfA{AfA}AbAaBbAcBdA_BbAaBbAaBdAaBbAaBdAaBbAaBbAaBdAaBdAaBbA_BbAaBdAcBbA_BbAaBdAaBbAaBdAaBbAaBdAaBbAaBbAaBdAaBbAaBbA_BdAaBbAaBdAaBbAaBdAaBbA_BdAaBbAaBdAaBbAaBdA_BbAaBbAcBdAaB`AcB~@eB|@iBz@kBx@mBx@mBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBx@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBt@oBv@oBv@oBv@oBv@oBv@oBv@oBt@oBv@oBv@oBv@oBx@mBv@mBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@mBv@qBv@oBv@oBv@oBv@oBt@oBv@mBx@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBt@oBv@oBx@oBv@mBv@oBv@oBt@oBx@oBv@mBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBx@mBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBt@oBt@qBr@sBn@uBh@yBb@}B`@}B\\_CXcCRcCLcCJeCHeCHeCHeCJeCHeCHeCHeCJeCHeCHeCHeCHeCJeCHeCHeCHeCHeCHeCHeCJeCHeCJeCHeCHeCHeCHeCHeCHeCHeCHeCHgCHeCHeCHeCHeCHeCFeC@eC@gC@eC?eC@gC?eC@eC@gC@eC?gC?eC@eC?gC@eC@eC?gC@eC?gC@eC@eC?gC@eC?eC@gC@eC?eC@gC@eC?gC@eC@eC@gCDeCDeCHeCNeCPcCRcCVaCXaCVcCVaCVcCXaCVaCXaCVcCVaCXaCVaCXcCVaCXaCVaCXcCVaCXaCVaCVcCXaCVaCXaCVcCXaCVaCVcCXaCVaCVaCXcCXaCVaC\\_C^_Cb@}Bf@{Bj@wBp@uBp@sBp@sBr@sBv@oBv@oBv@mBz@mB~@eBdA_BnAoAzAw@|Ai@~Ac@`Be@~A_@`B]bBM`BJbBLbBJbBLbBFbBI`BMbBY`BW`BY`BWbBSbBIbBH~A^|Ap@xAv@xAz@xAz@xA|@vAz@xA|@tA~@rAlAjAvAbA`B|G~M??}G_NcAaBkAwAsAmAuA_AyA}@wA{@yA}@yA{@yA{@yAw@}Aq@_B_@cBIcBHcBRaBVaBXaBVcBXaBLcBHcBGcBMcBKcBMaBKcBLaB\\_B^aBd@_Bb@}Ah@{Av@oAnAeA~A_AdB{@lBw@lBw@nBw@nBs@rBh@}AVu@t@qBr@qBr@sBr@qBr@sBt@qBp@sBr@sBr@qBr@sBr@qBt@sBr@qBr@sBr@sBp@qBr@sBr@qBr@sBr@sBr@qBr@sBr@qBt@sBr@qBr@sBp@sBr@qBr@sBt@qBr@sBr@qBr@sBr@qBp@sBr@sBr@qBr@sBt@qBr@sBr@qBt@qBr@sBp@sBr@qBr@sBt@qBr@sBr@qBr@sBp@sBrJuX",
+        "priority": 2
+      },
+      "id": "9790004",
+      "links": {
+        "self": "/shapes/9790004"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Kingston",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-brntn",
+              "type": "stop"
+            },
+            {
+              "id": "South Weymouth",
+              "type": "stop"
+            },
+            {
+              "id": "Abington",
+              "type": "stop"
+            },
+            {
+              "id": "Whitman",
+              "type": "stop"
+            },
+            {
+              "id": "Hanson",
+              "type": "stop"
+            },
+            {
+              "id": "Halifax",
+              "type": "stop"
+            },
+            {
+              "id": "Kingston",
+              "type": "stop"
+            },
+            {
+              "id": "Plymouth",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "ger~Fp`zoLiA~AkAzAsArAsAnAwAhAyAbA{Az@_Bv@_Bn@aBh@cB^eBXeBRgBFgB@eBAgBEeBQeBWcBe@aBk@aBm@_Bq@_Bo@_Bo@cBk@aBe@eB[eBMgBCeBFgBPcBZcB^eB`@cB^cB`@cB^cB`@cB^eB`@cB`@cB^cB`@cB^cBd@cBb@cB^cBd@cBb@aBf@cBf@aBj@aBj@_Bl@aBn@_Bn@aBn@_Bn@aBn@_Bn@_Bp@aBn@_Bn@aBp@_Bn@_Bn@aBn@_Bn@aBn@_Bn@aBn@_Bn@aBp@_Bn@_Bn@aBn@_Bn@aBn@_Bn@aBn@_Bn@_Bn@aBn@aBn@_Bl@aBn@_Bp@_Bn@aBn@_Bp@_Bn@aBp@_Bn@_Bn@aBn@_Bp@aBn@_Bn@aBn@_Bl@aBl@_Bl@aBp@_Bp@_Bp@aBn@_Bn@_Bp@aBn@_Bn@aBn@_Bl@aBl@aBl@_Bl@aBl@_Bp@aBn@_Bp@_Bn@aBn@_Bn@aBn@_Bn@aBn@_Bn@_Bn@aBn@_Bn@aBn@_Bp@_Bn@aBn@_Bp@_Bp@aBn@_Bp@_Bp@_Bn@_Bp@aBl@aBn@_Bn@_Bp@aBn@_Bn@aBn@_Bn@_Bn@aBn@_Bn@aBn@_Bp@_Bn@aBn@_Bn@aBn@_Bn@_Bn@aBp@_Bn@aBn@_Bn@_Bn@aBn@_Bp@_Bn@aBn@_Bn@aBn@_Bl@aBn@_Bn@_Bn@aBn@_Bp@aBn@_Bn@_Bn@aBn@_Bn@aBp@_Bn@_Bn@aBn@_Bn@_Bn@aBp@_Bn@aBn@_Bn@_Bp@aBn@_Bn@_Bn@aBl@aBl@_Bp@_Bn@aBn@_Bn@aBl@_Bp@_Bp@_Bt@}At@_Bt@}Av@{Az@}A|@{Az@{A|@{A`AwAbAwAhAuAjAuAlAsAlAuAnAqApAsApAsApAqApAsApAsApAsAnAsApAsAnAqApAsApAqApAuAnAqApAsAnAsArAqApAsApAsAnAsAnAsAnAsApAqApAsApAsApAsAnAsAnAuAlAsAlAyAdAwAfAwAdAyAbA{A`AyA`A{A|@}Az@}Ax@}Ar@_Br@aBp@_Bj@aBh@eB\\eBVeBPeBLeBJgBHeBHgBJeBHgBJeBLeBJgBHeBFgBBeB?gBAeBCgBAeB?gBCgBEeB?gBAeBCgBAeBAgBAeBCgB?gBAeBBeBHgBLeBPeBPeBPeBPeBReBPgBPeBPeBReBReBPeBReBPeBTeBNeBNeBTeBZcB^aBf@aBl@}At@}Az@yA`AwAfAuAjAuAlAuAlAsAlAuAlAsAnAuAlAsAlAuAlAsAlAuAlAuAjAsAnAsAnAuAnAuAjAuAlAsAlAsApAsAlAuAjAuAlAuAlAsAnAsAlAuAlAuAjAsAnAuAlAuAlAsAlAuAlAuAlAsAjAuAnAsAlAuAlAuAlAuAjAsAlAuAlAsAlAuAlAuAnAsAnAqAnAuAlAuAjAuAjAuAnAsAlAuAlAuAlAsAlAuAlAsAlAuAlAuAlAsAlAuAlAqApAwAhAsAnAsAlAuAnAuAlAsAjAwAjAsAjAsArAuAhAyA`A_Bv@}At@aBl@aBd@cB\\eBZcBZeBZcBZeB\\cBZeBZcBXeBZcBZeBZcBXeBZcBZeBTeBReBJgBFeBBgBBeB@gBAeBCgBFeBBgB@eBBgB@eBBgBDeBBgBBeBBgB@eBBgB@eBBgB@eB@gB@eBBgB@eB@gBAeBAgB@eB@gBBeB?eBBgB@eBBgB@eB@gB@eB@gBBeBBgBHeB@gBBeBDeBJgBPcBVcB`@cBd@_Bj@_Bt@{Az@{A|@{A~@yAbA{A|@{A~@yA~@{A~@{A|@yA`A{A~@yA`A{A~@{A~@{Ax@_Bt@_Bp@aBh@cB`@cB\\cBZeBVeBTeBVeBTcBTeBVeBVeBVcBVeBTeBVeBVcBTeBVeBTeBVcBTeBTeBVeBVcBTeBVeBVeBVcBTeBVeBVeBVcBRgBPeBLeBJeBDgBBeBCgBGeBGeBIgBGeBIgBGeBGeBIgBGeBEgBEeBGeBEgBEeBEgBAeB@gBDeBHeBNeBReBVcB\\cB`@aBd@aBj@aBh@aBh@aBh@cBb@cB^cBZeBVeBReBLeBJgBBeB?gBCeBCeBIgBGeBOeBQeBUcB[cB_@cBc@aBc@cBe@cBe@aBc@cBe@aBe@cBc@aBe@cBc@cBe@aBc@cBe@aBe@cBe@aBe@cBc@aBe@cBe@cBc@aBc@cBe@aBc@cBe@aBe@cBc@cBe@aBe@cBc@aBe@cBe@aBc@cBe@aBe@cBc@aBe@cBe@cBc@aBe@cBe@aBe@cBc@aBe@cBe@aBc@cBc@cBe@aBc@cBe@aBe@aBk@_Bo@{A{@{A_AwAiAqAqAkA{AiAaBgAcBeAcBgAcBgAcBgAcBgAaBeAcBgAcBgAcBgAcBeAcBgAcBgAcBgAcBeAcBgAcBkA{AmAyAsAoAwAiA{A{@}As@cBg@cB_@cBYeBUeBSeBSeBSeBQeBScBSeBSeBQeBOgBIeBIeBKeBKgBMcBYaBg@_Bs@{A{@yAaA{A_A}A{@}Aq@cBe@cB]eBUcBUeBQeBSeBOeBOeBQeBQeBOgBMeBOeBOeBQeBKeBKeBMeBMeBOgBMeBMeBOeBMeBOeBQeBMeBMeBMeBWeBKeB?eBNeB\\cB^cB^aBh@{Av@yAfAwAbAyAbA{A|@}Az@{Ax@}Az@{Ax@}Az@{Az@{Az@}Ax@{A|@{A|@wAfAoAtAuAjA{Av@cB`@eBLeBLgBJeBBeBCgBIcBUeBUeBWcBYeBYcBYcBYeBYcB[eBYcBYeBYcBYeBYcBYeB[cBYcBYeBYcBYeBYcBYeB[cBUeBSeBUeBSeBSeBKeB?eBPaBj@}Ap@}Ax@{Az@}Ax@}Av@{A~@{Az@aBh@wAbAsAlAsArAmAvAoAvAoAtAoAtAqAtAqArAoAtAqArAoAtAoAvAqArAoAtAoAtAqAtAqAtAqAnAqAtAoAtAoAtAoAvAqArAoAtAqAtAoAtAoAtAqArAqApAsApAoAtAoAvAoAtAoAtAqAtAoAvAoAtAoAtAoAvAoAtAoAvAqArAqArAqArAoAtAoAtAoAvAmAxAoAvAmAxAmAvAoAvAqAtAqArAqApAqArAqApAsApAsAjA}Ax@aBl@aBf@aBb@cB^aBf@_Bt@wAdAuAjAoAvAkAxAoAxAmAxAmAvAoAxAmAxAmAxAmAxAoAtAoAxAmAtAqAtAqAtAoAtAmAvAmAxAoAxAmAxAmAxAmAxAoAvAmAvAoAvAmAxAmAvAoAxAmAxAoAvAmAxAmAvAoAxAmAvAmAxAoAvAmAxAoAvAoAvAmAvAoAvAmAvAuAnAmAtAoAxAmAvAqAtAsAnAyA`A}Av@aBf@cBZeBHgB?eBKcBYcBYcB_@eBYeBUcBYcBYeBYcBYcB[cB_@cBc@aBg@aBi@aBg@aBi@aBg@aBg@aBg@cBg@aBa@eBUeBEeBAeBWeBFeBFgB?eB?eB@gBBeBBeBJeBJeBNeBPeBNcBXaBj@yA~@uAlAkAzAgA`BiA`BiA~AgA`BiA~AiA`BkA|AkAxAoAvAyAbA}Av@aBf@cB\\eBBeBBgBBeBFeBFeBFgBFeBJcBVeBZcBVeBLeBBgBCeBCeBCeBBgBBeBDeBDeBBgBDeB@eB?eBIeBW_Bq@}Au@yA_A{A}@{A{@{A}@{A}@{A}@wAgA{A}@{A}@{A{@{A}@{A{@}Ay@_Bo@_Bo@",
+        "priority": 2
+      },
+      "id": "9800001",
+      "links": {
+        "self": "/shapes/9800001"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Middleborough",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Middleborough/ Lakeville",
+              "type": "stop"
+            },
+            {
+              "id": "Bridgewater",
+              "type": "stop"
+            },
+            {
+              "id": "Campello",
+              "type": "stop"
+            },
+            {
+              "id": "Brockton",
+              "type": "stop"
+            },
+            {
+              "id": "Montello",
+              "type": "stop"
+            },
+            {
+              "id": "Holbrook/ Randolph",
+              "type": "stop"
+            },
+            {
+              "id": "place-brntn",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "oif_GdlmnLsJtXq@rBs@rBs@pBs@rBu@pBs@rBs@pBq@rBs@rBu@pBs@pBs@rBu@pBs@rBs@pBs@rBq@rBs@pBs@rBs@pBs@rBu@pBs@rBs@pBq@rBs@rBs@pBu@rBs@pBs@rBs@pBs@rBs@rBs@pBs@rBq@pBs@rBs@rBs@pBu@rBs@pBs@rBs@pBs@rBq@rBu@pBs@rBs@pBs@rBs@pBu@pBWt@i@|Ar@sBv@oBv@oBv@mBz@mB~@eBdA_BnAoAzAw@|Ai@~Ac@`Be@~A_@`B]bBM`BJbBLbBJbBLbBFbBI`BMbBY`BW`BY`BWbBSbBIbBH~A^|Ap@xAv@xAz@xAz@xA|@vAz@xA|@tA~@rAlAjAvAbA`B|G~M??}G_NcAaBkAwAsAmAuA_AyA}@wA{@yA}@yA{@yA{@yAw@}Aq@_B_@cBIcBHcBRaBVaBXaBVcBXaBLcBHcBGcBMcBKcBMaBKcBLaB\\_B^aBd@_Bb@}Ah@{Av@oAnAeA~A_AdB{@lBw@lBw@nBw@nBs@rBq@rBq@rBq@tBk@vBg@zBc@|B_@~B]~BW`CY`CYbCW`CW`CY`CWbCW`CY`CWbCY`CW`CY`CWbCW`CY`CW`CYbCW`CY`CW`CYbCW`CY`CW`CWbCY`CW`CY`CWbCW`CWbCY`CW`CSbCQbCOdCIdCEdCEdCAfCAdCAdC?fCAdCAfC?dCAdCAfC?dCAdC?fCAdCAdC?fCAdC?fCAdCAdC?fCAdC?dC?fCAdCAfCAdC?dCAfC?dCAdCAfCAdCGdCIdCIdCIdCIdCIdCIfCIdCIdCIdCIdCIdCIdCIdCIdCKdCIdCKdCIdCIdCIdCIdCIdCIdCKdCIdCIdCIdCIdCKdCIdCIdCIdCKdCIdCIdCIdCKdCMbCSbCYbC]~Ba@|Bc@|Bi@xBo@tBs@rBu@pBu@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBy@lBw@nBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@lBy@nBu@nBw@nBw@nBw@lBy@nBw@nBu@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBy@nBw@lBu@nBw@nBw@nBw@nBw@nBw@pBw@lBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@nBw@lBy@lBw@nBw@nBw@nBu@nBw@nBw@nBw@nBw@nBw@nBw@nBu@nBw@nBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@nBw@nBw@nBw@lBy@nBw@lBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBw@nBw@lBw@nBw@nBw@nBy@lBy@lB{@jB}@hB_AdBaAbBeA`BcAbBcA`BeA~AcA`BeA`BcA`BeA`BcA~AeA`BcA`BeA`BcA`BeA`BcA~AcA`BeA`BcA`BcA`BeA`BcA`BeA`BcA`BeA`BcA`BcA~AeAbBcA`BcA~AeA`BeA`BcA`BcA`BeA`BcA`BeA`BcA`BcA`BeA~AcAbBcA`BgA|AgAzAiAxAkAvAkAxAmArAoApAqAjAqAjAsAfAuAdAuAbAwA`AuAbAwA~@uAbAwA`AuAbAuAbAwA`AuAbAuAbAwA`AuA`AwAbAuA`AuAbAwA`AuAbAuAbAwA`AuAbAuAbAwA`AuA`AwA`AuAbAwAbAuA`AuA`AwA`AuAbAwA`AuAbAuAbAuAbAwAbAwA|@wA~@uAbAuAdAuAbAuAbAwAbAuA`AuAbAuAbAwA`AwA`AuA`AwA`AuA`AwA`AuAbAwA~@yAz@{Ar@}Al@}Aj@_Bd@_Bb@_Bd@_Bd@_Bd@aB`@_B`@_B`@aBb@_Bb@_Bb@_Bb@_B`@_Bd@aBb@_Bb@_Bb@_Bd@_Bb@_Bb@_Bb@aBb@_B`@_Bb@_Bd@_Bb@_Bb@aBb@_Bb@_Bb@_Bb@aB`@_Bb@_Bd@_B`@_Bd@_Bb@_B`@aB^_B`@_Bf@}Aj@_Bb@aB`@_Bb@_Bb@_Bb@_Bb@aBb@_Bb@_B`@_Bb@_Bd@_Bb@_Bb@aBb@_Bb@_B^aB\\aB\\aB\\_B\\aBZaBXaB\\aB\\aBXaBXaBZ_BZaB\\aB\\_B^aB\\aBZaB\\_B\\aBZaBZaBZaB\\aBZ_B\\aBZaB\\aBZaBZ_BZaBZaBZaB^aBZaBZ_B\\aBZaBZaBZaBZaB\\_BZaBZaBZaB\\aBZ_B\\aBZaBZaB\\_B^aB^_Bb@_Bf@}Ah@}Al@{Ar@{Av@yAv@yAx@yAv@{Ax@yAv@yAv@{Ax@yAv@yAv@{Ax@yAv@yAx@{Av@yAv@yAx@yAv@{Ax@yAx@yAx@yAv@{Av@yAt@{Av@yAx@yAx@yAx@yAx@yAz@yAv@}Al@}Aj@aB`@_BZaBZaBZaB\\aBZaBZaBX_B\\aBZaBZaBZaBZ_BZaBZaB\\aB\\_Bd@}Af@}An@}An@yAt@{At@yAx@wA~@wA~@uAbAwAbAuA`AuAbAuAbAuAbAuAbAuAbAwAbAuA`AuAbAwA`AuA`AuAbAuAbAuAbAwAbAuA`AuAbAwA`AuAbAuA`AwA`AuAbAuAbAuAbAuAbAwAbAuAbAuA`AuAbAuAbAqAlAmAtAgAzAcAbB_AdB}@hBq@rBo@tBk@xBc@zB_@~BY`CSbCSbCQdCQbCQbCUbC[~Bg@zBo@tBw@nB}@fBgA|AkAtAsAfAuAdAuAbAuAdAqAjAiAxAeA~AaAdBu@nBq@rBi@zBi@xBg@zBe@zBc@|Be@zBe@zBg@zBg@xBg@zBe@|Be@zBe@|Bk@vBo@rBu@pB}@hBcA`BkAvAqAhAwA`A{Av@}Ad@aB^aBRcBAcBIaBScBQaBSaBUcBMaBMcBOcBMaBSaBQcBMqDOcBOaBOcBIcBKaBMcBOaBMcBMcBMaBMcBOaBOcBOcBKaBMcBMaBYcBGaB@cBNaBZ_B^aB^}Ad@{At@uAbAuAbAwA`AwA|@yAv@yAx@{Ax@yAx@yAv@yAx@yAx@yAx@yAx@yAz@wAz@oApAoApAuA~@}An@_BZcBFcBNaBJcB?cBCcBMaBSaBUaBWaBWaBYaBYaBWaBYaBYaBYaBYaBWaBYaBYaBYaBWaBYaBYaBYaBWaBYaBYaBYaBWaBScBSaBUaBQcBQaBIcBBaBV}Aj@{Ap@{Ax@yAx@yAv@{At@wA|@yAz@}Af@wA~@qAjAoAnAkAtAmArAmArAmArAmArAoAnAmArAoApAmApAmAtAmApAmArAmArAmArAoApAoAnAoAnAmArAmApAmAtAmArAmApAoArAmApAmArAmArAmApAqAnAoAnAmApAmAtAmArAmApAmArAmArAmArAmArAmAtAmArAkArAoApAmApAoApAoApAmApAkAtAmAvAkAtAkAtAkAtAmAtAkAtAoApAoAnAoApAoAnAoAnAoAnAsAdA{At@}Al@_Bb@_Bb@_B^_Bf@{Ap@uA`AsAhAoApAiAxAkAtAkAtAkAvAkAtAkAvAkAtAmAvAkAtAmArAkAtAmArAmApAoArAkArAmAvAkAtAkAvAkAtAiAvAmAtAkAtAmAtAkAtAkAtAkAvAmAtAkAtAkAtAkAvAkAtAmAtAkAtAkAvAkAtAmAtAkAtAmAtAkArAmAtAkAtAoApAoAnAkAtAkAtAmArAoApAsAfAwAz@}An@_Bb@aBRcBFcBCaBOaBWaB[_B]aBWcBUaBW_BYaBYaBYaBYaB]_Ba@}Ag@_Bg@_Bg@}Ai@_Be@}Ae@_Bg@_Be@_Bc@aBYaBOcB?aBKcBGcBFaBBcB?cB?cB@cBBaBFcBJcBJaBNaBNcBNaBZ}Ah@uA~@sAjAiAxAeA|AgA|AeA|AgA~AeA|AgA|AgAzAkAvAkAtAsAfAyAx@}Al@_B`@aBJcBBcBBcBDaBDcBFcBFcBHaBNaBVaBXaBTcBJaB@cBCcBCcBEaBDcBDcBBcBDaBBcBDcB@cB@aBIcBQ}Ak@yAu@yAy@wA}@yA{@yAy@yA{@wA{@uAaAwAaAyAy@wA{@yA{@yA{@wAy@}Aq@{Ao@",
+        "priority": 2
+      },
+      "id": "9790007",
+      "links": {
+        "self": "/shapes/9790007"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Kingston",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Plymouth",
+              "type": "stop"
+            },
+            {
+              "id": "Kingston",
+              "type": "stop"
+            },
+            {
+              "id": "Halifax",
+              "type": "stop"
+            },
+            {
+              "id": "Hanson",
+              "type": "stop"
+            },
+            {
+              "id": "Whitman",
+              "type": "stop"
+            },
+            {
+              "id": "Abington",
+              "type": "stop"
+            },
+            {
+              "id": "South Weymouth",
+              "type": "stop"
+            },
+            {
+              "id": "place-brntn",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "South Station",
+        "polyline": "__m`GztxnLsBYgCi@oCeA}@k@q@g@{GmGaJoIaKqJoA}@{Aw@gA_@mBWkAEkA?yFt@kBBkAL}BXiJ`A_PdBuFp@gAPoBd@eCx@oCrAiCbB_CnBsDrCqAtAiAzAw@pAkAhCiN~\\sQd_@{T|d@_BtDwA|DuAhEuP~m@{AfGw@jEy@rImHz}@UhCi@nCu@fCcBjEoBnDqAfB_BhAo]dRyLrDyM~DuG~CyH~DuCfB_DrAgC`BsBpBsEjGcBnBkBpA{CdA{@`@_A|@y@hAk@~A_@dBY`D_@tHcBf^yOrfDeBl_@q@dOMtCErC@vDj@lLTnEFdB?`D]hM?jKNr_CDzCV`Eh@xD`ExQtBrIp@|EVtE^nDdAbFd@|CHfB@lBCvIH|C`@vEr@vDzBxJz@fFb@pBr@fBf@`An@`Al@p@~@t@dB|@lGbBp@PrEd@hGj@vEt@~CjAhAp@hAz@nBtBvC|DnG`JfIdLvEpGx]bf@`ExF~AtCjAlD\\`BTdBTbDDvBGvBa@dEs@~Cu@lBwRf`@cBfCgBvBaEpDeMrKaFjEiBjBwAzBs@~Ai@dBa@lBWnBOdCAhCCpg@@xITzEPjCd@fDf@~CtAlFxA|DdMxW`MjWzL`WdBhFd@xB\\|BP|BBpCSjCeAjHWrCAhRoA|p@s@r]CvG@lIBnJDlERlFVxDX`C`@~BfA|F\\xBD`AAz@WxAc@bAg@l@{PdKuPbKqDnBqFrBgFdAeCRoGUei@mIeXsEwKwAmI_AkAAoA@aBXoJvD}GxDwG|DqJxJaF`G}w@xz@i}@zaAqHzHgDnBoD`AwEjAoBp@gB~@gDpC}IlKeGxG}F`HyPjSyY`]wYb]uKfMcCzBwDdBmBp@uBRuBFkCMg\\kFq_@{K{Cw@yCQuUf@iEG{EXwFl@cCXoBp@iDpCoUz[mEfCeC|@wC^ug@~@kPp@uGPsF@wBMsBe@cFgCeUuLyVuJ",
+        "priority": 2
+      },
+      "id": "9900001",
+      "links": {
+        "self": "/shapes/9900001"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Greenbush",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Greenbush",
+              "type": "stop"
+            },
+            {
+              "id": "North Scituate",
+              "type": "stop"
+            },
+            {
+              "id": "Cohasset",
+              "type": "stop"
+            },
+            {
+              "id": "Nantasket Junction",
+              "type": "stop"
+            },
+            {
+              "id": "West Hingham",
+              "type": "stop"
+            },
+            {
+              "id": "East Weymouth",
+              "type": "stop"
+            },
+            {
+              "id": "Weymouth Landing/ East Braintree",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Kingston",
+        "polyline": "gqnaGp|tpLzAn@|Ap@vAx@xAz@xAz@vAz@xAx@vA`AtA`AvAz@xAz@xAx@xAz@vA|@xAx@xAt@|Aj@bBP`BHbBAbBAbBE`BCbBEbBCbBE`BEbBDbBBbBB`BAbBK`BU`BY`BW`BObBIbBGbBG`BEbBEbBCbBC`BK~Aa@|Am@xAy@rAgAjAuAjAwAfA{AfA}AdA}AfA_BdA}AfA}AdA}AhAyArAkAtA_A|Ai@`B[bBO`BO`BObBKbBK`BGbBCbBAbB?bB?`BCbBGbBF`BJbB?`BN`BX~Ab@~Ad@~Af@|Ad@~Ad@|Ah@~Af@~Af@|Af@~A`@`B\\`BX`BX`BX~AX`BVbBT`BV~A\\`BZ`BV`BNbBBbBG`BS~Ac@|Ao@vA{@rAgAnAqAlAsAjAuAjAuAnAoAnAqAjAuAlAuAjAsAlAuAjAuAlAuAjAuAjAwAjAuAlAuAjAuAjAwAjAuAjAuAlAuAjAwAjAuAjAuAlAuAjAuAlAuAhAwAjAuAjAwAjAuAlAwAjAsAnAsAlAqAlAsAjAuAlAsAjAuAlAwAjAuAjAwAjAuAjAwAjAuAjAuAhAyAnAqArAiAtAaAzAq@~Ag@~A_@~Ac@~Ac@|Am@zAu@rAeAnAoAnAoAnAoAnAqAnAoAnAqAjAuAlAuAjAuAjAuAjAuAlAwAjAuAlAqAnAqAnAqAlAqAnAqAjAsAlAsAlAuAlAsAlAsAlAsAlAsAlAqAlAsAlAuAlAqAnAoApAoAlAqAlAsAlAsAlAqAnAsAlAqAlAsAlAuAlAqAlAsAnAoAnAoAnAqAlAsAlAsAlAsAlAqAlAuAlAqAnAqAlAsAnAoAlAsAlAsAlAsAlAsAjAuAnAoApAkAvA_A|Ag@xA{@vA}@zAu@xAw@xAy@zAy@zAq@|Ak@`BWbBC`BHbBP`BP`BTbBR`BR`BV`BX`BX`BX`BV`BX`BX`BX`BV`BX`BX`BX`BV`BX`BX`BX`BX`BV`BX`BX`BV`BV`BT`BRbBLbBBbB?`BKbBObBG~A[|Ao@tA_AnAqAnAqAvA{@xA{@xAy@xAy@xAy@xAy@xAw@xAy@zAy@xAy@xAw@vA}@vAaAtAcAtAcAzAu@|Ae@`B_@~A_@`B[bBO`BAbBF`BXbBL`BLbBJbBN`BNbBN`BLbBLbBL`BLbBN`BLbBJbBH`BNbBNpDNbBL`BP`BRbBLbBN`BLbBL`BT`BRbBP`BRbBHbB@`BS`B_@|Ae@zAw@vAaApAiAjAwAbAaB|@iBt@qBn@sBj@wBd@}Bd@{Bd@}Bf@{Bf@yBf@{Bd@{Bd@{Bb@}Bd@{Bf@{Bh@yBh@{Bp@sBt@oB`AeBdA_BhAyApAkAtAeAtAcAtAeArAgAjAuAfA}A|@gBv@oBn@uBf@{BZ_CTcCPcCPcCPeCRcCRcCXaC^_Cb@{Bj@yBn@uBp@sB|@iB~@eBbAcBfA{AlAuApAmAtAcAtAcAtAaAtAcAvAcAtAcAtAcAtAcAtAcAvAaAtAaAtAcAvAaAtAcAtAaAvAcAtAcAtAcAtAcAtAaAvAaAtAcAtAaAvAcAtAcAtAcAtAcAtAcAtAcAtAaAvAcAtAcAvA_AvA_AxAy@zAu@xAu@|Ao@|Ao@|Ag@~Ae@`B]`B]`B[~A[`B[`B[`B[`B[~A]`BY`B[`B[`B]`B[`B[~A[`Ba@|Ak@|Am@xAw@xA{@xAy@xAy@xAy@xAy@zAw@xAu@zAw@xAw@xAy@xAy@zAy@xAw@xAy@xAw@zAw@xAy@xAw@zAy@xAw@xAw@zAy@xAw@xAw@zAy@xAw@xAy@xAw@zAw@zAs@|Am@|Ai@~Ag@~Ac@`B_@~A_@`B]`B[`B[~A]`B[`B]`B[`B[~A[`B]`B[`B[`B[`B[~A]`B[`B[`B_@`B[`B[~A[`B[`B[`B]`B[~A]`B[`B]`B[`B[`B[~A]`B]`B[`B]~A_@`B]`B]~A[`B[`BY`BY`B]`B]`BY`B[~A]`B]`B]`B]~A_@~Ac@`Bc@~Ac@~Ac@~Ae@~Ac@~Aa@~Ac@`Bc@~Ac@~Ac@~Ac@~Ac@`Ba@~Ac@|Ak@~Ag@~Aa@`B_@~Aa@~Ac@~Ae@~Aa@~Ae@~Ac@`Ba@~Ac@~Ac@~Ac@`Bc@~Ac@~Ac@~Ae@~Ac@~Aa@`Bc@~Ac@~Ac@~Ac@~Ae@~Ac@~Ac@`Bc@~Ae@~Aa@~Ac@~Ac@~Ac@`Bc@~Aa@~Aa@`Ba@~Ae@~Ae@~Ae@~Ac@~Ae@|Ak@|Am@zAs@xA{@vA_AtAcAvAaAtAaAvAaAtAaAvAaAvAaAtAcAtAcAtAaAvAcAtAcAtAcAtAeAtAcAvA_AvA}@vAcAtAcAtAcAtAcAvAaAtAcAvAaAtAaAtAaAvAcAtAcAvAaAtAaAvAaAtAcAtAcAvAaAtAcAtAcAvAaAtAcAtAaAvAcAtAaAvAaAtAcAtAcAvAaAtAcAtAcAvAaAtAcAvA_AtAcAvAaAtAcAtAeArAgApAkApAkAnAqAlAsAjAyAjAwAhAyAfA{AfA}AbAaBbAcBdA_BbAaBbAaBdAaBbAaBdAaBbAaBbAaBdAaBdAaBbA_BbAaBdAcBbA_BbAaBdAaBbAaBdAaBbAaBdAaBbAaBbAaBdAaBbAaBbA_BdAaBbAaBdAaBbAaBdAaBbA_BdAaBbAaBdAaBbAaBdA_BbAaBbAcBdAaB`AcB~@eB|@iBz@kBx@mBx@mBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBx@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBt@oBv@oBv@oBv@oBv@oBv@oBv@oBt@oBv@oBv@oBv@oBx@mBv@mBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@mBv@qBv@oBv@oBv@oBv@oBt@oBv@mBx@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBt@oBv@oBx@oBv@mBv@oBv@oBt@oBx@oBv@mBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBx@mBv@oBv@oBv@oBv@mBv@oBv@oBv@oBv@oBv@oBv@oBv@oBv@mBv@oBv@oBv@oBt@oBt@qBr@sBn@uBh@yBb@}B`@}B\\_CXcCRcCLcCJeCHeCHeCHeCJeCHeCHeCHeCJeCHeCHeCHeCHeCJeCHeCHeCHeCHeCHeCHeCJeCHeCJeCHeCHeCHeCHeCHeCHeCHeCHeCHgCHeCHeCHeCHeCHeCFeC@eC@gC@eC?eC@gC?eC@eC@gC@eC?gC?eC@eC?gC@eC@eC?gC@eC?gC@eC@eC?gC@eC?eC@gC@eC?eC@gC@eC?gC@eC@eC@gCDeCDeCHeCNeCPcCRcCVaCXaCVcCVaCVcCXaCVaCXaCVcCVaCXaCVaCXcCVaCXaCVaCXcCVaCXaCVaCVcCXaCVaCXaCVcCXaCVaCVcCXaCVaCVaCXcCXaCVaC\\_C^_Cb@}Bf@{Bj@wBp@uBp@sBp@sBr@sBv@oBv@oBv@mBz@mB~@eBdA_BnAoAzAw@|Ai@~Ac@`Be@~A_@`B]bBM`BJbBLbBJbBLbBFbBI`BMbBY`BW`BY`BWbBSbBIbBH~A^|Ap@xAv@xAz@xAz@xA|@vAz@xA|@tA~@rAlAjAvAbA`B|G~M",
+        "priority": -1
+      },
+      "id": "9790002",
+      "links": {
+        "self": "/shapes/9790002"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Kingston",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-jfk",
+              "type": "stop"
+            },
+            {
+              "id": "place-qnctr",
+              "type": "stop"
+            },
+            {
+              "id": "place-brntn",
+              "type": "stop"
+            },
+            {
+              "id": "South Weymouth",
+              "type": "stop"
+            },
+            {
+              "id": "Abington",
+              "type": "stop"
+            },
+            {
+              "id": "Whitman",
+              "type": "stop"
+            },
+            {
+              "id": "Hanson",
+              "type": "stop"
+            },
+            {
+              "id": "Halifax",
+              "type": "stop"
+            },
+            {
+              "id": "Kingston",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": "231 Centre Ave, Abington, MA 02351",
+        "description": null,
+        "latitude": 42.107156,
+        "location_type": 0,
+        "longitude": -70.934405,
+        "name": "Abington",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Abington",
+      "links": {
+        "self": "/stops/Abington"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Abington"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "85 Burrill Ave, Bridgewater, MA 02324",
+        "description": null,
+        "latitude": 41.984916,
+        "location_type": 0,
+        "longitude": -70.96537,
+        "name": "Bridgewater",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Bridgewater",
+      "links": {
+        "self": "/stops/Bridgewater"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Bridgewater"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "7 Commercial St, Brockton, MA 02302",
+        "description": null,
+        "latitude": 42.08572,
+        "location_type": 0,
+        "longitude": -71.0166,
+        "name": "Brockton",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Brockton",
+      "links": {
+        "self": "/stops/Brockton"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Brockton"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "30 Riverside Ave, Brockton, MA 02301",
+        "description": null,
+        "latitude": 42.060951,
+        "location_type": 0,
+        "longitude": -71.011004,
+        "name": "Campello",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Campello",
+      "links": {
+        "self": "/stops/Campello"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Campello"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "110 Chief Justice Cushing Hwy, Cohasset, MA 02025",
+        "description": null,
+        "latitude": 42.24421,
+        "location_type": 0,
+        "longitude": -70.837529,
+        "name": "Cohasset",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Cohasset",
+      "links": {
+        "self": "/stops/Cohasset"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Cohasset"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1590 Commercial St, East Weymouth, MA, 02189",
+        "description": null,
+        "latitude": 42.2191,
+        "location_type": 0,
+        "longitude": -70.9214,
+        "name": "East Weymouth",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "East Weymouth",
+      "links": {
+        "self": "/stops/East%20Weymouth"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=East%20Weymouth"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "247 Old Drifway, Scituate, MA 02066",
+        "description": null,
+        "latitude": 42.178776,
+        "location_type": 0,
+        "longitude": -70.746641,
+        "name": "Greenbush",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Greenbush",
+      "links": {
+        "self": "/stops/Greenbush"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Greenbush"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "6 Garden Rd, Halifax, MA 02338",
+        "description": null,
+        "latitude": 42.014739,
+        "location_type": 0,
+        "longitude": -70.824263,
+        "name": "Halifax",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Halifax",
+      "links": {
+        "self": "/stops/Halifax"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Halifax"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "1070 Main St, Hanson, MA 02341",
+        "description": null,
+        "latitude": 42.043967,
+        "location_type": 0,
+        "longitude": -70.882438,
+        "name": "Hanson",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Hanson",
+      "links": {
+        "self": "/stops/Hanson"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Hanson"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Union St and Center St, Randolph, MA 02368",
+        "description": null,
+        "latitude": 42.156343,
+        "location_type": 0,
+        "longitude": -71.027371,
+        "name": "Holbrook/Randolph",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Holbrook/ Randolph",
+      "links": {
+        "self": "/stops/Holbrook%2F%20Randolph"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Holbrook%2F%20Randolph"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "134 Marion Dr, Kingston, MA 02364",
+        "description": null,
+        "latitude": 41.97762,
+        "location_type": 0,
+        "longitude": -70.721709,
+        "name": "Kingston",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Kingston",
+      "links": {
+        "self": "/stops/Kingston"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Kingston"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "125 Commercial Dr, Lakeville, MA 02347",
+        "description": null,
+        "latitude": 41.87821,
+        "location_type": 0,
+        "longitude": -70.918444,
+        "name": "Middleborough/Lakeville",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Middleborough/ Lakeville",
+      "links": {
+        "self": "/stops/Middleborough%2F%20Lakeville"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Middleborough%2F%20Lakeville"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "150 Spark St, Brockton, MA 02302",
+        "description": null,
+        "latitude": 42.106555,
+        "location_type": 0,
+        "longitude": -71.022001,
+        "name": "Montello",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Montello",
+      "links": {
+        "self": "/stops/Montello"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Montello"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "190 Summer St, Hingham, MA 02043",
+        "description": null,
+        "latitude": 42.244959,
+        "location_type": 0,
+        "longitude": -70.869205,
+        "name": "Nantasket Junction",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Nantasket Junction",
+      "links": {
+        "self": "/stops/Nantasket%20Junction"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Nantasket%20Junction"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "777 Country Way, Scituate, MA 02066",
+        "description": null,
+        "latitude": 42.219528,
+        "location_type": 0,
+        "longitude": -70.788602,
+        "name": "North Scituate",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "North Scituate",
+      "links": {
+        "self": "/stops/North%20Scituate"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=North%20Scituate"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "385 Court St, Plymouth, MA 02360",
+        "description": null,
+        "latitude": 41.981278,
+        "location_type": 0,
+        "longitude": -70.690421,
+        "name": "Plymouth",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Plymouth",
+      "links": {
+        "self": "/stops/Plymouth"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Plymouth"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "89 Trotter Rd, Weymouth, MA 02190",
+        "description": null,
+        "latitude": 42.155025,
+        "location_type": 0,
+        "longitude": -70.953302,
+        "name": "South Weymouth",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "South Weymouth",
+      "links": {
+        "self": "/stops/South%20Weymouth"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=South%20Weymouth"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "20 Fort Hill Rd, Hingham, MA 02043",
+        "description": null,
+        "latitude": 42.235838,
+        "location_type": 0,
+        "longitude": -70.902708,
+        "name": "West Hingham",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "West Hingham",
+      "links": {
+        "self": "/stops/West%20Hingham"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=West%20Hingham"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "121 Commercial St, Weymouth, MA 02184",
+        "description": null,
+        "latitude": 42.221503,
+        "location_type": 0,
+        "longitude": -70.968152,
+        "name": "Weymouth Landing/East Braintree",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Weymouth Landing/ East Braintree",
+      "links": {
+        "self": "/stops/Weymouth%20Landing%2F%20East%20Braintree"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Weymouth%20Landing%2F%20East%20Braintree"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "383 South Ave, Whitman, MA 02382",
+        "description": null,
+        "latitude": 42.082749,
+        "location_type": 0,
+        "longitude": -70.923411,
+        "name": "Whitman",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Whitman",
+      "links": {
+        "self": "/stops/Whitman"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Whitman"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "197 Ivory St, Braintree, MA 02184",
+        "description": null,
+        "latitude": 42.207854,
+        "location_type": 1,
+        "longitude": -71.001138,
+        "name": "Braintree",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-brntn",
+      "links": {
+        "self": "/stops/place-brntn"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-brntn"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "599 Old Colony Ave Boston, MA 02127-3805",
+        "description": null,
+        "latitude": 42.320685,
+        "location_type": 1,
+        "longitude": -71.052391,
+        "name": "JFK/UMass",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-jfk",
+      "links": {
+        "self": "/stops/place-jfk"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-jfk"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "175 Thomas E Burgin Pkwy, Quincy, MA 02169",
+        "description": null,
+        "latitude": 42.251809,
+        "location_type": 1,
+        "longitude": -71.005409,
+        "name": "Quincy Center",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-qnctr",
+      "links": {
+        "self": "/stops/place-qnctr"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-qnctr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "700 Atlantic Ave, Boston, MA 02110",
+        "description": null,
+        "latitude": 42.352271,
+        "location_type": 1,
+        "longitude": -71.055242,
+        "name": "South Station",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-sstat",
+      "links": {
+        "self": "/stops/place-sstat"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-sstat"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
