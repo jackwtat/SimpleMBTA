@@ -425,19 +425,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
 
                     // If the user has changed the zoom level,
-                    // then change key stop markers visibilities
-                    if (gMap.getCameraPosition().zoom >= KEY_STOP_MARKER_VISIBILITY_LEVEL) {
-                        for (Marker marker : keyStopMarkers.values()) {
-                            marker.setVisible(true);
-                        }
-                    } else {
-                        for (Marker marker : keyStopMarkers.values()) {
-                            if (!marker.equals(selectedStopMarker))
-                                marker.setVisible(false);
-                        }
-                    }
-
-                    // If the user has changed the zoom level,
                     // then change the commuter rail stop marker visibilities
                     if (gMap.getCameraPosition().zoom >= COMMUTER_STOP_MARKER_VISIBILITY_LEVEL) {
                         for (Marker marker : commuterStopMarkers.values()) {
@@ -446,6 +433,21 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     } else {
                         for (Marker marker : commuterStopMarkers.values()) {
                             if (!marker.equals(selectedStopMarker))
+                                marker.setVisible(false);
+                        }
+                    }
+
+                    // If the user has changed the zoom level,
+                    // then change key stop markers visibilities
+                    if (gMap.getCameraPosition().zoom >= KEY_STOP_MARKER_VISIBILITY_LEVEL) {
+                        for (Marker marker : keyStopMarkers.values()) {
+                            marker.setVisible(true);
+                        }
+                    } else {
+                        for (Marker marker : keyStopMarkers.values()) {
+                            Stop stop = (Stop) marker.getTag();
+                            if (!marker.equals(selectedStopMarker) &&
+                                    !commuterStopMarkers.containsKey(stop.getId()))
                                 marker.setVisible(false);
                         }
                     }
@@ -1123,8 +1125,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         for (Shape shape : route.getAllShapes()) {
             for (Stop stop : shape.getStops()) {
                 if (keyStopMarkers.containsKey(stop.getId())) {
-                    keyStopMarkers.get(stop.getId()).setIcon(
+                    Marker marker = keyStopMarkers.get(stop.getId());
+                    marker.setIcon(
                             BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
+                    markers.put(stop.getId(), marker);
+
                 } else if (!markers.containsKey(stop.getId())) {
                     Marker stopMarker = gMap.addMarker(route.getStopMarkerOptions()
                             .position(new LatLng(
