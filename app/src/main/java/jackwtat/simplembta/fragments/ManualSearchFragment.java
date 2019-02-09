@@ -182,7 +182,7 @@ public class ManualSearchFragment extends Fragment implements
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set the onClickListener listener
-        recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
+        /*recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Prediction prediction = recyclerViewAdapter.getPrediction(position);
@@ -212,7 +212,7 @@ public class ManualSearchFragment extends Fragment implements
 
                 dialog.show();
             }
-        });
+        });*/
 
         return rootView;
     }
