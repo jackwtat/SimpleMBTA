@@ -32,6 +32,7 @@
 
     <!-- No Predictions Messages -->
     <string name="no_nearby_services">No MBTA services near this location</string>
+    <string name="no_predictions">No predictions</string>
     <string name="no_nearby_predictions">No predictions near this location</string>
     <string name="no_predictions_this_stop">No predictions at this stop</string>
     <string name="no_predictions_this_stop_p1">No</string>

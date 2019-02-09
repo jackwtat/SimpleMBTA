@@ -100,8 +100,7 @@ public class MapSearchRecyclerViewAdapter
             header.setVisibility(View.VISIBLE);
 
         } else if (thisStop == null && (i == 0 || previousStop != null)) {
-            header.setText(
-                    header.getContext().getResources().getString(R.string.no_nearby_predictions));
+            header.setText(header.getContext().getResources().getString(R.string.no_predictions));
             header.setVisibility(View.VISIBLE);
 
             // Otherwise, hide the header
