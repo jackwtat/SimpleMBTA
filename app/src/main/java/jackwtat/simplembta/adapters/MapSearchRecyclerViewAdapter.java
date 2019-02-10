@@ -80,7 +80,7 @@ public class MapSearchRecyclerViewAdapter
             else {
                 HashMap<String, Void> colors = new HashMap<>();
 
-                for (int j = i + 1; j < adapterItems.size(); j++) {
+                for (int j = i; j < adapterItems.size(); j++) {
                     AdapterItem item = adapterItems.get(j);
                     int mode = item.getRoute().getMode();
                     String color = item.getRoute().getPrimaryColor();
