@@ -1066,7 +1066,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             paddingWidth = 10;
         } else {
             lineWidth = 8;
-            paddingWidth = 14;
+            paddingWidth = 12;
         }
 
         for (Shape s : route.getShapes(0)) {
