@@ -1,0 +1,335 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Boston-Long Wharf via Hull & Logan Airport",
+        "polyline": "ws{`GzozoLoBLQBQAa@UaBq@wH_DaD{@qDKy[}G{ZqDwP{Gy[}Aa_AxJ_oBdVdAB|@nAr@tCZjG_@hJcCtIeClPqFjpCw@~y@y@ra@cDnc@kAzKsAxJcCfJgVtW_UxRi]pYk`@zVkj@v\\mm@ra@o[v_@uKdTiUho@sQfg@mAtCw@pBaAtBw@rA}@dAs@^_HlAiCIqAIaDmAoDgBqDsEyAi@IK?RBd@Pv@RdBTrDDlSqFrdAeCnSFnDr@bHj@fA",
+        "priority": 2
+      },
+      "id": "b0007",
+      "links": {
+        "self": "/shapes/b0007"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F1",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Hingham",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Hull",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Logan",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Long",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Hingham via Logan Airport & Hull",
+        "polyline": "crpaGh}spLk@gAs@cHGoDdCoSpFsdAEmSUsDSeBQw@Ce@?SHJxAh@pDrEnDfB`DlApAHhCH~GmAr@_@|@eAv@sA`AuBv@qBlAuCrQgg@hUio@tKeTn[w_@lm@sa@jj@w\\j`@{Vh]qY~TyRfVuWbCgJrAyJjA{KbDoc@x@sa@v@_z@pFkpCdCmPbCuI^iJ[kGs@uC}@oAeAC~nBeV`_AyJx[|AvPzGzZpDx[|GpDJ`Dz@vH~C`Bp@`@TP@PCnBM",
+        "priority": 2
+      },
+      "id": "b0006",
+      "links": {
+        "self": "/shapes/b0006"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F1",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Long",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Logan",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Hull",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Hingham",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Boston-Rowes Wharf",
+        "polyline": "ws{`GzozoLoBLQBQAa@UaBq@wH_DaD{@iBQgADeCr@aPxJ}E`D}FbDkAxCg@bEKpQ_BpKqAnFqB|DiHz@wH?aRQgRnB{L`GwHnJoFfMwCdMqDbZkF|^qDtPiDhKqFjHsjAnwAsMnMgj@zh@gVtW_UxRi]pYk`@zVkj@v\\mm@ra@o[v_@uKdTiUho@sQfg@gE|JeEpZcCd`@]bRiA|RYbPGlGBpD",
+        "priority": 1
+      },
+      "id": "b0015",
+      "links": {
+        "self": "/shapes/b0015"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F1",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Hingham",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Rowes",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Hingham",
+        "polyline": "{qoaGxzspLCqDFmGXcPhA}R\\cRbCe`@dEqZfE}JrQgg@hUio@tKeTn[w_@lm@sa@jj@w\\j`@{Vh]qY~TyRfVuWfj@{h@rMoMrjAowApFkHhDiKpDuPjF}^pDcZvCeMnFgMvHoJzLaGfRoB`RPvH?hH{@pB}DpAoF~AqKJqQf@cEjAyC|FcD|EaD`PyJdCs@fAEhBP`Dz@vH~C`Bp@`@TP@PCnBM",
+        "priority": 1
+      },
+      "id": "b0014",
+      "links": {
+        "self": "/shapes/b0014"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F1",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Rowes",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Hingham",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Hull",
+        "polyline": "crpaGh}spLk@gAs@cHGoDdCoSnKc`@|HmXjVod@zWes@hUio@tKeTn[w_@lm@sa@jj@w\\j`@{Vh]qY~TyRfVuWbCgJrAyJjA{KbDoc@x@sa@v@_z@pFkpCdCmPbCuI^iJ[kGs@uC}@oAeAC",
+        "priority": -1
+      },
+      "id": "b0002",
+      "links": {
+        "self": "/shapes/b0002"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F1",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Long",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Hull",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": "349 Lincoln St, Hingham, MA 02043",
+        "description": null,
+        "latitude": 42.252643,
+        "location_type": 0,
+        "longitude": -70.919875,
+        "name": "Hingham",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Hingham",
+      "links": {
+        "self": "/stops/Boat-Hingham"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Hingham"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "180 Main St, Hull, MA 02045",
+        "description": null,
+        "latitude": 42.303251,
+        "location_type": 0,
+        "longitude": -70.920215,
+        "name": "Hull",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Hull",
+      "links": {
+        "self": "/stops/Boat-Hull"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Hull"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Harborside Dr, East Boston, MA 02128",
+        "description": null,
+        "latitude": 42.359789,
+        "location_type": 0,
+        "longitude": -71.02734,
+        "name": "Logan Airport Ferry Terminal",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Logan",
+      "links": {
+        "self": "/stops/Boat-Logan"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Logan"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Long Wharf near Christopher Columbus Park, Boston, MA 02110",
+        "description": null,
+        "latitude": 42.360795,
+        "location_type": 0,
+        "longitude": -71.049976,
+        "name": "Long Wharf (North)",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Long",
+      "links": {
+        "self": "/stops/Boat-Long"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Long"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "60 Rowes Wharf, Boston, MA 02110",
+        "description": null,
+        "latitude": 42.355721,
+        "location_type": 0,
+        "longitude": -71.049897,
+        "name": "Rowes Wharf",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Rowes",
+      "links": {
+        "self": "/stops/Boat-Rowes"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Rowes"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

@@ -19,7 +19,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,6 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +67,7 @@ import jackwtat.simplembta.model.routes.CommuterRail;
 import jackwtat.simplembta.model.routes.CommuterRailNorthSide;
 import jackwtat.simplembta.model.routes.CommuterRailOldColony;
 import jackwtat.simplembta.model.routes.CommuterRailSouthSide;
+import jackwtat.simplembta.model.routes.Ferry;
 import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.OrangeLine;
@@ -193,7 +191,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private Route[] commuterRoutes = {
             new CommuterRailNorthSide(),
             new CommuterRailSouthSide(),
-            new CommuterRailOldColony()};
+            new CommuterRailOldColony(),
+            new Ferry("Boat-F1"),
+            new Ferry("Boat-F4")};
 
 
     @Override
@@ -237,7 +237,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         Shape[][] commuterShapes = {
                 getShapesFromJson(R.raw.shapes_commuter_north),
                 getShapesFromJson(R.raw.shapes_commuter_south),
-                getShapesFromJson(R.raw.shapes_commuter_old_colony)};
+                getShapesFromJson(R.raw.shapes_commuter_old_colony),
+                getShapesFromJson(R.raw.shapes_boat_f1),
+                getShapesFromJson(R.raw.shapes_boat_f4)};
         for (Shape[] s : commuterShapes) {
             for (Route r : commuterRoutes) {
                 if (r.equals(s[0].getRouteId())) {
@@ -1059,7 +1061,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         int lineWidth;
         int paddingWidth;
 
-        if (route.getMode() == Route.COMMUTER_RAIL) {
+        if (route.getMode() == Route.COMMUTER_RAIL || route.getMode() == Route.FERRY) {
             lineWidth = 6;
             paddingWidth = 10;
         } else {

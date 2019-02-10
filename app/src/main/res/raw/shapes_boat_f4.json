@@ -1,0 +1,133 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "direction_id": 1,
+        "name": "Boston-Long Wharf",
+        "polyline": "q}raGjntpLpCaChGqFzP_QlBuBdAaApAcA`Bu@bBi@lB]|BQbBCzCHbDV|JfBb@Rd@^Rt@r@jDNtEThCTdC",
+        "priority": 2
+      },
+      "id": "b0018",
+      "links": {
+        "self": "/shapes/b0018"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F4",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Charlestown",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Long-South",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Charlestown Navy Yard",
+        "polyline": "qipaGl`tpLUeCUiCOuEs@kDSu@e@_@c@S}JgBcDW{CIcBB}BPmB\\cBh@aBt@qAbAeA`AmBtB{P~PiGpFqC`C",
+        "priority": 2
+      },
+      "id": "b0017",
+      "links": {
+        "self": "/shapes/b0017"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Boat-F4",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "Boat-Long-South",
+              "type": "stop"
+            },
+            {
+              "id": "Boat-Charlestown",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "address": "Pier 4, Boston, MA 02129",
+        "description": null,
+        "latitude": 42.372876,
+        "location_type": 0,
+        "longitude": -71.052764,
+        "name": "Charlestown",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Charlestown",
+      "links": {
+        "self": "/stops/Boat-Charlestown"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Charlestown"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Long Wharf near Old Atlantic Ave, Boston, MA 02110",
+        "description": null,
+        "latitude": 42.359448,
+        "location_type": 0,
+        "longitude": -71.050498,
+        "name": "Long Wharf (South)",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Boat-Long-South",
+      "links": {
+        "self": "/stops/Boat-Long-South"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Boat-Long-South"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
