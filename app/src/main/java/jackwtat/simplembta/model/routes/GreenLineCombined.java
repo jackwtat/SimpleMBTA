@@ -15,7 +15,7 @@ public class GreenLineCombined extends GreenLine {
         setPrimaryColor("00843D");
         setTextColor("FFFFFF");
         setStopMarkerFactory(new GreenLineStopMarkerFactory());
-        setSortOrder(4);
+        setSortOrder(10030);
         setDirection(new Direction(Direction.WESTBOUND, "Westbound"));
         setDirection(new Direction(Direction.EASTBOUND, "Eastbound"));
     }

@@ -10,7 +10,7 @@ public class CommuterRailOldColony extends CommuterRail {
         setLongName("Commuter Rail");
         setPrimaryColor("80276C");
         setTextColor("FFFFFF");
-        setSortOrder(50);
+        setSortOrder(20000);
     }
 
     @Override

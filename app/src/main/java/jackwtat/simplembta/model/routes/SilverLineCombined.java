@@ -12,7 +12,7 @@ public class SilverLineCombined extends SilverLine {
         setLongName("Silver Line");
         setPrimaryColor("7C878E");
         setTextColor("FFFFFF");
-        setSortOrder(14);
+        setSortOrder(10050);
         setDirection(new Direction(Direction.OUTBOUND, "Outbound"));
         setDirection(new Direction(Direction.INBOUND, "Inbound"));
     }
