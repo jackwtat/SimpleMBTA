@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.RoutesJsonParser;
-import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.Route;
 
 public class RoutesByStopsAsyncTask extends AsyncTask<Void, Void, Route[]> {
@@ -30,15 +29,25 @@ public class RoutesByStopsAsyncTask extends AsyncTask<Void, Void, Route[]> {
         }
         String[] routesArgs = {"filter[stop]=" + stopArgBuilder.toString()};
 
-        return RoutesJsonParser.parse(realTimeApiClient.get("routes", routesArgs));
+        String jsonResponse = realTimeApiClient.get("routes", routesArgs);
+
+        if (jsonResponse != null)
+            return RoutesJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Route[] routes) {
-        onPostExecuteListener.onPostExecute(routes);
+        if (routes != null)
+            onPostExecuteListener.onSuccess(routes);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        void onPostExecute(Route[] routes);
+        void onSuccess(Route[] routes);
+
+        void onError();
     }
 }

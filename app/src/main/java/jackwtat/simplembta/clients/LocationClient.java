@@ -81,7 +81,7 @@ public class LocationClient {
                                 callbacks.onSuccess();
                             } else {
                                 lastLocation = null;
-                                callbacks.onFailure();
+                                callbacks.onError();
                             }
                         }
                     })
@@ -89,7 +89,7 @@ public class LocationClient {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             lastLocation = null;
-                            callbacks.onFailure();
+                            callbacks.onError();
                         }
                     });
         } else {
@@ -116,10 +116,9 @@ public class LocationClient {
     }
 
     public interface LocationClientCallbacks {
-
         void onSuccess();
 
-        void onFailure();
+        void onError();
 
         void onNoPermission();
     }

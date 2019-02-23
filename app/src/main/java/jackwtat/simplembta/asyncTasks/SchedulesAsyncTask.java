@@ -1,7 +1,5 @@
 package jackwtat.simplembta.asyncTasks;
 
-import android.util.Log;
-
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.SchedulesJsonParser;
 import jackwtat.simplembta.model.Prediction;
@@ -52,11 +50,19 @@ public class SchedulesAsyncTask extends PredictionsAsyncTask {
                 "include=route,trip,stop,prediction,vehicle"
         };
 
-        return SchedulesJsonParser.parse(realTimeApiClient.get("schedules", scheduleArgs));
+        String jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
+
+        if (jsonResponse != null)
+            return SchedulesJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Prediction[] predictions) {
-        onPostExecuteListener.onPostExecute(predictions, false);
+        if (predictions != null)
+            onPostExecuteListener.onSuccess(predictions, false);
+        else
+            onPostExecuteListener.onError();
     }
 }

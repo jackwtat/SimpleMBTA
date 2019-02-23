@@ -29,6 +29,10 @@
     <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>
     <string name="location_error_text">Unable to get your current location</string>
     <string name="network_error_text">Unable to connect to the internet</string>
+    <string name="error_network">Unable to connect to the internet</string>
+    <string name="error_location">Unable to get your current location</string>
+    <string name="error_stops">Unable to retrieve nearby stops</string>
+    <string name="error_routes">Unable to retrieve nearby MBTA services</string>
 
     <!-- No Predictions Messages -->
     <string name="no_nearby_services">No MBTA services near this location</string>

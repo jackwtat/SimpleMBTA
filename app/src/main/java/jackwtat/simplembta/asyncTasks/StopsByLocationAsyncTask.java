@@ -30,15 +30,25 @@ public class StopsByLocationAsyncTask extends AsyncTask<Void, Void, Stop[]> {
                 "include=child_stops"
         };
 
-        return StopsJsonParser.parse(realTimeApiClient.get("stops", stopArgs));
+        String jsonResponse = realTimeApiClient.get("stops", stopArgs);
+
+        if (jsonResponse != null)
+            return StopsJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Stop[] stops) {
-        onPostExecuteListener.onPostExecute(stops);
+        if (stops != null)
+            onPostExecuteListener.onSuccess(stops);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        void onPostExecute(Stop[] stops);
+        void onSuccess(Stop[] stops);
+
+        void onError();
     }
 }

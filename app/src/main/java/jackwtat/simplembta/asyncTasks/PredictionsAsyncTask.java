@@ -6,6 +6,8 @@ import jackwtat.simplembta.model.Prediction;
 
 public abstract class PredictionsAsyncTask extends AsyncTask<Void, Void, Prediction[]> {
     public interface OnPostExecuteListener {
-        void onPostExecute(Prediction[] predictions, boolean live);
+        void onSuccess(Prediction[] predictions, boolean live);
+
+        void onError();
     }
 }

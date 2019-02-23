@@ -56,7 +56,6 @@ import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
-import jackwtat.simplembta.clients.LocationClient.LocationClientCallbacks;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.map.markers.StopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
@@ -82,11 +81,7 @@ import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
-        StopsByLocationAsyncTask.OnPostExecuteListener,
-        RoutesByStopsAsyncTask.OnPostExecuteListener,
-        PredictionsAsyncTask.OnPostExecuteListener,
         ServiceAlertsAsyncTask.OnPostExecuteListener,
-        LocationClientCallbacks,
         ErrorManager.OnErrorChangedListener {
     public static final String LOG_TAG = "MapSearchFragment";
 
@@ -156,6 +151,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private boolean cameraIsMoving = false;
     private boolean userIsScrolling = false;
     private boolean staleLocation = true;
+    private boolean predictionsLoaded = false;
     private int mapState = USER_HAS_NOT_MOVED_MAP;
     private int cameraMoveReason = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
     private long refreshTime = 0;
@@ -417,8 +413,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                                     realTimeApiKey, displayedLocation,
                                     new StopsByLocationAsyncTask.OnPostExecuteListener() {
                                         @Override
-                                        public void onPostExecute(Stop[] stops) {
+                                        public void onSuccess(Stop[] stops) {
                                             refreshStopMarkers(stops);
+                                        }
+
+                                        @Override
+                                        public void onError() {
                                         }
                                     });
 
@@ -662,60 +662,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onSuccess() {
-        if (mapReady && !cameraIsMoving) {
-            userLocation = locationClient.getLastLocation();
-
-            if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
-                if (staleLocation) {
-                    // If the user is far outside the MBTA's operating area, then center to Boston
-                    if (userLocation.getLatitude() < 41.3 ||
-                            userLocation.getLatitude() > 43.3 ||
-                            userLocation.getLongitude() < -72.5 ||
-                            userLocation.getLongitude() > -69.9) {
-                        userLocation.setLatitude(42.3604);
-                        userLocation.setLongitude(-71.0580);
-                        mapTargetView.setVisibility(View.VISIBLE);
-                        mapState = USER_HAS_MOVED_MAP;
-                    }
-
-                    gMap.moveCamera(CameraUpdateFactory.newLatLng(
-                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
-                    staleLocation = false;
-                } else {
-                    gMap.animateCamera(CameraUpdateFactory.newLatLng(
-                            new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
-                }
-
-                boolean forceRefresh = targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH;
-
-                if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE)
-                    targetLocation = userLocation;
-
-                if (forceRefresh) {
-                    swipeRefreshLayout.setRefreshing(true);
-                    forceUpdate();
-                } else {
-                    backgroundUpdate();
-                }
-            }
-        }
-
-        errorManager.setLocationError(false);
-        errorManager.setLocationPermissionDenied(false);
-    }
-
-    @Override
-    public void onFailure() {
-        errorManager.setLocationError(true);
-    }
-
-    @Override
-    public void onNoPermission() {
-        errorManager.setLocationPermissionDenied(true);
-    }
-
-    @Override
     public void onErrorChanged() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -755,6 +701,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void update() {
+        predictionsLoaded = false;
+
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
@@ -764,14 +712,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             getStops();
         } else {
+            enableOnErrorView(getResources().getString(R.string.error_network));
             errorManager.setNetworkError(true);
-
             refreshing = false;
 
-            swipeRefreshLayout.setRefreshing(false);
-
-            if (targetRoutes != null)
-                targetRoutes.clear();
+            targetStops.clear();
+            targetRoutes.clear();
         }
     }
 
@@ -793,7 +739,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (stopsAsyncTask != null)
             stopsAsyncTask.cancel(true);
 
-        stopsAsyncTask = new StopsByLocationAsyncTask(realTimeApiKey, targetLocation, this);
+        stopsAsyncTask = new StopsByLocationAsyncTask(realTimeApiKey, targetLocation,
+                new StopsPostExecuteListener());
 
         stopsAsyncTask.execute();
     }
@@ -804,7 +751,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
 
-        routesAsyncTask = new RoutesByStopsAsyncTask(realTimeApiKey, stopIds, this);
+        routesAsyncTask = new RoutesByStopsAsyncTask(realTimeApiKey, stopIds,
+                new RoutesPostExecuteListener());
 
         routesAsyncTask.execute();
     }
@@ -816,7 +764,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
 
         predictionsAsyncTask = new PredictionsByStopsAsyncTask(realTimeApiKey, stopIds,
-                this);
+                new PredictionsPostExecuteListener());
 
         predictionsAsyncTask.execute();
     }
@@ -839,7 +787,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
 
         predictionsAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
-                routeIds.toArray(new String[routeIds.size()]), stopIds, this);
+                routeIds.toArray(new String[routeIds.size()]), stopIds,
+                new PredictionsPostExecuteListener());
 
         predictionsAsyncTask.execute();
     }
@@ -853,119 +802,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 this);
 
         serviceAlertsAsyncTask.execute();
-    }
-
-    @Override
-    public void onPostExecute(Stop[] stops) {
-        // Update the target stops
-        targetStops.clear();
-        for (Stop stop : stops) {
-            targetStops.put(stop.getId(), stop);
-        }
-
-        // If there is no selected stop, then update the stop markers
-        if (selectedStop == null) {
-            refreshStopMarkers(stops);
-        }
-
-        // Update the target routes
-        getRoutes();
-    }
-
-    @Override
-    public void onPostExecute(Route[] routes) {
-        targetRoutes.clear();
-
-        for (Route route : routes) {
-            targetRoutes.put(route.getId(), route);
-        }
-
-        getPredictions();
-        getServiceAlerts();
-    }
-
-    @Override
-    public void onPostExecute(Prediction[] predictions, boolean live) {
-        for (Prediction prediction : predictions) {
-            // Replace prediction's stop ID with its parent stop ID
-            if (targetStops.containsKey(prediction.getParentStopId())) {
-                prediction.setStop(targetStops.get(prediction.getParentStopId()));
-            }
-
-            // If the prediction is for the eastbound Green Line, then replace the route
-            // with the Green Line Grouped route. This is to reduce the maximum number of
-            // prediction cards displayed and reduces UI clutter.
-            if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
-                    GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
-                if (targetRoutes.get(prediction.getRouteId()) != null &&
-                        !targetRoutes.get(prediction.getRouteId()).hasPickUps(0) &&
-                        !targetRoutes.get(prediction.getRouteId()).hasPickUps(1)) {
-                    targetRoutes.remove(prediction.getRouteId());
-                }
-
-                prediction.setRoute(new GreenLineCombined());
-            }
-
-            // If the prediction is for the inbound Commuter Rail, then replace the route
-            // with the Commuter Rail Grouped route. This is to reduce the maximum number
-            // of prediction cards displayed and reduces UI clutter.
-            if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                    prediction.getDirection() == Direction.INBOUND &&
-                    CommuterRail.isCommuterRailHub(prediction.getStopId(), false)) {
-
-                if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {
-                    prediction.setRoute(new CommuterRailNorthSide());
-
-                } else if (CommuterRailSouthSide.isSouthSideCommuterRail(prediction.getRoute().getId())) {
-                    prediction.setRoute(new CommuterRailSouthSide());
-
-                } else if (CommuterRailOldColony.isOldColonyCommuterRail(prediction.getRoute().getId())) {
-                    prediction.setRoute(new CommuterRailOldColony());
-                }
-            }
-
-            // Add route to routes list if not already there
-            if (!targetRoutes.containsKey(prediction.getRouteId())) {
-                targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
-            }
-
-            // Add stop to stops list if not already there
-            if (!targetStops.containsKey(prediction.getStopId())) {
-                targetStops.put(prediction.getStopId(), prediction.getStop());
-            }
-
-            // Add prediction to its respective route
-            int direction = prediction.getDirection();
-            String routeId = prediction.getRouteId();
-            Stop stop = targetStops.get(prediction.getStopId());
-
-            // If this prediction's stop is the route's nearest stop
-            if (stop.equals(targetRoutes.get(routeId).getNearestStop(direction))) {
-                targetRoutes.get(routeId).addPrediction(prediction);
-
-                // If route does not have predictions in this prediction's direction
-            } else if (!targetRoutes.get(routeId).hasPredictions(direction)) {
-                targetRoutes.get(routeId).setNearestStop(direction, stop);
-                targetRoutes.get(routeId).addPrediction(prediction);
-
-                // If this prediction's stop is closer than route's current nearest stop
-            } else if (stop.getLocation().distanceTo(targetLocation) <
-                    targetRoutes.get(routeId).getNearestStop(direction).getLocation()
-                            .distanceTo(targetLocation)
-                    && prediction.willPickUpPassengers()) {
-                targetRoutes.get(routeId).setNearestStop(direction, stop);
-                targetRoutes.get(routeId).addPrediction(prediction);
-            }
-        }
-
-        if (live) {
-            getSchedules();
-
-        } else {
-            refreshing = false;
-
-            refreshPredictionViews();
-        }
     }
 
     @Override
@@ -1022,12 +858,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
-                if (targetRoutes.size() == 0) {
-                    noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_services));
-                } else {
-                    noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_predictions));
-                }
-
+                noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_services));
                 noPredictionsTextView.setVisibility(View.VISIBLE);
                 appBarLayout.setExpanded(true);
                 recyclerView.setNestedScrollingEnabled(false);
@@ -1038,11 +869,33 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void enableOnErrorView(String message) {
+        final String m = message;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewAdapter.clear();
+
+                recyclerView.setNestedScrollingEnabled(false);
+
+                swipeRefreshLayout.setRefreshing(false);
+
+                appBarLayout.setExpanded(true);
+
+                noPredictionsTextView.setText(m);
+                noPredictionsTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     private void clearPredictions() {
         recyclerViewAdapter.clear();
         noPredictionsTextView.setVisibility(View.GONE);
         appBarLayout.setExpanded(true);
         recyclerView.setNestedScrollingEnabled(false);
+
+        targetStops.clear();
+        targetRoutes.clear();
     }
 
     private void clearSelectedStop() {
@@ -1165,11 +1018,250 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         return stopMarker;
     }
 
+    private class LocationClientCallbacks implements LocationClient.LocationClientCallbacks {
+        @Override
+        public void onSuccess() {
+            if (mapReady && !cameraIsMoving) {
+                userLocation = locationClient.getLastLocation();
+
+                if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
+                    if (staleLocation) {
+                        // If the user is far outside the MBTA's operating area, then center to Boston
+                        if (userLocation.getLatitude() < 41.3 ||
+                                userLocation.getLatitude() > 43.3 ||
+                                userLocation.getLongitude() < -72.5 ||
+                                userLocation.getLongitude() > -69.9) {
+                            userLocation.setLatitude(42.3604);
+                            userLocation.setLongitude(-71.0580);
+                            mapTargetView.setVisibility(View.VISIBLE);
+                            mapState = USER_HAS_MOVED_MAP;
+                        }
+
+                        gMap.moveCamera(CameraUpdateFactory.newLatLng(
+                                new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
+                        staleLocation = false;
+                    } else {
+                        gMap.animateCamera(CameraUpdateFactory.newLatLng(
+                                new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
+                    }
+
+                    boolean forceRefresh = targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH;
+
+                    if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE)
+                        targetLocation = userLocation;
+
+                    if (forceRefresh) {
+                        swipeRefreshLayout.setRefreshing(true);
+                        forceUpdate();
+                    } else {
+                        backgroundUpdate();
+                    }
+                }
+            }
+
+            errorManager.setLocationError(false);
+            errorManager.setLocationPermissionDenied(false);
+        }
+
+        @Override
+        public void onError() {
+            errorManager.setLocationError(true);
+
+            if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
+                refreshing = false;
+                cancelUpdate();
+
+                enableOnErrorView(getResources().getString(R.string.error_location));
+
+                targetStops.clear();
+                targetRoutes.clear();
+            }
+        }
+
+        @Override
+        public void onNoPermission() {
+            errorManager.setLocationPermissionDenied(true);
+
+            if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
+                refreshing = false;
+                cancelUpdate();
+
+                enableOnErrorView(getResources().getString(R.string.error_location));
+
+                targetStops.clear();
+                targetRoutes.clear();
+            }
+        }
+    }
+
+    private class StopsPostExecuteListener implements StopsByLocationAsyncTask.OnPostExecuteListener {
+        private StopsPostExecuteListener() {
+        }
+
+        @Override
+        public void onSuccess(Stop[] stops) {
+            // Update the target stops
+            targetStops.clear();
+            for (Stop stop : stops) {
+                targetStops.put(stop.getId(), stop);
+            }
+
+            // If there is no selected stop, then update the stop markers
+            if (selectedStop == null) {
+                refreshStopMarkers(stops);
+            }
+
+            // Update the target routes
+            getRoutes();
+        }
+
+        @Override
+        public void onError() {
+            if (targetStops.size() > 0) {
+                // If we have stops from a previous update, then proceed with current update
+                getRoutes();
+
+            } else {
+                // If we have no stops, then show error message
+                refreshing = false;
+                enableOnErrorView(getResources().getString(R.string.error_stops));
+                forceUpdate();
+            }
+        }
+    }
+
+    private class RoutesPostExecuteListener implements RoutesByStopsAsyncTask.OnPostExecuteListener {
+        private RoutesPostExecuteListener() {
+        }
+
+        @Override
+        public void onSuccess(Route[] routes) {
+            targetRoutes.clear();
+
+            for (Route route : routes) {
+                targetRoutes.put(route.getId(), route);
+            }
+
+            getPredictions();
+            getServiceAlerts();
+        }
+
+        @Override
+        public void onError() {
+            if (targetRoutes.size() > 0) {
+                // If we have routes from a previous update, then proceed with current update
+                getPredictions();
+                getServiceAlerts();
+
+            } else {
+                // If we have no routes, then show error message
+                refreshing = false;
+                enableOnErrorView(getResources().getString(R.string.error_routes));
+                forceUpdate();
+            }
+        }
+    }
+
+    private class PredictionsPostExecuteListener implements PredictionsAsyncTask.OnPostExecuteListener {
+        private PredictionsPostExecuteListener() {
+        }
+
+        @Override
+        public void onSuccess(Prediction[] predictions, boolean live) {
+            for (Prediction prediction : predictions) {
+                // Replace prediction's stop ID with its parent stop ID
+                if (targetStops.containsKey(prediction.getParentStopId())) {
+                    prediction.setStop(targetStops.get(prediction.getParentStopId()));
+                }
+
+                // If the prediction is for the eastbound Green Line, then replace the route
+                // with the Green Line Grouped route. This is to reduce the maximum number of
+                // prediction cards displayed and reduces UI clutter.
+                if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
+                        GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
+                    if (targetRoutes.get(prediction.getRouteId()) != null &&
+                            !targetRoutes.get(prediction.getRouteId()).hasPickUps(0) &&
+                            !targetRoutes.get(prediction.getRouteId()).hasPickUps(1)) {
+                        targetRoutes.remove(prediction.getRouteId());
+                    }
+
+                    prediction.setRoute(new GreenLineCombined());
+                }
+
+                // If the prediction is for the inbound Commuter Rail, then replace the route
+                // with the Commuter Rail Grouped route. This is to reduce the maximum number
+                // of prediction cards displayed and reduces UI clutter.
+                if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                        prediction.getDirection() == Direction.INBOUND &&
+                        CommuterRail.isCommuterRailHub(prediction.getStopId(), false)) {
+
+                    if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new CommuterRailNorthSide());
+
+                    } else if (CommuterRailSouthSide.isSouthSideCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new CommuterRailSouthSide());
+
+                    } else if (CommuterRailOldColony.isOldColonyCommuterRail(prediction.getRoute().getId())) {
+                        prediction.setRoute(new CommuterRailOldColony());
+                    }
+                }
+
+                // Add route to routes list if not already there
+                if (!targetRoutes.containsKey(prediction.getRouteId())) {
+                    targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
+                }
+
+                // Add stop to stops list if not already there
+                if (!targetStops.containsKey(prediction.getStopId())) {
+                    targetStops.put(prediction.getStopId(), prediction.getStop());
+                }
+
+                // Add prediction to its respective route
+                int direction = prediction.getDirection();
+                String routeId = prediction.getRouteId();
+                Stop stop = targetStops.get(prediction.getStopId());
+
+                // If this prediction's stop is the route's nearest stop
+                if (stop.equals(targetRoutes.get(routeId).getNearestStop(direction))) {
+                    targetRoutes.get(routeId).addPrediction(prediction);
+
+                    // If route does not have predictions in this prediction's direction
+                } else if (!targetRoutes.get(routeId).hasPredictions(direction)) {
+                    targetRoutes.get(routeId).setNearestStop(direction, stop);
+                    targetRoutes.get(routeId).addPrediction(prediction);
+
+                    // If this prediction's stop is closer than route's current nearest stop
+                } else if (stop.getLocation().distanceTo(targetLocation) <
+                        targetRoutes.get(routeId).getNearestStop(direction).getLocation()
+                                .distanceTo(targetLocation)
+                        && prediction.willPickUpPassengers()) {
+                    targetRoutes.get(routeId).setNearestStop(direction, stop);
+                    targetRoutes.get(routeId).addPrediction(prediction);
+                }
+            }
+
+            if (live) {
+                getSchedules();
+
+            } else {
+                refreshing = false;
+                refreshPredictionViews();
+            }
+        }
+
+        @Override
+        public void onError() {
+            refreshing = false;
+            refreshPredictionViews();
+            update();
+        }
+    }
+
     private class LocationUpdateTimerTask extends TimerTask {
         @Override
         public void run() {
             if (mapReady) {
-                locationClient.updateLocation(MapSearchFragment.this);
+                locationClient.updateLocation(new MapSearchFragment.LocationClientCallbacks());
             }
         }
     }

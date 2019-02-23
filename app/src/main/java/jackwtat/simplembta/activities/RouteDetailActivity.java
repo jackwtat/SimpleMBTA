@@ -72,13 +72,11 @@ import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.RawResourceReader;
-import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 import jackwtat.simplembta.views.RouteDetailSpinners;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
-        ErrorManager.OnErrorChangedListener, RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
-        ShapesAsyncTask.OnPostExecuteListener, ServiceAlertsAsyncTask.OnPostExecuteListener,
-        VehiclesAsyncTask.OnPostExecuteListener,
+        ErrorManager.OnErrorChangedListener, ShapesAsyncTask.OnPostExecuteListener,
+        ServiceAlertsAsyncTask.OnPostExecuteListener, VehiclesAsyncTask.OnPostExecuteListener,
         RouteDetailSpinners.OnDirectionSelectedListener, RouteDetailSpinners.OnStopSelectedListener {
     public static final String LOG_TAG = "RouteDetailActivity";
 
@@ -483,7 +481,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, selectedRoute,
-                        selectedDirectionId, this);
+                        selectedDirectionId, new PredictionsPostExecuteListener());
                 predictionsAsyncTask.execute();
 
             } else {
@@ -593,18 +591,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         } else {
             errorManager.setNetworkError(true);
         }
-    }
-
-    @Override
-    public void onPostExecute(List<Prediction> predictions) {
-        refreshing = false;
-        refreshTime = new Date().getTime();
-
-        selectedRoute.clearPredictions(0);
-        selectedRoute.clearPredictions(1);
-        selectedRoute.addAllPredictions(predictions);
-
-        refreshPredictions(false);
     }
 
     @Override
@@ -937,6 +923,34 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void forceUpdate() {
         getPredictions();
+    }
+
+    private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
+        private PredictionsPostExecuteListener() {
+        }
+
+        @Override
+        public void onSuccess(List<Prediction> predictions) {
+            refreshing = false;
+            refreshTime = new Date().getTime();
+
+            selectedRoute.clearPredictions(0);
+            selectedRoute.clearPredictions(1);
+            selectedRoute.addAllPredictions(predictions);
+
+            refreshPredictions(false);
+        }
+
+        @Override
+        public void onError() {
+            refreshing = false;
+            refreshTime = new Date().getTime();
+
+            selectedRoute.clearPredictions(0);
+            selectedRoute.clearPredictions(1);
+
+            refreshPredictions(true);
+        }
     }
 
     private class PredictionsUpdateTimerTask extends TimerTask {

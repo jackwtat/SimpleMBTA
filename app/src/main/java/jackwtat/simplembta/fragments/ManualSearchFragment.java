@@ -56,7 +56,6 @@ public class ManualSearchFragment extends Fragment implements
         RoutesAsyncTask.OnPostExecuteListener,
         ShapesAsyncTask.OnPostExecuteListener,
         ServiceAlertsAsyncTask.OnPostExecuteListener,
-        RouteDetailPredictionsAsyncTask.OnPostExecuteListener,
         ManualSearchSpinners.OnRouteSelectedListener,
         ManualSearchSpinners.OnDirectionSelectedListener,
         ManualSearchSpinners.OnStopSelectedListener {
@@ -438,7 +437,7 @@ public class ManualSearchFragment extends Fragment implements
                     }
 
                     predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey,
-                            selectedRoute, selectedDirectionId, this);
+                            selectedRoute, selectedDirectionId, new PredictionsPostExecuteListener());
                     predictionsAsyncTask.execute();
 
                 } else {
@@ -478,18 +477,6 @@ public class ManualSearchFragment extends Fragment implements
         selectedRoute.addAllServiceAlerts(serviceAlerts);
 
         refreshServiceAlerts();
-    }
-
-    @Override
-    public void onPostExecute(List<Prediction> predictions) {
-        refreshing = false;
-        refreshTime = new Date().getTime();
-
-        selectedRoute.clearPredictions(0);
-        selectedRoute.clearPredictions(1);
-        selectedRoute.addAllPredictions(predictions);
-
-        refreshPredictions(false);
     }
 
     private void refreshRoutes() {
@@ -646,6 +633,34 @@ public class ManualSearchFragment extends Fragment implements
 
     private void forceUpdate() {
         getPredictions();
+    }
+
+    private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
+        private PredictionsPostExecuteListener() {
+        }
+
+        @Override
+        public void onSuccess(List<Prediction> predictions) {
+            refreshing = false;
+            refreshTime = new Date().getTime();
+
+            selectedRoute.clearPredictions(0);
+            selectedRoute.clearPredictions(1);
+            selectedRoute.addAllPredictions(predictions);
+
+            refreshPredictions(false);
+        }
+
+        @Override
+        public void onError() {
+            refreshing = false;
+            refreshTime = new Date().getTime();
+
+            selectedRoute.clearPredictions(0);
+            selectedRoute.clearPredictions(1);
+
+            refreshPredictions(true);
+        }
     }
 
     private class PredictionsUpdateTimerTask extends TimerTask {

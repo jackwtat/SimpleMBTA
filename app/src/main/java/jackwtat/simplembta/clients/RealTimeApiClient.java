@@ -71,7 +71,7 @@ public class RealTimeApiClient {
 
         // If the URL is null, then return early.
         if (url == null) {
-            return jsonResponse;
+            return null;
         }
 
         HttpURLConnection urlConnection = null;
@@ -89,7 +89,7 @@ public class RealTimeApiClient {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                return null;
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making HTTP request");

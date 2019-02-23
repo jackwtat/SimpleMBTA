@@ -60,11 +60,19 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                     "include=route,trip,stop,prediction,vehicle"
             };
 
-            for (Prediction prediction : SchedulesJsonParser
-                    .parse(realTimeApiClient.get("schedules", scheduleArgs))) {
-                if (!predictions.containsKey(prediction.getId())) {
-                    predictions.put(prediction.getId(), prediction);
+            String jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
+
+            if (jsonResponse != null) {
+                for (Prediction prediction : SchedulesJsonParser
+                        .parse(jsonResponse)) {
+                    if (!predictions.containsKey(prediction.getId())) {
+                        predictions.put(prediction.getId(), prediction);
+                    }
                 }
+
+
+            } else {
+                return null;
             }
         }
 
@@ -73,10 +81,15 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
 
     @Override
     protected void onPostExecute(List<Prediction> predictions) {
-        onPostExecuteListener.onPostExecute(predictions);
+        if (predictions != null)
+            onPostExecuteListener.onSuccess(predictions);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        void onPostExecute(List<Prediction> predictions);
+        void onSuccess(List<Prediction> predictions);
+
+        void onError();
     }
 }

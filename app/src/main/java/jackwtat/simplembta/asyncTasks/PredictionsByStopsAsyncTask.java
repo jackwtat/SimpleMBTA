@@ -32,11 +32,19 @@ public class PredictionsByStopsAsyncTask extends PredictionsAsyncTask {
                 "include=route,trip,stop,schedule,vehicle"
         };
 
-        return PredictionsJsonParser.parse(realTimeApiClient.get("predictions", predictionsArgs));
+        String jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
+
+        if (jsonResponse != null)
+            return PredictionsJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Prediction[] predictions) {
-        onPostExecuteListener.onPostExecute(predictions, true);
+        if (predictions != null)
+            onPostExecuteListener.onSuccess(predictions, true);
+        else
+            onPostExecuteListener.onError();
     }
 }
