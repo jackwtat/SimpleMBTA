@@ -28,15 +28,25 @@ public class VehiclesAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
                 "include=trip"
         };
 
-        return VehiclesJsonParser.parse(realTimeApiClient.get("vehicles", routeArgs));
+        String jsonResponse = realTimeApiClient.get("vehicles", routeArgs);
+
+        if (jsonResponse != null)
+            return VehiclesJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Vehicle[] vehicles) {
-        onPostExecuteListener.onPostExecute(vehicles);
+        if (vehicles != null)
+            onPostExecuteListener.onSuccess(vehicles);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        public void onPostExecute(Vehicle[] vehicles);
+        void onSuccess(Vehicle[] vehicles);
+
+        void onError();
     }
 }

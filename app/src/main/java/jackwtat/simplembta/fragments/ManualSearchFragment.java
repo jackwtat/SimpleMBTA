@@ -1,7 +1,6 @@
 package jackwtat.simplembta.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -53,9 +50,6 @@ import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
 public class ManualSearchFragment extends Fragment implements
         ErrorManager.OnErrorChangedListener,
-        RoutesAsyncTask.OnPostExecuteListener,
-        ShapesAsyncTask.OnPostExecuteListener,
-        ServiceAlertsAsyncTask.OnPostExecuteListener,
         ManualSearchSpinners.OnRouteSelectedListener,
         ManualSearchSpinners.OnDirectionSelectedListener,
         ManualSearchSpinners.OnStopSelectedListener {
@@ -91,7 +85,7 @@ public class ManualSearchFragment extends Fragment implements
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
-    private Route[] routes;
+    private Route[] allRoutes;
     private Route selectedRoute;
     private int selectedDirectionId;
 
@@ -229,7 +223,7 @@ public class ManualSearchFragment extends Fragment implements
     public void onResume() {
         super.onResume();
 
-        if (routes == null || routes.length == 0) {
+        if (allRoutes == null || allRoutes.length == 0) {
             getRoutes();
         }
 
@@ -338,7 +332,7 @@ public class ManualSearchFragment extends Fragment implements
                 routesAsyncTask.cancel(true);
             }
 
-            routesAsyncTask = new RoutesAsyncTask(realTimeApiKey, this);
+            routesAsyncTask = new RoutesAsyncTask(realTimeApiKey, new RoutesPostExecuteListener());
             routesAsyncTask.execute();
 
         } else {
@@ -390,9 +384,7 @@ public class ManualSearchFragment extends Fragment implements
                 }
 
                 shapesAsyncTask = new ShapesAsyncTask(
-                        realTimeApiKey,
-                        selectedRoute.getId(),
-                        this);
+                        realTimeApiKey, selectedRoute.getId(), new ShapesPostExecuteListener());
                 shapesAsyncTask.execute();
 
             } else {
@@ -413,9 +405,7 @@ public class ManualSearchFragment extends Fragment implements
                 String[] routeId = {selectedRoute.getId()};
 
                 serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
-                        realTimeApiKey,
-                        routeId,
-                        this);
+                        realTimeApiKey, routeId, new ServiceAlertsPostExecuteListener());
                 serviceAlertsAsyncTask.execute();
 
             } else {
@@ -456,31 +446,8 @@ public class ManualSearchFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onPostExecute(Route[] routes) {
-        this.routes = routes;
-        Arrays.sort(this.routes);
-
-        refreshRoutes();
-    }
-
-    @Override
-    public void onPostExecute(Shape[] shapes) {
-        selectedRoute.setShapes(shapes);
-
-        refreshShapes();
-    }
-
-    @Override
-    public void onPostExecute(ServiceAlert[] serviceAlerts) {
-        selectedRoute.clearServiceAlerts();
-        selectedRoute.addAllServiceAlerts(serviceAlerts);
-
-        refreshServiceAlerts();
-    }
-
     private void refreshRoutes() {
-        populateRouteSpinner(routes);
+        populateRouteSpinner(allRoutes);
     }
 
     private void refreshShapes() {
@@ -635,10 +602,51 @@ public class ManualSearchFragment extends Fragment implements
         getPredictions();
     }
 
-    private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
-        private PredictionsPostExecuteListener() {
+    private class RoutesPostExecuteListener implements RoutesAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Route[] routes) {
+            allRoutes = routes;
+            Arrays.sort(allRoutes);
+
+            refreshRoutes();
         }
 
+        @Override
+        public void onError() {
+            getRoutes();
+        }
+    }
+
+    private class ShapesPostExecuteListener implements ShapesAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Shape[] shapes) {
+            selectedRoute.setShapes(shapes);
+
+            refreshShapes();
+        }
+
+        @Override
+        public void onError() {
+            getShapes();
+        }
+    }
+
+    private class ServiceAlertsPostExecuteListener implements ServiceAlertsAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] serviceAlerts) {
+            selectedRoute.clearServiceAlerts();
+            selectedRoute.addAllServiceAlerts(serviceAlerts);
+
+            refreshServiceAlerts();
+        }
+
+        @Override
+        public void onError() {
+            getServiceAlerts();
+        }
+    }
+
+    private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
             refreshing = false;

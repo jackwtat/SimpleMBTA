@@ -28,15 +28,25 @@ public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
                 "include=stops"
         };
 
-        return ShapesJsonParser.parse(realTimeApiClient.get("shapes", routeArgs));
+        String jsonResponse = realTimeApiClient.get("shapes", routeArgs);
+
+        if (jsonResponse != null)
+            return ShapesJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Shape[] shapes) {
-        onPostExecuteListener.onPostExecute(shapes);
+        if (shapes != null)
+            onPostExecuteListener.onSuccess(shapes);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        void onPostExecute(Shape[] shapes);
+        void onSuccess(Shape[] shapes);
+
+        void onError();
     }
 }

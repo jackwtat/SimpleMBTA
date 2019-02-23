@@ -20,15 +20,25 @@ public class RoutesAsyncTask extends AsyncTask<Void, Void, Route[]> {
     protected Route[] doInBackground(Void... voids) {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
-        return RoutesJsonParser.parse(realTimeApiClient.get("routes", new String[0]));
+        String jsonResponse = realTimeApiClient.get("routes", new String[0]);
+
+        if (jsonResponse != null)
+            return RoutesJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Route[] routes) {
-        onPostExecuteListener.onPostExecute(routes);
+        if (routes != null)
+            onPostExecuteListener.onSuccess(routes);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        void onPostExecute(Route[] routes);
+        void onSuccess(Route[] routes);
+
+        void onError();
     }
 }

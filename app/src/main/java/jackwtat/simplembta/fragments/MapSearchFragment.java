@@ -89,7 +89,6 @@ import jackwtat.simplembta.views.ServiceAlertsListView;
 import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
-        ServiceAlertsAsyncTask.OnPostExecuteListener,
         ErrorManager.OnErrorChangedListener {
     public static final String LOG_TAG = "MapSearchFragment";
 
@@ -868,27 +867,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
                 targetRoutes.keySet().toArray(new String[targetRoutes.size()]),
-                this);
+                new ServiceAlertsPostExecuteListener());
 
         serviceAlertsAsyncTask.execute();
-    }
-
-    @Override
-    public void onPostExecute(ServiceAlert[] serviceAlerts) {
-        for (ServiceAlert alert : serviceAlerts) {
-            for (Route route : targetRoutes.values()) {
-                if (alert.affectsMode(route.getMode())) {
-                    route.addServiceAlert(alert);
-                } else {
-                    for (String affectedRouteId : alert.getAffectedRoutes()) {
-                        if (route.equals(affectedRouteId)) {
-                            route.addServiceAlert(alert);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private void refreshStopMarkers(Stop[] stops) {
@@ -1164,9 +1145,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private class StopsPostExecuteListener implements StopsByLocationAsyncTask.OnPostExecuteListener {
-        private StopsPostExecuteListener() {
-        }
-
         @Override
         public void onSuccess(Stop[] stops) {
             // Update the target stops
@@ -1200,9 +1178,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private class RoutesPostExecuteListener implements RoutesByStopsAsyncTask.OnPostExecuteListener {
-        private RoutesPostExecuteListener() {
-        }
-
         @Override
         public void onSuccess(Route[] routes) {
             targetRoutes.clear();
@@ -1232,9 +1207,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private class PredictionsPostExecuteListener implements PredictionsAsyncTask.OnPostExecuteListener {
-        private PredictionsPostExecuteListener() {
-        }
-
         @Override
         public void onSuccess(Prediction[] predictions, boolean live) {
             for (Prediction prediction : predictions) {
@@ -1323,6 +1295,31 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             refreshing = false;
             refreshPredictionViews();
             update();
+        }
+    }
+
+    private class ServiceAlertsPostExecuteListener implements ServiceAlertsAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] serviceAlerts) {
+            for (ServiceAlert alert : serviceAlerts) {
+                for (Route route : targetRoutes.values()) {
+                    if (alert.affectsMode(route.getMode())) {
+                        route.addServiceAlert(alert);
+                    } else {
+                        for (String affectedRouteId : alert.getAffectedRoutes()) {
+                            if (route.equals(affectedRouteId)) {
+                                route.addServiceAlert(alert);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onError() {
+            getServiceAlerts();
         }
     }
 

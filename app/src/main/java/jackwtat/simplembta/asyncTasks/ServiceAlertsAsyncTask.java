@@ -38,15 +38,26 @@ public class ServiceAlertsAsyncTask extends AsyncTask<Void, Void, ServiceAlert[]
                 "include=stops"
         };
 
-        return ServiceAlertsJsonParser.parse(realTimeApiClient.get("alerts", routeArgs));
+        String jsonResponse = realTimeApiClient.get("alerts", routeArgs);
+
+        if (jsonResponse != null)
+            return ServiceAlertsJsonParser.parse(jsonResponse);
+        else {
+            return null;
+        }
     }
 
     @Override
     protected void onPostExecute(ServiceAlert[] serviceAlerts) {
-        onPostExecuteListener.onPostExecute(serviceAlerts);
+        if (serviceAlerts != null)
+            onPostExecuteListener.onSuccess(serviceAlerts);
+        else
+            onPostExecuteListener.onError();
     }
 
     public interface OnPostExecuteListener {
-        void onPostExecute(ServiceAlert[] serviceAlerts);
+        void onSuccess(ServiceAlert[] serviceAlerts);
+
+        void onError();
     }
 }

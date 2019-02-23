@@ -75,9 +75,8 @@ import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.RouteDetailSpinners;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
-        ErrorManager.OnErrorChangedListener, ShapesAsyncTask.OnPostExecuteListener,
-        ServiceAlertsAsyncTask.OnPostExecuteListener, VehiclesAsyncTask.OnPostExecuteListener,
-        RouteDetailSpinners.OnDirectionSelectedListener, RouteDetailSpinners.OnStopSelectedListener {
+        ErrorManager.OnErrorChangedListener, RouteDetailSpinners.OnDirectionSelectedListener,
+        RouteDetailSpinners.OnStopSelectedListener {
     public static final String LOG_TAG = "RouteDetailActivity";
 
     // Predictions auto update rate
@@ -510,9 +509,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             String[] routeId = {selectedRoute.getId()};
 
             serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
-                    realTimeApiKey,
-                    routeId,
-                    this);
+                    realTimeApiKey, routeId, new ServiceAlertsPostExecuteListener());
             serviceAlertsAsyncTask.execute();
 
         } else {
@@ -564,9 +561,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
 
             shapesAsyncTask = new ShapesAsyncTask(
-                    realTimeApiKey,
-                    selectedRoute.getId(),
-                    this);
+                    realTimeApiKey, selectedRoute.getId(), new ShapesPostExecuteListener());
             shapesAsyncTask.execute();
 
         } else {
@@ -583,37 +578,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
 
             vehiclesAsyncTask = new VehiclesAsyncTask(
-                    realTimeApiKey,
-                    selectedRoute.getId(),
-                    this);
+                    realTimeApiKey, selectedRoute.getId(), new VehiclesPostExecuteListener());
             vehiclesAsyncTask.execute();
 
         } else {
             errorManager.setNetworkError(true);
         }
-    }
-
-    @Override
-    public void onPostExecute(ServiceAlert[] serviceAlerts) {
-        selectedRoute.clearServiceAlerts();
-        selectedRoute.addAllServiceAlerts(serviceAlerts);
-
-        refreshServiceAlerts();
-    }
-
-    @Override
-    public void onPostExecute(Shape[] shapes) {
-        selectedRoute.setShapes(shapes);
-
-        refreshShapes();
-        populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
-    }
-
-    @Override
-    public void onPostExecute(Vehicle[] vehicles) {
-        selectedRoute.setVehicles(vehicles);
-
-        refreshVehicles();
     }
 
     private void refreshPredictions(boolean returnToTop) {
@@ -926,9 +896,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
-        private PredictionsPostExecuteListener() {
-        }
-
         @Override
         public void onSuccess(List<Prediction> predictions) {
             refreshing = false;
@@ -950,6 +917,50 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedRoute.clearPredictions(1);
 
             refreshPredictions(true);
+        }
+    }
+
+    private class ServiceAlertsPostExecuteListener implements ServiceAlertsAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] serviceAlerts) {
+            selectedRoute.clearServiceAlerts();
+            selectedRoute.addAllServiceAlerts(serviceAlerts);
+
+            refreshServiceAlerts();
+        }
+
+        @Override
+        public void onError() {
+            getServiceAlerts();
+        }
+    }
+
+    private class ShapesPostExecuteListener implements ShapesAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Shape[] shapes) {
+            selectedRoute.setShapes(shapes);
+
+            refreshShapes();
+            populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
+        }
+
+        @Override
+        public void onError() {
+            getShapes();
+        }
+    }
+
+    private class VehiclesPostExecuteListener implements VehiclesAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Vehicle[] vehicles) {
+            selectedRoute.setVehicles(vehicles);
+
+            refreshVehicles();
+        }
+
+        @Override
+        public void onError() {
+            getVehicles();
         }
     }
 
