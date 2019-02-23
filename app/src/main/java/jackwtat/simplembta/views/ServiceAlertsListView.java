@@ -22,6 +22,7 @@ public class ServiceAlertsListView extends RelativeLayout {
     ListView alertsListView;
     ImageView listDownArrow;
     ImageView listUpArrow;
+    LinearLayout noAlertsLayout;
     ArrayAdapter<ServiceAlert> alertsArrayAdapter;
 
     public ServiceAlertsListView(Context context) {
@@ -46,33 +47,44 @@ public class ServiceAlertsListView extends RelativeLayout {
         alertsListView = rootView.findViewById(R.id.alerts_list_view);
         listDownArrow = rootView.findViewById(R.id.alerts_list_down_arrow);
         listUpArrow = rootView.findViewById(R.id.alerts_list_up_arrow);
+        noAlertsLayout = rootView.findViewById(R.id.no_alerts_layout);
 
-        alertsArrayAdapter = new ServiceAlertsListAdapter(context, alerts);
-        //alertsArrayAdapter.addAll(alerts);
-        alertsListView.setAdapter(alertsArrayAdapter);
+        if (alerts.size() > 0) {
+            alertsArrayAdapter = new ServiceAlertsListAdapter(context, alerts);
 
-        alertsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            alertsListView.setAdapter(alertsArrayAdapter);
 
-            }
+            alertsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-                if (alertsListView.getLastVisiblePosition() == alertsListView.getAdapter().getCount() - 1 &&
-                        alertsListView.getChildAt(alertsListView.getChildCount() - 1).getBottom() <= alertsListView.getHeight()) {
-                    listDownArrow.setVisibility(View.GONE);
-                } else {
-                    listDownArrow.setVisibility(View.VISIBLE);
                 }
 
-                if (alertsListView.getFirstVisiblePosition() == 0) {
-                    listUpArrow.setVisibility(View.GONE);
-                } else {
-                    listUpArrow.setVisibility(View.VISIBLE);
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem,
+                                     int visibleItemCount, int totalItemCount) {
+                    if (alertsListView.getLastVisiblePosition() == alertsListView.getAdapter().getCount() - 1 &&
+                            alertsListView.getChildAt(alertsListView.getChildCount() - 1).getBottom() <= alertsListView.getHeight())
+                        listDownArrow.setVisibility(View.GONE);
+                    else
+                        listDownArrow.setVisibility(View.VISIBLE);
+
+                    if (alertsListView.getFirstVisiblePosition() == 0)
+                        listUpArrow.setVisibility(View.GONE);
+                    else
+                        listUpArrow.setVisibility(View.VISIBLE);
                 }
-            }
-        });
+            });
+
+            alertsListView.setVisibility(VISIBLE);
+            listDownArrow.setVisibility(VISIBLE);
+            listUpArrow.setVisibility(VISIBLE);
+            noAlertsLayout.setVisibility(GONE);
+        } else {
+            noAlertsLayout.setVisibility(VISIBLE);
+            alertsListView.setVisibility(GONE);
+            listDownArrow.setVisibility(GONE);
+            listUpArrow.setVisibility(GONE);
+        }
     }
 }

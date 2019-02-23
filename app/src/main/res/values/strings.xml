@@ -24,6 +24,7 @@
     <string name="alerts">Alerts</string>
     <string name="advisory">Advisory</string>
     <string name="advisories">Advisories</string>
+    <string name="no_service_alerts">No Service Alerts</string>
 
     <!-- Error Messages -->
     <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>
@@ -108,6 +109,7 @@
 
     <!-- Dialog Box Strings -->
     <string name="dialog_close_button">Close</string>
+    <string name="dialog_go_to_route_button">Go To Route</string>
     <string name="route_prefix">Route</string>
 
     <!-- SharedPreferences Keys -->

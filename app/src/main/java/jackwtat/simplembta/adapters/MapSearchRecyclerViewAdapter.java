@@ -27,6 +27,7 @@ public class MapSearchRecyclerViewAdapter
     private Stop selectedStop;
 
     private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
 
     private Location targetLocation;
 
@@ -116,6 +117,17 @@ public class MapSearchRecyclerViewAdapter
                 }
             }
         });
+        holder.predictionView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (onItemLongClickListener != null) {
+                    onItemLongClickListener.onItemLongClick(i);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
 
     @Override
@@ -167,13 +179,24 @@ public class MapSearchRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
-        if (onItemClickListener != null)
-            this.onItemClickListener = onItemClickListener;
+    public void setOnItemClickListener(MapSearchRecyclerViewAdapter
+                                               .OnItemClickListener listener) {
+        if (listener != null)
+            this.onItemClickListener = listener;
+    }
+
+    public void setOnItemLongClickListener(MapSearchRecyclerViewAdapter
+                                                   .OnItemLongClickListener listener) {
+        if (listener != null)
+            this.onItemLongClickListener = listener;
     }
 
     public interface OnItemClickListener {
         void onItemClick(int i);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int i);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
