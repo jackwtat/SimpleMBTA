@@ -67,7 +67,7 @@ public class RealTimeApiClient {
      * Make an HTTP request to the given URL and return a String as the response.
      */
     private String makeHttpRequest(URL url) throws IOException {
-        String jsonResponse = "";
+        String jsonResponse = null;
 
         // If the URL is null, then return early.
         if (url == null) {
