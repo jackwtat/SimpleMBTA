@@ -26,8 +26,8 @@ public class MapSearchRecyclerViewAdapter
 
     private Stop selectedStop;
 
-    private OnItemClickListener onItemClickListener;
-    private OnItemClickListener onItemLongClickListener;
+    private OnItemClickListener onHeaderClickListener;
+    private OnItemClickListener onBodyLongClickListener;
 
     private Location targetLocation;
 
@@ -109,23 +109,18 @@ public class MapSearchRecyclerViewAdapter
             header.setVisibility(View.GONE);
         }
 
-        holder.predictionView.setOnClickListener(new View.OnClickListener() {
+        holder.predictionView.setHeaderOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(i);
-                }
+                if (onHeaderClickListener != null)
+                    onHeaderClickListener.onItemClick(i);
             }
         });
-        holder.predictionView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.predictionView.setBodyOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onItemClick(i);
-                    return true;
-                } else {
-                    return false;
-                }
+            public void onClick(View view) {
+                if (onBodyLongClickListener != null)
+                    onBodyLongClickListener.onItemClick(i);
             }
         });
     }
@@ -179,16 +174,16 @@ public class MapSearchRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(MapSearchRecyclerViewAdapter
-                                               .OnItemClickListener listener) {
+    public void setOnHeaderClickListener(MapSearchRecyclerViewAdapter
+                                                 .OnItemClickListener listener) {
         if (listener != null)
-            this.onItemClickListener = listener;
+            this.onHeaderClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(MapSearchRecyclerViewAdapter
-                                                   .OnItemClickListener listener) {
+    public void setOnBodyClickListener(MapSearchRecyclerViewAdapter
+                                               .OnItemClickListener listener) {
         if (listener != null)
-            this.onItemLongClickListener = listener;
+            this.onBodyLongClickListener = listener;
     }
 
     public interface OnItemClickListener {

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import jackwtat.simplembta.model.Stop;
 
 public class MapSearchPredictionItem extends LinearLayout {
     View rootView;
+    RelativeLayout headerLayout;
+    RelativeLayout bodyLayout;
     RouteNameView routeNameView;
     LinearLayout predictionsListLayout;
     TextView noPredictionsView;
@@ -142,6 +145,14 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
     }
 
+    public void setHeaderOnClickListener(View.OnClickListener onClickListener){
+        headerLayout.setOnClickListener(onClickListener);
+    }
+
+    public void setBodyOnClickListener(View.OnClickListener onClickListener){
+        bodyLayout.setOnClickListener(onClickListener);
+    }
+
     public void clear() {
         predictionsListLayout.removeAllViews();
         noPredictionsView.setVisibility(GONE);
@@ -151,7 +162,8 @@ public class MapSearchPredictionItem extends LinearLayout {
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_map_search_prediction, this);
-
+        headerLayout = rootView.findViewById(R.id.route_header_layout);
+        bodyLayout = rootView.findViewById(R.id.predictions_layout);
         routeNameView = rootView.findViewById(R.id.route_name_view);
         predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
         noPredictionsView = rootView.findViewById(R.id.no_predictions_text_view);

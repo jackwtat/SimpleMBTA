@@ -2,6 +2,7 @@ package jackwtat.simplembta.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,6 +42,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,11 +77,15 @@ import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.model.routes.SilverLineCombined;
+import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
+import jackwtat.simplembta.views.ServiceAlertsListView;
+import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener {
@@ -155,6 +162,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private int cameraMoveReason = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
     private long refreshTime = 0;
     private long onPauseTime = 0;
+    private int predictionsCount = 0;
 
     // Data surrounding the user's current location
     private Location userLocation = new Location("");
@@ -312,33 +320,60 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerViewAdapter = new MapSearchRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        // Set OnClickListener
-        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+        // Set OnClickListeners
+        recyclerViewAdapter.setOnHeaderClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
-                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
-                intent.putExtra("refreshTime", refreshTime);
-                intent.putExtra("showAlerts", true);
-                startActivity(intent);
-            }
-        });
+            public void onItemClick(int i) {
+                final int position = i;
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+                List<ServiceAlert> serviceAlerts = route.getServiceAlerts();
 
-        /*
-        // Set OnLongClickListener
-        recyclerViewAdapter.setOnItemLongClickListener(new OnItemClickListener() {
+                Collections.sort(serviceAlerts);
+
+                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+
+                dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
+                        DisplayNameUtil.getLongDisplayName(getContext(), route),
+                        Color.parseColor(route.getTextColor()),
+                        Color.parseColor(route.getPrimaryColor()),
+                        route.getMode() == Route.BUS &&
+                                !SilverLine.isSilverLine(route.getId())));
+
+                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
+
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.dialog_go_to_route_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
+                                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
+                                intent.putExtra("refreshTime", refreshTime);
+                                startActivity(intent);
+                            }
+                        });
+
+                dialog.show();
+            }
+        });
+        recyclerViewAdapter.setOnBodyClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
                 intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
                 intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
                 intent.putExtra("refreshTime", refreshTime);
-                intent.putExtra("showAlerts", false);
                 startActivity(intent);
             }
         });
-        */
 
         // Set the no predictions indicator
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
@@ -717,6 +752,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void update() {
         predictionsLoaded = false;
+        predictionsCount = 0;
 
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
@@ -1226,6 +1262,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     targetRoutes.get(routeId).setNearestStop(direction, stop);
                     targetRoutes.get(routeId).addPrediction(prediction);
                 }
+
+                predictionsCount++;
             }
 
             if (live) {
@@ -1234,6 +1272,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             } else {
                 refreshing = false;
                 refreshPredictionViews();
+
+                if (predictionsCount == 0)
+                    forceUpdate();
             }
         }
 
