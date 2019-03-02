@@ -1,6 +1,7 @@
 package jackwtat.simplembta.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +45,7 @@ import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -69,10 +72,13 @@ import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.RouteDetailSpinners;
+import jackwtat.simplembta.views.ServiceAlertsListView;
+import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, RouteDetailSpinners.OnDirectionSelectedListener,
@@ -116,6 +122,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
+    private boolean showAlerts = false;
     private boolean refreshing = false;
     private boolean mapReady = false;
     private boolean shapesLoaded = false;
@@ -157,6 +164,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedRoute = (Route) intent.getSerializableExtra("route");
             selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
+            showAlerts = intent.getBooleanExtra("showAlerts", false);
         }
 
         // Get network connectivity client
@@ -381,6 +389,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
         timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
         timer.schedule(new VehiclesUpdateTimerTask(), 0, VEHICLES_UPDATE_RATE);
+
+        if (showAlerts && selectedRoute.getServiceAlerts().size() > 0) {
+            displayServiceAlertsDialog();
+            showAlerts = false;
+        }
     }
 
     @Override
@@ -392,25 +405,20 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         swipeRefreshLayout.setRefreshing(false);
 
-        if (predictionsAsyncTask != null) {
+        if (predictionsAsyncTask != null)
             predictionsAsyncTask.cancel(true);
-        }
 
-        if (serviceAlertsAsyncTask != null) {
+        if (serviceAlertsAsyncTask != null)
             serviceAlertsAsyncTask.cancel(true);
-        }
 
-        if (shapesAsyncTask != null) {
+        if (shapesAsyncTask != null)
             shapesAsyncTask.cancel(true);
-        }
 
-        if (vehiclesAsyncTask != null) {
+        if (vehiclesAsyncTask != null)
             vehiclesAsyncTask.cancel(true);
-        }
 
-        if (timer != null) {
+        if (timer != null)
             timer.cancel();
-        }
     }
 
     @Override
@@ -733,6 +741,53 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         vehicleMarkers.clear();
     }
 
+    private void displayServiceAlertsDialog() {
+        int alertsCount = 0;
+        int advisoriesCount = 0;
+
+        // Get the service alerts
+        List<ServiceAlert> serviceAlerts = selectedRoute.getServiceAlerts();
+        Collections.sort(serviceAlerts);
+
+        // Count the service alerts
+        for (ServiceAlert alert : serviceAlerts) {
+            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                alertsCount++;
+            } else {
+                advisoriesCount++;
+            }
+        }
+
+        // Build the dialog
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+
+        dialog.setCustomTitle(new ServiceAlertsTitleView(this,
+                (alertsCount > 0)
+                        ? (alertsCount + advisoriesCount > 1)
+                        ? getResources().getString(R.string.service_alerts)
+                        : getResources().getString(R.string.service_alert)
+                        : (advisoriesCount > 1)
+                        ? getResources().getString(R.string.service_advisories)
+                        : getResources().getString(R.string.service_advisory),
+                Color.parseColor(selectedRoute.getTextColor()),
+                Color.parseColor(selectedRoute.getPrimaryColor()),
+                selectedRoute.getMode() == Route.BUS &&
+                        !SilverLine.isSilverLine(selectedRoute.getId())));
+
+        dialog.setView(new ServiceAlertsListView(this, serviceAlerts));
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        dialog.show();
+    }
+
     private Shape[] getShapesFromJson(int jsonFile) {
         return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
@@ -857,8 +912,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         selectedRoute.setNearestStop(oppositeDirectionId, nearestOppositeStop);
 
-        // Clear the current predictions and get the predictions for the selected stop
-        recyclerViewAdapter.clear();
+        // Get the predictions for the selected stop
         swipeRefreshLayout.setRefreshing(true);
         getPredictions();
 

@@ -27,7 +27,7 @@ public class MapSearchRecyclerViewAdapter
     private Stop selectedStop;
 
     private OnItemClickListener onItemClickListener;
-    private OnItemLongClickListener onItemLongClickListener;
+    private OnItemClickListener onItemLongClickListener;
 
     private Location targetLocation;
 
@@ -121,7 +121,7 @@ public class MapSearchRecyclerViewAdapter
             @Override
             public boolean onLongClick(View view) {
                 if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onItemLongClick(i);
+                    onItemLongClickListener.onItemClick(i);
                     return true;
                 } else {
                     return false;
@@ -186,17 +186,13 @@ public class MapSearchRecyclerViewAdapter
     }
 
     public void setOnItemLongClickListener(MapSearchRecyclerViewAdapter
-                                                   .OnItemLongClickListener listener) {
+                                                   .OnItemClickListener listener) {
         if (listener != null)
             this.onItemLongClickListener = listener;
     }
 
     public interface OnItemClickListener {
         void onItemClick(int i);
-    }
-
-    public interface OnItemLongClickListener {
-        void onItemLongClick(int i);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
