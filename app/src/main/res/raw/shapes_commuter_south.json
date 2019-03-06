@@ -284,6 +284,10 @@
               "type": "stop"
             },
             {
+              "id": "Blue Hill Avenue",
+              "type": "stop"
+            },
+            {
               "id": "Fairmount",
               "type": "stop"
             },
@@ -492,6 +496,10 @@
             },
             {
               "id": "Fairmount",
+              "type": "stop"
+            },
+            {
+              "id": "Blue Hill Avenue",
               "type": "stop"
             },
             {
@@ -2572,6 +2580,35 @@
         "facilities": {
           "links": {
             "related": "/facilities/?filter[stop]=West%20Newton"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "description": null,
+        "latitude": 42.271412,
+        "location_type": 0,
+        "longitude": -71.096419,
+        "name": "Blue Hill Avenue",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "Blue Hill Avenue",
+      "links": {
+        "self": "/stops/Blue%20Hill%20Avenue"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=Blue%20Hill%20Avenue"
           }
         },
         "parent_station": {
