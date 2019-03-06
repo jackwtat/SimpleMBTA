@@ -57,7 +57,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                     "filter[stop]=" + route.getNearestStop(directionId).getId(),
                     "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                     "filter[min_time]=" + DateUtil.getMbtaTime(0),
-                    "include=route,trip,stop,prediction,vehicle"
+                    "include=route,trip,stop,prediction"
             };
 
             String jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
