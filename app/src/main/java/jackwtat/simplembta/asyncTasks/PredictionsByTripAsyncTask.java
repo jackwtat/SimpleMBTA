@@ -1,21 +1,19 @@
 package jackwtat.simplembta.asyncTasks;
 
-import android.location.Location;
-
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.PredictionsJsonParser;
 import jackwtat.simplembta.model.Prediction;
 
-public class PredictionsByLocationAsyncTask extends PredictionsAsyncTask {
+public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
     private String realTimeApiKey;
-    private Location targetLocation;
+    private String tripId;
     private OnPostExecuteListener onPostExecuteListener;
 
-    public PredictionsByLocationAsyncTask(String realTimeApiKey,
-                                          Location targetLocation,
-                                          OnPostExecuteListener onPostExecuteListener) {
+    public PredictionsByTripAsyncTask(String realTimeApiKey,
+                                      String tripId,
+                                      OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
-        this.targetLocation = targetLocation;
+        this.tripId = tripId;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
@@ -24,16 +22,23 @@ public class PredictionsByLocationAsyncTask extends PredictionsAsyncTask {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] predictionsArgs = {
-                "filter[latitude]=" + Double.toString(targetLocation.getLatitude()),
-                "filter[longitude]=" + Double.toString(targetLocation.getLongitude()),
+                "filter[trip]=" + tripId,
                 "include=route,trip,stop,schedule,vehicle"
         };
 
-        return PredictionsJsonParser.parse(realTimeApiClient.get("predictions", predictionsArgs));
+        String jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
+
+        if (jsonResponse != null)
+            return PredictionsJsonParser.parse(jsonResponse);
+        else
+            return null;
     }
 
     @Override
     protected void onPostExecute(Prediction[] predictions) {
-        onPostExecuteListener.onPostExecute(predictions, true);
+        if (predictions != null)
+            onPostExecuteListener.onSuccess(predictions, true);
+        else
+            onPostExecuteListener.onError();
     }
 }
