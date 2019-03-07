@@ -1230,15 +1230,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
                 }
 
+                // If the prediction is at Harvard destined for Harvard, then set to drop-off only
+                if (prediction.getStop().getName().equals(prediction.getDestination()))
+                    prediction.setPickUpType(Prediction.NO_PICK_UP);
+
                 // Add route to routes list if not already there
-                if (!targetRoutes.containsKey(prediction.getRouteId())) {
+                if (!targetRoutes.containsKey(prediction.getRouteId()))
                     targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
-                }
 
                 // Add stop to stops list if not already there
-                if (!targetStops.containsKey(prediction.getStopId())) {
+                if (!targetStops.containsKey(prediction.getStopId()))
                     targetStops.put(prediction.getStopId(), prediction.getStop());
-                }
 
                 // Add prediction to its respective route
                 int direction = prediction.getDirection();
