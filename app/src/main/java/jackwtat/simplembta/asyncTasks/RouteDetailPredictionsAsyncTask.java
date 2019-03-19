@@ -44,9 +44,15 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                 "include=route,trip,stop,schedule,vehicle"
         };
 
-        for (Prediction prediction : PredictionsJsonParser
-                .parse(realTimeApiClient.get("predictions", predictionsArgs))) {
-            predictions.put(prediction.getId(), prediction);
+        String jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
+
+        if (jsonResponse != null) {
+            for (Prediction prediction : PredictionsJsonParser
+                    .parse(jsonResponse)) {
+                predictions.put(prediction.getId(), prediction);
+            }
+        } else {
+            return null;
         }
 
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
@@ -60,7 +66,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                     "include=route,trip,stop,prediction"
             };
 
-            String jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
+            jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
 
             if (jsonResponse != null) {
                 for (Prediction prediction : SchedulesJsonParser
@@ -69,8 +75,31 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                         predictions.put(prediction.getId(), prediction);
                     }
                 }
+            } else {
+                return null;
+            }
+        }
 
+        if (predictions.size() == 0) {
+            // Get the next day's predictions
+            String[] scheduleArgs = {
+                    "filter[route]=" + route.getId(),
+                    "filter[direction_id]=" + directionId,
+                    "filter[stop]=" + route.getNearestStop(directionId).getId(),
+                    "filter[date]=" + DateUtil.getMbtaDate(1),
+                    "filter[min_time]=" + "03:00",
+                    "include=route,trip,stop,prediction"
+            };
 
+            jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
+
+            if (jsonResponse != null) {
+                for (Prediction prediction : SchedulesJsonParser
+                        .parse(jsonResponse)) {
+                    if (!predictions.containsKey(prediction.getId())) {
+                        predictions.put(prediction.getId(), prediction);
+                    }
+                }
             } else {
                 return null;
             }
