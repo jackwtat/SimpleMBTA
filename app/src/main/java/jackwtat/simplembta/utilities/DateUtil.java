@@ -35,6 +35,15 @@ public class DateUtil {
         return new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
     }
 
+    public static String getMbtaDate(int dayOffset) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+
+        calendar.add(Calendar.DATE, dayOffset);
+
+        return new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+    }
+
     public static String getMbtaTime(int hourOffset) {
         String mbtaTime;
         int hour;
