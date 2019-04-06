@@ -80,7 +80,8 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
             }
         }
 
-        if (predictions.size() == 0) {
+        if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL
+                && predictions.size() == 0) {
             // Get the next day's predictions
             String[] scheduleArgs = {
                     "filter[route]=" + route.getId(),
