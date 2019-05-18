@@ -91,20 +91,6 @@ public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
             advisoryIcon.setVisibility(View.VISIBLE);
         }
 
-
-        listItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (shortBody.getVisibility() == View.VISIBLE) {
-                    shortBody.setVisibility(View.GONE);
-                    longBody.setVisibility(View.VISIBLE);
-                } else {
-                    shortBody.setVisibility(View.VISIBLE);
-                    longBody.setVisibility(View.GONE);
-                }
-            }
-        });
-
         return listItemView;
     }
 }
