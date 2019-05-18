@@ -145,14 +145,6 @@ public class MapSearchPredictionItem extends LinearLayout {
         }
     }
 
-    public void setHeaderOnClickListener(View.OnClickListener onClickListener){
-        headerLayout.setOnClickListener(onClickListener);
-    }
-
-    public void setBodyOnClickListener(View.OnClickListener onClickListener){
-        bodyLayout.setOnClickListener(onClickListener);
-    }
-
     public void clear() {
         predictionsListLayout.removeAllViews();
         noPredictionsView.setVisibility(GONE);

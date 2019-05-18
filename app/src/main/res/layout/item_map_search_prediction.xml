@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/prediction_header"
-        android:layout_marginTop="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
@@ -28,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="4dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:paddingTop="8dp" />
 
         <ImageView
             android:id="@+id/service_advisory_image_view"
@@ -37,6 +37,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/route_name_view"
             android:contentDescription="@string/service_advisory"
+            android:paddingTop="8dp"
             android:src="@drawable/ic_service_advisory"
             android:visibility="gone" />
 
@@ -47,6 +48,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/route_name_view"
             android:contentDescription="@string/service_alert"
+            android:paddingTop="8dp"
             android:src="@drawable/ic_service_alert"
             android:visibility="gone" />
 
@@ -57,10 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/route_header_layout"
-        android:layout_marginBottom="16dp"
         android:background="?android:attr/selectableItemBackground"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/no_predictions_text_view"

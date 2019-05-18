@@ -321,6 +321,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set OnClickListeners
+        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
+                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
+                intent.putExtra("refreshTime", refreshTime);
+                startActivity(intent);
+            }
+        });
+        /*
         recyclerViewAdapter.setOnHeaderClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
@@ -364,16 +375,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 dialog.show();
             }
         });
-        recyclerViewAdapter.setOnBodyClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
-                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
-                intent.putExtra("refreshTime", refreshTime);
-                startActivity(intent);
-            }
-        });
+        */
 
         // Set the no predictions indicator
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);

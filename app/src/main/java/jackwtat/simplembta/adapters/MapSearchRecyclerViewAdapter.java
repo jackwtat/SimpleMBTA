@@ -25,11 +25,9 @@ public class MapSearchRecyclerViewAdapter
     private ArrayList<AdapterItem> adapterItems = new ArrayList<>();
 
     private Stop selectedStop;
-
-    private OnItemClickListener onHeaderClickListener;
-    private OnItemClickListener onBodyLongClickListener;
-
     private Location targetLocation;
+    private OnItemClickListener onItemClickListener;
+
 
     public MapSearchRecyclerViewAdapter() {
     }
@@ -109,18 +107,12 @@ public class MapSearchRecyclerViewAdapter
             header.setVisibility(View.GONE);
         }
 
-        holder.predictionView.setHeaderOnClickListener(new View.OnClickListener() {
+        holder.predictionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onHeaderClickListener != null)
-                    onHeaderClickListener.onItemClick(i);
-            }
-        });
-        holder.predictionView.setBodyOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onBodyLongClickListener != null)
-                    onBodyLongClickListener.onItemClick(i);
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(i);
+                }
             }
         });
     }
@@ -174,16 +166,10 @@ public class MapSearchRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
-    public void setOnHeaderClickListener(MapSearchRecyclerViewAdapter
-                                                 .OnItemClickListener listener) {
-        if (listener != null)
-            this.onHeaderClickListener = listener;
-    }
-
-    public void setOnBodyClickListener(MapSearchRecyclerViewAdapter
-                                               .OnItemClickListener listener) {
-        if (listener != null)
-            this.onBodyLongClickListener = listener;
+    public void setOnItemClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
+        if (listener != null) {
+            this.onItemClickListener = listener;
+        }
     }
 
     public interface OnItemClickListener {
