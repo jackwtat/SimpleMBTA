@@ -130,6 +130,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
+    private Location userLocation = new Location("userLocation");
     private Route selectedRoute;
     private int selectedDirectionId;
     private ArrayList<Polyline> polylines = new ArrayList<>();
@@ -151,6 +152,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedRoute = (Route) savedInstanceState.getSerializable("route");
             selectedDirectionId = savedInstanceState.getInt("direction");
             refreshTime = savedInstanceState.getLong("refreshTime");
+            userLocation.setLatitude(0);
+            userLocation.setLongitude(0);
 
             if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
                 for (Direction d : selectedRoute.getAllDirections()) {
@@ -165,6 +168,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
             showAlerts = intent.getBooleanExtra("showAlerts", false);
+
+            userLocation.setLatitude(intent.getLongExtra("userLat", 0));
+            userLocation.setLongitude(intent.getLongExtra("userLon", 0));
         }
 
         // Get network connectivity client
@@ -877,6 +883,21 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         if (selectedStop != null) {
             routeDetailSpinners.selectStop(selectedStop.getId());
+        } else if (stops.length > 0 && userLocation.getLatitude() != 0 &&
+                userLocation.getLongitude() != 0) {
+            // Locate stop nearest to user's location
+            Stop nearestStop = stops[0];
+            double nearestDistance = stops[0].getLocation().distanceTo(userLocation);
+
+            for (int i = 1; i < stops.length; i++) {
+                double d = stops[i].getLocation().distanceTo(userLocation);
+                if (stops[i].getLocation().distanceTo(userLocation) < nearestDistance) {
+                    nearestStop = stops[i];
+                    nearestDistance = d;
+                }
+            }
+
+            routeDetailSpinners.selectStop(nearestStop.getId());
         }
     }
 
