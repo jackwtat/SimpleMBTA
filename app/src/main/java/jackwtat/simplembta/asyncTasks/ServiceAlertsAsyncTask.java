@@ -2,6 +2,10 @@ package jackwtat.simplembta.asyncTasks;
 
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.jsonParsers.ServiceAlertsJsonParser;
@@ -40,8 +44,11 @@ public class ServiceAlertsAsyncTask extends AsyncTask<Void, Void, ServiceAlert[]
 
         String jsonResponse = realTimeApiClient.get("alerts", routeArgs);
 
+        ArrayList<ServiceAlert> alerts = new ArrayList<>(Arrays.asList(ServiceAlertsJsonParser.parse(jsonResponse)));
+        Collections.sort(alerts);
+
         if (jsonResponse != null)
-            return ServiceAlertsJsonParser.parse(jsonResponse);
+            return alerts.toArray(new ServiceAlert[alerts.size()]);
         else {
             return null;
         }

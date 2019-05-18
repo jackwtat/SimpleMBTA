@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingEnd="24dp"
     android:paddingStart="24dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="16dp">
 
     <LinearLayout
         android:id="@+id/alert_header"
@@ -39,11 +39,24 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/alert_body_text_view"
+        android:id="@+id/alert_short_body_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@id/alert_header"
+        android:layout_alignParentLeft="true"
         android:textSize="@dimen/body_text_size"
-        tools:text="Body" />
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:text="Short Body" />
+
+    <TextView
+        android:id="@+id/alert_long_body_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alert_short_body_text_view"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        android:textSize="@dimen/body_text_size"
+        android:visibility="visible"
+        tools:text="Full Body" />
 </RelativeLayout>

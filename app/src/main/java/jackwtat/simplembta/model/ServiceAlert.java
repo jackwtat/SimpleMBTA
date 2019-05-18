@@ -33,6 +33,7 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
 
     private String id;
     private String header = "";
+    private String description = "";
     private String effect = "";
     private int severity = 0;
     private Lifecycle lifecycle = Lifecycle.UNKNOWN;
@@ -50,6 +51,10 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
 
     public String getHeader() {
         return header;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getEffect() {
@@ -70,6 +75,10 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setEffect(String effect) {
