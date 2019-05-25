@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         tabLayout.setupWithViewPager(viewPager);
 
         errorTextView = findViewById(R.id.error_message_text_view);
-
     }
 
     @Override
@@ -74,6 +73,15 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() > 0) {
+            viewPager.setCurrentItem(0);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
