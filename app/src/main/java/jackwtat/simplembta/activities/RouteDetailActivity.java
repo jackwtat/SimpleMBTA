@@ -167,8 +167,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
 
-            userLocation.setLatitude(intent.getLongExtra("userLat", 0));
-            userLocation.setLongitude(intent.getLongExtra("userLon", 0));
+            userLocation.setLatitude(intent.getDoubleExtra("userLat", 0));
+            userLocation.setLongitude(intent.getDoubleExtra("userLon", 0));
         }
 
         // Get network connectivity client
@@ -281,7 +281,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Move the map camera to the selected stop
         Stop stop = selectedRoute.getNearestStop(selectedDirectionId);
         LatLng latLng = (stop == null)
-                ? new LatLng(42.3604, -71.0580)
+                ? new LatLng(userLocation.getLatitude(), userLocation.getLongitude())
                 : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM_LEVEL));
 

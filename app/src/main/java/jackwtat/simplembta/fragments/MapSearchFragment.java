@@ -328,6 +328,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
                 intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
                 intent.putExtra("refreshTime", refreshTime);
+                intent.putExtra("userLat", targetLocation.getLatitude());
+                intent.putExtra("userLon", targetLocation.getLongitude());
                 startActivity(intent);
             }
         });
