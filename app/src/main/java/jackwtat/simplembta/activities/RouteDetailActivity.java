@@ -122,7 +122,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
-    private boolean showAlerts = false;
     private boolean refreshing = false;
     private boolean mapReady = false;
     private boolean shapesLoaded = false;
@@ -167,7 +166,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             selectedRoute = (Route) intent.getSerializableExtra("route");
             selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
-            showAlerts = intent.getBooleanExtra("showAlerts", false);
 
             userLocation.setLatitude(intent.getLongExtra("userLat", 0));
             userLocation.setLongitude(intent.getLongExtra("userLon", 0));
@@ -395,11 +393,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
         timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
         timer.schedule(new VehiclesUpdateTimerTask(), 0, VEHICLES_UPDATE_RATE);
-
-        if (showAlerts && selectedRoute.getServiceAlerts().size() > 0) {
-            displayServiceAlertsDialog();
-            showAlerts = false;
-        }
     }
 
     @Override
