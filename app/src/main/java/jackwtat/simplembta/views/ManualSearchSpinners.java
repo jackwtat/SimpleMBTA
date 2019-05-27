@@ -114,7 +114,7 @@ public class ManualSearchSpinners extends LinearLayout implements AdapterView.On
         populateStopSpinner(new Stop[0]);
     }
 
-    public void selectedRoute(String routeId) {
+    public void selectRoute(String routeId) {
         for (int i = 0; i < routes.length; i++) {
             if (routes[i].getId().equals(routeId)) {
                 routeSpinner.setSelection(i);
