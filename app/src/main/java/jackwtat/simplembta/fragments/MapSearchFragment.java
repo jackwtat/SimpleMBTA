@@ -333,51 +333,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 startActivity(intent);
             }
         });
-        /*
-        recyclerViewAdapter.setOnHeaderClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int i) {
-                final int position = i;
-                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
-                List<ServiceAlert> serviceAlerts = route.getServiceAlerts();
-
-                Collections.sort(serviceAlerts);
-
-                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
-
-                dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
-                        DisplayNameUtil.getLongDisplayName(getContext(), route),
-                        Color.parseColor(route.getTextColor()),
-                        Color.parseColor(route.getPrimaryColor()),
-                        route.getMode() == Route.BUS &&
-                                !SilverLine.isSilverLine(route.getId())));
-
-                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
-
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-
-                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.dialog_go_to_route_button),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
-                                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
-                                intent.putExtra("refreshTime", refreshTime);
-                                startActivity(intent);
-                            }
-                        });
-
-                dialog.show();
-            }
-        });
-        */
 
         // Set the no predictions indicator
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
@@ -1082,16 +1037,20 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                                 new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                     }
 
-                    boolean forceRefresh = targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH;
+                    if (!refreshing) {
+                        boolean forceRefresh = targetLocation.distanceTo(userLocation) >
+                                DISTANCE_TO_FORCE_REFRESH;
 
-                    if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE)
-                        targetLocation = userLocation;
+                        if (targetLocation.distanceTo(userLocation) >
+                                DISTANCE_TO_TARGET_LOCATION_UPDATE)
+                            targetLocation = userLocation;
 
-                    if (forceRefresh) {
-                        swipeRefreshLayout.setRefreshing(true);
-                        forceUpdate();
-                    } else {
-                        backgroundUpdate();
+                        if (forceRefresh) {
+                            swipeRefreshLayout.setRefreshing(true);
+                            forceUpdate();
+                        } else {
+                            backgroundUpdate();
+                        }
                     }
                 }
             }
