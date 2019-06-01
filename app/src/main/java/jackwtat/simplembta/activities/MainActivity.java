@@ -1,5 +1,6 @@
 package jackwtat.simplembta.activities;
 
+import android.location.Location;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.fragments.ManualSearchFragment;
+import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
@@ -35,12 +38,12 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Fragment[] fragments = {new MapSearchFragment(),
-                new ManualSearchFragment()};
+        MapSearchFragment mapSearchFragment = new MapSearchFragment();
+        mapSearchFragment.setMainActivity(this);
 
-        /*Fragment[] fragments = {new MapSearchFragment(),
-                new ManualSearchFragment(),
-                new FavoritesFragment()};*/
+        ManualSearchFragment manualSearchFragment = new ManualSearchFragment();
+
+        Fragment[] fragments = {mapSearchFragment, manualSearchFragment};
 
         String[] tabTitles = {getResources().getString(R.string.map_title),
                 getResources().getString(R.string.search_title),
@@ -114,5 +117,25 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
                 }
             }
         });
+    }
+
+    public void goToRoute(Route route, int directionId, Stop stop) {
+        ManualSearchFragment fragment = (ManualSearchFragment) pagerAdapter.getItem(1);
+        fragment.query(route, directionId, stop);
+        viewPager.setCurrentItem(1);
+    }
+
+    public void goToRoute(Route route, int directionId, Location location) {
+        ManualSearchFragment fragment = (ManualSearchFragment) pagerAdapter.getItem(1);
+        fragment.query(route, directionId, location);
+        viewPager.setCurrentItem(1);
+    }
+
+    public MapSearchFragment getMapSearchFragment() {
+        return (MapSearchFragment) pagerAdapter.getItem(0);
+    }
+
+    public ManualSearchFragment getManualSearchFragment() {
+        return (ManualSearchFragment) pagerAdapter.getItem(1);
     }
 }

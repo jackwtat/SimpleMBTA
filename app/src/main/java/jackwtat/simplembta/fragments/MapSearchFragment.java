@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jackwtat.simplembta.activities.MainActivity;
 import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter.OnItemClickListener;
@@ -131,6 +132,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final int USER_HAS_NOT_MOVED_MAP = 0;
     public static final int USER_HAS_MOVED_MAP = 1;
 
+    private MainActivity mainActivity;
+
     private View rootView;
     private AppBarLayout appBarLayout;
     private MapView mapView;
@@ -157,7 +160,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private boolean cameraIsMoving = false;
     private boolean userIsScrolling = false;
     private boolean staleLocation = true;
-    private boolean predictionsLoaded = false;
     private int mapState = USER_HAS_NOT_MOVED_MAP;
     private int cameraMoveReason = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
     private long refreshTime = 0;
@@ -324,13 +326,27 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                intent.putExtra("route", recyclerViewAdapter.getAdapterItem(position).getRoute());
-                intent.putExtra("direction", recyclerViewAdapter.getAdapterItem(position).getDirection());
-                intent.putExtra("refreshTime", refreshTime);
-                intent.putExtra("userLat", targetLocation.getLatitude());
-                intent.putExtra("userLon", targetLocation.getLongitude());
-                startActivity(intent);
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+                int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
+
+                if (mainActivity != null) {
+                    Stop stop = route.getNearestStop(direction);
+
+                    if (stop == null) {
+                        mainActivity.goToRoute(route, direction, targetLocation);
+                    } else {
+                        mainActivity.goToRoute(route, direction, stop);
+                    }
+
+                } else {
+                    Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                    intent.putExtra("route", route);
+                    intent.putExtra("direction", direction);
+                    intent.putExtra("refreshTime", refreshTime);
+                    intent.putExtra("userLat", targetLocation.getLatitude());
+                    intent.putExtra("userLon", targetLocation.getLongitude());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -698,6 +714,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
     private void backgroundUpdate() {
         if (!refreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
             update();
@@ -710,7 +730,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void update() {
-        predictionsLoaded = false;
         predictionsCount = 0;
 
         if (networkConnectivityClient.isConnected()) {

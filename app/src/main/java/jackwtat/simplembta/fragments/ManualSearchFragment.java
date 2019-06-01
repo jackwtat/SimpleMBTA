@@ -3,6 +3,7 @@ package jackwtat.simplembta.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -85,9 +88,16 @@ public class ManualSearchFragment extends Fragment implements
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
-    private Route[] allRoutes;
+    private ArrayList<Route> allRoutes = new ArrayList<>();
     private Route selectedRoute;
     private int selectedDirectionId;
+    private Stop selectedStop;
+
+    private boolean queryInProgress = false;
+    private Route queryRoute = null;
+    private int queryDirectionId = 0;
+    private Stop queryStop = null;
+    private Location queryLocation = null;
 
     private String savedRouteId;
     private String[] savedStopIds = new String[2];
@@ -160,7 +170,7 @@ public class ManualSearchFragment extends Fragment implements
         // Add onScrollListener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
                     refreshPredictions(false);
@@ -223,7 +233,7 @@ public class ManualSearchFragment extends Fragment implements
     public void onResume() {
         super.onResume();
 
-        if (allRoutes == null || allRoutes.length == 0) {
+        if (allRoutes == null || allRoutes.size() == 0) {
             getRoutes();
         }
 
@@ -447,7 +457,7 @@ public class ManualSearchFragment extends Fragment implements
     }
 
     private void refreshRoutes() {
-        populateRouteSpinner(allRoutes);
+        populateRouteSpinner(allRoutes.toArray(new Route[0]));
     }
 
     private void refreshShapes() {
@@ -516,11 +526,14 @@ public class ManualSearchFragment extends Fragment implements
     private void populateRouteSpinner(Route[] routes) {
         searchSpinners.populateRouteSpinner(routes);
 
-        if (selectedRoute != null) {
-            searchSpinners.selectedRoute(selectedRoute.getId());
+        if (queryInProgress && queryRoute != null) {
+            searchSpinners.selectRoute(queryRoute.getId());
+
+        } else if (selectedRoute != null) {
+            searchSpinners.selectRoute(selectedRoute.getId());
 
         } else if (savedRouteId != null) {
-            searchSpinners.selectedRoute(savedRouteId);
+            searchSpinners.selectRoute(savedRouteId);
         }
     }
 
@@ -532,16 +545,34 @@ public class ManualSearchFragment extends Fragment implements
         }
 
         searchSpinners.populateDirectionSpinner(directions);
-        searchSpinners.selectDirection(selectedDirectionId);
+
+        if (queryInProgress) {
+            searchSpinners.selectDirection(queryDirectionId);
+        } else {
+            searchSpinners.selectDirection(selectedDirectionId);
+        }
     }
 
     private void populateStopSpinner(Stop[] stops) {
         searchSpinners.populateStopSpinner(stops);
 
-        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-            searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
-        } else if (savedStopIds != null) {
-            searchSpinners.selectStop(savedStopIds[selectedDirectionId]);
+        if (queryInProgress) {
+            if (queryStop != null) {
+                searchSpinners.selectStop(queryStop.getId());
+            } else if (queryLocation != null) {
+                Stop stop = getStopFromLocation(selectedRoute, selectedDirectionId, queryLocation);
+                if (stop != null) {
+                    searchSpinners.selectStop(stop.getId());
+                }
+            }
+            queryInProgress = false;
+
+        } else {
+            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+                searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
+            } else if (savedStopIds != null) {
+                searchSpinners.selectStop(savedStopIds[selectedDirectionId]);
+            }
         }
     }
 
@@ -584,12 +615,104 @@ public class ManualSearchFragment extends Fragment implements
 
     @Override
     public void onStopSelected(Stop stop) {
+        selectedStop = stop;
         selectedRoute.setNearestStop(selectedDirectionId, stop);
+
+        // Find the nearest stop in the opposite direction
+        Stop nearestOppositeStop = null;
+        float oppositeStopDistance = 0;
+        int oppositeDirectionId = (selectedDirectionId + 1) % 2;
+
+        for (Stop s : selectedRoute.getStops(oppositeDirectionId)) {
+            float dist = s.getLocation().distanceTo(selectedStop.getLocation());
+            if (nearestOppositeStop == null || dist < oppositeStopDistance) {
+                nearestOppositeStop = s;
+                oppositeStopDistance = dist;
+            }
+        }
+
+        selectedRoute.setNearestStop(oppositeDirectionId, nearestOppositeStop);
 
         // Clear the current predictions and get the predictions for the selected stop
         clearPredictions();
         swipeRefreshLayout.setRefreshing(true);
         forceUpdate();
+    }
+
+    public void query(Route route, int directionId, Stop stop) {
+        queryRoute = route;
+        queryDirectionId = directionId;
+        queryStop = stop;
+        queryLocation = null;
+
+        executeQuery();
+    }
+
+    public void query(Route route, int directionId, Location location) {
+        queryRoute = route;
+        queryDirectionId = directionId;
+        queryStop = null;
+        queryLocation = location;
+
+        executeQuery();
+    }
+
+    private void executeQuery() {
+        queryInProgress = true;
+
+        boolean routeExists = false;
+        for (Route r : allRoutes) {
+            if (r.getId().equals(queryRoute.getId())) {
+                routeExists = true;
+            }
+        }
+
+        if (!routeExists) {
+            allRoutes.add(queryRoute);
+            Collections.sort(allRoutes);
+            populateRouteSpinner(allRoutes.toArray(new Route[0]));
+
+        } else if (!selectedRoute.equals(queryRoute)) {
+            searchSpinners.selectRoute(queryRoute.getId());
+
+        } else if (selectedDirectionId != queryDirectionId) {
+            searchSpinners.selectDirection(queryDirectionId);
+
+        } else if (queryStop != null) {
+            searchSpinners.selectStop(queryStop.getId());
+
+        } else if (queryLocation != null && selectedRoute.getStops(selectedDirectionId) != null) {
+            Stop stop = getStopFromLocation(selectedRoute, selectedDirectionId, queryLocation);
+            if (stop != null) {
+                searchSpinners.selectStop(stop.getId());
+            } else {
+                queryInProgress = false;
+            }
+
+        } else {
+            queryInProgress = false;
+        }
+    }
+
+    private Stop getStopFromLocation(Route route, int directionId, Location location) {
+        Stop[] stops = route.getStops(directionId);
+        if (stops != null && stops.length > 0) {
+            Stop nearestStop = stops[0];
+            double nearestDistance = stops[0].getLocation().distanceTo(location);
+
+            for (int i = 1; i < stops.length; i++) {
+                double d = stops[i].getLocation().distanceTo(location);
+                if (stops[i].getLocation().distanceTo(location) < nearestDistance) {
+                    nearestStop = stops[i];
+                    nearestDistance = d;
+                }
+            }
+
+            return nearestStop;
+
+        } else {
+            return null;
+        }
     }
 
     private void backgroundUpdate() {
@@ -605,8 +728,9 @@ public class ManualSearchFragment extends Fragment implements
     private class RoutesPostExecuteListener implements RoutesAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Route[] routes) {
-            allRoutes = routes;
-            Arrays.sort(allRoutes);
+            allRoutes.clear();
+            allRoutes.addAll(Arrays.asList(routes));
+            Collections.sort(allRoutes);
 
             refreshRoutes();
         }
