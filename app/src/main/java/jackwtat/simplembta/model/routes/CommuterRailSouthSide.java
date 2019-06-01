@@ -8,7 +8,7 @@ public class CommuterRailSouthSide extends CommuterRail {
         super("CR-Fairmount,CR-Worcester,CR-Franklin,CR-Needham,CR-Providence,CR-Foxboro");
         setMode(COMMUTER_RAIL);
         setShortName("CR");
-        setLongName("Commuter Rail");
+        setLongName("Commuter Rail - South Side");
         setPrimaryColor("80276C");
         setTextColor("FFFFFF");
         setSortOrder(20000);

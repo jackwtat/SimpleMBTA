@@ -7,7 +7,7 @@ public class CommuterRailNorthSide extends CommuterRail {
         super("CR-Fitchburg,CR-Haverhill,CR-Lowell,CR-Newburyport");
         setMode(COMMUTER_RAIL);
         setShortName("CR");
-        setLongName("Commuter Rail");
+        setLongName("Commuter Rail - North Side");
         setPrimaryColor("80276C");
         setTextColor("FFFFFF");
         setSortOrder(20000);

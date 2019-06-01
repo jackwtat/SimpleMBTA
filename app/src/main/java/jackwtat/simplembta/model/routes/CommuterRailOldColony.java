@@ -7,7 +7,7 @@ public class CommuterRailOldColony extends CommuterRail {
         super("CR-Greenbush,CR-Kingston,CR-Middleborough");
         setMode(COMMUTER_RAIL);
         setShortName("CR");
-        setLongName("Commuter Rail");
+        setLongName("Commuter Rail - South Shore");
         setPrimaryColor("80276C");
         setTextColor("FFFFFF");
         setSortOrder(20000);
