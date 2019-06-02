@@ -17,7 +17,7 @@ import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.Route;
 
-public class ManualSearchSpinners extends LinearLayout implements AdapterView.OnItemSelectedListener {
+public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnItemSelectedListener {
     private View rootView;
     private LinearLayout directionLayout;
     private LinearLayout stopLayout;
@@ -38,23 +38,23 @@ public class ManualSearchSpinners extends LinearLayout implements AdapterView.On
     private OnDirectionSelectedListener onDirectionSelectedListener;
     private OnStopSelectedListener onStopSelectedListener;
 
-    public ManualSearchSpinners(Context context) {
+    public RouteSearchSpinners(Context context) {
         super(context);
         init(context);
     }
 
-    public ManualSearchSpinners(Context context, @Nullable AttributeSet attrs) {
+    public RouteSearchSpinners(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public ManualSearchSpinners(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RouteSearchSpinners(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        rootView = inflate(context, R.layout.spinners_manual_search, this);
+        rootView = inflate(context, R.layout.spinners_route_search, this);
 
         routeSpinner = rootView.findViewById(R.id.route_spinner);
         routeSpinner.setOnItemSelectedListener(this);

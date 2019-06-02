@@ -28,8 +28,8 @@ import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.activities.RouteDetailActivity;
-import jackwtat.simplembta.adapters.RouteDetailRecyclerViewAdapter;
-import jackwtat.simplembta.asyncTasks.RouteDetailPredictionsAsyncTask;
+import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
+import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
@@ -48,15 +48,15 @@ import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.RawResourceReader;
-import jackwtat.simplembta.views.ManualSearchSpinners;
+import jackwtat.simplembta.views.RouteSearchSpinners;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
-public class ManualSearchFragment extends Fragment implements
+public class RouteSearchFragment extends Fragment implements
         ErrorManager.OnErrorChangedListener,
-        ManualSearchSpinners.OnRouteSelectedListener,
-        ManualSearchSpinners.OnDirectionSelectedListener,
-        ManualSearchSpinners.OnStopSelectedListener {
-    public static final String LOG_TAG = "ManualSearchFragment";
+        RouteSearchSpinners.OnRouteSelectedListener,
+        RouteSearchSpinners.OnDirectionSelectedListener,
+        RouteSearchSpinners.OnStopSelectedListener {
+    public static final String LOG_TAG = "RouteSearchFragment";
 
     // Maximum age of prediction
     public static final long MAX_PREDICTION_AGE = 90000;
@@ -68,7 +68,7 @@ public class ManualSearchFragment extends Fragment implements
     public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
 
     private AppBarLayout appBarLayout;
-    private ManualSearchSpinners searchSpinners;
+    private RouteSearchSpinners searchSpinners;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -79,9 +79,9 @@ public class ManualSearchFragment extends Fragment implements
     private RoutesAsyncTask routesAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
-    private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
+    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
     private ErrorManager errorManager;
-    private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
+    private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
     private boolean refreshing = false;
@@ -114,7 +114,7 @@ public class ManualSearchFragment extends Fragment implements
 
         // Get the route and stop the user last viewed
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                getResources().getString(R.string.saved_manual_search_route), Context.MODE_PRIVATE);
+                getResources().getString(R.string.saved_route_search_route), Context.MODE_PRIVATE);
         savedRouteId = sharedPreferences.getString("routeId", null);
         savedStopIds[0] = sharedPreferences.getString("stopId_0", null);
         savedStopIds[1] = sharedPreferences.getString("stopId_1", null);
@@ -125,10 +125,10 @@ public class ManualSearchFragment extends Fragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_manual_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_route_search, container, false);
 
         // Get the spinner
-        searchSpinners = rootView.findViewById(R.id.manual_search_spinners);
+        searchSpinners = rootView.findViewById(R.id.route_search_spinners);
         searchSpinners.setOnRouteSelectedListener(this);
         searchSpinners.setOnDirectionSelectedListener(this);
         searchSpinners.setOnStopSelectedListener(this);
@@ -181,7 +181,7 @@ public class ManualSearchFragment extends Fragment implements
         });
 
         // Create and set the recycler view adapter
-        recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
+        recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set the onClickListener listener
@@ -290,7 +290,7 @@ public class ManualSearchFragment extends Fragment implements
         // Save the location the user last viewed
         if (selectedRoute != null) {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                    getResources().getString(R.string.saved_manual_search_route), Context.MODE_PRIVATE);
+                    getResources().getString(R.string.saved_route_search_route), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("routeId", selectedRoute.getId());
             editor.putInt("directionId", selectedDirectionId);
@@ -436,7 +436,7 @@ public class ManualSearchFragment extends Fragment implements
                         predictionsAsyncTask.cancel(true);
                     }
 
-                    predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey,
+                    predictionsAsyncTask = new RouteSearchPredictionsAsyncTask(realTimeApiKey,
                             selectedRoute, selectedDirectionId, new PredictionsPostExecuteListener());
                     predictionsAsyncTask.execute();
 
@@ -770,7 +770,7 @@ public class ManualSearchFragment extends Fragment implements
         }
     }
 
-    private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
+    private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
             refreshing = false;

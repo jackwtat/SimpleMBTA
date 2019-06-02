@@ -14,8 +14,8 @@ import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.views.RouteDetailPredictionItem;
 
-public class RouteDetailRecyclerViewAdapter
-        extends RecyclerView.Adapter<RouteDetailRecyclerViewAdapter.ViewHolder> {
+public class RouteSearchRecyclerViewAdapter
+        extends RecyclerView.Adapter<RouteSearchRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private OnItemClickListener onItemClickListener = null;
@@ -23,7 +23,7 @@ public class RouteDetailRecyclerViewAdapter
 
     private boolean cleared = true;
 
-    public RouteDetailRecyclerViewAdapter() {
+    public RouteSearchRecyclerViewAdapter() {
     }
 
     @NonNull
@@ -33,7 +33,7 @@ public class RouteDetailRecyclerViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RouteDetailRecyclerViewAdapter.ViewHolder holder, int i) {
+    public void onBindViewHolder(@NonNull RouteSearchRecyclerViewAdapter.ViewHolder holder, int i) {
         final int position = routeServiceAlerts == null ?
                 i :
                 i - 1;

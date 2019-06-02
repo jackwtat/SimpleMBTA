@@ -13,7 +13,7 @@ import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.jsonParsers.PredictionsJsonParser;
 import jackwtat.simplembta.jsonParsers.SchedulesJsonParser;
 
-public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<Prediction>> {
+public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<Prediction>> {
     private String realTimeApiKey;
     private OnPostExecuteListener onPostExecuteListener;
 
@@ -22,7 +22,7 @@ public class RouteDetailPredictionsAsyncTask extends AsyncTask<Void, Void, List<
 
     private HashMap<String, Prediction> predictions = new HashMap<>();
 
-    public RouteDetailPredictionsAsyncTask(String realTimeApiKey,
+    public RouteSearchPredictionsAsyncTask(String realTimeApiKey,
                                            Route route,
                                            int directionId,
                                            OnPostExecuteListener onPostExecuteListener) {

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <jackwtat.simplembta.views.ManualSearchSpinners
-        android:id="@+id/manual_search_spinners"
+    <jackwtat.simplembta.views.RouteSearchSpinners
+        android:id="@+id/route_search_spinners"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"

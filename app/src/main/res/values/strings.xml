@@ -7,9 +7,8 @@
     <string name="route_detail_activity_title">Route Detail</string>
 
     <!-- Tab Titles -->
-    <string name="map_title">Map</string>
-    <string name="search_title">Search</string>
-    <string name="favorites_title">Favorites</string>
+    <string name="map_search_title">Map</string>
+    <string name="route_search_title">Routes</string>
 
     <!-- Spinner Titles -->
     <string name="direction">Direction</string>
@@ -114,7 +113,7 @@
 
     <!-- SharedPreferences Keys -->
     <string name="saved_map_search_latlon">savedMapSearchLatLon</string>
-    <string name="saved_manual_search_route">savedManualSearchRoute</string>
+    <string name="saved_route_search_route">savedRouteSearchRoute</string>
 
     <!-- Miscellaneous -->
     <string name="train">Train</string>

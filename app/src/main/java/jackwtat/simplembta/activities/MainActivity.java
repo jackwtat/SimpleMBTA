@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import jackwtat.simplembta.clients.LocationClient;
-import jackwtat.simplembta.fragments.ManualSearchFragment;
+import jackwtat.simplembta.fragments.RouteSearchFragment;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
@@ -41,13 +41,12 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         MapSearchFragment mapSearchFragment = new MapSearchFragment();
         mapSearchFragment.setMainActivity(this);
 
-        ManualSearchFragment manualSearchFragment = new ManualSearchFragment();
+        RouteSearchFragment routeSearchFragment = new RouteSearchFragment();
 
-        Fragment[] fragments = {mapSearchFragment, manualSearchFragment};
+        Fragment[] fragments = {mapSearchFragment, routeSearchFragment};
 
-        String[] tabTitles = {getResources().getString(R.string.map_title),
-                getResources().getString(R.string.search_title),
-                getResources().getString(R.string.favorites_title)};
+        String[] tabTitles = {getResources().getString(R.string.map_search_title),
+                getResources().getString(R.string.route_search_title),};
 
         pagerAdapter = new FragmentsPagerAdapter(getSupportFragmentManager(),
                 fragments, tabTitles);
@@ -120,22 +119,14 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
     }
 
     public void goToRoute(Route route, int directionId, Stop stop) {
-        ManualSearchFragment fragment = (ManualSearchFragment) pagerAdapter.getItem(1);
+        RouteSearchFragment fragment = (RouteSearchFragment) pagerAdapter.getItem(1);
         fragment.query(route, directionId, stop);
         viewPager.setCurrentItem(1);
     }
 
     public void goToRoute(Route route, int directionId, Location location) {
-        ManualSearchFragment fragment = (ManualSearchFragment) pagerAdapter.getItem(1);
+        RouteSearchFragment fragment = (RouteSearchFragment) pagerAdapter.getItem(1);
         fragment.query(route, directionId, location);
         viewPager.setCurrentItem(1);
-    }
-
-    public MapSearchFragment getMapSearchFragment() {
-        return (MapSearchFragment) pagerAdapter.getItem(0);
-    }
-
-    public ManualSearchFragment getManualSearchFragment() {
-        return (ManualSearchFragment) pagerAdapter.getItem(1);
     }
 }

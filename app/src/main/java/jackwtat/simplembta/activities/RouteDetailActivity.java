@@ -53,8 +53,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.RouteDetailRecyclerViewAdapter;
-import jackwtat.simplembta.asyncTasks.RouteDetailPredictionsAsyncTask;
+import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
+import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesAsyncTask;
@@ -113,13 +113,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RouteDetailSpinners routeDetailSpinners;
 
     private String realTimeApiKey;
-    private RouteDetailPredictionsAsyncTask predictionsAsyncTask;
+    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
     private VehiclesAsyncTask vehiclesAsyncTask;
     private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
-    private RouteDetailRecyclerViewAdapter recyclerViewAdapter;
+    private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
     private boolean refreshing = false;
@@ -269,7 +269,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
 
         // Create and set the recycler view adapter
-        recyclerViewAdapter = new RouteDetailRecyclerViewAdapter();
+        recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -486,7 +486,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     predictionsAsyncTask.cancel(true);
                 }
 
-                predictionsAsyncTask = new RouteDetailPredictionsAsyncTask(realTimeApiKey, selectedRoute,
+                predictionsAsyncTask = new RouteSearchPredictionsAsyncTask(realTimeApiKey, selectedRoute,
                         selectedDirectionId, new PredictionsPostExecuteListener());
                 predictionsAsyncTask.execute();
 
@@ -963,7 +963,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         getPredictions();
     }
 
-    private class PredictionsPostExecuteListener implements RouteDetailPredictionsAsyncTask.OnPostExecuteListener {
+    private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
             refreshing = false;
