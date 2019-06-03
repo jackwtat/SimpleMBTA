@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         setSupportActionBar(toolbar);
 
         MapSearchFragment mapSearchFragment = new MapSearchFragment();
-        mapSearchFragment.setMainActivity(this);
 
         RouteSearchFragment routeSearchFragment = new RouteSearchFragment();
 
@@ -68,6 +67,13 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
 
         errorManager = ErrorManager.getErrorManager();
         errorManager.registerOnErrorChangeListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ((MapSearchFragment) pagerAdapter.getItem(0)).setMainActivity(this);
     }
 
     @Override
