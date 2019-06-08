@@ -1224,6 +1224,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 if (!targetStops.containsKey(prediction.getStopId()))
                     targetStops.put(prediction.getStopId(), prediction.getStop());
 
+                // Add route to its stop's routes list
+                Stop targetStop = targetStops.get(prediction.getStopId());
+                if (targetStop != null) {
+                    targetStop.addRoute(prediction.getRoute());
+                    prediction.setStop(targetStop);
+                }
+
                 // Add prediction to its respective route
                 int direction = prediction.getDirection();
                 String routeId = prediction.getRouteId();

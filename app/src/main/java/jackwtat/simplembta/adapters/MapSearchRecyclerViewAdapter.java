@@ -15,6 +15,7 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
 import jackwtat.simplembta.views.PredictionHeaderView;
 
@@ -68,33 +69,30 @@ public class MapSearchRecyclerViewAdapter
 
         header.reset();
 
+        // Set prediction group header
         if ((thisStop != null && i == 0) ||
                 (thisStop != null && previousStop != null && !thisStop.equals(previousStop))) {
             // Set the header text as the stop name
             header.setText(thisStop.getName());
 
             // Add the colors
-            if (thisRoute.getMode() != Route.LIGHT_RAIL &&
-                    thisRoute.getMode() != Route.HEAVY_RAIL)
-                header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
-            else {
-                HashMap<String, Void> colors = new HashMap<>();
+            Collections.sort(adapterItems.get(i).getStop().getRoutes());
+            HashMap<String, Void> colors = new HashMap<>();
 
-                for (int j = i; j < adapterItems.size(); j++) {
-                    AdapterItem item = adapterItems.get(j);
-                    int mode = item.getRoute().getMode();
-                    String color = item.getRoute().getPrimaryColor();
+            for (Route route : adapterItems.get(i).getStop().getRoutes()) {
+                int mode = route.getMode();
+                String color = route.getPrimaryColor();
 
-                    if (item.getStop() == null || !thisStop.equals(item.getStop())) {
-                        break;
-                    }
-
-                    if (!colors.containsKey(color) &&
-                            (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL)) {
-                        header.addSecondaryColor(Color.parseColor(color));
-                        colors.put(color, null);
-                    }
+                if (!colors.containsKey(color) &&
+                        (mode == Route.LIGHT_RAIL ||
+                                mode == Route.HEAVY_RAIL)) {
+                    header.addSecondaryColor(Color.parseColor(color));
+                    colors.put(color, null);
                 }
+            }
+
+            if (colors.size() == 0) {
+                header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
             }
 
             header.setVisibility(View.VISIBLE);
