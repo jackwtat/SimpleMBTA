@@ -81,9 +81,17 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/bottom_edge"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/predictions_layout"
         android:background="#CCCCCC" />
 
+    <View
+        android:id="@+id/bottom_border"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_below="@id/bottom_edge"
+        android:background="@color/list_view_background"
+        android:visibility="visible" />
 </RelativeLayout>
