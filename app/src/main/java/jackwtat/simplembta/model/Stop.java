@@ -4,6 +4,9 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
+import jackwtat.simplembta.model.routes.Route;
 
 public class Stop implements Comparable<Stop>, Serializable {
     private String id;
@@ -12,6 +15,7 @@ public class Stop implements Comparable<Stop>, Serializable {
     private String[] childIds = new String[0];
     private double latitude = 0.0;
     private double longitude = 0.0;
+    private ArrayList<Route> routes = new ArrayList<>();
 
     public Stop(String id) {
         if (id.equals("64") || id.equals("64000"))
@@ -58,6 +62,10 @@ public class Stop implements Comparable<Stop>, Serializable {
         return location;
     }
 
+    public ArrayList<Route> getRoutes() {
+        return routes;
+    }
+
     public String getParentId() {
         return parentId;
     }
@@ -81,6 +89,10 @@ public class Stop implements Comparable<Stop>, Serializable {
     public void setLocation(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+    }
+
+    public void addRoute(Route route) {
+        routes.add(route);
     }
 
     public boolean isParentOf(String id) {
