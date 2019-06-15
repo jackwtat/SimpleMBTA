@@ -709,6 +709,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     UiSettings mapUiSettings = gMap.getUiSettings();
                     gMap.setMyLocationEnabled(true);
                     mapUiSettings.setMyLocationButtonEnabled(true);
+
+                    if(mapState == USER_HAS_NOT_MOVED_MAP || selectedStop!=null){
+                        mapTargetView.setVisibility(View.GONE);
+                    }
                 }
             }
         });
