@@ -710,8 +710,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     gMap.setMyLocationEnabled(true);
                     mapUiSettings.setMyLocationButtonEnabled(true);
 
-                    if(mapState == USER_HAS_NOT_MOVED_MAP || selectedStop!=null){
+                    if (mapState == USER_HAS_NOT_MOVED_MAP || selectedStop != null) {
                         mapTargetView.setVisibility(View.GONE);
+                    }
+
+                    if (mapReady) {
+                        locationClient.updateLocation(new MapSearchFragment.LocationClientCallbacks());
                     }
                 }
             }
@@ -1076,6 +1080,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     } else if (!refreshing && targetLocation.distanceTo(userLocation) >
                             DISTANCE_TO_TARGET_LOCATION_UPDATE) {
                         targetLocation = userLocation;
+                        backgroundUpdate();
 
                     } else {
                         backgroundUpdate();
@@ -1092,13 +1097,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             errorManager.setLocationError(true);
 
             if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
-                refreshing = false;
-                cancelUpdate();
-
                 enableOnErrorView(getResources().getString(R.string.error_location));
-
-                targetStops.clear();
-                targetRoutes.clear();
+                backgroundUpdate();
             }
         }
 
