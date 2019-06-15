@@ -1033,7 +1033,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onSuccess() {
             if (mapReady && !cameraIsMoving) {
-                userLocation = locationClient.getLastLocation();
+                Location locationResult = locationClient.getLastLocation();
+
+                if (new Date().getTime() - locationResult.getTime() > 60000) {
+                    locationClient.updateLocation(new MapSearchFragment.LocationClientCallbacks());
+                    return;
+                }
+
+                userLocation = locationResult;
 
                 if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
                     if (staleLocation) {
@@ -1056,20 +1063,18 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                                 new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                     }
 
-                    if (!refreshing) {
-                        boolean forceRefresh = targetLocation.distanceTo(userLocation) >
-                                DISTANCE_TO_FORCE_REFRESH;
+                    if (targetLocation.distanceTo(userLocation) >
+                            DISTANCE_TO_FORCE_REFRESH) {
+                        targetLocation = userLocation;
+                        swipeRefreshLayout.setRefreshing(true);
+                        forceUpdate();
 
-                        if (targetLocation.distanceTo(userLocation) >
-                                DISTANCE_TO_TARGET_LOCATION_UPDATE)
-                            targetLocation = userLocation;
+                    } else if (!refreshing && targetLocation.distanceTo(userLocation) >
+                            DISTANCE_TO_TARGET_LOCATION_UPDATE) {
+                        targetLocation = userLocation;
 
-                        if (forceRefresh) {
-                            swipeRefreshLayout.setRefreshing(true);
-                            forceUpdate();
-                        } else {
-                            backgroundUpdate();
-                        }
+                    } else {
+                        backgroundUpdate();
                     }
                 }
             }
