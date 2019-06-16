@@ -38,12 +38,14 @@ public class ServiceAlertsJsonParser {
                     JSONObject jAttributes = jAlert.getJSONObject("attributes");
                     String header = jAttributes.getString("header");
                     String description = jAttributes.getString("description");
+                    String url = jAttributes.getString("url");
                     String effect = jAttributes.getString("effect");
                     int severity = jAttributes.getInt("severity");
                     String lifecycle = jAttributes.getString("lifecycle");
 
                     alert.setHeader(header);
                     alert.setDescription(description);
+                    alert.setUrl(url);
                     alert.setEffect(effect);
                     alert.setSeverity(severity);
                     alert.setLifecycle(lifecycle);
