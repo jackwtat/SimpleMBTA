@@ -44,14 +44,12 @@ public class RouteSearchRecyclerViewAdapter
             holder.predictionView.setServiceAlerts(routeServiceAlerts);
 
         } else if (position == predictions.size()) {
-            if (!cleared) {
-                if (predictions.size() == 0)
-                    holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_predictions_this_stop));
-                else
-                    holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_further_predictions));
+            if (!cleared && predictions.size() == 0) {
+                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_predictions_this_stop));
             } else {
-                holder.predictionView.setNoPredictionsTextView("");
+                holder.predictionView.setBottomBorderVisible();
             }
+
         } else {
             holder.predictionView.setPrediction(predictions.get(position));
 

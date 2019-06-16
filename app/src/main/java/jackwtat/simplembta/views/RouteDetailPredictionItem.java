@@ -27,6 +27,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
     TextView destinationTextView;
     ImageView enrouteIcon;
     View bottomDivider;
+    View bottomBorder;
     View onClickAnimation;
 
     String min;
@@ -79,6 +80,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
 
         mainContent.setVisibility(VISIBLE);
         bottomDivider.setVisibility(VISIBLE);
+        bottomBorder.setVisibility(GONE);
         serviceAlertsIndicatorView.setVisibility(GONE);
         noPredictionsTextView.setVisibility(GONE);
     }
@@ -90,6 +92,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
         mainContent.setVisibility(GONE);
         bottomDivider.setVisibility(GONE);
         noPredictionsTextView.setVisibility(GONE);
+        bottomBorder.setVisibility(GONE);
     }
 
     public void setNoPredictionsTextView(String message) {
@@ -99,6 +102,16 @@ public class RouteDetailPredictionItem extends LinearLayout {
         mainContent.setVisibility(GONE);
         bottomDivider.setVisibility(GONE);
         serviceAlertsIndicatorView.setVisibility(GONE);
+        bottomBorder.setVisibility(GONE);
+    }
+
+    public void setBottomBorderVisible() {
+        bottomBorder.setVisibility(VISIBLE);
+
+        mainContent.setVisibility(GONE);
+        bottomDivider.setVisibility(GONE);
+        serviceAlertsIndicatorView.setVisibility(GONE);
+        noPredictionsTextView.setVisibility(GONE);
     }
 
     public void enableOnClickAnimation(boolean enabled) {
@@ -131,6 +144,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         enrouteIcon = rootView.findViewById(R.id.enroute_icon);
         bottomDivider = rootView.findViewById(R.id.bottom_divider);
+        bottomBorder = rootView.findViewById(R.id.bottom_border);
         onClickAnimation = rootView.findViewById(R.id.on_click_animation);
 
         min = context.getResources().getString(R.string.min);
