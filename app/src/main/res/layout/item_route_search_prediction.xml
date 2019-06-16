@@ -96,6 +96,19 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tomorrow_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/border_tomorrow"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/tomorrow"
+                android:textColor="@color/tomorrowPrediction"
+                android:textSize="@dimen/body_text_size"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/drop_off_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

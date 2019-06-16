@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import jackwtat.simplembta.R;
@@ -23,6 +24,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView timeTextView;
     TextView minuteTextView;
     TextView liveIndicator;
+    TextView tomorrowIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
     ImageView enrouteIcon;
@@ -52,6 +54,13 @@ public class RouteSearchPredictionItem extends LinearLayout {
         String minuteText;
 
         long countdownTime = prediction.getCountdownTime();
+        Date predictionTime = prediction.getPredictionTime();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(prediction.getPredictionTime());
+        int predictionDay = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.setTime(new Date());
+        int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         if (countdownTime <= 60 * 60000) {
             if (countdownTime > 0)
@@ -59,7 +68,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
             timeText = (countdownTime / 60000) + "";
             minuteText = min;
         } else {
-            Date predictionTime = prediction.getPredictionTime();
             timeText = new SimpleDateFormat("h:mm").format(predictionTime);
             minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
         }
@@ -74,6 +82,14 @@ public class RouteSearchPredictionItem extends LinearLayout {
         } else if (prediction.isLive()) {
             liveIndicator.setVisibility(VISIBLE);
             dropOffIndicator.setVisibility(GONE);
+        }
+        if (todayDay - predictionDay < 0) {
+            tomorrowIndicator.setVisibility(VISIBLE);
+        }
+        if (liveIndicator.getVisibility() == GONE &&
+                dropOffIndicator.getVisibility() == GONE &&
+                tomorrowIndicator.getVisibility() == GONE) {
+            liveIndicator.setVisibility(INVISIBLE);
         }
 
         destinationTextView.setText(prediction.getDestination());
@@ -127,7 +143,8 @@ public class RouteSearchPredictionItem extends LinearLayout {
         noPredictionsTextView.setText("");
         timeTextView.setText("");
         minuteTextView.setText("");
-        liveIndicator.setVisibility(INVISIBLE);
+        liveIndicator.setVisibility(GONE);
+        tomorrowIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
         destinationTextView.setText("");
     }
@@ -140,6 +157,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
+        tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         enrouteIcon = rootView.findViewById(R.id.enroute_icon);
