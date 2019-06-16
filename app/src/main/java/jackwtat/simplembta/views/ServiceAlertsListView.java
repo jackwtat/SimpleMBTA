@@ -1,19 +1,21 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.activities.WebViewActivity;
 import jackwtat.simplembta.adapters.ServiceAlertsListAdapter;
 import jackwtat.simplembta.model.ServiceAlert;
 
@@ -48,6 +50,19 @@ public class ServiceAlertsListView extends RelativeLayout {
         listDownArrow = rootView.findViewById(R.id.alerts_list_down_arrow);
         listUpArrow = rootView.findViewById(R.id.alerts_list_up_arrow);
         noAlertsLayout = rootView.findViewById(R.id.no_alerts_layout);
+
+        alertsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url = alertsArrayAdapter.getItem(position).getUrl();
+
+                if (url != null && !url.equals("") && !url.equalsIgnoreCase("null")) {
+                    Intent intent = new Intent(getContext(), WebViewActivity.class);
+                    intent.putExtra("url", url);
+                    getContext().startActivity(intent);
+                }
+            }
+        });
 
         if (alerts.size() > 0) {
             alertsArrayAdapter = new ServiceAlertsListAdapter(context, alerts);
