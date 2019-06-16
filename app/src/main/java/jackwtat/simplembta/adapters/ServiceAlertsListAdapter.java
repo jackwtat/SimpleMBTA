@@ -51,6 +51,7 @@ public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
         final TextView longBody = listItemView.findViewById(R.id.alert_long_body_text_view);
         ImageView alertIcon = listItemView.findViewById(R.id.service_alert_icon);
         ImageView advisoryIcon = listItemView.findViewById(R.id.service_advisory_icon);
+        ImageView externalLinkIcon = listItemView.findViewById(R.id.external_link_icon);
 
         String headerText = getContext().getResources().getString(
                 getContext().getResources().getIdentifier(
@@ -89,6 +90,13 @@ public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
         } else {
             alertIcon.setVisibility(View.GONE);
             advisoryIcon.setVisibility(View.VISIBLE);
+        }
+
+        if (alert.getUrl() != null && !alert.getUrl().equals("") &&
+                !alert.getUrl().equalsIgnoreCase("null")) {
+            externalLinkIcon.setVisibility(View.VISIBLE);
+        } else {
+            externalLinkIcon.setVisibility(View.GONE);
         }
 
         return listItemView;
