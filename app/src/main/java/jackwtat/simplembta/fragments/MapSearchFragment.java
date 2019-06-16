@@ -380,6 +380,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             gMap.setMyLocationEnabled(true);
             mapUiSettings.setMyLocationButtonEnabled(true);
+        } else {
+            mapTargetView.setVisibility(View.VISIBLE);
         }
 
         // Draw the key routes
@@ -1096,25 +1098,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         public void onError() {
             errorManager.setLocationError(true);
 
-            if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
-                enableOnErrorView(getResources().getString(R.string.error_location));
-                backgroundUpdate();
-            }
+            backgroundUpdate();
         }
 
         @Override
         public void onNoPermission() {
             errorManager.setLocationPermissionDenied(true);
 
-            if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
-                refreshing = false;
-                cancelUpdate();
-
-                enableOnErrorView(getResources().getString(R.string.error_location));
-
-                targetStops.clear();
-                targetRoutes.clear();
-            }
+            backgroundUpdate();
         }
     }
 
