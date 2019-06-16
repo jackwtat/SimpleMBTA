@@ -67,7 +67,6 @@ public class RouteSearchFragment extends Fragment implements
     // Service alerts auto update rate
     public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
 
-    private AppBarLayout appBarLayout;
     private RouteSearchSpinners searchSpinners;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -142,9 +141,6 @@ public class RouteSearchFragment extends Fragment implements
                 startActivity(intent);
             }
         });
-
-        // Get app bar
-        appBarLayout = rootView.findViewById(R.id.app_bar_layout);
 
         // Get service alerts indicator
         serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
@@ -515,7 +511,6 @@ public class RouteSearchFragment extends Fragment implements
     private void clearPredictions() {
         recyclerViewAdapter.clear();
         noPredictionsTextView.setVisibility(View.GONE);
-        appBarLayout.setExpanded(true);
         recyclerView.setNestedScrollingEnabled(false);
     }
 
