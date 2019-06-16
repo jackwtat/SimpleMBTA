@@ -15,7 +15,7 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.Route;
 
-public class RouteDetailPredictionItem extends LinearLayout {
+public class RouteSearchPredictionItem extends LinearLayout {
     View rootView;
     View mainContent;
     ServiceAlertsIndicatorView serviceAlertsIndicatorView;
@@ -32,17 +32,17 @@ public class RouteDetailPredictionItem extends LinearLayout {
 
     String min;
 
-    public RouteDetailPredictionItem(Context context) {
+    public RouteSearchPredictionItem(Context context) {
         super(context);
         init(context);
     }
 
-    public RouteDetailPredictionItem(Context context, @Nullable AttributeSet attrs) {
+    public RouteSearchPredictionItem(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public RouteDetailPredictionItem(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RouteSearchPredictionItem(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -133,7 +133,7 @@ public class RouteDetailPredictionItem extends LinearLayout {
     }
 
     private void init(Context context) {
-        rootView = inflate(context, R.layout.item_route_detail_prediction, this);
+        rootView = inflate(context, R.layout.item_route_search_prediction, this);
         mainContent = rootView.findViewById(R.id.main_content);
         serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);

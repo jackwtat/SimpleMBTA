@@ -12,7 +12,7 @@ import java.util.List;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.Route;
-import jackwtat.simplembta.views.RouteDetailPredictionItem;
+import jackwtat.simplembta.views.RouteSearchPredictionItem;
 
 public class RouteSearchRecyclerViewAdapter
         extends RecyclerView.Adapter<RouteSearchRecyclerViewAdapter.ViewHolder> {
@@ -29,7 +29,7 @@ public class RouteSearchRecyclerViewAdapter
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(new RouteDetailPredictionItem(parent.getContext()));
+        return new ViewHolder(new RouteSearchPredictionItem(parent.getContext()));
     }
 
     @Override
@@ -111,9 +111,9 @@ public class RouteSearchRecyclerViewAdapter
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        RouteDetailPredictionItem predictionView;
+        RouteSearchPredictionItem predictionView;
 
-        ViewHolder(RouteDetailPredictionItem v) {
+        ViewHolder(RouteSearchPredictionItem v) {
             super(v);
             predictionView = v;
         }
