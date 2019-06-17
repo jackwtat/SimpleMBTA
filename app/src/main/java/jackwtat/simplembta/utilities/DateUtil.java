@@ -29,7 +29,7 @@ public class DateUtil {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(new Date());
 
-        if (calendar.get(Calendar.HOUR_OF_DAY) <= 2) {
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 3) {
             calendar.add(Calendar.DATE, -1);
         }
         return new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
@@ -39,7 +39,11 @@ public class DateUtil {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(new Date());
 
-        calendar.add(Calendar.DATE, dayOffset);
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 3) {
+            calendar.add(Calendar.DATE, dayOffset - 1);
+        } else {
+            calendar.add(Calendar.DATE, dayOffset);
+        }
 
         return new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
     }
