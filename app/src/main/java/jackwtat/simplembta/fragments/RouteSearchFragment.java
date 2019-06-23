@@ -27,12 +27,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.activities.MainActivity;
 import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
+import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Direction;
@@ -72,6 +74,7 @@ public class RouteSearchFragment extends Fragment implements
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
+    private TextView errorTextView;
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
@@ -213,6 +216,9 @@ public class RouteSearchFragment extends Fragment implements
             }
         });*/
 
+        // Set the error text message
+        errorTextView = rootView.findViewById(R.id.error_message_text_view);
+
         return rootView;
     }
 
@@ -317,6 +323,9 @@ public class RouteSearchFragment extends Fragment implements
             @Override
             public void run() {
                 if (errorManager.hasNetworkError()) {
+                    errorTextView.setText(R.string.network_error_text);
+                    errorTextView.setVisibility(View.VISIBLE);
+
                     if (selectedRoute != null) {
                         selectedRoute.clearPredictions(Direction.INBOUND);
                         selectedRoute.clearPredictions(Direction.OUTBOUND);
@@ -324,6 +333,20 @@ public class RouteSearchFragment extends Fragment implements
 
                         refreshPredictions(true);
                         refreshServiceAlerts();
+                    }
+                } else {
+                    errorTextView.setVisibility(View.GONE);
+
+                    if (allRoutes == null || allRoutes.size() == 0) {
+                        getRoutes();
+                    } else if (selectedRoute.getStops(selectedDirectionId).length == 0) {
+                        Route route = selectedRoute;
+                        searchSpinners.clearRoutes();
+                        searchSpinners.populateRouteSpinner(
+                                allRoutes.toArray(new Route[0]));
+                        searchSpinners.selectRoute(route.getId());
+                    } else {
+                        getPredictions();
                     }
                 }
             }

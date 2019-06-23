@@ -22,13 +22,11 @@ import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
 
 
-public class MainActivity extends AppCompatActivity implements ErrorManager.OnErrorChangedListener {
+public class MainActivity extends AppCompatActivity {
     public final static String LOG_TAG = "MainActivity";
 
     private FragmentsPagerAdapter pagerAdapter;
     private ViewPager viewPager;
-    private ErrorManager errorManager;
-    private TextView errorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +55,6 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        errorTextView = findViewById(R.id.error_message_text_view);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        errorManager = ErrorManager.getErrorManager();
-        errorManager.registerOnErrorChangeListener(this);
     }
 
     @Override
@@ -90,38 +78,6 @@ public class MainActivity extends AppCompatActivity implements ErrorManager.OnEr
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onErrorChanged() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                errorTextView.setOnClickListener(null);
-
-                if (errorManager.hasNetworkError()) {
-                    errorTextView.setText(R.string.network_error_text);
-                    errorTextView.setVisibility(View.VISIBLE);
-
-                } else if (errorManager.hasLocationPermissionDenied()) {
-                    errorTextView.setText(R.string.location_permission_denied_text);
-                    errorTextView.setVisibility(View.VISIBLE);
-                    errorTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            LocationClient.requestLocationPermission(MainActivity.this);
-                        }
-                    });
-
-                } else if (errorManager.hasLocationError()) {
-                    errorTextView.setText(R.string.location_error_text);
-                    errorTextView.setVisibility(View.VISIBLE);
-
-                } else {
-                    errorTextView.setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
     public void goToRoute(Route route, int directionId, Stop stop) {

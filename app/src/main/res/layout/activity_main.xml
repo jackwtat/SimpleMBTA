@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/list_view_background"
-    android:orientation="vertical"
     tools:context="jackwtat.simplembta.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -34,23 +33,11 @@
             app:tabTextColor="@color/TabText" />
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/error_message_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/error_message_background"
-        android:elevation="8dp"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textColor="#ffffff"
-        android:textSize="@dimen/body_text_size"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appbar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -142,6 +142,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
+    private TextView errorTextView;
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
@@ -352,6 +353,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         // Set the no predictions indicator
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
+
+        // Set the error text message
+        errorTextView = rootView.findViewById(R.id.error_message_text_view);
 
         return rootView;
     }
@@ -693,6 +697,30 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                errorTextView.setOnClickListener(null);
+
+                if (errorManager.hasNetworkError()) {
+                    errorTextView.setText(R.string.network_error_text);
+                    errorTextView.setVisibility(View.VISIBLE);
+
+                } else if (errorManager.hasLocationPermissionDenied()) {
+                    errorTextView.setText(R.string.location_permission_denied_text);
+                    errorTextView.setVisibility(View.VISIBLE);
+                    errorTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            LocationClient.requestLocationPermission(getActivity());
+                        }
+                    });
+
+                } else if (errorManager.hasLocationError()) {
+                    errorTextView.setText(R.string.location_error_text);
+                    errorTextView.setVisibility(View.VISIBLE);
+
+                } else {
+                    errorTextView.setVisibility(View.GONE);
+                }
+
                 if (errorManager.hasLocationPermissionDenied() || errorManager.hasLocationError() ||
                         errorManager.hasNetworkError()) {
                     if (targetRoutes != null) {
