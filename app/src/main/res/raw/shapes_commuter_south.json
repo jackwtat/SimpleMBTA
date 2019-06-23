@@ -903,6 +903,43 @@
         }
       },
       "type": "shape"
+    },
+    {
+      "attributes": {
+        "direction_id": 0,
+        "name": "Foxboro",
+        "polyline": "mvf`Gpe|qLt@bBt@bApAlAhAp@r@XjAJx@C~@DbALtBV~B\\fCXfBZdDj@~Cd@rEn@|B`@lH|@tANrA\\`Dn@fBd@bE|@`E~@hARzBh@vEhAfCj@~HzAlCj@~@^lAZrB\\tD^pGx@lI`ArADzDj@`Ej@v@J`A@v@DlARlBZdFp@xCf@j@J|@?zF|@nEp@rARlAPzAJ|A?rAA~@CnAOzA_@xA_@bAa@jAY\\Ov@_@n@Uj@EfBk@rAk@tBo@rCg@hCa@`BGpDGpDE~HC~BCjAGdBYrBa@rAWtBw@jAc@~Aw@x@[dCw@pAe@",
+        "priority": 2
+      },
+      "id": "SouthStationToFoxboroViaFairmount",
+      "links": {
+        "self": "/shapes/SouthStationToFoxboroViaFairmount"
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "CR-Foxboro",
+            "type": "route"
+          }
+        },
+        "stops": {
+          "data": [
+            {
+              "id": "place-sstat",
+              "type": "stop"
+            },
+            {
+              "id": "place-FB-0118",
+              "type": "stop"
+            },
+            {
+              "id": "place-FS-0049",
+              "type": "stop"
+            }
+          ]
+        }
+      },
+      "type": "shape"
     }
   ],
   "included": [
@@ -2613,6 +2650,42 @@
         },
         "parent_station": {
           "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Gillette Stadium near Lots 3 and 4, Foxborough, MA 02035",
+        "description": null,
+        "latitude": 42.0951,
+        "location_type": 1,
+        "longitude": -71.26151,
+        "name": "Foxboro",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-FS-0049",
+      "links": {
+        "self": "/stops/place-FS-0049"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-FS-0049"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "recommended_transfers": {},
+        "zone": {
+          "data": {
+            "id": "CR-zone-special",
+            "type": "zone"
+          }
         }
       },
       "type": "stop"
