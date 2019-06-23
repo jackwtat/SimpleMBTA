@@ -346,6 +346,7 @@ public class RouteSearchFragment extends Fragment implements
                                 allRoutes.toArray(new Route[0]));
                         searchSpinners.selectRoute(route.getId());
                     } else {
+                        swipeRefreshLayout.setRefreshing(true);
                         getPredictions();
                     }
                 }
