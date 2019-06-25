@@ -13,6 +13,7 @@
     <!-- Spinner Titles -->
     <string name="direction">Direction</string>
     <string name="from">From</string>
+    <string name="map">Map</string>
 
     <!-- Service Alerts -->
     <string name="service_advisory">Service Advisory</string>
