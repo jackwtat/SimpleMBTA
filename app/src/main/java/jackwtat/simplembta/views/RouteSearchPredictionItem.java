@@ -54,7 +54,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
         String minuteText;
 
         long countdownTime = prediction.getCountdownTime();
-        Date predictionTime = prediction.getPredictionTime();
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prediction.getPredictionTime());
@@ -63,17 +62,40 @@ public class RouteSearchPredictionItem extends LinearLayout {
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         if (countdownTime <= 60 * 60000) {
-            if (countdownTime > 0)
-                countdownTime += 15000;
-            timeText = (countdownTime / 60000) + "";
-            minuteText = min;
+            if (countdownTime > 0) {
+                countdownTime = (countdownTime + 15000) / 60000;
+            }
+
+            if (countdownTime > 0 || !prediction.isLive()) {
+                timeText = countdownTime + "";
+                minuteText = min;
+
+                if (!prediction.isLive()) {
+                    minuteText += "*";
+                }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+                minuteTextView.setVisibility(VISIBLE);
+            } else {
+                timeText = "Arriving";
+
+                timeTextView.setText(timeText);
+                minuteTextView.setVisibility(GONE);
+            }
         } else {
+            Date predictionTime = prediction.getPredictionTime();
             timeText = new SimpleDateFormat("h:mm").format(predictionTime);
             minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-        }
 
-        timeTextView.setText(timeText);
-        minuteTextView.setText(minuteText);
+            if (!prediction.isLive()) {
+                minuteText += "*";
+            }
+
+            timeTextView.setText(timeText);
+            minuteTextView.setText(minuteText);
+            minuteTextView.setVisibility(VISIBLE);
+        }
 
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {

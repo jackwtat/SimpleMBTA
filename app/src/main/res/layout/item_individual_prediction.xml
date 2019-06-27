@@ -45,8 +45,7 @@
             android:id="@+id/time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
+            android:paddingLeft="4dp"
             android:textSize="@dimen/small_header_text_size"
             android:textStyle="bold"
             tools:text="50" />
@@ -55,6 +54,7 @@
             android:id="@+id/minute_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
             android:text="@string/min"
             android:textSize="@dimen/body_text_size"
             tools:text="min" />

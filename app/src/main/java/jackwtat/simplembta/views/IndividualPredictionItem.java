@@ -52,23 +52,40 @@ public class IndividualPredictionItem extends LinearLayout {
         long countdownTime = prediction.getCountdownTime();
 
         if (countdownTime <= 60 * 60000) {
-            if (countdownTime > 0)
-                countdownTime += 15000;
+            if (countdownTime > 0) {
+                countdownTime = (countdownTime + 15000) / 60000;
+            }
 
-            timeText = (countdownTime / 60000) + "";
-            minuteText = min;
+            if (countdownTime > 0 || !prediction.isLive()) {
+                timeText = countdownTime + "";
+                minuteText = min;
+
+                if (!prediction.isLive()) {
+                    minuteText += "*";
+                }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+                minuteTextView.setVisibility(VISIBLE);
+            } else {
+                timeText = "Arriving";
+
+                timeTextView.setText(timeText);
+                minuteTextView.setVisibility(GONE);
+            }
         } else {
             Date predictionTime = prediction.getPredictionTime();
             timeText = new SimpleDateFormat("h:mm").format(predictionTime);
             minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-        }
 
-        if (!prediction.isLive()) {
-            minuteText += "*";
-        }
+            if (!prediction.isLive()) {
+                minuteText += "*";
+            }
 
-        timeTextView.setText(timeText);
-        minuteTextView.setText(minuteText);
+            timeTextView.setText(timeText);
+            minuteTextView.setText(minuteText);
+            minuteTextView.setVisibility(VISIBLE);
+        }
     }
 
     private void init(Context context) {
