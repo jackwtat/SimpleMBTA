@@ -26,6 +26,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     public static final String SKIPPED = "SKIPPED";
     public static final String UNSCHEDULED = "UNSCHEDULED";
 
+    // Prediction types
+    public static final int ARRIVAL = 0;
+    public static final int DEPARTURE = 1;
+
     // Prediction data
     private String id;
     private int stopSequence = -1;
@@ -100,6 +104,16 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     public String getStatus() {
         return status;
+    }
+
+    public int getPredictionType() {
+        if (arrivalTime != null && departureTime == null) {
+            return ARRIVAL;
+        } else if (arrivalTime == null && departureTime != null) {
+            return DEPARTURE;
+        } else {
+            return ARRIVAL;
+        }
     }
 
     public boolean isLive() {

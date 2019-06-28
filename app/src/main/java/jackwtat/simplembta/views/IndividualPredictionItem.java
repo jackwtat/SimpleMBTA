@@ -68,7 +68,11 @@ public class IndividualPredictionItem extends LinearLayout {
                 minuteTextView.setText(minuteText);
                 minuteTextView.setVisibility(VISIBLE);
             } else {
-                timeText = "Arriving";
+                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
+                    timeText = getContext().getResources().getString(R.string.departing);
+                } else {
+                    timeText = getContext().getResources().getString(R.string.arriving);
+                }
 
                 timeTextView.setText(timeText);
                 minuteTextView.setVisibility(GONE);
