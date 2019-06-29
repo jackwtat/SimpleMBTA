@@ -72,9 +72,9 @@
       "attributes": {
         "address": "Pier 4, Boston, MA 02129",
         "description": null,
-        "latitude": 42.372876,
+        "latitude": 42.372889,
         "location_type": 0,
-        "longitude": -71.052764,
+        "longitude": -71.052699,
         "name": "Charlestown",
         "platform_code": null,
         "platform_name": null,
@@ -101,9 +101,9 @@
       "attributes": {
         "address": "Long Wharf near Old Atlantic Ave, Boston, MA 02110",
         "description": null,
-        "latitude": 42.359448,
+        "latitude": 42.359449,
         "location_type": 0,
-        "longitude": -71.050498,
+        "longitude": -71.050469,
         "name": "Long Wharf (South)",
         "platform_code": null,
         "platform_name": null,
