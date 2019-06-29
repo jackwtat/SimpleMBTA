@@ -1028,7 +1028,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             .position(new LatLng(
                                     stop.getLocation().getLatitude(),
                                     stop.getLocation().getLongitude()))
-                            .zIndex(20)
+                            .zIndex(22)
                             .title(stop.getName()));
 
                     stopMarker.setTag(stop);
@@ -1057,7 +1057,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             .position(new LatLng(
                                     stop.getLocation().getLatitude(),
                                     stop.getLocation().getLongitude()))
-                            .zIndex(20)
+                            .zIndex(21)
                             .title(stop.getName()));
 
                     stopMarker.setTag(stop);
