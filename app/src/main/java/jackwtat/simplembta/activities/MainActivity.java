@@ -9,20 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
 
-import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.fragments.RouteSearchFragment;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.Route;
-import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MapSearchFragment.PredictionClickListener {
     public final static String LOG_TAG = "MainActivity";
 
     private FragmentsPagerAdapter pagerAdapter;
@@ -61,7 +57,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        ((MapSearchFragment) pagerAdapter.getItem(0)).setMainActivity(this);
+        MapSearchFragment.registerPredictionClickListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        MapSearchFragment.deregisterPredictionClickListener();
     }
 
     @Override
@@ -80,13 +83,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goToRoute(Route route, int directionId, Stop stop) {
+    @Override
+    public void onClick(Route route, int directionId, Stop stop) {
         RouteSearchFragment fragment = (RouteSearchFragment) pagerAdapter.getItem(1);
         fragment.query(route, directionId, stop);
         viewPager.setCurrentItem(1);
     }
 
-    public void goToRoute(Route route, int directionId, Location location) {
+    @Override
+    public void onClick(Route route, int directionId, Location location) {
         RouteSearchFragment fragment = (RouteSearchFragment) pagerAdapter.getItem(1);
         fragment.query(route, directionId, location);
         viewPager.setCurrentItem(1);

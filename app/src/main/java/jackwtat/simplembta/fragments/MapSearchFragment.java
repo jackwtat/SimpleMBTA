@@ -132,7 +132,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final int USER_HAS_NOT_MOVED_MAP = 0;
     public static final int USER_HAS_MOVED_MAP = 1;
 
-    private MainActivity mainActivity;
+    // Prediction click listener
+    private static PredictionClickListener predictionClickListener = null;
 
     private View rootView;
     private AppBarLayout appBarLayout;
@@ -143,6 +144,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
     private TextView errorTextView;
+    private TextView latLngTextView;
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
@@ -200,7 +202,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             new CommuterRailOldColony(),
             new Ferry("Boat-F1"),
             new Ferry("Boat-F4")};
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -330,13 +331,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
                 int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
 
-                if (mainActivity != null) {
+                if (predictionClickListener != null) {
                     Stop stop = route.getNearestStop(direction);
 
                     if (stop == null) {
-                        mainActivity.goToRoute(route, direction, targetLocation);
+                        predictionClickListener.onClick(route, direction, targetLocation);
                     } else {
-                        mainActivity.goToRoute(route, direction, stop);
+                        predictionClickListener.onClick(route, direction, stop);
                     }
 
                 } else {
@@ -356,6 +357,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         // Set the error text message
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
+
+        latLngTextView = rootView.findViewById(R.id.lat_lng_text_view);
 
         return rootView;
     }
@@ -425,6 +428,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     displayedLocation.setLatitude(gMap.getCameraPosition().target.latitude);
                     displayedLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+
+                    //latLngTextView.setText(("" + displayedLocation.getLatitude()).substring(0, 9) + ",  " + ("" + displayedLocation.getLongitude()).substring(0, 10));
 
                     // If the user has moved the map, then force a predictions update
                     if (cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE &&
@@ -678,6 +683,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onStop() {
         super.onStop();
         mapView.onStop();
+        predictionClickListener = null;
     }
 
     @Override
@@ -750,10 +756,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
         });
-    }
-
-    public void setMainActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
     }
 
     private void backgroundUpdate() {
@@ -1345,4 +1347,19 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             backgroundUpdate();
         }
     }
+
+    public interface PredictionClickListener {
+        void onClick(Route route, int directionId, Stop stop);
+
+        void onClick(Route route, int directionId, Location location);
+    }
+
+    public static void registerPredictionClickListener(PredictionClickListener listener) {
+        predictionClickListener = listener;
+    }
+
+    public static void deregisterPredictionClickListener() {
+        predictionClickListener = null;
+    }
+
 }
