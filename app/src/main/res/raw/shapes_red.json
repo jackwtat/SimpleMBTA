@@ -717,9 +717,9 @@
       "attributes": {
         "address": "1899 Massachusetts Ave, Cambridge, MA 02140",
         "description": null,
-        "latitude": 42.388309,
+        "latitude": 42.388240,
         "location_type": 1,
-        "longitude": -71.118938,
+        "longitude": -71.118940,
         "name": "Porter",
         "platform_code": null,
         "platform_name": null,
