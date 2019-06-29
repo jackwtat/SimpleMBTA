@@ -27,6 +27,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView tomorrowIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
+    TextView trainNumberTextView;
     ImageView enrouteIcon;
     View bottomDivider;
     View bottomBorder;
@@ -99,6 +100,18 @@ public class RouteSearchPredictionItem extends LinearLayout {
             timeTextView.setText(timeText);
             minuteTextView.setText(minuteText);
             minuteTextView.setVisibility(VISIBLE);
+        }
+
+        if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                prediction.getTripName() != null &&
+                !prediction.getTripName().equalsIgnoreCase("null")) {
+            String trainNumber = getResources().getString(R.string.train) +
+                    " " + prediction.getTripName();
+
+            trainNumberTextView.setText(trainNumber);
+            trainNumberTextView.setVisibility(VISIBLE);
+        } else {
+            trainNumberTextView.setVisibility(GONE);
         }
 
         // Show the appropriate status indicators
@@ -186,6 +199,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
+        trainNumberTextView = rootView.findViewById(R.id.train_number_text_view);
         enrouteIcon = rootView.findViewById(R.id.enroute_icon);
         bottomDivider = rootView.findViewById(R.id.bottom_divider);
         bottomBorder = rootView.findViewById(R.id.bottom_border);
