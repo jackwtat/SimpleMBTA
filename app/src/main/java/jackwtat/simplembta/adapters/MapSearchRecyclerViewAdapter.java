@@ -15,7 +15,6 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
 import jackwtat.simplembta.views.PredictionHeaderView;
 
@@ -28,6 +27,7 @@ public class MapSearchRecyclerViewAdapter
     private Stop selectedStop;
     private Location targetLocation;
     private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
 
 
     public MapSearchRecyclerViewAdapter() {
@@ -122,6 +122,16 @@ public class MapSearchRecyclerViewAdapter
                 }
             }
         });
+
+        holder.predictionView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (onItemLongClickListener != null) {
+                    onItemLongClickListener.onItemLongClick(i);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -179,8 +189,18 @@ public class MapSearchRecyclerViewAdapter
         }
     }
 
+    public void setOnItemLongClickListener(MapSearchRecyclerViewAdapter.OnItemLongClickListener listener) {
+        if (listener != null) {
+            this.onItemLongClickListener = listener;
+        }
+    }
+
     public interface OnItemClickListener {
         void onItemClick(int i);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int i);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -352,6 +352,22 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
+        recyclerViewAdapter.setOnItemLongClickListener(new MapSearchRecyclerViewAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(int position) {
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+                int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
+
+                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                intent.putExtra("route", route);
+                intent.putExtra("direction", direction);
+                intent.putExtra("refreshTime", refreshTime);
+                intent.putExtra("userLat", targetLocation.getLatitude());
+                intent.putExtra("userLon", targetLocation.getLongitude());
+                startActivity(intent);
+            }
+        });
+
         // Set the no predictions indicator
         noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
 
