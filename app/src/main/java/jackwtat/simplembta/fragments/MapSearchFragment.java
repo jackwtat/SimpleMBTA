@@ -311,9 +311,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
+                    refreshPredictionViews();
 
-                    if (!refreshing)
-                        refreshPredictionViews();
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
                 }
