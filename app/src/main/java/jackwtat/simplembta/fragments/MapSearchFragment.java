@@ -2,7 +2,6 @@ package jackwtat.simplembta.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,14 +40,12 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jackwtat.simplembta.activities.MainActivity;
 import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter.OnItemClickListener;
@@ -78,15 +74,11 @@ import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.model.routes.SilverLineCombined;
-import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
-import jackwtat.simplembta.views.ServiceAlertsListView;
-import jackwtat.simplembta.views.ServiceAlertsTitleView;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener {
@@ -158,7 +150,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private PredictionsAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
 
-    private boolean refreshing = false;
+    private boolean dataRefreshing = false;
+    private boolean viewsRefreshing = false;
     private boolean mapReady = false;
     private boolean cameraIsMoving = false;
     private boolean userIsScrolling = false;
@@ -312,7 +305,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictionViews();
+                    if (!viewsRefreshing) {
+                        refreshPredictionViews();
+                    }
 
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
@@ -673,7 +668,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         cameraIsMoving = false;
 
-        refreshing = false;
+        dataRefreshing = false;
 
         cancelUpdate();
 
@@ -776,7 +771,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void backgroundUpdate() {
-        if (!refreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
+        if (!dataRefreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
             update();
         }
     }
@@ -792,7 +787,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
-            refreshing = true;
+            dataRefreshing = true;
 
             refreshTime = new Date().getTime();
 
@@ -800,7 +795,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         } else {
             enableOnErrorView(getResources().getString(R.string.error_network));
             errorManager.setNetworkError(true);
-            refreshing = false;
+            dataRefreshing = false;
 
             targetStops.clear();
             targetRoutes.clear();
@@ -920,7 +915,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void refreshPredictionViews() {
-        if (!userIsScrolling && targetRoutes != null) {
+        if (!userIsScrolling && displayedRoutes != null) {
             recyclerViewAdapter.setData(targetLocation,
                     displayedRoutes.values().toArray(new Route[0]), selectedStop);
             swipeRefreshLayout.setRefreshing(false);
@@ -1126,7 +1121,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         swipeRefreshLayout.setRefreshing(true);
                         forceUpdate();
 
-                    } else if (!refreshing && targetLocation.distanceTo(userLocation) >
+                    } else if (!dataRefreshing && targetLocation.distanceTo(userLocation) >
                             DISTANCE_TO_TARGET_LOCATION_UPDATE) {
                         targetLocation = userLocation;
                         backgroundUpdate();
@@ -1182,7 +1177,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             } else {
                 // If we have no stops, then show error message
-                refreshing = false;
+                dataRefreshing = false;
                 enableOnErrorView(getResources().getString(R.string.error_stops));
                 forceUpdate();
             }
@@ -1211,7 +1206,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             } else {
                 // If we have no routes, then show error message
-                refreshing = false;
+                dataRefreshing = false;
                 enableOnErrorView(getResources().getString(R.string.error_routes));
                 forceUpdate();
             }
@@ -1308,9 +1303,20 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 getSchedules();
 
             } else {
-                refreshing = false;
-                displayedRoutes = targetRoutes;
+                // Lock the views to prevent UI changes while loading new data to views
+                viewsRefreshing = true;
+
+                // Load new data to views
+                displayedRoutes.clear();
+                displayedRoutes.putAll(targetRoutes);
+
+                // Unlock views
+                viewsRefreshing = false;
+
+                // Refresh views
                 refreshPredictionViews();
+
+                dataRefreshing = false;
 
                 if (predictionsCount == 0)
                     forceUpdate();
@@ -1319,7 +1325,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         @Override
         public void onError() {
-            refreshing = false;
+            dataRefreshing = false;
             refreshPredictionViews();
             update();
         }

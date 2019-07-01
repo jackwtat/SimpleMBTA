@@ -9,7 +9,6 @@
         android:id="@+id/error_message_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appbar"
         android:background="@color/error_message_background"
         android:elevation="8dp"
         android:gravity="center"
@@ -17,6 +16,18 @@
         android:textColor="#ffffff"
         android:textSize="@dimen/body_text_size"
         android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/lat_lng_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/error_message_background"
+        android:elevation="8dp"
+        android:padding="8dp"
+        android:text="asdfasdf"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/body_text_size"
         android:visibility="gone" />
 
     <android.support.design.widget.AppBarLayout
@@ -50,7 +61,6 @@
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
