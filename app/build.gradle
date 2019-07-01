@@ -7,8 +7,8 @@ android {
         applicationId "jackwtat.simplembta"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 30
-        versionName '2.4.0'
+        versionCode 32
+        versionName '2.4.1'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
