@@ -59,8 +59,13 @@ public class RouteSearchPredictionItem extends LinearLayout {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prediction.getPredictionTime());
         int predictionDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int predictionMonth = calendar.get(Calendar.MONTH);
+        int predictionYear = calendar.get(Calendar.YEAR);
+
         calendar.setTime(new Date());
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int todayMonth = calendar.get(Calendar.MONTH);
+        int todayYear = calendar.get(Calendar.YEAR);
 
         if (countdownTime <= 60 * 60000) {
             if (countdownTime > 0) {
@@ -122,7 +127,9 @@ public class RouteSearchPredictionItem extends LinearLayout {
             liveIndicator.setVisibility(VISIBLE);
             dropOffIndicator.setVisibility(GONE);
         }
-        if (todayDay - predictionDay < 0) {
+        if (predictionDay - todayDay > 0 ||
+                predictionMonth - todayMonth > 0 ||
+                predictionYear - todayYear > 0) {
             tomorrowIndicator.setVisibility(VISIBLE);
         }
         if (liveIndicator.getVisibility() == GONE &&
