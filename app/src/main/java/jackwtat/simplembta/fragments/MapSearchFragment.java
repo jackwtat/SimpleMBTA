@@ -180,6 +180,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Data surrounding the location displayed on the map
     private Location displayedLocation = new Location("");
     private HashMap<String, Stop> displayedStops = new HashMap<>();
+    private HashMap<String, Route> displayedRoutes = new HashMap<>();
     private HashMap<String, Marker> displayedStopMarkers = new HashMap<>();
 
     // Selected stop data
@@ -390,10 +391,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+        //gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         // Set the map UI settings
         UiSettings mapUiSettings = gMap.getUiSettings();
-        mapUiSettings.setRotateGesturesEnabled(false);
+        mapUiSettings.setRotateGesturesEnabled(true);
         mapUiSettings.setTiltGesturesEnabled(false);
         mapUiSettings.setZoomControlsEnabled(true);
 
@@ -920,7 +922,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private void refreshPredictionViews() {
         if (!userIsScrolling && targetRoutes != null) {
             recyclerViewAdapter.setData(targetLocation,
-                    targetRoutes.values().toArray(new Route[targetRoutes.size()]), selectedStop);
+                    displayedRoutes.values().toArray(new Route[0]), selectedStop);
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
@@ -1307,6 +1309,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             } else {
                 refreshing = false;
+                displayedRoutes = targetRoutes;
                 refreshPredictionViews();
 
                 if (predictionsCount == 0)
