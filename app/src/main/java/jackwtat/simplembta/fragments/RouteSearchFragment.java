@@ -83,7 +83,8 @@ public class RouteSearchFragment extends Fragment implements
     private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
-    private boolean refreshing = false;
+    private boolean dataRefreshing = false;
+    private boolean viewsRefreshing = false;
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
@@ -169,7 +170,10 @@ public class RouteSearchFragment extends Fragment implements
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions(false);
+                    if (!viewsRefreshing) {
+                        refreshPredictions(false);
+                    }
+
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
                 }
@@ -266,7 +270,7 @@ public class RouteSearchFragment extends Fragment implements
     public void onPause() {
         super.onPause();
 
-        refreshing = false;
+        dataRefreshing = false;
 
         swipeRefreshLayout.setRefreshing(false);
 
@@ -447,7 +451,7 @@ public class RouteSearchFragment extends Fragment implements
                 if (networkConnectivityClient.isConnected()) {
                     errorManager.setNetworkError(false);
 
-                    refreshing = true;
+                    dataRefreshing = true;
 
                     if (predictionsAsyncTask != null) {
                         predictionsAsyncTask.cancel(true);
@@ -459,7 +463,7 @@ public class RouteSearchFragment extends Fragment implements
 
                 } else {
                     errorManager.setNetworkError(true);
-                    refreshing = false;
+                    dataRefreshing = false;
                     swipeRefreshLayout.setRefreshing(false);
                 }
             } else {
@@ -732,7 +736,7 @@ public class RouteSearchFragment extends Fragment implements
     }
 
     private void backgroundUpdate() {
-        if (!refreshing) {
+        if (!dataRefreshing) {
             getPredictions();
         }
     }
@@ -789,19 +793,26 @@ public class RouteSearchFragment extends Fragment implements
     private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
-            refreshing = false;
+            dataRefreshing = false;
             refreshTime = new Date().getTime();
 
+            // Lock the views to prevent UI changes while loading new data to views
+            viewsRefreshing = true;
+
+            // Load new data to views
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
             selectedRoute.addAllPredictions(predictions);
+
+            // Unlock views
+            viewsRefreshing = false;
 
             refreshPredictions(false);
         }
 
         @Override
         public void onError() {
-            refreshing = false;
+            dataRefreshing = false;
             refreshTime = new Date().getTime();
 
             selectedRoute.clearPredictions(0);
