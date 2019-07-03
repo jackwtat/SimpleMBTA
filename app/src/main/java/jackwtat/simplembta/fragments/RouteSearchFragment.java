@@ -666,16 +666,6 @@ public class RouteSearchFragment extends Fragment implements
     }
 
     @Override
-    public void outsideQuery(Route route, int directionId, Stop stop) {
-        queryRoute = route;
-        queryDirectionId = directionId;
-        queryStop = stop;
-        queryLocation = null;
-
-        executeQuery();
-    }
-
-    @Override
     public void outsideQuery(Route route, int directionId, Location location) {
         queryRoute = route;
         queryDirectionId = directionId;

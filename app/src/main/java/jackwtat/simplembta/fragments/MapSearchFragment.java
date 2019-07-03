@@ -332,7 +332,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     if (stop == null) {
                         predictionClickListener.onClick(route, direction, targetLocation);
                     } else {
-                        predictionClickListener.onClick(route, direction, stop);
+                        predictionClickListener.onClick(route, direction, stop.getLocation());
                     }
 
                 } else {
@@ -1373,8 +1373,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     public interface PredictionClickListener {
-        void onClick(Route route, int directionId, Stop stop);
-
         void onClick(Route route, int directionId, Location location);
     }
 

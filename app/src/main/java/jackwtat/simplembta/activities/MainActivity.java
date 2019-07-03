@@ -86,15 +86,6 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
     }
 
     @Override
-    public void onClick(Route route, int directionId, Stop stop) {
-        if (outsideQueryListener != null) {
-            outsideQueryListener.outsideQuery(route, directionId, stop);
-        }
-
-        viewPager.setCurrentItem(1);
-    }
-
-    @Override
     public void onClick(Route route, int directionId, Location location) {
         if (outsideQueryListener != null) {
             outsideQueryListener.outsideQuery(route, directionId, location);
@@ -104,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
     }
 
     public interface OutsideQueryListener {
-        void outsideQuery(Route route, int directionId, Stop stop);
-
         void outsideQuery(Route route, int directionId, Location location);
     }
 
