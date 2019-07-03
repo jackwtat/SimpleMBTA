@@ -26,6 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.activities.MainActivity;
 import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
@@ -54,7 +55,8 @@ public class RouteSearchFragment extends Fragment implements
         ErrorManager.OnErrorChangedListener,
         RouteSearchSpinners.OnRouteSelectedListener,
         RouteSearchSpinners.OnDirectionSelectedListener,
-        RouteSearchSpinners.OnStopSelectedListener {
+        RouteSearchSpinners.OnStopSelectedListener,
+        MainActivity.OutsideQueryListener {
     public static final String LOG_TAG = "RouteSearchFragment";
 
     // Maximum age of prediction
@@ -264,6 +266,8 @@ public class RouteSearchFragment extends Fragment implements
         timer = new Timer();
         timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
         timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
+
+        MainActivity.registerOutsideQueryListener(this);
     }
 
     @Override
@@ -306,6 +310,8 @@ public class RouteSearchFragment extends Fragment implements
 
             editor.apply();
         }
+
+        MainActivity.deregisterOutsideQueryListener();
     }
 
     @Override
@@ -659,7 +665,8 @@ public class RouteSearchFragment extends Fragment implements
         forceUpdate();
     }
 
-    public void query(Route route, int directionId, Stop stop) {
+    @Override
+    public void outsideQuery(Route route, int directionId, Stop stop) {
         queryRoute = route;
         queryDirectionId = directionId;
         queryStop = stop;
@@ -668,7 +675,8 @@ public class RouteSearchFragment extends Fragment implements
         executeQuery();
     }
 
-    public void query(Route route, int directionId, Location location) {
+    @Override
+    public void outsideQuery(Route route, int directionId, Location location) {
         queryRoute = route;
         queryDirectionId = directionId;
         queryStop = null;

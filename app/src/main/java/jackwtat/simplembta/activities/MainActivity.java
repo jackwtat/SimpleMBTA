@@ -21,6 +21,8 @@ import jackwtat.simplembta.fragments.MapSearchFragment;
 public class MainActivity extends AppCompatActivity implements MapSearchFragment.PredictionClickListener {
     public final static String LOG_TAG = "MainActivity";
 
+    private static OutsideQueryListener outsideQueryListener;
+
     private FragmentsPagerAdapter pagerAdapter;
     private ViewPager viewPager;
 
@@ -85,15 +87,33 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
 
     @Override
     public void onClick(Route route, int directionId, Stop stop) {
-        RouteSearchFragment fragment = (RouteSearchFragment) pagerAdapter.getItem(1);
-        fragment.query(route, directionId, stop);
+        if (outsideQueryListener != null) {
+            outsideQueryListener.outsideQuery(route, directionId, stop);
+        }
+
         viewPager.setCurrentItem(1);
     }
 
     @Override
     public void onClick(Route route, int directionId, Location location) {
-        RouteSearchFragment fragment = (RouteSearchFragment) pagerAdapter.getItem(1);
-        fragment.query(route, directionId, location);
+        if (outsideQueryListener != null) {
+            outsideQueryListener.outsideQuery(route, directionId, location);
+        }
+
         viewPager.setCurrentItem(1);
+    }
+
+    public interface OutsideQueryListener {
+        void outsideQuery(Route route, int directionId, Stop stop);
+
+        void outsideQuery(Route route, int directionId, Location location);
+    }
+
+    public static void registerOutsideQueryListener(OutsideQueryListener listener) {
+        outsideQueryListener = listener;
+    }
+
+    public static void deregisterOutsideQueryListener() {
+        outsideQueryListener = null;
     }
 }
