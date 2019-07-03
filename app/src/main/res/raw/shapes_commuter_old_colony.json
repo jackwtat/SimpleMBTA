@@ -198,205 +198,6 @@
         }
       },
       "type": "shape"
-    },
-    {
-      "attributes": {
-        "direction_id": 1,
-        "name": "South Station",
-        "polyline": "ger~Fp`zoLiA~AkAzAsArAsAnAwAhAyAbA{Az@_Bv@_Bn@aBh@cB^eBXeBRgBFgB@eBAgBEeBQeBWcBe@aBk@aBm@_Bq@_Bo@_Bo@cBk@aBe@eB[eBMgBCeBFgBPcBZcB^eB`@cB^cB`@cB^cB`@cB^eB`@cB`@cB^cB`@cB^cBd@cBb@cB^cBd@cBb@aBf@cBf@aBj@aBj@_Bl@aBn@_Bn@aBn@_Bn@aBn@_Bn@_Bp@aBn@_Bn@aBp@_Bn@_Bn@aBn@_Bn@aBn@_Bn@aBn@_Bn@aBp@_Bn@_Bn@aBn@_Bn@aBn@_Bn@aBn@_Bn@_Bn@aBn@aBn@_Bl@aBn@_Bp@_Bn@aBn@_Bp@_Bn@aBp@_Bn@_Bn@aBn@_Bp@aBn@_Bn@aBn@_Bl@aBl@_Bl@aBp@_Bp@_Bp@aBn@_Bn@_Bp@aBn@_Bn@aBn@_Bl@aBl@aBl@_Bl@aBl@_Bp@aBn@_Bp@_Bn@aBn@_Bn@aBn@_Bn@aBn@_Bn@_Bn@aBn@_Bn@aBn@_Bp@_Bn@aBn@_Bp@_Bp@aBn@_Bp@_Bp@_Bn@_Bp@aBl@aBn@_Bn@_Bp@aBn@_Bn@aBn@_Bn@_Bn@aBn@_Bn@aBn@_Bp@_Bn@aBn@_Bn@aBn@_Bn@_Bn@aBp@_Bn@aBn@_Bn@_Bn@aBn@_Bp@_Bn@aBn@_Bn@aBn@_Bl@aBn@_Bn@_Bn@aBn@_Bp@aBn@_Bn@_Bn@aBn@_Bn@aBp@_Bn@_Bn@aBn@_Bn@_Bn@aBp@_Bn@aBn@_Bn@_Bp@aBn@_Bn@_Bn@aBl@aBl@_Bp@_Bn@aBn@_Bn@aBl@_Bp@_Bp@_Bt@}At@_Bt@}Av@{Az@}A|@{Az@{A|@{A`AwAbAwAhAuAjAuAlAsAlAuAnAqApAsApAsApAqApAsApAsApAsAnAsApAsAnAqApAsApAqApAuAnAqApAsAnAsArAqApAsApAsAnAsAnAsAnAsApAqApAsApAsApAsAnAsAnAuAlAsAlAyAdAwAfAwAdAyAbA{A`AyA`A{A|@}Az@}Ax@}Ar@_Br@aBp@_Bj@aBh@eB\\eBVeBPeBLeBJgBHeBHgBJeBHgBJeBLeBJgBHeBFgBBeB?gBAeBCgBAeB?gBCgBEeB?gBAeBCgBAeBAgBAeBCgB?gBAeBBeBHgBLeBPeBPeBPeBPeBReBPgBPeBPeBReBReBPeBReBPeBTeBNeBNeBTeBZcB^aBf@aBl@}At@}Az@yA`AwAfAuAjAuAlAuAlAsAlAuAlAsAnAuAlAsAlAuAlAsAlAuAlAuAjAsAnAsAnAuAnAuAjAuAlAsAlAsApAsAlAuAjAuAlAuAlAsAnAsAlAuAlAuAjAsAnAuAlAuAlAsAlAuAlAuAlAsAjAuAnAsAlAuAlAuAlAuAjAsAlAuAlAsAlAuAlAuAnAsAnAqAnAuAlAuAjAuAjAuAnAsAlAuAlAuAlAsAlAuAlAsAlAuAlAuAlAsAlAuAlAqApAwAhAsAnAsAlAuAnAuAlAsAjAwAjAsAjAsArAuAhAyA`A_Bv@}At@aBl@aBd@cB\\eBZcBZeBZcBZeB\\cBZeBZcBXeBZcBZeBZcBXeBZcBZeBTeBReBJgBFeBBgBBeB@gBAeBCgBFeBBgB@eBBgB@eBBgBDeBBgBBeBBgB@eBBgB@eBBgB@eB@gB@eBBgB@eB@gBAeBAgB@eB@gBBeB?eBBgB@eBBgB@eB@gB@eB@gBBeBBgBHeB@gBBeBDeBJgBPcBVcB`@cBd@_Bj@_Bt@{Az@{A|@{A~@yAbA{A|@{A~@yA~@{A~@{A|@yA`A{A~@yA`A{A~@{A~@{Ax@_Bt@_Bp@aBh@cB`@cB\\cBZeBVeBTeBVeBTcBTeBVeBVeBVcBVeBTeBVeBVcBTeBVeBTeBVcBTeBTeBVeBVcBTeBVeBVeBVcBTeBVeBVeBVcBRgBPeBLeBJeBDgBBeBCgBGeBGeBIgBGeBIgBGeBGeBIgBGeBEgBEeBGeBEgBEeBEgBAeB@gBDeBHeBNeBReBVcB\\cB`@aBd@aBj@aBh@aBh@aBh@cBb@cB^cBZeBVeBReBLeBJgBBeB?gBCeBCeBIgBGeBOeBQeBUcB[cB_@cBc@aBc@cBe@cBe@aBc@cBe@aBe@cBc@aBe@cBc@cBe@aBc@cBe@aBe@cBe@aBe@cBc@aBe@cBe@cBc@aBc@cBe@aBc@cBe@aBe@cBc@cBe@aBe@cBc@aBe@cBe@aBc@cBe@aBe@cBc@aBe@cBe@cBc@aBe@cBe@aBe@cBc@aBe@cBe@aBc@cBc@cBe@aBc@cBe@aBe@aBk@_Bo@{A{@{A_AwAiAqAqAkA{AiAaBgAcBeAcBgAcBgAcBgAcBgAaBeAcBgAcBgAcBgAcBeAcBgAcBgAcBgAcBeAcBgAcBkA{AmAyAsAoAwAiA{A{@}As@cBg@cB_@cBYeBUeBSeBSeBSeBQeBScBSeBSeBQeBOgBIeBIeBKeBKgBMcBYaBg@_Bs@{A{@yAaA{A_A}A{@}Aq@cBe@cB]eBUcBUeBQeBSeBOeBOeBQeBQeBOgBMeBOeBOeBQeBKeBKeBMeBMeBOgBMeBMeBOeBMeBOeBQeBMeBMeBMeBWeBKeB?eBNeB\\cB^cB^aBh@{Av@yAfAwAbAyAbA{A|@}Az@{Ax@}Az@{Ax@}Az@{Az@{Az@}Ax@{A|@{A|@wAfAoAtAuAjA{Av@cB`@eBLeBLgBJeBBeBCgBIcBUeBUeBWcBYeBYcBYcBYeBYcB[eBYcBYeBYcBYeBYcBYeB[cBYcBYeBYcBYeBYcBYeB[cBUeBSeBUeBSeBSeBKeB?eBPaBj@}Ap@}Ax@{Az@}Ax@}Av@{A~@{Az@aBh@wAbAsAlAsArAmAvAoAvAoAtAoAtAqAtAqArAoAtAqArAoAtAoAvAqArAoAtAoAtAqAtAqAtAqAnAqAtAoAtAoAtAoAvAqArAoAtAqAtAoAtAoAtAqArAqApAsApAoAtAoAvAoAtAoAtAqAtAoAvAoAtAoAtAoAvAoAtAoAvAqArAqArAqArAoAtAoAtAoAvAmAxAoAvAmAxAmAvAoAvAqAtAqArAqApAqArAqApAsApAsAjA}Ax@aBl@aBf@aBb@cB^aBf@_Bt@wAdAuAjAoAvAkAxAoAxAmAxAmAvAoAxAmAxAmAxAmAxAoAtAoAxAmAtAqAtAqAtAoAtAmAvAmAxAoAxAmAxAmAxAmAxAoAvAmAvAoAvAmAxAmAvAoAxAmAxAoAvAmAxAmAvAoAxAmAvAmAxAoAvAmAxAoAvAoAvAmAvAoAvAmAvAuAnAmAtAoAxAmAvAqAtAsAnAyA`A}Av@aBf@cBZeBHgB?eBKcBYcBYcB_@eBYeBUcBYcBYeBYcBYcB[cB_@cBc@aBg@aBi@aBg@aBi@aBg@aBg@aBg@cBg@aBa@eBUeBEeBAeBWeBFeBFgB?eB?eB@gBBeBBeBJeBJeBNeBPeBNcBXaBj@yA~@uAlAkAzAgA`BiA`BiA~AgA`BiA~AiA`BkA|AkAxAoAvAyAbA}Av@aBf@cB\\eBBeBBgBBeBFeBFeBFgBFeBJcBVeBZcBVeBLeBBgBCeBCeBCeBBgBBeBDeBDeBBgBDeB@eB?eBIeBW_Bq@}Au@yA_A{A}@{A{@{A}@{A}@{A}@wAgA{A}@{A}@{A{@{A}@{A{@}Ay@_Bo@_Bo@",
-        "priority": 2
-      },
-      "id": "9800001",
-      "links": {
-        "self": "/shapes/9800001"
-      },
-      "relationships": {
-        "route": {
-          "data": {
-            "id": "CR-Middleborough",
-            "type": "route"
-          }
-        },
-        "stops": {
-          "data": [
-            {
-              "id": "Middleborough/ Lakeville",
-              "type": "stop"
-            },
-            {
-              "id": "Bridgewater",
-              "type": "stop"
-            },
-            {
-              "id": "Campello",
-              "type": "stop"
-            },
-            {
-              "id": "Brockton",
-              "type": "stop"
-            },
-            {
-              "id": "Montello",
-              "type": "stop"
-            },
-            {
-              "id": "Holbrook/ Randolph",
-              "type": "stop"
-            },
-            {
-              "id": "place-brntn",
-              "type": "stop"
-            },
-            {
-              "id": "place-qnctr",
-              "type": "stop"
-            },
-            {
-              "id": "place-jfk",
-              "type": "stop"
-            },
-            {
-              "id": "place-sstat",
-              "type": "stop"
-            }
-          ]
-        }
-      },
-      "type": "shape"
-    },
-    {
-      "attributes": {
-        "direction_id": 1,
-        "name": "South Station",
-        "polyline": "oif_GdlmnLeLh\\gBdFiBdFgBdFeBfFiBbFiBdFgBdFeBfFgBdFgBdFiBdFeBdFgBdFiBdFgBdFgBfFgBdFeBdFgBdFiBdFgBdFeBfFiBdFgBdFiBbFaArCjBcFnB}EzBsEtCoDxDaB`EiA`E}@dEAfEXfETdEWdEq@bEq@fE]bEh@vDhBrDvBpDxBnD|B~CdD`J`Q}G_NoCyDiDmCqDyBsDyBsDsB}DqAgE?eEj@cEp@eEf@gE@gEYeEYeEj@aEdA}DlAkDfCeCdEsBzEoB~EeBfFcBhFsArFcA|Fu@`Gs@dGo@bGq@dGq@bGq@dGq@bGo@dGq@bGq@dGq@bGq@dGq@bGq@dGq@bGo@dGq@dGk@dGa@hGOjGGlGCjGAlGAlGClGAjGAlGAlGAlGCjGAlG?lGClGAjGAlGClGIjGSjGSjGSlGSjGSjGSjGSjGUjGUjGSjGSjGUjGSjGSjGUjGSjGUjGSjGYhGm@fG_A|FmAvFcBhFkB`FoB~EoB|EoB~EoB~EoB~EoB|EoB~EqB|EoB~EoB~EoB|EoB~EqB|EmB~EoB|EqB~EmB~EoB~EoB|EoB~EqB|EmB~EoB~EoB`FoB|EoB~EoB|EoB~EoB~EqBzEoB~EmB~EoB~EoB~EoB~EmB~EoB~EoB~EoB|EoB~EoB|EoB~EoB~EoB~EoB|EqB|EoB~EoB~EoB|EoB~EoB~EoB~EoB|EoB~EoB|EoB~EoB|EoB~EoB~EoB~EoB|EoB~EoB~EoB|EoB~EsBzEyBtEaChEiCdEiC`EiCbEiCbEiC`EiCbEiCbEgC`EiCbEiCbEiCbEiCbEgC`EiCdEiC`EiCbEiCbEiCbEgCbEiCbEkC~DqCtDwCpD}CdDcDvCiDlCmDdCmDbCmDdCkDfCmDdCmDdCmDdCkDdCmDdCmDdCkDfCmDbCmDdCmDdCmDbCmDdCkDfCmDfCoD|BkDhCkDfCmDdCkDfCoDbCmDbCmDbCmDbCuDnB{DxA_EhA_EjAaEfA_EbAaEfA_EfA_EfAaEfA_EhA_EfAaEfA_EdA_EhAaEfA_EfAaEdA_EhA_EfA_EdAaE`A}DrAaEdA_EfA_EfAaEfA_EdA_EhAaEfA_EbAcEz@aEz@cEt@cEz@cEr@aEv@cEz@aE|@cEx@aEx@cEv@cEx@aEx@cEx@aEv@cEv@cEz@aEx@cEv@cEv@aEx@cEv@cEx@aEx@cEx@aE~@_EjA{DvAwDjBsDpBuDpBsDnBuDpBuDpBsDpBuDnBsDpBuDrBsDpBuDlBuDpBsDrBsDtBwDdB_ElAaEv@cEx@cEv@aEv@cEv@cEv@aEv@cEz@}DlA{D~AuDjBqDxBmDbCmDdCkDfCkDfCmDfCkDdCmDbCkDfCmDfCkDdCmDdCmDbCkDfCkDfCmDfCkDdCgDpCuCpDcChEoB|E{AnFcAzFm@dGe@hGc@fGq@bGwApFuBvEsCrDiDlCkDhC{CdDgCdEgBbFsAtFmAvFiAxFmAvFoAtFkAxFqAtFeBdFaCjE}C`DsDxB_EdAeEPeE]eEe@eEc@eE]eEa@eE_@",
-        "priority": 2
-      },
-      "id": "9790007",
-      "links": {
-        "self": "/shapes/9790007"
-      },
-      "relationships": {
-        "route": {
-          "data": {
-            "id": "CR-Kingston",
-            "type": "route"
-          }
-        },
-        "stops": {
-          "data": [
-            {
-              "id": "Plymouth",
-              "type": "stop"
-            },
-            {
-              "id": "Kingston",
-              "type": "stop"
-            },
-            {
-              "id": "Halifax",
-              "type": "stop"
-            },
-            {
-              "id": "Hanson",
-              "type": "stop"
-            },
-            {
-              "id": "Whitman",
-              "type": "stop"
-            },
-            {
-              "id": "Abington",
-              "type": "stop"
-            },
-            {
-              "id": "South Weymouth",
-              "type": "stop"
-            },
-            {
-              "id": "place-brntn",
-              "type": "stop"
-            },
-            {
-              "id": "place-qnctr",
-              "type": "stop"
-            },
-            {
-              "id": "place-jfk",
-              "type": "stop"
-            },
-            {
-              "id": "place-sstat",
-              "type": "stop"
-            }
-          ]
-        }
-      },
-      "type": "shape"
-    },
-    {
-      "attributes": {
-        "direction_id": 1,
-        "name": "South Station",
-        "polyline": "__m`GztxnLsBYgCi@oCeA}@k@q@g@{GmGaJoIaKqJoA}@{Aw@gA_@mBWkAEkA?yFt@kBBkAL}BXiJ`A_PdBuFp@gAPoBd@eCx@oCrAiCbB_CnBsDrCqAtAiAzAw@pAkAhCiN~\\sQd_@{T|d@_BtDwA|DuAhEuP~m@{AfGw@jEy@rImHz}@UhCi@nCu@fCcBjEoBnDqAfB_BhAo]dRyLrDyM~DuG~CyH~DuCfB_DrAgC`BsBpBsEjGcBnBkBpA{CdA{@`@_A|@y@hAk@~A_@dBY`D_@tHcBf^yOrfDeBl_@q@dOMtCErC@vDj@lLTnEFdB?`D]hM?jKNr_CDzCV`Eh@xD`ExQtBrIp@|EVtE^nDdAbFd@|CHfB@lBCvIH|C`@vEr@vDzBxJz@fFb@pBr@fBf@`An@`Al@p@~@t@dB|@lGbBp@PrEd@hGj@vEt@~CjAhAp@hAz@nBtBvC|DnG`JfIdLvEpGx]bf@`ExF~AtCjAlD\\`BTdBTbDDvBGvBa@dEs@~Cu@lBwRf`@cBfCgBvBaEpDeMrKaFjEiBjBwAzBs@~Ai@dBa@lBWnBOdCAhCCpg@@xITzEPjCd@fDf@~CtAlFxA|DdMxW`MjWzL`WdBhFd@xB\\|BP|BBpCSjCeAjHWrCAhRoA|p@s@r]CvG@lIBnJDlERlFVxDX`C`@~BfA|F\\xBD`AAz@WxAc@bAg@l@",
-        "priority": 2
-      },
-      "id": "9900001",
-      "links": {
-        "self": "/shapes/9900001"
-      },
-      "relationships": {
-        "route": {
-          "data": {
-            "id": "CR-Greenbush",
-            "type": "route"
-          }
-        },
-        "stops": {
-          "data": [
-            {
-              "id": "Greenbush",
-              "type": "stop"
-            },
-            {
-              "id": "North Scituate",
-              "type": "stop"
-            },
-            {
-              "id": "Cohasset",
-              "type": "stop"
-            },
-            {
-              "id": "Nantasket Junction",
-              "type": "stop"
-            },
-            {
-              "id": "West Hingham",
-              "type": "stop"
-            },
-            {
-              "id": "East Weymouth",
-              "type": "stop"
-            },
-            {
-              "id": "Weymouth Landing/ East Braintree",
-              "type": "stop"
-            },
-            {
-              "id": "place-qnctr",
-              "type": "stop"
-            },
-            {
-              "id": "place-jfk",
-              "type": "stop"
-            },
-            {
-              "id": "place-sstat",
-              "type": "stop"
-            }
-          ]
-        }
-      },
-      "type": "shape"
     }
   ],
   "included": [
@@ -404,9 +205,9 @@
       "attributes": {
         "address": "231 Centre Ave, Abington, MA 02351",
         "description": null,
-        "latitude": 42.107156,
+        "latitude": 42.107160,
         "location_type": 0,
-        "longitude": -70.934405,
+        "longitude": -70.934376,
         "name": "Abington",
         "platform_code": null,
         "platform_name": null,
@@ -433,9 +234,9 @@
       "attributes": {
         "address": "85 Burrill Ave, Bridgewater, MA 02324",
         "description": null,
-        "latitude": 41.984916,
+        "latitude": 41.984906,
         "location_type": 0,
-        "longitude": -70.96537,
+        "longitude": -70.965382,
         "name": "Bridgewater",
         "platform_code": null,
         "platform_name": null,
@@ -462,9 +263,9 @@
       "attributes": {
         "address": "7 Commercial St, Brockton, MA 02302",
         "description": null,
-        "latitude": 42.08572,
+        "latitude": 42.085721,
         "location_type": 0,
-        "longitude": -71.0166,
+        "longitude": -71.016564,
         "name": "Brockton",
         "platform_code": null,
         "platform_name": null,
@@ -491,9 +292,9 @@
       "attributes": {
         "address": "30 Riverside Ave, Brockton, MA 02301",
         "description": null,
-        "latitude": 42.060951,
+        "latitude": 42.060970,
         "location_type": 0,
-        "longitude": -71.011004,
+        "longitude": -71.010963,
         "name": "Campello",
         "platform_code": null,
         "platform_name": null,
@@ -520,9 +321,9 @@
       "attributes": {
         "address": "110 Chief Justice Cushing Hwy, Cohasset, MA 02025",
         "description": null,
-        "latitude": 42.24421,
+        "latitude": 42.244235,
         "location_type": 0,
-        "longitude": -70.837529,
+        "longitude": -70.837527,
         "name": "Cohasset",
         "platform_code": null,
         "platform_name": null,
@@ -549,9 +350,9 @@
       "attributes": {
         "address": "1590 Commercial St, East Weymouth, MA, 02189",
         "description": null,
-        "latitude": 42.2191,
+        "latitude": 42.219390,
         "location_type": 0,
-        "longitude": -70.9214,
+        "longitude": -70.922029,
         "name": "East Weymouth",
         "platform_code": null,
         "platform_name": null,
@@ -578,9 +379,9 @@
       "attributes": {
         "address": "247 Old Drifway, Scituate, MA 02066",
         "description": null,
-        "latitude": 42.178776,
+        "latitude": 42.178559,
         "location_type": 0,
-        "longitude": -70.746641,
+        "longitude": -70.746540,
         "name": "Greenbush",
         "platform_code": null,
         "platform_name": null,
@@ -607,9 +408,9 @@
       "attributes": {
         "address": "6 Garden Rd, Halifax, MA 02338",
         "description": null,
-        "latitude": 42.014739,
+        "latitude": 42.014718,
         "location_type": 0,
-        "longitude": -70.824263,
+        "longitude": -70.824279,
         "name": "Halifax",
         "platform_code": null,
         "platform_name": null,
@@ -636,9 +437,9 @@
       "attributes": {
         "address": "1070 Main St, Hanson, MA 02341",
         "description": null,
-        "latitude": 42.043967,
+        "latitude": 42.043964,
         "location_type": 0,
-        "longitude": -70.882438,
+        "longitude": -70.882441,
         "name": "Hanson",
         "platform_code": null,
         "platform_name": null,
@@ -694,9 +495,9 @@
       "attributes": {
         "address": "134 Marion Dr, Kingston, MA 02364",
         "description": null,
-        "latitude": 41.97762,
+        "latitude": 41.976598,
         "location_type": 0,
-        "longitude": -70.721709,
+        "longitude": -70.723431,
         "name": "Kingston",
         "platform_code": null,
         "platform_name": null,
@@ -723,9 +524,9 @@
       "attributes": {
         "address": "125 Commercial Dr, Lakeville, MA 02347",
         "description": null,
-        "latitude": 41.87821,
+        "latitude": 41.877480,
         "location_type": 0,
-        "longitude": -70.918444,
+        "longitude": -70.917370,
         "name": "Middleborough/Lakeville",
         "platform_code": null,
         "platform_name": null,
@@ -752,9 +553,9 @@
       "attributes": {
         "address": "150 Spark St, Brockton, MA 02302",
         "description": null,
-        "latitude": 42.106555,
+        "latitude": 42.106561,
         "location_type": 0,
-        "longitude": -71.022001,
+        "longitude": -71.021981,
         "name": "Montello",
         "platform_code": null,
         "platform_name": null,
@@ -781,9 +582,9 @@
       "attributes": {
         "address": "190 Summer St, Hingham, MA 02043",
         "description": null,
-        "latitude": 42.244959,
+        "latitude": 42.244948,
         "location_type": 0,
-        "longitude": -70.869205,
+        "longitude": -70.868390,
         "name": "Nantasket Junction",
         "platform_code": null,
         "platform_name": null,
@@ -839,9 +640,9 @@
       "attributes": {
         "address": "385 Court St, Plymouth, MA 02360",
         "description": null,
-        "latitude": 41.981278,
+        "latitude": 41.980560,
         "location_type": 0,
-        "longitude": -70.690421,
+        "longitude": -70.688829,
         "name": "Plymouth",
         "platform_code": null,
         "platform_name": null,
@@ -868,9 +669,9 @@
       "attributes": {
         "address": "89 Trotter Rd, Weymouth, MA 02190",
         "description": null,
-        "latitude": 42.155025,
+        "latitude": 42.155033,
         "location_type": 0,
-        "longitude": -70.953302,
+        "longitude": -70.953261,
         "name": "South Weymouth",
         "platform_code": null,
         "platform_name": null,
@@ -897,9 +698,9 @@
       "attributes": {
         "address": "20 Fort Hill Rd, Hingham, MA 02043",
         "description": null,
-        "latitude": 42.235838,
+        "latitude": 42.235837,
         "location_type": 0,
-        "longitude": -70.902708,
+        "longitude": -70.902696,
         "name": "West Hingham",
         "platform_code": null,
         "platform_name": null,
@@ -926,7 +727,7 @@
       "attributes": {
         "address": "121 Commercial St, Weymouth, MA 02184",
         "description": null,
-        "latitude": 42.221503,
+        "latitude": 42.221505,
         "location_type": 0,
         "longitude": -70.968152,
         "name": "Weymouth Landing/East Braintree",
@@ -955,9 +756,9 @@
       "attributes": {
         "address": "383 South Ave, Whitman, MA 02382",
         "description": null,
-        "latitude": 42.082749,
+        "latitude": 42.082735,
         "location_type": 0,
-        "longitude": -70.923411,
+        "longitude": -70.923435,
         "name": "Whitman",
         "platform_code": null,
         "platform_name": null,
