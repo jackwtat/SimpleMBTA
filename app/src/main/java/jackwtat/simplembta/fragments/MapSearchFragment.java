@@ -136,7 +136,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
     private TextView errorTextView;
-    private TextView latLngTextView;
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
@@ -369,8 +368,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Set the error text message
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
 
-        latLngTextView = rootView.findViewById(R.id.lat_lng_text_view);
-
         return rootView;
     }
 
@@ -386,7 +383,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
-        //gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         // Set the map UI settings
         UiSettings mapUiSettings = gMap.getUiSettings();
@@ -440,8 +436,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     displayedLocation.setLatitude(gMap.getCameraPosition().target.latitude);
                     displayedLocation.setLongitude(gMap.getCameraPosition().target.longitude);
-
-                    //latLngTextView.setText(("" + displayedLocation.getLatitude()).substring(0, 9) + ",  " + ("" + displayedLocation.getLongitude()).substring(0, 10));
 
                     // If the user has moved the map, then force a predictions update
                     if (cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE &&
