@@ -1090,17 +1090,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 if (mapState == USER_HAS_NOT_MOVED_MAP && selectedStop == null) {
                     if (staleLocation) {
-                        // If the user is far outside the MBTA's operating area, then center to Boston
-                        if (userLocation.getLatitude() < 41.3 ||
-                                userLocation.getLatitude() > 43.3 ||
-                                userLocation.getLongitude() < -72.5 ||
-                                userLocation.getLongitude() > -69.9) {
-                            userLocation.setLatitude(42.3604);
-                            userLocation.setLongitude(-71.0580);
-                            mapTargetView.setVisibility(View.VISIBLE);
-                            mapState = USER_HAS_MOVED_MAP;
-                        }
-
                         gMap.moveCamera(CameraUpdateFactory.newLatLng(
                                 new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                         staleLocation = false;
