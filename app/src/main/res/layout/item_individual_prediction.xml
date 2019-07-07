@@ -42,7 +42,7 @@
             tools:text="Malden Center" />
 
         <TextView
-            android:id="@+id/train_number_text_view"
+            android:id="@+id/vehicle_number_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"

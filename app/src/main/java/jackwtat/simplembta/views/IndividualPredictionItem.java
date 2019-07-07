@@ -109,7 +109,7 @@ public class IndividualPredictionItem extends LinearLayout {
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_individual_prediction, this);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
-        trainNumberTextView = rootView.findViewById(R.id.train_number_text_view);
+        trainNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
 
