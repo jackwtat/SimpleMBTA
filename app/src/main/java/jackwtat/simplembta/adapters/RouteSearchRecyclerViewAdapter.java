@@ -20,6 +20,7 @@ public class RouteSearchRecyclerViewAdapter
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private OnItemClickListener onItemClickListener = null;
     private Route routeServiceAlerts = null;
+    private boolean vehicleNumberEnabled = false;
 
     private boolean cleared = true;
 
@@ -51,7 +52,22 @@ public class RouteSearchRecyclerViewAdapter
             }
 
         } else {
-            holder.predictionView.setPrediction(predictions.get(position));
+            Prediction prediction = predictions.get(position);
+            holder.predictionView.setPrediction(prediction);
+
+            if (prediction != null) {
+                if (prediction.getRoute() != null &&
+                        prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                        prediction.getTripName() != null &&
+                        !prediction.getTripName().equalsIgnoreCase("null")) {
+                    holder.predictionView.setTrainNumber(prediction.getTripName());
+
+                } else if (vehicleNumberEnabled &&
+                        prediction.getVehicleId() != null &&
+                        !prediction.getVehicleId().equalsIgnoreCase("null")) {
+                    holder.predictionView.setVehicleNumber(prediction.getVehicleId());
+                }
+            }
 
             if (onItemClickListener != null) {
                 holder.predictionView.enableOnClickAnimation(true);
@@ -104,6 +120,10 @@ public class RouteSearchRecyclerViewAdapter
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void enableVehicleNumber(boolean enabled) {
+        vehicleNumberEnabled = enabled;
     }
 
     public interface OnItemClickListener {

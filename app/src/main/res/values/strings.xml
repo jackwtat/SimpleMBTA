@@ -117,6 +117,7 @@
     <string name="saved_route_search_route">savedRouteSearchRoute</string>
 
     <!-- Miscellaneous -->
+    <string name="vehicle">Vehicle</string>
     <string name="train">Train</string>
     <string name="track">Boarding On Track</string>
     <string name="min">min</string>

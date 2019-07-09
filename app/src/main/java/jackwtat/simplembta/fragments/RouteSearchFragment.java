@@ -184,6 +184,7 @@ public class RouteSearchFragment extends Fragment implements
 
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
+        recyclerViewAdapter.enableVehicleNumber(false);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set the onClickListener listener

@@ -79,6 +79,7 @@ public class VehiclesJsonParser {
                     JSONObject jTrip = includedData.get("trip" + tripId);
                     if (jTrip != null) {
                         JSONObject jTripAttr = jTrip.getJSONObject("attributes");
+                        vehicle.setTripName(jTripAttr.getString("name"));
                         vehicle.setDestination(jTripAttr.getString("headsign"));
                     }
                 } catch (JSONException e) {

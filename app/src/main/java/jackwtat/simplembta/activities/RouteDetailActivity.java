@@ -257,6 +257,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
+        recyclerViewAdapter.enableVehicleNumber(true);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -648,7 +649,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                         vMarker.setSnippet("To " + vehicle.getDestination());
                     }
                 } else {
-                    vehicleMarkers.put(vehicle.getId(), drawVehicleMarker(vehicle));
+                    String vehicleTitle;
+                    if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
+                        vehicleTitle = getResources().getString(R.string.train) + " " + vehicle.getTripName();
+
+                    } else {
+                        vehicleTitle = getResources().getString(R.string.vehicle) + " " + vehicle.getLabel();
+                    }
+                    vehicleMarkers.put(vehicle.getId(), drawVehicleMarker(vehicle, vehicleTitle));
                 }
             }
         }
@@ -734,7 +742,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         return stopMarker;
     }
 
-    private Marker drawVehicleMarker(@NonNull Vehicle vehicle) {
+    private Marker drawVehicleMarker(@NonNull Vehicle vehicle, String vehicleTitle) {
         Marker vehicleMarker = gMap.addMarker(new MarkerOptions()
                 .position(new LatLng(
                         vehicle.getLocation().getLatitude(), vehicle.getLocation().getLongitude()))
@@ -742,7 +750,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 .anchor(0.5f, 0.5f)
                 .zIndex(20)
                 .flat(true)
-                .title(vehicle.getTitle())
+                .title(vehicleTitle)
+                //.title(getResources().getString(R.string.vehicle) + " " + vehicle.getLabel())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))
         );
 

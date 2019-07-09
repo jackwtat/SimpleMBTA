@@ -107,6 +107,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
             minuteTextView.setVisibility(VISIBLE);
         }
 
+        /*
         if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
                 prediction.getTripName() != null &&
                 !prediction.getTripName().equalsIgnoreCase("null")) {
@@ -118,6 +119,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         } else {
             vehicleNumberTextView.setVisibility(GONE);
         }
+        */
 
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {
@@ -145,6 +147,26 @@ public class RouteSearchPredictionItem extends LinearLayout {
         bottomBorder.setVisibility(GONE);
         serviceAlertsIndicatorView.setVisibility(GONE);
         noPredictionsTextView.setVisibility(GONE);
+    }
+
+    public void setTrainNumber(String trainNumber) {
+        String text = getResources().getString(R.string.train) +
+                " " + trainNumber;
+
+        vehicleNumberTextView.setText(text);
+        vehicleNumberTextView.setVisibility(VISIBLE);
+    }
+
+    public void setVehicleNumber(String vehicleNumber) {
+        if (vehicleNumber.substring(0, 1).equals("y")) {
+            vehicleNumber = vehicleNumber.substring(1);
+        }
+
+        String text = getResources().getString(R.string.vehicle) +
+                " " + vehicleNumber;
+
+        vehicleNumberTextView.setText(text);
+        vehicleNumberTextView.setVisibility(VISIBLE);
     }
 
     public void setServiceAlerts(Route route) {
@@ -193,6 +215,8 @@ public class RouteSearchPredictionItem extends LinearLayout {
         tomorrowIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
         destinationTextView.setText("");
+        vehicleNumberTextView.setText("");
+        vehicleNumberTextView.setVisibility(GONE);
     }
 
     private void init(Context context) {
