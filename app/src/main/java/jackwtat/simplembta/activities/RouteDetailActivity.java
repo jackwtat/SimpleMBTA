@@ -881,6 +881,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             refreshing = false;
             refreshTime = new Date().getTime();
 
+            for (Prediction prediction : predictions) {
+                if (vehicleMarkers.get(prediction.getVehicleId()) != null) {
+                    prediction.setVehicle(
+                            (Vehicle) (vehicleMarkers.get(prediction.getVehicleId()).getTag()));
+                }
+            }
+
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
             selectedRoute.addAllPredictions(predictions);

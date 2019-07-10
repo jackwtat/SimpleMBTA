@@ -63,9 +63,10 @@ public class RouteSearchRecyclerViewAdapter
                     holder.predictionView.setTrainNumber(prediction.getTripName());
 
                 } else if (vehicleNumberEnabled &&
-                        prediction.getVehicleId() != null &&
-                        !prediction.getVehicleId().equalsIgnoreCase("null")) {
-                    holder.predictionView.setVehicleNumber(prediction.getVehicleId());
+                        prediction.getVehicle() != null &&
+                        prediction.getVehicle().getLabel() != null &&
+                        !prediction.getVehicle().getLabel().equalsIgnoreCase("null")) {
+                    holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
                 }
             }
 
