@@ -259,6 +259,22 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
         recyclerViewAdapter.enableVehicleNumber(true);
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        // Set OnClickListener
+        recyclerViewAdapter.setOnItemClickListener(new RouteSearchRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Vehicle vehicle = recyclerViewAdapter.getPrediction(position).getVehicle();
+
+                if (vehicle != null) {
+                    Marker marker = vehicleMarkers.get(vehicle.getId());
+
+                    if (marker != null) {
+                        marker.showInfoWindow();
+                    }
+                }
+            }
+        });
     }
 
     @Override
