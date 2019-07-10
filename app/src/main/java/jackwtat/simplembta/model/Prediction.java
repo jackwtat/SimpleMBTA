@@ -54,6 +54,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Vehicle data
     private String vehicleId = null;
+    private Vehicle vehicle = null;
 
     public Prediction(String id) {
         this.id = id;
@@ -159,6 +160,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         return vehicleId;
     }
 
+    public Vehicle getVehicle(){
+        return vehicle;
+    }
+
     // Prediction data setters
     public void setId(String id) {
         this.id = id;
@@ -221,6 +226,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     // Vehicle data setters
     public void setVehicleId(String vehicleId) {
         this.vehicleId = vehicleId;
+    }
+
+    public void setVehicle(Vehicle vehicle){
+        this.vehicle = vehicle;
     }
 
     @Override
