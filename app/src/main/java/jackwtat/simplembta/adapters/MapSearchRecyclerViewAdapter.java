@@ -178,8 +178,11 @@ public class MapSearchRecyclerViewAdapter
                 }
             }
 
+            // Both inbound and outbound stops located
             if (route.getNearestStop(Direction.INBOUND) != null &&
                     route.getNearestStop(Direction.OUTBOUND) != null) {
+
+                // Both stops are the same, only display the directions with predictions
                 if (route.getNearestStop(Direction.INBOUND)
                         .equals(route.getNearestStop(Direction.OUTBOUND))) {
                     if (route.hasPickUps(Direction.INBOUND)) {
@@ -190,14 +193,18 @@ public class MapSearchRecyclerViewAdapter
                         adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
                     }
 
+                    // No predictions for either stop, display the default direction
                     if (!route.hasPickUps(Direction.INBOUND) && !route.hasPickUps(Direction.OUTBOUND)) {
-                        adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                        adapterItems.add(new AdapterItem(route, Direction.NULL_DIRECTION));
                     }
+
+                    // Both stops are different, show both directions
                 } else {
                     adapterItems.add(new AdapterItem(route, Direction.INBOUND));
                     adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
                 }
 
+                // One or no stops in either direction located, display the one with predictions
             } else {
                 if (route.hasPickUps(Direction.INBOUND)) {
                     adapterItems.add(new AdapterItem(route, Direction.INBOUND));
@@ -207,6 +214,7 @@ public class MapSearchRecyclerViewAdapter
                     adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
                 }
 
+                // No predictions, display the located stop, or default stop if none located
                 if (!route.hasPickUps(Direction.INBOUND) && !route.hasPickUps(Direction.OUTBOUND)) {
                     if (route.getNearestStop(Direction.INBOUND) != null) {
                         adapterItems.add(new AdapterItem(route, Direction.INBOUND));
