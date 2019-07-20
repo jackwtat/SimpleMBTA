@@ -930,17 +930,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void refreshPredictionViews() {
-        // Lock the views to prevent UI changes while loading new data to views
-        viewsRefreshing = true;
-
-        // Update routes to be displayed
-        displayedRoutes.clear();
-        displayedRoutes.putAll(targetRoutes);
-
-        // Unlock views
-        viewsRefreshing = false;
-
-        // Load data to views
         if (!userIsScrolling && displayedRoutes != null) {
             recyclerViewAdapter.setData(targetLocation,
                     displayedRoutes.values().toArray(new Route[0]), selectedStop);
@@ -1320,13 +1309,24 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 getSchedules();
 
             } else {
+                // Lock the views to prevent UI changes while loading new data to views
+                viewsRefreshing = true;
+
+                // Load new data to views
+                displayedRoutes.clear();
+                displayedRoutes.putAll(targetRoutes);
+
+                // Unlock views
+                viewsRefreshing = false;
+
                 // Refresh views
                 refreshPredictionViews();
 
                 dataRefreshing = false;
 
-                if (predictionsCount == 0)
+                if (predictionsCount == 0) {
                     forceUpdate();
+                }
             }
         }
 
