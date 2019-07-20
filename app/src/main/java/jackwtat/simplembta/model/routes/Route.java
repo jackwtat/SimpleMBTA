@@ -38,7 +38,7 @@ public class Route implements Comparable<Route>, Serializable {
     private Direction[] directions = {
             new Direction(Direction.OUTBOUND, "Outbound"),
             new Direction(Direction.INBOUND, "Inbound")};
-    private Shape[] shapes = {};
+    private HashMap<String, Shape> shapes = new HashMap<>();
     private StopMarkerFactory markerFactory = new StopMarkerFactory();
     private Vehicle[] vehicles = {};
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
@@ -99,13 +99,13 @@ public class Route implements Comparable<Route>, Serializable {
     }
 
     public Shape[] getAllShapes() {
-        return shapes;
+        return shapes.values().toArray(new Shape[0]);
     }
 
     public Shape[] getShapes(int directionId) {
         ArrayList<Shape> directionalShapes = new ArrayList<>();
 
-        for (Shape s : shapes) {
+        for (Shape s : shapes.values()) {
             if (s.getDirection() == directionId) {
                 directionalShapes.add(s);
             }
@@ -146,7 +146,7 @@ public class Route implements Comparable<Route>, Serializable {
         ArrayList<Stop> sortedStops = new ArrayList<>();
         HashMap<String, Stop> addedStops = new HashMap<>();
 
-        Shape[] allShapes = shapes;
+        Shape[] allShapes = shapes.values().toArray(new Shape[0]);
         Arrays.sort(allShapes);
 
         for (Shape shape : allShapes) {
@@ -245,8 +245,14 @@ public class Route implements Comparable<Route>, Serializable {
             directions[direction.getId()] = direction;
     }
 
-    public void setShapes(Shape[] shapes) {
-        this.shapes = shapes;
+    public void addShapes(Shape[] shapes) {
+        for (Shape shape : shapes) {
+            this.shapes.put(shape.getId(), shape);
+        }
+    }
+
+    public void addShape(Shape shape) {
+        shapes.put(shape.getId(), shape);
     }
 
     public void setStopMarkerFactory(StopMarkerFactory factory) {
