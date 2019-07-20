@@ -178,7 +178,9 @@ public class MapSearchRecyclerViewAdapter
                 }
             }
 
-            if (!route.getNearestStop(Direction.INBOUND)
+            if (route.getNearestStop(Direction.INBOUND) != null &&
+                    route.getNearestStop(Direction.OUTBOUND) != null
+                    && !route.getNearestStop(Direction.INBOUND)
                     .equals(route.getNearestStop(Direction.OUTBOUND))) {
                 adapterItems.add(new AdapterItem(route, Direction.INBOUND));
                 adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
@@ -186,10 +188,14 @@ public class MapSearchRecyclerViewAdapter
             } else {
                 if (route.hasPickUps(Direction.INBOUND)) {
                     adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                }
 
-                } else {
+                if (route.hasPickUps(Direction.OUTBOUND)) {
                     adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+                }
 
+                if (!route.hasPickUps(Direction.INBOUND) && !route.hasPickUps(Direction.OUTBOUND)) {
+                    adapterItems.add(new AdapterItem(route, Direction.NULL_DIRECTION));
                 }
             }
         }

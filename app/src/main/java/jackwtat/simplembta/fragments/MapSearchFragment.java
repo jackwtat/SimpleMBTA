@@ -886,15 +886,16 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             shapesAsyncTask.cancel(true);
         }
 
-        String[] routeIds = new String[targetRoutes.size()];
-        Route[] routes = targetRoutes.values().toArray(new Route[0]);
+        ArrayList<String> routeIds = new ArrayList<>();
 
-        for (int i = 0; i < routeIds.length; i++) {
-            routeIds[i] = routes[i].getId();
+        for (Route route : targetRoutes.values()) {
+            if (route.getMode() == Route.BUS) {
+                routeIds.add(route.getId());
+            }
         }
 
         shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
-                routeIds,
+                routeIds.toArray(new String[0]),
                 new ShapesPostExecuteListener());
 
         shapesAsyncTask.execute();
