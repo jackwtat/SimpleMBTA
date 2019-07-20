@@ -54,6 +54,7 @@ import jackwtat.simplembta.asyncTasks.PredictionsByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
+import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
@@ -148,6 +149,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private RoutesByStopsAsyncTask routesAsyncTask;
     private PredictionsAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
+    private ShapesAsyncTask shapesAsyncTask;
 
     private boolean dataRefreshing = false;
     private boolean viewsRefreshing = false;
@@ -227,7 +229,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         for (Shape[] s : keyShapes) {
             for (Route r : keyRoutes) {
                 if (r.equals(s[0].getRouteId())) {
-                    r.setShapes(s);
+                    r.addShapes(s);
                     break;
                 }
             }
@@ -243,7 +245,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         for (Shape[] s : commuterShapes) {
             for (Route r : commuterRoutes) {
                 if (r.equals(s[0].getRouteId())) {
-                    r.setShapes(s);
+                    r.addShapes(s);
                     break;
                 }
             }
@@ -879,6 +881,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         serviceAlertsAsyncTask.execute();
     }
 
+    private void getShapes() {
+        if (shapesAsyncTask != null) {
+            shapesAsyncTask.cancel(true);
+        }
+
+        String[] routeIds = new String[targetRoutes.size()];
+        Route[] routes = targetRoutes.values().toArray(new Route[0]);
+
+        for (int i = 0; i < routeIds.length; i++) {
+            routeIds[i] = routes[i].getId();
+        }
+
+        shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
+                routeIds,
+                new ShapesPostExecuteListener());
+
+        shapesAsyncTask.execute();
+    }
+
     private void refreshStopMarkers(Stop[] stops) {
         HashMap<String, Void> newStopIds = new HashMap<>();
         for (Stop stop : stops) {
@@ -909,6 +930,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void refreshPredictionViews() {
+        // Lock the views to prevent UI changes while loading new data to views
+        viewsRefreshing = true;
+
+        // Update routes to be displayed
+        displayedRoutes.clear();
+        displayedRoutes.putAll(targetRoutes);
+
+        // Unlock views
+        viewsRefreshing = false;
+
+        // Load data to views
         if (!userIsScrolling && displayedRoutes != null) {
             recyclerViewAdapter.setData(targetLocation,
                     displayedRoutes.values().toArray(new Route[0]), selectedStop);
@@ -1176,16 +1208,18 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 targetRoutes.put(route.getId(), route);
             }
 
-            getPredictions();
+            getShapes();
             getServiceAlerts();
+            getPredictions();
         }
 
         @Override
         public void onError() {
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
-                getPredictions();
+                getShapes();
                 getServiceAlerts();
+                getPredictions();
 
             } else {
                 // If we have no routes, then show error message
@@ -1286,16 +1320,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 getSchedules();
 
             } else {
-                // Lock the views to prevent UI changes while loading new data to views
-                viewsRefreshing = true;
-
-                // Load new data to views
-                displayedRoutes.clear();
-                displayedRoutes.putAll(targetRoutes);
-
-                // Unlock views
-                viewsRefreshing = false;
-
                 // Refresh views
                 refreshPredictionViews();
 
@@ -1308,8 +1332,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         @Override
         public void onError() {
-            dataRefreshing = false;
+            // Refresh views
             refreshPredictionViews();
+
+            dataRefreshing = false;
+
             update();
         }
     }
@@ -1336,6 +1363,24 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onError() {
             getServiceAlerts();
+        }
+    }
+
+    private class ShapesPostExecuteListener implements ShapesAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Shape[] shapes) {
+            for (Shape shape : shapes) {
+                Route route = targetRoutes.get(shape.getRouteId());
+
+                if (route != null) {
+                    route.addShape(shape);
+                }
+            }
+        }
+
+        @Override
+        public void onError() {
+            getShapes();
         }
     }
 
