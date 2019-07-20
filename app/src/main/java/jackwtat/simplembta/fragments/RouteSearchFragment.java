@@ -383,31 +383,31 @@ public class RouteSearchFragment extends Fragment implements
             // Hard coding to save the user time and data
             if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
                 if (BlueLine.isBlueLine(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_blue));
+                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_blue));
 
                 } else if (OrangeLine.isOrangeLine(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_orange));
+                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_orange));
 
                 } else if (RedLine.isRedLine(selectedRoute.getId()) && !RedLine.isMattapanLine(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_red));
+                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_red));
 
                 } else if (RedLine.isRedLine(selectedRoute.getId()) && RedLine.isMattapanLine(selectedRoute.getId())) {
-                    selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_mattapan));
+                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_mattapan));
 
                 } else if (GreenLine.isGreenLine(selectedRoute.getId())) {
                     if (GreenLineCombined.isGreenLineCombined(selectedRoute.getId())) {
-                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_combined));
+                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_combined));
                     } else if (GreenLine.isGreenLineB(selectedRoute.getId())) {
-                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_b));
+                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_b));
 
                     } else if (GreenLine.isGreenLineC(selectedRoute.getId())) {
-                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_c));
+                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_c));
 
                     } else if (GreenLine.isGreenLineD(selectedRoute.getId())) {
-                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_d));
+                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_d));
 
                     } else if (GreenLine.isGreenLineE(selectedRoute.getId())) {
-                        selectedRoute.setShapes(getShapesFromJson(R.raw.shapes_green_e));
+                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_e));
 
                     }
                 }
@@ -763,7 +763,7 @@ public class RouteSearchFragment extends Fragment implements
     private class ShapesPostExecuteListener implements ShapesAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Shape[] shapes) {
-            selectedRoute.setShapes(shapes);
+            selectedRoute.addShapes(shapes);
 
             refreshShapes();
         }
