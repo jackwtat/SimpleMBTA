@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
@@ -151,25 +152,45 @@ public class MapSearchRecyclerViewAdapter
         this.selectedStop = selectedStop;
 
         for (Route route : routes) {
-            boolean hasInboundPickUps = route.hasPickUps(Direction.INBOUND);
-            boolean hasOutboundPickUps = route.hasPickUps(Direction.OUTBOUND);
+            if (route.getNearestStop(Direction.INBOUND) == null) {
+                Stop[] inboundStops = route.getStops(Direction.INBOUND);
 
-            if (hasInboundPickUps || hasOutboundPickUps) {
-                if (hasInboundPickUps) {
-                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                for (Stop stop : inboundStops) {
+                    Stop nearestStop = route.getNearestStop(Direction.INBOUND);
+                    if (nearestStop == null
+                            || stop.getLocation().distanceTo(targetLocation) <
+                            nearestStop.getLocation().distanceTo(targetLocation)) {
+                        route.setNearestStop(Direction.INBOUND, stop);
+                    }
                 }
-                if (hasOutboundPickUps) {
-                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+            }
+
+            if (route.getNearestStop(Direction.OUTBOUND) == null) {
+                Stop[] outboundStops = route.getStops(Direction.OUTBOUND);
+
+                for (Stop stop : outboundStops) {
+                    Stop nearestStop = route.getNearestStop(Direction.OUTBOUND);
+                    if (nearestStop == null
+                            || stop.getLocation().distanceTo(targetLocation) <
+                            nearestStop.getLocation().distanceTo(targetLocation)) {
+                        route.setNearestStop(Direction.OUTBOUND, stop);
+                    }
                 }
-            } else if (route.hasNearbyStops()) {
-                if (route.getNearestStop(Direction.INBOUND) != null) {
-                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
-                }
-                if (route.getNearestStop(Direction.OUTBOUND) != null) {
-                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
-                }
+            }
+
+            if (!route.getNearestStop(Direction.INBOUND)
+                    .equals(route.getNearestStop(Direction.OUTBOUND))) {
+                adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+
             } else {
-                adapterItems.add(new AdapterItem(route, Direction.NULL_DIRECTION));
+                if (route.hasPickUps(Direction.INBOUND)) {
+                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+
+                } else {
+                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+
+                }
             }
         }
 
@@ -240,6 +261,8 @@ public class MapSearchRecyclerViewAdapter
         public int compareTo(@NonNull AdapterItem otherAdapterItem) {
             Stop thisStop = route.getNearestStop(direction);
             Stop otherStop = otherAdapterItem.route.getNearestStop(otherAdapterItem.direction);
+            Prediction[] thisPredictions = route.getPredictions(direction).toArray(new Prediction[0]);
+            Prediction[] otherPredictions = otherAdapterItem.route.getPredictions(direction).toArray(new Prediction[0]);
 
             if (thisStop == null && otherStop == null) {
                 return this.route.compareTo(otherAdapterItem.route);
@@ -261,6 +284,12 @@ public class MapSearchRecyclerViewAdapter
                 } else {
                     return 0;
                 }
+            } else if ((thisPredictions == null || thisPredictions.length == 0) &&
+                    (otherPredictions != null && otherPredictions.length > 0)) {
+                return 1;
+            } else if ((otherPredictions == null || otherPredictions.length == 0)
+                    && (thisPredictions != null && thisPredictions.length > 0)) {
+                return -1;
             } else if (!this.route.equals(otherAdapterItem.route)) {
                 return this.route.compareTo(otherAdapterItem.route);
             } else {

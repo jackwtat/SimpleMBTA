@@ -45,6 +45,7 @@
     <string name="no_further_predictions">No more predictions</string>
     <string name="select_stop">Select a stop to see predictions</string>
     <string name="no_stops">No stops in this direction</string>
+    <string name="no_departures">No upcoming departures</string>
 
     <!-- Prediction Header Texts -->
     <string name="nearby">Nearby</string>
