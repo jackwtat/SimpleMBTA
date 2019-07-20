@@ -179,11 +179,24 @@ public class MapSearchRecyclerViewAdapter
             }
 
             if (route.getNearestStop(Direction.INBOUND) != null &&
-                    route.getNearestStop(Direction.OUTBOUND) != null
-                    && !route.getNearestStop(Direction.INBOUND)
-                    .equals(route.getNearestStop(Direction.OUTBOUND))) {
-                adapterItems.add(new AdapterItem(route, Direction.INBOUND));
-                adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+                    route.getNearestStop(Direction.OUTBOUND) != null) {
+                if (route.getNearestStop(Direction.INBOUND)
+                        .equals(route.getNearestStop(Direction.OUTBOUND))) {
+                    if (route.hasPickUps(Direction.INBOUND)) {
+                        adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                    }
+
+                    if (route.hasPickUps(Direction.OUTBOUND)) {
+                        adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+                    }
+
+                    if (!route.hasPickUps(Direction.INBOUND) && !route.hasPickUps(Direction.OUTBOUND)) {
+                        adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                    }
+                } else {
+                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+                }
 
             } else {
                 if (route.hasPickUps(Direction.INBOUND)) {
@@ -195,7 +208,15 @@ public class MapSearchRecyclerViewAdapter
                 }
 
                 if (!route.hasPickUps(Direction.INBOUND) && !route.hasPickUps(Direction.OUTBOUND)) {
-                    adapterItems.add(new AdapterItem(route, Direction.NULL_DIRECTION));
+                    if (route.getNearestStop(Direction.INBOUND) != null) {
+                        adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+
+                    } else if (route.getNearestStop(Direction.OUTBOUND) != null) {
+                        adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+
+                    } else {
+                        adapterItems.add(new AdapterItem(route, Direction.NULL_DIRECTION));
+                    }
                 }
             }
         }
