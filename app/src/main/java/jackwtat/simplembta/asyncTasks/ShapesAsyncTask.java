@@ -8,14 +8,23 @@ import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 
 public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
     private String realTimeApiKey;
-    private String routeId;
+    private String[] routeIds;
     private OnPostExecuteListener onPostExecuteListener;
+
+    public ShapesAsyncTask(String realTimeApiKey,
+                           String[] routeIds,
+                           OnPostExecuteListener onPostExecuteListener) {
+        this.realTimeApiKey = realTimeApiKey;
+        this.routeIds = routeIds;
+        this.onPostExecuteListener = onPostExecuteListener;
+    }
 
     public ShapesAsyncTask(String realTimeApiKey,
                            String routeId,
                            OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
-        this.routeId = routeId;
+        String[] routeIds = {routeId};
+        this.routeIds = routeIds;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
@@ -23,12 +32,17 @@ public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
     protected Shape[] doInBackground(Void... voids) {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
-        String[] routeArgs = {
-                "filter[route]=" + routeId,
+        StringBuilder routeArgBuilder = new StringBuilder();
+        for (String routeId : routeIds) {
+            routeArgBuilder.append(routeId).append(",");
+        }
+
+        String[] shapeArgs = {
+                "filter[route]=" + routeArgBuilder.toString(),
                 "include=stops"
         };
 
-        String jsonResponse = realTimeApiClient.get("shapes", routeArgs);
+        String jsonResponse = realTimeApiClient.get("shapes", shapeArgs);
 
         if (jsonResponse != null)
             return ShapesJsonParser.parse(jsonResponse);
