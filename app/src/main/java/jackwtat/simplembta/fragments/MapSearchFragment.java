@@ -889,9 +889,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ArrayList<String> routeIds = new ArrayList<>();
 
         for (Route route : targetRoutes.values()) {
-            if (route.getMode() == Route.BUS) {
-                routeIds.add(route.getId());
-            }
+            routeIds.add(route.getId());
         }
 
         shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
@@ -1199,8 +1197,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
 
             getShapes();
-            getServiceAlerts();
             getPredictions();
+            getServiceAlerts();
         }
 
         @Override
@@ -1208,8 +1206,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
                 getShapes();
-                getServiceAlerts();
                 getPredictions();
+                getServiceAlerts();
 
             } else {
                 // If we have no routes, then show error message
@@ -1351,9 +1349,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         route.addServiceAlert(alert);
                     } else {
                         for (String affectedRouteId : alert.getAffectedRoutes()) {
-                            if (route.equals(affectedRouteId)) {
+                            if (route.equals(new Route(affectedRouteId))) {
                                 route.addServiceAlert(alert);
-                                break;
                             }
                         }
                     }
