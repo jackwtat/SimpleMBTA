@@ -826,7 +826,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (routesAsyncTask != null)
             routesAsyncTask.cancel(true);
 
-        String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
+        String[] stopIds = targetStops.keySet().toArray(new String[0]);
 
         routesAsyncTask = new RoutesByStopsAsyncTask(realTimeApiKey, stopIds,
                 new RoutesPostExecuteListener());
@@ -838,7 +838,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (predictionsAsyncTask != null)
             predictionsAsyncTask.cancel(true);
 
-        String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
+        String[] stopIds = targetStops.keySet().toArray(new String[0]);
 
         predictionsAsyncTask = new PredictionsByStopsAsyncTask(realTimeApiKey, stopIds,
                 new PredictionsPostExecuteListener());
@@ -861,10 +861,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
         }
 
-        String[] stopIds = targetStops.keySet().toArray(new String[targetStops.size()]);
+        String[] stopIds = targetStops.keySet().toArray(new String[0]);
 
         predictionsAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
-                routeIds.toArray(new String[routeIds.size()]), stopIds,
+                routeIds.toArray(new String[0]), stopIds,
                 new PredictionsPostExecuteListener());
 
         predictionsAsyncTask.execute();
@@ -875,7 +875,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             serviceAlertsAsyncTask.cancel(true);
 
         serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
-                targetRoutes.keySet().toArray(new String[targetRoutes.size()]),
+                targetRoutes.keySet().toArray(new String[0]),
                 new ServiceAlertsPostExecuteListener());
 
         serviceAlertsAsyncTask.execute();
@@ -907,7 +907,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             newStopIds.put(stop.getId(), null);
         }
 
-        String[] displayedStopIds = displayedStops.keySet().toArray(new String[displayedStops.size()]);
+        String[] displayedStopIds = displayedStops.keySet().toArray(new String[0]);
 
         // Remove existing stop markers that are not in the argument Stops array and are not selected
         for (String displayedStopId : displayedStopIds) {
