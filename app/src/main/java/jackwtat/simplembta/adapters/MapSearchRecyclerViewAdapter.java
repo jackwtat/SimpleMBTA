@@ -303,16 +303,12 @@ public class MapSearchRecyclerViewAdapter
                             otherStop.getLocation().distanceTo(targetLocation));
                 }
 
-            } else if ((this.route.hasPickUps(Direction.INBOUND) ||
-                    this.route.hasPickUps(Direction.OUTBOUND)) &&
-                    !otherAdapterItem.route.hasPickUps(Direction.INBOUND) &&
-                    !otherAdapterItem.route.hasPickUps(Direction.OUTBOUND)) {
+            } else if (route.hasPickUps(direction) &&
+                    !otherAdapterItem.route.hasPickUps(otherAdapterItem.direction)) {
                 return -1;
 
-            } else if (!this.route.hasPickUps(Direction.INBOUND) &&
-                    !this.route.hasPickUps(Direction.OUTBOUND) &&
-                    (!otherAdapterItem.route.hasPickUps(Direction.INBOUND) ||
-                            otherAdapterItem.route.hasPickUps(Direction.OUTBOUND))) {
+            } else if (!route.hasPickUps(direction) &&
+                    otherAdapterItem.route.hasPickUps(otherAdapterItem.direction)) {
                 return 1;
 
             } else if (!this.route.equals(otherAdapterItem.route)) {
