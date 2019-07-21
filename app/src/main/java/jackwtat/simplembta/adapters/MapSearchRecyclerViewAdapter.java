@@ -284,7 +284,7 @@ public class MapSearchRecyclerViewAdapter
             Stop otherStop = otherAdapterItem.route.getNearestStop(otherAdapterItem.direction);
 
             if (thisStop == null && otherStop == null) {
-                return this.route.compareTo(otherAdapterItem.route);
+                return route.compareTo(otherAdapterItem.route);
 
             } else if (thisStop == null) {
                 return 1;
@@ -295,6 +295,7 @@ public class MapSearchRecyclerViewAdapter
             } else if (!thisStop.equals(otherStop)) {
                 if (thisStop.equals(selectedStop)) {
                     return -1;
+
                 } else if (otherStop.equals(selectedStop)) {
                     return 1;
 
@@ -311,11 +312,11 @@ public class MapSearchRecyclerViewAdapter
                     otherAdapterItem.route.hasPickUps(otherAdapterItem.direction)) {
                 return 1;
 
-            } else if (!this.route.equals(otherAdapterItem.route)) {
-                return this.route.compareTo(otherAdapterItem.route);
+            } else if (!route.equals(otherAdapterItem.route)) {
+                return route.compareTo(otherAdapterItem.route);
 
             } else {
-                return otherAdapterItem.direction - this.direction;
+                return otherAdapterItem.direction - direction;
             }
         }
     }
