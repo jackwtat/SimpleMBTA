@@ -282,37 +282,42 @@ public class MapSearchRecyclerViewAdapter
         public int compareTo(@NonNull AdapterItem otherAdapterItem) {
             Stop thisStop = route.getNearestStop(direction);
             Stop otherStop = otherAdapterItem.route.getNearestStop(otherAdapterItem.direction);
-            Prediction[] thisPredictions = route.getPredictions(direction).toArray(new Prediction[0]);
-            Prediction[] otherPredictions = otherAdapterItem.route.getPredictions(direction).toArray(new Prediction[0]);
 
             if (thisStop == null && otherStop == null) {
                 return this.route.compareTo(otherAdapterItem.route);
+
             } else if (thisStop == null) {
                 return 1;
+
             } else if (otherStop == null) {
                 return -1;
+
             } else if (!thisStop.equals(otherStop)) {
                 if (thisStop.equals(selectedStop)) {
                     return -1;
                 } else if (otherStop.equals(selectedStop)) {
                     return 1;
-                } else if (thisStop.getLocation().distanceTo(targetLocation) <
-                        otherStop.getLocation().distanceTo(targetLocation)) {
-                    return -1;
-                } else if (thisStop.getLocation().distanceTo(targetLocation) >
-                        otherStop.getLocation().distanceTo(targetLocation)) {
-                    return 1;
+
                 } else {
-                    return 0;
+                    return Float.compare(thisStop.getLocation().distanceTo(targetLocation),
+                            otherStop.getLocation().distanceTo(targetLocation));
                 }
-            } else if ((thisPredictions == null || thisPredictions.length == 0) &&
-                    (otherPredictions != null && otherPredictions.length > 0)) {
-                return 1;
-            } else if ((otherPredictions == null || otherPredictions.length == 0)
-                    && (thisPredictions != null && thisPredictions.length > 0)) {
+
+            } else if ((this.route.hasPickUps(Direction.INBOUND) ||
+                    this.route.hasPickUps(Direction.OUTBOUND)) &&
+                    !otherAdapterItem.route.hasPickUps(Direction.INBOUND) &&
+                    !otherAdapterItem.route.hasPickUps(Direction.OUTBOUND)) {
                 return -1;
+
+            } else if (!this.route.hasPickUps(Direction.INBOUND) &&
+                    !this.route.hasPickUps(Direction.OUTBOUND) &&
+                    (!otherAdapterItem.route.hasPickUps(Direction.INBOUND) ||
+                            otherAdapterItem.route.hasPickUps(Direction.OUTBOUND))) {
+                return 1;
+
             } else if (!this.route.equals(otherAdapterItem.route)) {
                 return this.route.compareTo(otherAdapterItem.route);
+
             } else {
                 return otherAdapterItem.direction - this.direction;
             }
