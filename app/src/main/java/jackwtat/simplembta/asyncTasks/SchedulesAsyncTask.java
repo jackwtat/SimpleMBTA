@@ -27,15 +27,6 @@ public class SchedulesAsyncTask extends PredictionsAsyncTask {
         if (routeIds.length == 0 || stopIds.length == 0)
             return new Prediction[0];
 
-        int maxHours;
-        if (routeIds.length > 15) {
-            maxHours = 2;
-        } else if (routeIds.length > 5) {
-            maxHours = 3;
-        } else {
-            maxHours = 5;
-        }
-
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         StringBuilder routeArgBuilder = new StringBuilder();
@@ -55,7 +46,7 @@ public class SchedulesAsyncTask extends PredictionsAsyncTask {
                 "filter[stop]=" + stopArgBuilder.toString(),
                 "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                 "filter[min_time]=" + DateUtil.getMbtaTime(0),
-                "filter[max_time]=" + DateUtil.getMbtaTime(maxHours),
+                "filter[max_time]=" + DateUtil.getMbtaTime(3),
                 "include=route,trip,stop,prediction,vehicle"
         };
 
