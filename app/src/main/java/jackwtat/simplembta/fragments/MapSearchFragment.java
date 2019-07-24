@@ -856,7 +856,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Light rail and heavy rail (Green, Red, Blue, and Orange Lines) on-time performances
         // are too erratic and unreliable for scheduled predictions to be reliable
         for (Route route : targetRoutes.values()) {
-            if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
+            if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL &&
+                    (route.getPredictions(Direction.INBOUND).size() == 0 ||
+                            route.getPredictions(Direction.OUTBOUND).size() == 0)) {
                 routeIds.add(route.getId());
             }
         }
@@ -1227,14 +1229,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     prediction.setStop(targetStops.get(prediction.getParentStopId()));
                 }
 
-                // If the prediction is for the eastbound Green Line, then replace the route
+                // If the prediction is for the Green Line, then replace the route
                 // with the Green Line Grouped route. This is to reduce the maximum number of
                 // prediction cards displayed and reduces UI clutter.
                 if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
                         GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
-                    if (targetRoutes.get(prediction.getRouteId()) != null &&
-                            !targetRoutes.get(prediction.getRouteId()).hasPickUps(0) &&
-                            !targetRoutes.get(prediction.getRouteId()).hasPickUps(1)) {
+                    Route r = targetRoutes.get(prediction.getRouteId());
+                    if (r != null && !r.hasPickUps(0) && !r.hasPickUps(1)) {
                         targetRoutes.remove(prediction.getRouteId());
                     }
 
@@ -1260,45 +1261,46 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
                 // If the prediction is at Harvard destined for Harvard, then set to drop-off only
-                if (prediction.getStop().getName().equals(prediction.getDestination()))
+                if (prediction.getStop().getName().equals(prediction.getDestination())) {
                     prediction.setPickUpType(Prediction.NO_PICK_UP);
+                }
 
                 // Add route to routes list if not already there
-                if (!targetRoutes.containsKey(prediction.getRouteId()))
+                if (!targetRoutes.containsKey(prediction.getRouteId())) {
                     targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
+                } else {
+                    prediction.setRoute(targetRoutes.get(prediction.getRouteId()));
+                }
 
                 // Add stop to stops list if not already there
-                if (!targetStops.containsKey(prediction.getStopId()))
+                if (!targetStops.containsKey(prediction.getStopId())) {
                     targetStops.put(prediction.getStopId(), prediction.getStop());
-
-                // Add route to its stop's routes list
-                Stop targetStop = targetStops.get(prediction.getStopId());
-                if (targetStop != null) {
-                    targetStop.addRoute(prediction.getRoute());
-                    prediction.setStop(targetStop);
+                } else {
+                    prediction.setStop(targetStops.get(prediction.getStopId()));
+                    prediction.getStop().addRoute(prediction.getRoute());
                 }
 
                 // Add prediction to its respective route
+                Route route = prediction.getRoute();
+                Stop stop = prediction.getStop();
                 int direction = prediction.getDirection();
-                String routeId = prediction.getRouteId();
-                Stop stop = targetStops.get(prediction.getStopId());
 
                 // If this prediction's stop is the route's nearest stop
-                if (stop.equals(targetRoutes.get(routeId).getNearestStop(direction))) {
-                    targetRoutes.get(routeId).addPrediction(prediction);
+                if (stop.equals(route.getNearestStop(direction))) {
+                    route.addPrediction(prediction);
 
                     // If route does not have predictions in this prediction's direction
-                } else if (!targetRoutes.get(routeId).hasPredictions(direction)) {
-                    targetRoutes.get(routeId).setNearestStop(direction, stop);
-                    targetRoutes.get(routeId).addPrediction(prediction);
+                } else if (!route.hasPredictions(direction)) {
+                    route.setNearestStop(direction, stop);
+                    route.addPrediction(prediction);
 
                     // If this prediction's stop is closer than route's current nearest stop
-                } else if (stop.getLocation().distanceTo(targetLocation) <
-                        targetRoutes.get(routeId).getNearestStop(direction).getLocation()
+                } else if (live && stop.getLocation().distanceTo(targetLocation) <
+                        route.getNearestStop(direction).getLocation()
                                 .distanceTo(targetLocation)
                         && prediction.willPickUpPassengers()) {
-                    targetRoutes.get(routeId).setNearestStop(direction, stop);
-                    targetRoutes.get(routeId).addPrediction(prediction);
+                    route.setNearestStop(direction, stop);
+                    route.addPrediction(prediction);
                 }
 
                 predictionsCount++;
