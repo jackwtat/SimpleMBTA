@@ -932,6 +932,30 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void refreshPredictionViews() {
         if (!userIsScrolling && displayedRoutes != null) {
+            for (Route route : displayedRoutes.values()) {
+                for (int direction = 0; direction <= 1; direction++) {
+                    if (route.getNearestStop(direction) == null) {
+                        Stop[] inboundStops = route.getStops(direction);
+
+                        for (Stop stop : inboundStops) {
+                            Stop targetStop = targetStops.get(stop.getId());
+                            if (targetStop != null) {
+                                targetStop.addRoute(route);
+                            } else {
+                                targetStop = stop;
+                            }
+
+                            Stop nearestStop = route.getNearestStop(direction);
+                            if (nearestStop == null
+                                    || targetStop.getLocation().distanceTo(targetLocation) <
+                                    nearestStop.getLocation().distanceTo(targetLocation)) {
+                                route.setNearestStop(direction, targetStop);
+                            }
+                        }
+                    }
+                }
+            }
+
             recyclerViewAdapter.setData(targetLocation,
                     displayedRoutes.values().toArray(new Route[0]), selectedStop);
             swipeRefreshLayout.setRefreshing(false);

@@ -152,32 +152,6 @@ public class MapSearchRecyclerViewAdapter
         this.selectedStop = selectedStop;
 
         for (Route route : routes) {
-            if (route.getNearestStop(Direction.INBOUND) == null) {
-                Stop[] inboundStops = route.getStops(Direction.INBOUND);
-
-                for (Stop stop : inboundStops) {
-                    Stop nearestStop = route.getNearestStop(Direction.INBOUND);
-                    if (nearestStop == null
-                            || stop.getLocation().distanceTo(targetLocation) <
-                            nearestStop.getLocation().distanceTo(targetLocation)) {
-                        route.setNearestStop(Direction.INBOUND, stop);
-                    }
-                }
-            }
-
-            if (route.getNearestStop(Direction.OUTBOUND) == null) {
-                Stop[] outboundStops = route.getStops(Direction.OUTBOUND);
-
-                for (Stop stop : outboundStops) {
-                    Stop nearestStop = route.getNearestStop(Direction.OUTBOUND);
-                    if (nearestStop == null
-                            || stop.getLocation().distanceTo(targetLocation) <
-                            nearestStop.getLocation().distanceTo(targetLocation)) {
-                        route.setNearestStop(Direction.OUTBOUND, stop);
-                    }
-                }
-            }
-
             // Display the inbound predictions
             if (route.hasPickUps(Direction.INBOUND)) {
                 adapterItems.add(new AdapterItem(route, Direction.INBOUND));
