@@ -46,7 +46,7 @@ public class RouteSearchRecyclerViewAdapter
 
         } else if (position == predictions.size()) {
             if (!cleared && predictions.size() == 0) {
-                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_predictions_this_stop));
+                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_departures));
             } else {
                 holder.predictionView.setBottomBorderVisible();
             }
