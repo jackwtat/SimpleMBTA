@@ -81,10 +81,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     public static final long PREDICTIONS_UPDATE_RATE = 15000;
 
     // Vehicle locations auto update rate
-    public static final long VEHICLES_UPDATE_RATE = 15000;
-
-    // Shapes auto update rate
-    public static final long SHAPES_UPDATE_RATE = 15000;
+    public static final long VEHICLES_UPDATE_RATE = 5000;
 
     // Maximum age of prediction
     public static final long MAXIMUM_PREDICTION_AGE = 90000;
@@ -948,7 +945,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         @Override
         public void onError() {
-            getVehicles();
         }
     }
 
