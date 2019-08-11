@@ -105,6 +105,28 @@ public class Stop implements Comparable<Stop>, Serializable {
         return false;
     }
 
+    public boolean isTransferStop() {
+        return id.equals("place-north") || // North Station
+                id.equals("place-sstat") || // South Station
+                id.equals("place-bbsta") || // Back Bay
+                id.equals("place-bbsta-worcester") || // Back Bay - Worcester platform
+                id.equals("place-pktrm") || // Park Street
+                id.equals("place-dwnxg") || // Downtown Crossing
+                id.equals("place-gover") || // Government Center
+                id.equals("place-state") || // State
+                id.equals("place-haecl") || // Haymarket
+                id.equals("place-tumnl") || // Tufts Medical Center
+                id.equals("place-mlmnl") || // Malden Center
+                id.equals("place-rugg") || // Ruggles
+                id.equals("place-forhl") || // Forest Hills
+                id.equals("place-portr") || // Porter
+                id.equals("place-jfk") || // JFK/UMass
+                id.equals("place-qnctr") || // Quincy Center
+                id.equals("place-brntn") || // Braintree
+                id.equals("place-asmnl") || // Ashmont
+                id.equals("place-aport"); // Airport
+    }
+
     @Override
     public int compareTo(@NonNull Stop otherStop) {
         return id.compareTo(otherStop.getId());

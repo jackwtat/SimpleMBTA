@@ -73,6 +73,10 @@
               "type": "stop"
             },
             {
+              "id": "place-bbsta-worcester",
+              "type": "stop"
+            },
+            {
               "id": "place-masta",
               "type": "stop"
             },
@@ -155,6 +159,10 @@
             },
             {
               "id": "place-bbsta",
+              "type": "stop"
+            },
+            {
+              "id": "place-bbsta-worcester",
               "type": "stop"
             },
             {
@@ -245,15 +253,44 @@
       "attributes": {
         "address": "145 Dartmouth St Boston, MA 02116",
         "description": null,
-        "latitude": 42.347399,
+        "latitude": 42.347483,
         "location_type": 1,
-        "longitude": -71.075794,
+        "longitude": -71.075408,
         "name": "Back Bay",
         "platform_code": null,
         "platform_name": null,
         "wheelchair_boarding": 1
       },
       "id": "place-bbsta",
+      "links": {
+        "self": "/stops/place-bbsta"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bbsta"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "145 Dartmouth St Boston, MA 02116",
+        "description": null,
+        "latitude": 42.347483,
+        "location_type": 1,
+        "longitude": -71.075408,
+        "name": "Back Bay",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-bbsta-worcester",
       "links": {
         "self": "/stops/place-bbsta"
       },
@@ -303,9 +340,9 @@
       "attributes": {
         "address": "Washington Street and Boylston Street, Boston, MA",
         "description": null,
-        "latitude": 42.352629,
+        "latitude": 42.35271,
         "location_type": 1,
-        "longitude": -71.062557,
+        "longitude": -71.062486,
         "name": "Chinatown",
         "platform_code": null,
         "platform_name": null,
@@ -332,9 +369,9 @@
       "attributes": {
         "address": "Washington St and Summer St, Boston, MA",
         "description": null,
-        "latitude": 42.355415,
+        "latitude": 42.355520,
         "location_type": 1,
-        "longitude": -71.060479,
+        "longitude": -71.060378,
         "name": "Downtown Crossing",
         "platform_code": null,
         "platform_name": null,
@@ -419,9 +456,9 @@
       "attributes": {
         "address": "136 Blackstone St, Boston, MA 02109",
         "description": null,
-        "latitude": 42.363045,
+        "latitude": 42.363080,
         "location_type": 1,
-        "longitude": -71.058085,
+        "longitude": -71.058004,
         "name": "Haymarket",
         "platform_code": null,
         "platform_name": null,
@@ -535,9 +572,9 @@
       "attributes": {
         "address": "135 Causeway St, Boston MA 02114",
         "description": null,
-        "latitude": 42.365850,
+        "latitude": 42.365713,
         "location_type": 1,
-        "longitude": -71.060664,
+        "longitude": -71.060437,
         "name": "North Station",
         "platform_code": null,
         "platform_name": null,
@@ -680,9 +717,9 @@
       "attributes": {
         "address": "200 Washington St, Boston, MA",
         "description": null,
-        "latitude": 42.358890,
+        "latitude": 42.358782,
         "location_type": 1,
-        "longitude": -71.057709,
+        "longitude": -71.057710,
         "name": "State Street",
         "platform_code": null,
         "platform_name": null,

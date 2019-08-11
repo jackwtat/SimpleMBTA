@@ -30,15 +30,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,6 +61,7 @@ import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.map.markers.StopMarkerFactory;
+import jackwtat.simplembta.map.markers.TransferStopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -137,6 +140,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private RecyclerView recyclerView;
     private TextView noPredictionsTextView;
     private TextView errorTextView;
+    private TextView debugTextView;
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
@@ -182,9 +186,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private Marker selectedStopMarker = null;
 
     // Key stop/route data
-    private HashMap<String, Marker> keyStopMarkers = new HashMap<>();
+    private HashMap<String, Stop> keyStops = new HashMap<>();
+    private HashMap<String, Marker> rapidStopMarkers = new HashMap<>();
     private HashMap<String, Marker> commuterStopMarkers = new HashMap<>();
-    private Route[] keyRoutes = {
+    private ArrayList<Polyline> transferLines = new ArrayList<>();
+    private Route[] rapidRoutes = {
             new BlueLine("Blue"),
             new OrangeLine("Orange"),
             new RedLine("Red"),
@@ -227,7 +233,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 getShapesFromJson(R.raw.shapes_silver),
                 getShapesFromJson(R.raw.shapes_mattapan)};
         for (Shape[] s : keyShapes) {
-            for (Route r : keyRoutes) {
+            for (Route r : rapidRoutes) {
                 if (r.equals(s[0].getRouteId())) {
                     r.addShapes(s);
                     break;
@@ -370,6 +376,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Set the error text message
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
 
+        // Set the debug text view
+        debugTextView = rootView.findViewById(R.id.debug_text_view);
+
         return rootView;
     }
 
@@ -402,9 +411,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
 
         // Draw the key routes
-        for (int i = 0; i < keyRoutes.length; i++) {
-            drawRouteShapes(keyRoutes[i], keyRoutes.length + commuterRoutes.length - i);
-            drawKeyStopMarkers(keyRoutes[i]);
+        for (int i = 0; i < rapidRoutes.length; i++) {
+            drawRouteShapes(rapidRoutes[i], rapidRoutes.length + commuterRoutes.length - i);
+            drawKeyStopMarkers(rapidRoutes[i]);
         }
 
         // Draw the commuter rail routes
@@ -412,6 +421,28 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             drawRouteShapes(commuterRoutes[i], commuterRoutes.length - i);
             drawCommuterRailStopMarkers(commuterRoutes[i]);
         }
+
+        // Draw the transfer indicators
+        drawTransferLine(rapidRoutes[0].getId(), rapidRoutes[1].getId(), "place-state");
+        drawTransferLine(rapidRoutes[0].getId(), rapidRoutes[4].getId(), "place-gover");
+        drawTransferLine(rapidRoutes[0].getId(), rapidRoutes[5].getId(), "place-aport");
+        drawTransferLine(rapidRoutes[1].getId(), rapidRoutes[2].getId(), "place-dwnxg");
+        drawTransferLine(rapidRoutes[1].getId(), rapidRoutes[4].getId(), "place-north");
+        drawTransferLine(rapidRoutes[1].getId(), rapidRoutes[4].getId(), "place-haecl");
+        drawTransferLine(rapidRoutes[2].getId(), rapidRoutes[3].getId(), "place-asmnl");
+        drawTransferLine(rapidRoutes[2].getId(), rapidRoutes[4].getId(), "place-pktrm");
+        drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[1].getId(), "place-mlmnl");
+        drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[2].getId(), "place-portr");
+        drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[4].getId(), "place-north");
+        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-bbsta");
+        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-bbsta-worcester");
+        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-rugg");
+        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-forhl");
+        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[2].getId(), "place-sstat");
+        drawTransferLine(commuterRoutes[2].getId(), rapidRoutes[2].getId(), "place-jfk");
+        drawTransferLine(commuterRoutes[2].getId(), rapidRoutes[2].getId(), "place-qnctr");
+        drawTransferLine(commuterRoutes[2].getId(), rapidRoutes[2].getId(), "place-brntn");
+
 
         // Set the action listeners
         gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
@@ -438,6 +469,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     displayedLocation.setLatitude(gMap.getCameraPosition().target.latitude);
                     displayedLocation.setLongitude(gMap.getCameraPosition().target.longitude);
+
+                    // Display lat/lon coordinates in debug text view
+                    /*
+                    DecimalFormat df = new DecimalFormat("#.######");
+                    String debugText = df.format(displayedLocation.getLatitude()) + "\n" +
+                            df.format(displayedLocation.getLongitude());
+                    debugTextView.setText(debugText);
+                    */
 
                     // If the user has moved the map, then force a predictions update
                     if (cameraMoveReason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE &&
@@ -486,15 +525,18 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     // If the user has changed the zoom level,
                     // then change key stop markers visibilities
                     if (gMap.getCameraPosition().zoom >= KEY_STOP_MARKER_VISIBILITY_LEVEL) {
-                        for (Marker marker : keyStopMarkers.values()) {
+                        for (Marker marker : rapidStopMarkers.values()) {
                             marker.setVisible(true);
                         }
+                        for (Polyline line : transferLines) {
+                            line.setVisible(true);
+                        }
                     } else {
-                        for (Marker marker : keyStopMarkers.values()) {
-                            Stop stop = (Stop) marker.getTag();
-                            if (!marker.equals(selectedStopMarker) &&
-                                    !commuterStopMarkers.containsKey(stop.getId()))
-                                marker.setVisible(false);
+                        for (Marker marker : rapidStopMarkers.values()) {
+                            marker.setVisible(false);
+                        }
+                        for (Polyline line : transferLines) {
+                            line.setVisible(false);
                         }
                     }
 
@@ -922,8 +964,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Display the new stops
         for (Stop stop : stops) {
             String stopId = stop.getId();
-            if (!displayedStops.containsKey(stopId) && !keyStopMarkers.containsKey(stopId)
-                    && !commuterStopMarkers.containsKey(stopId)) {
+            if (!displayedStops.containsKey(stopId) && !keyStops.containsKey(stopId)) {
                 displayedStops.put(stopId, stop);
                 displayedStopMarkers.put(stopId, drawStopMarker(stop));
             }
@@ -1052,29 +1093,31 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawKeyStopMarkers(Route route) {
-        HashMap<String, Marker> markers = new HashMap<>();
+        StopMarkerFactory transferMarker = new TransferStopMarkerFactory();
 
         for (Shape shape : route.getAllShapes()) {
             for (Stop stop : shape.getStops()) {
-                if (keyStopMarkers.containsKey(stop.getId())) {
-                    keyStopMarkers.get(stop.getId()).setIcon(
-                            BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
-                } else if (!markers.containsKey(stop.getId())) {
-                    Marker stopMarker = gMap.addMarker(route.getStopMarkerOptions()
+                String markerId = route.getId() + "_" + stop.getId();
+
+                MarkerOptions markerOptions = (stop.isTransferStop()) ?
+                        transferMarker.createMarkerOptions() :
+                        route.getStopMarkerOptions();
+
+                if (!rapidStopMarkers.containsKey(markerId)) {
+                    Marker stopMarker = gMap.addMarker(markerOptions
                             .position(new LatLng(
                                     stop.getLocation().getLatitude(),
                                     stop.getLocation().getLongitude()))
-                            .zIndex(22)
+                            .zIndex(24)
                             .title(stop.getName()));
 
                     stopMarker.setTag(stop);
 
-                    markers.put(stop.getId(), stopMarker);
+                    keyStops.put(stop.getId(), stop);
+                    rapidStopMarkers.put(markerId, stopMarker);
                 }
             }
         }
-
-        keyStopMarkers.putAll(markers);
     }
 
     private void drawCommuterRailStopMarkers(Route route) {
@@ -1082,23 +1125,24 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         for (Shape shape : route.getAllShapes()) {
             for (Stop stop : shape.getStops()) {
-                if (keyStopMarkers.containsKey(stop.getId())) {
-                    Marker marker = keyStopMarkers.get(stop.getId());
-                    marker.setIcon(
-                            BitmapDescriptorFactory.fromResource(R.drawable.icon_stop));
-                    markers.put(stop.getId(), marker);
+                String markerId = route.getId() + "_" + stop.getId();
 
-                } else if (!markers.containsKey(stop.getId())) {
-                    Marker stopMarker = gMap.addMarker(route.getStopMarkerOptions()
+                MarkerOptions markerOptions = (stop.isTransferStop()) ?
+                        new TransferStopMarkerFactory().createMarkerOptions() :
+                        route.getStopMarkerOptions();
+
+                if (!commuterStopMarkers.containsKey(markerId)) {
+                    Marker stopMarker = gMap.addMarker(markerOptions
                             .position(new LatLng(
                                     stop.getLocation().getLatitude(),
                                     stop.getLocation().getLongitude()))
-                            .zIndex(21)
+                            .zIndex(23)
                             .title(stop.getName()));
 
                     stopMarker.setTag(stop);
 
-                    markers.put(stop.getId(), stopMarker);
+                    keyStops.put(stop.getId(), stop);
+                    commuterStopMarkers.put(markerId, stopMarker);
                 }
             }
         }
@@ -1111,7 +1155,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 .position(new LatLng(
                         stop.getLocation().getLatitude(),
                         stop.getLocation().getLongitude()))
-                .zIndex(20)
+                .zIndex(22)
                 .title(stop.getName()));
 
         stopMarker.setTag(stop);
@@ -1119,6 +1163,30 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         stopMarker.setVisible(gMap.getCameraPosition().zoom >= STOP_MARKER_VISIBILITY_LEVEL);
 
         return stopMarker;
+    }
+
+    private void drawTransferLine(String route1, String route2, String stop) {
+        Marker marker1 = (rapidStopMarkers.get(route1 + "_" + stop) != null) ?
+                (rapidStopMarkers.get(route1 + "_" + stop)) :
+                (commuterStopMarkers.get(route1 + "_" + stop));
+        Marker marker2 = (rapidStopMarkers.get(route2 + "_" + stop) != null) ?
+                (rapidStopMarkers.get(route2 + "_" + stop)) :
+                (commuterStopMarkers.get(route2 + "_" + stop));
+
+        if (marker1 == null || marker2 == null) {
+            return;
+        }
+
+        transferLines.add(gMap.addPolyline(new PolylineOptions()
+                .add(marker1.getPosition())
+                .add(marker2.getPosition())
+                .color(Color.parseColor("#000000"))
+                .zIndex(21)
+                .jointType(JointType.ROUND)
+                .startCap(new RoundCap())
+                .endCap(new RoundCap())
+                .width(5))
+        );
     }
 
     private class LocationClientCallbacks implements LocationClient.LocationClientCallbacks {
@@ -1319,10 +1387,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     route.addPrediction(prediction);
 
                     // If this prediction's stop is closer than route's current nearest stop
-                } else if (live && stop.getLocation().distanceTo(targetLocation) <
-                        route.getNearestStop(direction).getLocation()
-                                .distanceTo(targetLocation)
-                        && prediction.willPickUpPassengers()) {
+                } else if (stop.getLocation().distanceTo(targetLocation) <
+                        route.getNearestStop(direction).getLocation().distanceTo(targetLocation)
+                        && live && prediction.willPickUpPassengers()) {
                     route.setNearestStop(direction, stop);
                     route.addPrediction(prediction);
                 }

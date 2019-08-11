@@ -385,7 +385,7 @@
               "type": "stop"
             },
             {
-              "id": "place-bbsta",
+              "id": "place-bbsta-worcester",
               "type": "stop"
             },
             {
@@ -633,7 +633,7 @@
               "type": "stop"
             },
             {
-              "id": "place-bbsta",
+              "id": "place-bbsta-worcester",
               "type": "stop"
             },
             {
@@ -1208,9 +1208,9 @@
       "attributes": {
         "address": "Washington St and Hyde Park Ave, Jamaica Plain, MA 02130",
         "description": null,
-        "latitude": 42.300523,
+        "latitude": 42.300620,
         "location_type": 1,
-        "longitude": -71.113686,
+        "longitude": -71.113826,
         "name": "Forest Hills",
         "platform_code": null,
         "platform_name": null,
@@ -1469,9 +1469,9 @@
       "attributes": {
         "address": "700 Atlantic Ave, Boston, MA 02110",
         "description": null,
-        "latitude": 42.352271,
+        "latitude": 42.351760,
         "location_type": 1,
-        "longitude": -71.055242,
+        "longitude": -71.054800,
         "name": "South Station",
         "platform_code": null,
         "platform_name": null,
@@ -1788,15 +1788,44 @@
       "attributes": {
         "address": "145 Dartmouth St Boston, MA 02116",
         "description": null,
-        "latitude": 42.34735,
+        "latitude": 42.347413,
         "location_type": 1,
-        "longitude": -71.075727,
+        "longitude": -71.075396,
         "name": "Back Bay",
         "platform_code": null,
         "platform_name": null,
         "wheelchair_boarding": 1
       },
       "id": "place-bbsta",
+      "links": {
+        "self": "/stops/place-bbsta"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-bbsta"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "145 Dartmouth St Boston, MA 02116",
+        "description": null,
+        "latitude": 42.347640,
+        "location_type": 1,
+        "longitude": -71.075423,
+        "name": "Back Bay",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-bbsta-worcester",
       "links": {
         "self": "/stops/place-bbsta"
       },
@@ -2107,9 +2136,9 @@
       "attributes": {
         "address": "1150 Tremont St, Roxbury, MA 02120",
         "description": null,
-        "latitude": 42.336377,
+        "latitude": 42.336426,
         "location_type": 1,
-        "longitude": -71.088961,
+        "longitude": -71.089258,
         "name": "Ruggles",
         "platform_code": null,
         "platform_name": null,

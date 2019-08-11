@@ -120,9 +120,9 @@
       "attributes": {
         "address": "Dorchester Ave and Ashmont St, Boston, MA 02124",
         "description": null,
-        "latitude": 42.284171,
+        "latitude": 42.284099,
         "location_type": 1,
-        "longitude": -71.063414,
+        "longitude": -71.063300,
         "name": "Ashmont",
         "platform_code": null,
         "platform_name": null,

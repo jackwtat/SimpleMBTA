@@ -46,6 +46,16 @@
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_map_target"
                     android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/debug_text_view"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:background="#ff000000"
+                    android:padding="2dp"
+                    android:textColor="#ffffffff"
+                    android:visibility="gone"
+                    tools:text="00.000000, 00.000000" />
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
