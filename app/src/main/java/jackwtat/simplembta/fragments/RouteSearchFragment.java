@@ -93,7 +93,6 @@ public class RouteSearchFragment extends Fragment implements
     private ArrayList<Route> allRoutes = new ArrayList<>();
     private Route selectedRoute;
     private int selectedDirectionId;
-    private Stop selectedStop;
 
     private boolean queryInProgress = false;
     private Route queryRoute = null;
@@ -642,7 +641,7 @@ public class RouteSearchFragment extends Fragment implements
 
     @Override
     public void onStopSelected(Stop stop) {
-        selectedStop = stop;
+        Stop selectedStop = stop;
         selectedRoute.setNearestStop(selectedDirectionId, stop);
 
         // Find the nearest stop in the opposite direction
