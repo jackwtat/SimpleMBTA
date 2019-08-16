@@ -435,7 +435,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[2].getId(), "place-portr");
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[4].getId(), "place-north");
         drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-bbsta");
-        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-bbsta-worcester");
+        drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(),
+                "place-bbsta-worcester", "place-bbsta");
         drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-rugg");
         drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-forhl");
         drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[2].getId(), "place-sstat");
@@ -1165,13 +1166,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         return stopMarker;
     }
 
-    private void drawTransferLine(String route1, String route2, String stop) {
-        Marker marker1 = (rapidStopMarkers.get(route1 + "_" + stop) != null) ?
-                (rapidStopMarkers.get(route1 + "_" + stop)) :
-                (commuterStopMarkers.get(route1 + "_" + stop));
-        Marker marker2 = (rapidStopMarkers.get(route2 + "_" + stop) != null) ?
-                (rapidStopMarkers.get(route2 + "_" + stop)) :
-                (commuterStopMarkers.get(route2 + "_" + stop));
+    private void drawTransferLine(String route1, String route2, String stop){
+        drawTransferLine(route1, route2, stop, stop);
+    }
+
+    private void drawTransferLine(String route1, String route2, String stop1, String stop2) {
+        Marker marker1 = (rapidStopMarkers.get(route1 + "_" + stop1) != null) ?
+                (rapidStopMarkers.get(route1 + "_" + stop1)) :
+                (commuterStopMarkers.get(route1 + "_" + stop1));
+        Marker marker2 = (rapidStopMarkers.get(route2 + "_" + stop2) != null) ?
+                (rapidStopMarkers.get(route2 + "_" + stop2)) :
+                (commuterStopMarkers.get(route2 + "_" + stop2));
 
         if (marker1 == null || marker2 == null) {
             return;

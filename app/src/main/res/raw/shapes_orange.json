@@ -73,10 +73,6 @@
               "type": "stop"
             },
             {
-              "id": "place-bbsta-worcester",
-              "type": "stop"
-            },
-            {
               "id": "place-masta",
               "type": "stop"
             },
@@ -159,10 +155,6 @@
             },
             {
               "id": "place-bbsta",
-              "type": "stop"
-            },
-            {
-              "id": "place-bbsta-worcester",
               "type": "stop"
             },
             {
@@ -262,35 +254,6 @@
         "wheelchair_boarding": 1
       },
       "id": "place-bbsta",
-      "links": {
-        "self": "/stops/place-bbsta"
-      },
-      "relationships": {
-        "child_stops": {},
-        "facilities": {
-          "links": {
-            "related": "/facilities/?filter[stop]=place-bbsta"
-          }
-        },
-        "parent_station": {
-          "data": null
-        }
-      },
-      "type": "stop"
-    },
-    {
-      "attributes": {
-        "address": "145 Dartmouth St Boston, MA 02116",
-        "description": null,
-        "latitude": 42.347483,
-        "location_type": 1,
-        "longitude": -71.075408,
-        "name": "Back Bay",
-        "platform_code": null,
-        "platform_name": null,
-        "wheelchair_boarding": 1
-      },
-      "id": "place-bbsta-worcester",
       "links": {
         "self": "/stops/place-bbsta"
       },
