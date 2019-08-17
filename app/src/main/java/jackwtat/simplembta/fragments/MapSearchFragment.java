@@ -234,7 +234,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 getShapesFromJson(R.raw.shapes_mattapan)};
         for (Shape[] s : keyShapes) {
             for (Route r : rapidRoutes) {
-                if (r.equals(s[0].getRouteId())) {
+                if (r.equals(new Route(s[0].getRouteId()))) {
                     r.addShapes(s);
                     break;
                 }
@@ -250,7 +250,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 getShapesFromJson(R.raw.shapes_boat_f4)};
         for (Shape[] s : commuterShapes) {
             for (Route r : commuterRoutes) {
-                if (r.equals(s[0].getRouteId())) {
+                if (r.equals(new Route(s[0].getRouteId()))) {
                     r.addShapes(s);
                     break;
                 }
@@ -275,7 +275,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
         behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
             @Override
-            public boolean canDrag(AppBarLayout appBarLayout) {
+            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
                 return false;
             }
         });
@@ -309,7 +309,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Add onScrollListener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
                     if (!viewsRefreshing) {
@@ -1094,14 +1094,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawKeyStopMarkers(Route route) {
-        StopMarkerFactory transferMarker = new TransferStopMarkerFactory();
-
         for (Shape shape : route.getAllShapes()) {
             for (Stop stop : shape.getStops()) {
                 String markerId = route.getId() + "_" + stop.getId();
 
                 MarkerOptions markerOptions = (stop.isTransferStop()) ?
-                        transferMarker.createMarkerOptions() :
+                        new TransferStopMarkerFactory().createMarkerOptions() :
                         route.getStopMarkerOptions();
 
                 if (!rapidStopMarkers.containsKey(markerId)) {
@@ -1122,8 +1120,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawCommuterRailStopMarkers(Route route) {
-        HashMap<String, Marker> markers = new HashMap<>();
-
         for (Shape shape : route.getAllShapes()) {
             for (Stop stop : shape.getStops()) {
                 String markerId = route.getId() + "_" + stop.getId();
@@ -1147,8 +1143,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
         }
-
-        commuterStopMarkers.putAll(markers);
     }
 
     private Marker drawStopMarker(Stop stop) {
