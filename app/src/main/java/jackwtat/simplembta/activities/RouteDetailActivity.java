@@ -193,7 +193,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
         behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
             @Override
-            public boolean canDrag(AppBarLayout appBarLayout) {
+            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
                 return false;
             }
         });
@@ -238,7 +238,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Add on scroll listener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
                     refreshPredictions(false);
