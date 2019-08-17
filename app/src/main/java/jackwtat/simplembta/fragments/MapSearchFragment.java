@@ -1166,7 +1166,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         return stopMarker;
     }
 
-    private void drawTransferLine(String route1, String route2, String stop){
+    private void drawTransferLine(String route1, String route2, String stop) {
         drawTransferLine(route1, route2, stop, stop);
     }
 
@@ -1391,10 +1391,18 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     route.setNearestStop(direction, stop);
                     route.addPrediction(prediction);
 
-                    // If this prediction's stop is closer than route's current nearest stop
-                } else if (stop.getLocation().distanceTo(targetLocation) <
-                        route.getNearestStop(direction).getLocation().distanceTo(targetLocation)
-                        && live && prediction.willPickUpPassengers()) {
+                    // If this prediction is live and closer than route's current nearest stop
+                } else if (live && prediction.willPickUpPassengers() &&
+                        route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                stop.getLocation().distanceTo(targetLocation)) {
+                    route.setNearestStop(direction, stop);
+                    route.addPrediction(prediction);
+
+                    // If this prediction is not live and closer than the current nearest stop
+                } else if (!live && !route.hasLivePredictions(direction) &&
+                        prediction.willPickUpPassengers() &&
+                        route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                stop.getLocation().distanceTo(targetLocation)) {
                     route.setNearestStop(direction, stop);
                     route.addPrediction(prediction);
                 }

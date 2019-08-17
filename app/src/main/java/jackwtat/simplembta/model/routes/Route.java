@@ -341,6 +341,16 @@ public class Route implements Comparable<Route>, Serializable {
         return nearestStops[0] != null || nearestStops[1] != null;
     }
 
+    public boolean hasLivePredictions(int direction) {
+        for (Prediction p : predictions.get(direction)) {
+            if (p.isLive()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public int compareTo(@NonNull Route otherRoute) {
         if (this.sortOrder != otherRoute.sortOrder) {
