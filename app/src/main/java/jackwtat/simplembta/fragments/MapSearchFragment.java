@@ -751,62 +751,64 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onErrorChanged() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                errorTextView.setOnClickListener(null);
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    errorTextView.setOnClickListener(null);
 
-                if (errorManager.hasNetworkError()) {
-                    errorTextView.setText(R.string.network_error_text);
-                    errorTextView.setVisibility(View.VISIBLE);
+                    if (errorManager.hasNetworkError()) {
+                        errorTextView.setText(R.string.network_error_text);
+                        errorTextView.setVisibility(View.VISIBLE);
 
-                } else if (errorManager.hasLocationPermissionDenied()) {
-                    errorTextView.setText(R.string.location_permission_denied_text);
-                    errorTextView.setVisibility(View.VISIBLE);
-                    errorTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            LocationClient.requestLocationPermission(getActivity());
+                    } else if (errorManager.hasLocationPermissionDenied()) {
+                        errorTextView.setText(R.string.location_permission_denied_text);
+                        errorTextView.setVisibility(View.VISIBLE);
+                        errorTextView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                LocationClient.requestLocationPermission(getActivity());
+                            }
+                        });
+
+                    } else if (errorManager.hasLocationError()) {
+                        errorTextView.setText(R.string.location_error_text);
+                        errorTextView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        errorTextView.setVisibility(View.GONE);
+                    }
+
+                    if (errorManager.hasLocationPermissionDenied() || errorManager.hasLocationError() ||
+                            errorManager.hasNetworkError()) {
+                        if (targetRoutes != null) {
+                            targetRoutes.clear();
+                            forceUpdate();
                         }
-                    });
 
-                } else if (errorManager.hasLocationError()) {
-                    errorTextView.setText(R.string.location_error_text);
-                    errorTextView.setVisibility(View.VISIBLE);
+                        if (mapReady) {
+                            UiSettings mapUiSettings = gMap.getUiSettings();
+                            mapUiSettings.setMyLocationButtonEnabled(false);
+                            mapTargetView.setVisibility(View.VISIBLE);
+                        }
 
-                } else {
-                    errorTextView.setVisibility(View.GONE);
-                }
-
-                if (errorManager.hasLocationPermissionDenied() || errorManager.hasLocationError() ||
-                        errorManager.hasNetworkError()) {
-                    if (targetRoutes != null) {
-                        targetRoutes.clear();
-                        forceUpdate();
-                    }
-
-                    if (mapReady) {
+                    } else if (mapReady && ActivityCompat.checkSelfPermission(getContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         UiSettings mapUiSettings = gMap.getUiSettings();
-                        mapUiSettings.setMyLocationButtonEnabled(false);
-                        mapTargetView.setVisibility(View.VISIBLE);
-                    }
+                        gMap.setMyLocationEnabled(true);
+                        mapUiSettings.setMyLocationButtonEnabled(true);
 
-                } else if (mapReady && ActivityCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    UiSettings mapUiSettings = gMap.getUiSettings();
-                    gMap.setMyLocationEnabled(true);
-                    mapUiSettings.setMyLocationButtonEnabled(true);
+                        if (mapState == USER_HAS_NOT_MOVED_MAP || selectedStop != null) {
+                            mapTargetView.setVisibility(View.GONE);
+                        }
 
-                    if (mapState == USER_HAS_NOT_MOVED_MAP || selectedStop != null) {
-                        mapTargetView.setVisibility(View.GONE);
-                    }
-
-                    if (mapReady) {
-                        locationClient.updateLocation(new MapSearchFragment.LocationClientCallbacks());
+                        if (mapReady) {
+                            locationClient.updateLocation(new MapSearchFragment.LocationClientCallbacks());
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void backgroundUpdate() {
@@ -1016,21 +1018,23 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void enableOnErrorView(String message) {
         final String m = message;
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                recyclerViewAdapter.clear();
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewAdapter.clear();
 
-                recyclerView.setNestedScrollingEnabled(false);
+                    recyclerView.setNestedScrollingEnabled(false);
 
-                swipeRefreshLayout.setRefreshing(false);
+                    swipeRefreshLayout.setRefreshing(false);
 
-                appBarLayout.setExpanded(true);
+                    appBarLayout.setExpanded(true);
 
-                noPredictionsTextView.setText(m);
-                noPredictionsTextView.setVisibility(View.VISIBLE);
-            }
-        });
+                    noPredictionsTextView.setText(m);
+                    noPredictionsTextView.setVisibility(View.VISIBLE);
+                }
+            });
+        }
     }
 
     private void clearPredictions() {

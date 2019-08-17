@@ -326,39 +326,41 @@ public class RouteSearchFragment extends Fragment implements
 
     @Override
     public void onErrorChanged() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (errorManager.hasNetworkError()) {
-                    errorTextView.setText(R.string.network_error_text);
-                    errorTextView.setVisibility(View.VISIBLE);
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (errorManager.hasNetworkError()) {
+                        errorTextView.setText(R.string.network_error_text);
+                        errorTextView.setVisibility(View.VISIBLE);
 
-                    if (selectedRoute != null) {
-                        selectedRoute.clearPredictions(Direction.INBOUND);
-                        selectedRoute.clearPredictions(Direction.OUTBOUND);
-                        selectedRoute.clearServiceAlerts();
+                        if (selectedRoute != null) {
+                            selectedRoute.clearPredictions(Direction.INBOUND);
+                            selectedRoute.clearPredictions(Direction.OUTBOUND);
+                            selectedRoute.clearServiceAlerts();
 
-                        refreshPredictions(true);
-                        refreshServiceAlerts();
-                    }
-                } else {
-                    errorTextView.setVisibility(View.GONE);
-
-                    if (allRoutes == null || allRoutes.size() == 0) {
-                        getRoutes();
-                    } else if (selectedRoute.getStops(selectedDirectionId).length == 0) {
-                        Route route = selectedRoute;
-                        searchSpinners.clearRoutes();
-                        searchSpinners.populateRouteSpinner(
-                                allRoutes.toArray(new Route[0]));
-                        searchSpinners.selectRoute(route.getId());
+                            refreshPredictions(true);
+                            refreshServiceAlerts();
+                        }
                     } else {
-                        swipeRefreshLayout.setRefreshing(true);
-                        getPredictions();
+                        errorTextView.setVisibility(View.GONE);
+
+                        if (allRoutes == null || allRoutes.size() == 0) {
+                            getRoutes();
+                        } else if (selectedRoute.getStops(selectedDirectionId).length == 0) {
+                            Route route = selectedRoute;
+                            searchSpinners.clearRoutes();
+                            searchSpinners.populateRouteSpinner(
+                                    allRoutes.toArray(new Route[0]));
+                            searchSpinners.selectRoute(route.getId());
+                        } else {
+                            swipeRefreshLayout.setRefreshing(true);
+                            getPredictions();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void getRoutes() {
@@ -473,12 +475,14 @@ public class RouteSearchFragment extends Fragment implements
                     swipeRefreshLayout.setRefreshing(false);
                 }
             } else {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshPredictions(true);
-                    }
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshPredictions(true);
+                        }
+                    });
+                }
             }
         }
     }
