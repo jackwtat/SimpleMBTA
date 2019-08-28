@@ -11,6 +11,7 @@
     <string name="route_search_title">Routes</string>
 
     <!-- Spinner Titles -->
+    <string name="route">Route</string>
     <string name="direction">Direction</string>
     <string name="from">From</string>
     <string name="map">Map</string>
