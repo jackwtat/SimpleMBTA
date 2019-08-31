@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -133,11 +134,11 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
                 dialog.setCustomTitle(new ServiceAlertsTitleView(view.getContext(),
                         (alertsCount > 0)
                                 ? (alertsCount + advisoriesCount > 1)
-                                    ? view.getContext().getString(R.string.service_alerts)
-                                    : view.getContext().getString(R.string.service_alert)
+                                ? view.getContext().getString(R.string.service_alerts)
+                                : view.getContext().getString(R.string.service_alert)
                                 : (advisoriesCount > 1)
-                                    ? view.getContext().getString(R.string.service_advisories)
-                                    : view.getContext().getString(R.string.service_advisory),
+                                ? view.getContext().getString(R.string.service_advisories)
+                                : view.getContext().getString(R.string.service_advisory),
                         Color.parseColor(route.getTextColor()),
                         Color.parseColor(route.getPrimaryColor()),
                         route.getMode() == Route.BUS &&
