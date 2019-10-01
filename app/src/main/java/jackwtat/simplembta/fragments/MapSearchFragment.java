@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -476,6 +477,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     String debugText = df.format(displayedLocation.getLatitude()) + "\n" +
                             df.format(displayedLocation.getLongitude());
                     debugTextView.setText(debugText);
+                    debugTextView.setVisibility(View.VISIBLE);
                     */
 
                     // If the user has moved the map, then force a predictions update
