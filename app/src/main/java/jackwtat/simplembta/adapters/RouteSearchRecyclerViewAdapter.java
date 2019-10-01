@@ -20,7 +20,6 @@ public class RouteSearchRecyclerViewAdapter
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private OnItemClickListener onItemClickListener = null;
     private Route routeServiceAlerts = null;
-    private boolean vehicleNumberEnabled = false;
 
     private boolean cleared = true;
 
@@ -55,30 +54,31 @@ public class RouteSearchRecyclerViewAdapter
             Prediction prediction = predictions.get(position);
             holder.predictionView.setPrediction(prediction);
 
-            if (prediction != null) {
-                if (prediction.getRoute() != null &&
-                        prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                        prediction.getTripName() != null &&
-                        !prediction.getTripName().equalsIgnoreCase("null")) {
-                    holder.predictionView.setTrainNumber(prediction.getTripName());
+            if (prediction.getRoute() != null &&
+                    prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                    prediction.getTripName() != null &&
+                    !prediction.getTripName().equalsIgnoreCase("null")) {
+                holder.predictionView.setTrainNumber(prediction.getTripName());
 
-                } else if (vehicleNumberEnabled &&
-                        prediction.getVehicle() != null &&
-                        prediction.getVehicle().getLabel() != null &&
-                        !prediction.getVehicle().getLabel().equalsIgnoreCase("null")) {
-                    holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
+            } else if (prediction.getVehicle() != null &&
+                    prediction.getVehicle().getLabel() != null &&
+                    !prediction.getVehicle().getLabel().equalsIgnoreCase("null")) {
+                holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
+
+            } else if (prediction.getVehicleId() != null &&
+                    prediction.getVehicleId().equalsIgnoreCase("null")) {
+                holder.predictionView.setVehicleNumber(prediction.getVehicleId());
+            }
+        }
+
+        if (onItemClickListener != null) {
+            holder.predictionView.enableOnClickAnimation(true);
+            holder.predictionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onItemClick(position);
                 }
-            }
-
-            if (onItemClickListener != null) {
-                holder.predictionView.enableOnClickAnimation(true);
-                holder.predictionView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onItemClickListener.onItemClick(position);
-                    }
-                });
-            }
+            });
         }
     }
 
@@ -121,10 +121,6 @@ public class RouteSearchRecyclerViewAdapter
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
-    }
-
-    public void enableVehicleNumber(boolean enabled) {
-        vehicleNumberEnabled = enabled;
     }
 
     public interface OnItemClickListener {

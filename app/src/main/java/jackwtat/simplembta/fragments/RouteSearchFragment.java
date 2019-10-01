@@ -21,18 +21,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.activities.MainActivity;
-import jackwtat.simplembta.activities.RouteDetailActivity;
+import jackwtat.simplembta.activities.TripDetailActivity;
 import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
+import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Direction;
@@ -40,6 +42,7 @@ import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.GreenLineCombined;
@@ -68,6 +71,9 @@ public class RouteSearchFragment extends Fragment implements
     // Service alerts auto update rate
     public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
 
+    // Vehicle locations auto update rate
+    public static final long VEHICLES_UPDATE_RATE = 5000;
+
     private RouteSearchSpinners searchSpinners;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -81,6 +87,7 @@ public class RouteSearchFragment extends Fragment implements
     private ShapesAsyncTask shapesAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
+    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
     private ErrorManager errorManager;
     private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
@@ -102,6 +109,8 @@ public class RouteSearchFragment extends Fragment implements
 
     private String savedRouteId;
     private String[] savedStopIds = new String[2];
+
+    private HashMap<String, Vehicle> vehicles = new HashMap<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,16 +142,6 @@ public class RouteSearchFragment extends Fragment implements
         searchSpinners.setOnRouteSelectedListener(this);
         searchSpinners.setOnDirectionSelectedListener(this);
         searchSpinners.setOnStopSelectedListener(this);
-        searchSpinners.setOnMapButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                intent.putExtra("route", selectedRoute);
-                intent.putExtra("direction", selectedDirectionId);
-                intent.putExtra("refreshTime", refreshTime);
-                startActivity(intent);
-            }
-        });
 
         // Get service alerts indicator
         serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
@@ -183,41 +182,24 @@ public class RouteSearchFragment extends Fragment implements
 
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
-        recyclerViewAdapter.enableVehicleNumber(false);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set the onClickListener listener
-        /*recyclerViewAdapter.setOnItemClickListener(new RouteDetailRecyclerViewAdapter.OnItemClickListener() {
+        recyclerViewAdapter.setOnItemClickListener(new RouteSearchRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Prediction prediction = recyclerViewAdapter.getPrediction(position);
+                if (position < recyclerViewAdapter.getItemCount() - 1) {
+                    Prediction prediction = recyclerViewAdapter.getPrediction(position);
 
-                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
-
-                TextView testTextView = new TextView(getContext());
-
-                String testText = "";
-
-                testText += "Trip: " + prediction.getTripId();
-                testText += "\nVehicle: " + prediction.getVehicleId();
-                testText += "\nDestination: " + prediction.getDestination();
-                testText += "\nDeparture: " + new SimpleDateFormat("h:mm:ss").format(prediction.getPredictionTime());
-
-                testTextView.setText(testText);
-
-                dialog.setView(testTextView);
-
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-
-                dialog.show();
+                    Intent intent = new Intent(getActivity(), TripDetailActivity.class);
+                    intent.putExtra("route", prediction.getRoute());
+                    intent.putExtra("stop", prediction.getStop());
+                    intent.putExtra("trip", prediction.getTripId());
+                    intent.putExtra("date", prediction.getPredictionTime());
+                    startActivity(intent);
+                }
             }
-        });*/
+        });
 
         // Set the error text message
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
@@ -266,6 +248,7 @@ public class RouteSearchFragment extends Fragment implements
         timer = new Timer();
         timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
         timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
+        timer.schedule(new VehiclesUpdateTimerTask(), 0, VEHICLES_UPDATE_RATE);
 
         MainActivity.registerOutsideQueryListener(this);
     }
@@ -288,6 +271,10 @@ public class RouteSearchFragment extends Fragment implements
 
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
+        }
+
+        if (vehiclesAsyncTask != null) {
+            vehiclesAsyncTask.cancel(true);
         }
 
         if (timer != null) {
@@ -356,6 +343,7 @@ public class RouteSearchFragment extends Fragment implements
                         } else {
                             swipeRefreshLayout.setRefreshing(true);
                             getPredictions();
+                            getVehicles();
                         }
                     }
                 }
@@ -484,6 +472,25 @@ public class RouteSearchFragment extends Fragment implements
                     });
                 }
             }
+        }
+    }
+
+    private void getVehicles() {
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
+
+            if (vehiclesAsyncTask != null) {
+                vehiclesAsyncTask.cancel(true);
+            }
+
+            if (selectedRoute != null && selectedRoute.getId() != null) {
+                vehiclesAsyncTask = new VehiclesByRouteAsyncTask(
+                        realTimeApiKey, selectedRoute.getId(), new VehiclesPostExecuteListener());
+                vehiclesAsyncTask.execute();
+            }
+
+        } else {
+            errorManager.setNetworkError(true);
         }
     }
 
@@ -624,6 +631,7 @@ public class RouteSearchFragment extends Fragment implements
 
         refreshServiceAlerts();
         getServiceAlerts();
+        getVehicles();
 
         populateDirectionSpinner(selectedRoute.getAllDirections());
     }
@@ -798,6 +806,13 @@ public class RouteSearchFragment extends Fragment implements
             dataRefreshing = false;
             refreshTime = new Date().getTime();
 
+            for (Prediction p : predictions) {
+                Vehicle v = vehicles.get(p.getVehicleId());
+                if (v != null) {
+                    p.setVehicle(v);
+                }
+            }
+
             // Lock the views to prevent UI changes while loading new data to views
             viewsRefreshing = true;
 
@@ -824,6 +839,21 @@ public class RouteSearchFragment extends Fragment implements
         }
     }
 
+    private class VehiclesPostExecuteListener implements VehiclesByRouteAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Vehicle[] vs) {
+            vehicles.clear();
+
+            for (Vehicle v : vs) {
+                vehicles.put(v.getId(), v);
+            }
+        }
+
+        @Override
+        public void onError() {
+        }
+    }
+
     private class PredictionsUpdateTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -835,6 +865,13 @@ public class RouteSearchFragment extends Fragment implements
         @Override
         public void run() {
             getServiceAlerts();
+        }
+    }
+
+    private class VehiclesUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            getVehicles();
         }
     }
 }

@@ -4,9 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,13 +13,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -50,32 +45,25 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
-import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
-import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
-import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
+import jackwtat.simplembta.adapters.TripDetailRecyclerViewAdapter;
+import jackwtat.simplembta.asyncTasks.PredictionsByTripAsyncTask;
+import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
+import jackwtat.simplembta.asyncTasks.VehiclesByTripAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
-import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
-import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.routes.BlueLine;
-import jackwtat.simplembta.model.routes.GreenLine;
-import jackwtat.simplembta.model.routes.GreenLineCombined;
-import jackwtat.simplembta.model.routes.OrangeLine;
-import jackwtat.simplembta.model.routes.RedLine;
-import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.Trip;
 import jackwtat.simplembta.model.Vehicle;
+import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
-import jackwtat.simplembta.utilities.RawResourceReader;
-import jackwtat.simplembta.views.RouteDetailSpinners;
 
-public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
-        ErrorManager.OnErrorChangedListener, RouteDetailSpinners.OnDirectionSelectedListener,
-        RouteDetailSpinners.OnStopSelectedListener {
-    public static final String LOG_TAG = "RouteDetailActivity";
+public class TripDetailActivity extends AppCompatActivity implements
+        OnMapReadyCallback,
+        ErrorManager.OnErrorChangedListener {
+    public static final String LOG_TAG = "TripDetailActivity";
 
     // Predictions auto update rate
     public static final long PREDICTIONS_UPDATE_RATE = 15000;
@@ -92,96 +80,79 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private AppBarLayout appBarLayout;
     private MapView mapView;
     private GoogleMap gMap;
+    private ProgressBar mapProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private ProgressBar mapProgressBar;
     private TextView errorTextView;
-    private RouteDetailSpinners routeDetailSpinners;
 
     private String realTimeApiKey;
-    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
-    private ShapesAsyncTask shapesAsyncTask;
-    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
+    private PredictionsByTripAsyncTask predictionsAsyncTask;
+    private TripsAsyncTask tripsAsyncTask;
+    private VehiclesByTripAsyncTask vehiclesAsyncTask;
     private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
-    private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
+    private TripDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
     private boolean refreshing = false;
-    private boolean mapReady = false;
-    private boolean shapesLoaded = false;
-    private boolean mapCameraIsMoving = false;
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
-    private Location userLocation = new Location("userLocation");
-    private Route selectedRoute;
-    private int selectedDirectionId;
+    private boolean mapReady = false;
+    private boolean shapesLoaded = false;
+    private boolean mapCameraIsMoving = false;
+
+    private Trip trip;
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
     private Marker selectedStopMarker;
     private Marker selectedVehicleMarker;
 
+    private Route selectedRoute;
+    private Stop selectedStop;
+    private String selectedTripId;
+    private Date selectedDate;
+    private ArrayList<Prediction> predictions = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route_detail);
+        setContentView(R.layout.activity_trip_detail);
+        recyclerView = findViewById(R.id.predictions_recycler_view);
+        errorTextView = findViewById(R.id.error_message_text_view);
 
         // Get MBTA realTime API key
         realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
+        // Get network connectivity client
+        networkConnectivityClient = new NetworkConnectivityClient(this);
+
         // Get data saved from previous session
         if (savedInstanceState != null) {
             selectedRoute = (Route) savedInstanceState.getSerializable("route");
-            selectedDirectionId = savedInstanceState.getInt("direction");
+            selectedStop = (Stop) savedInstanceState.getSerializable("stop");
+            selectedTripId = savedInstanceState.getString("trip");
+            selectedDate = (Date) savedInstanceState.getSerializable("date");
             refreshTime = savedInstanceState.getLong("refreshTime");
-            userLocation.setLatitude(0);
-            userLocation.setLongitude(0);
 
             if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
-                for (Direction d : selectedRoute.getAllDirections()) {
-                    selectedRoute.clearPredictions(d.getId());
-                }
+                predictions.clear();
             }
 
             // Get values passed from calling activity/fragment
         } else {
             Intent intent = getIntent();
             selectedRoute = (Route) intent.getSerializableExtra("route");
-            selectedDirectionId = intent.getIntExtra("direction", Direction.NULL_DIRECTION);
+            selectedStop = (Stop) intent.getSerializableExtra("stop");
+            selectedTripId = intent.getStringExtra("trip");
+            selectedDate = (Date) intent.getSerializableExtra("date");
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
-
-            userLocation.setLatitude(intent.getDoubleExtra("userLat", 0));
-            userLocation.setLongitude(intent.getDoubleExtra("userLon", 0));
         }
-
-        // Get network connectivity client
-        networkConnectivityClient = new NetworkConnectivityClient(this);
 
         // Set action bar
-        setTitle(DisplayNameUtil.getLongDisplayName(this, selectedRoute));
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            // Create color for status bar
-            float[] hsv = new float[3];
-            Color.colorToHSV(Color.parseColor(selectedRoute.getPrimaryColor()), hsv);
-            hsv[2] *= .8f;
-
-            // Set status bar color
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(Color.HSVToColor(hsv));
-
-            // Set action bar background color
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setBackgroundDrawable(
-                    new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
-        }
-
-        // Get error text view
-        errorTextView = findViewById(R.id.error_message_text_view);
+        String title = DisplayNameUtil.getLongDisplayName(this, selectedRoute);
+        setTitle(title);
 
         // Get app bar and app bar params
         appBarLayout = findViewById(R.id.app_bar_layout);
@@ -207,33 +178,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Get map progress bar
         mapProgressBar = findViewById(R.id.map_progress_bar);
 
-        // Get the stop selector view
-        routeDetailSpinners = findViewById(R.id.route_detail_spinners);
-        populateDirectionSpinner(selectedRoute.getAllDirections());
-
-        // Populate the stops spinner with the nearest stop until we query the shapes
-        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-            Stop[] selectedStopArray = {selectedRoute.getNearestStop(selectedDirectionId)};
-            populateStopSpinner(selectedStopArray);
-        }
-
-        routeDetailSpinners.setOnDirectionSelectedListener(this);
-        routeDetailSpinners.setOnStopSelectedListener(this);
-
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,
                 R.color.colorAccent));
         swipeRefreshLayout.setEnabled(false);
 
-        // Get recycler view
+        // Get and set recycler view
         recyclerView = findViewById(R.id.predictions_recycler_view);
-
-        // Set recycler view layout
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-
-        // Enable nested scrolling
-        recyclerView.setNestedScrollingEnabled(true);
 
         // Add on scroll listener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -241,10 +194,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions(false);
-                    if (!shapesLoaded) {
-                        refreshShapes();
-                    }
+                    refreshPredictions();
 
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
@@ -253,24 +203,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
 
         // Create and set the recycler view adapter
-        recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
+        recyclerViewAdapter = new TripDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-
-        // Set OnClickListener
-        recyclerViewAdapter.setOnItemClickListener(new RouteSearchRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Vehicle vehicle = recyclerViewAdapter.getPrediction(position).getVehicle();
-
-                if (vehicle != null) {
-                    Marker marker = vehicleMarkers.get(vehicle.getId());
-
-                    if (marker != null) {
-                        marker.showInfoWindow();
-                    }
-                }
-            }
-        });
+        recyclerViewAdapter.setSelectedStop(selectedStop);
     }
 
     @Override
@@ -279,10 +214,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         mapReady = true;
 
         // Move the map camera to the selected stop
-        Stop stop = selectedRoute.getNearestStop(selectedDirectionId);
-        LatLng latLng = (stop == null)
-                ? new LatLng(userLocation.getLatitude(), userLocation.getLongitude())
-                : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
+        LatLng latLng = (selectedStop == null)
+                ? new LatLng(0, 0)
+                : new LatLng(selectedStop.getLocation().getLatitude(), selectedStop.getLocation().getLongitude());
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM_LEVEL));
 
         // Set the map style
@@ -301,6 +235,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             mapUiSettings.setMyLocationButtonEnabled(true);
         }
 
+
         // Set the action listeners
         gMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
@@ -316,6 +251,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 }
             }
         });
+        /*
         gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -336,6 +272,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 return true;
             }
         });
+         */
         gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
@@ -345,7 +282,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         });
 
         // Load route shapes
-        getShapes();
+        getTrip();
     }
 
     @Override
@@ -364,13 +301,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Refresh the activity to update UI so that the predictions are accurate
         // as of the last update
-        refreshPredictions(false);
-        refreshVehicles();
-
-        // Get the route shapes if there aren't any
-        if (polylines.size() == 0 && mapReady) {
-            getShapes();
-        }
+        refreshPredictions();
 
         // If too much time has elapsed since last refresh, then clear predictions and force update
         if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
@@ -406,8 +337,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             predictionsAsyncTask.cancel(true);
         }
 
-        if (shapesAsyncTask != null) {
-            shapesAsyncTask.cancel(true);
+        if (tripsAsyncTask != null) {
+            tripsAsyncTask.cancel(true);
         }
 
         if (vehiclesAsyncTask != null) {
@@ -434,7 +365,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable("route", selectedRoute);
-        outState.putInt("direction", selectedDirectionId);
+        outState.putSerializable("stop", selectedStop);
+        outState.putString("trip", selectedTripId);
         outState.putLong("refreshTime", refreshTime);
 
         super.onSaveInstanceState(outState);
@@ -443,7 +375,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
     }
 
     @Override
@@ -457,14 +388,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     errorTextView.setText(R.string.network_error_text);
                     errorTextView.setVisibility(View.VISIBLE);
 
-                    selectedRoute.clearPredictions(Direction.INBOUND);
-                    selectedRoute.clearPredictions(Direction.OUTBOUND);
-
-                    clearVehicleMarkers();
-
-                    refreshPredictions(true);
-                    refreshVehicles();
-
                 } else if (!errorManager.hasNetworkError()) {
                     errorTextView.setVisibility(View.GONE);
                 }
@@ -473,81 +396,37 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void getPredictions() {
-        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-            if (networkConnectivityClient.isConnected()) {
-                errorManager.setNetworkError(false);
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
 
-                refreshing = true;
+            refreshing = true;
 
-                if (predictionsAsyncTask != null) {
-                    predictionsAsyncTask.cancel(true);
-                }
-
-                predictionsAsyncTask = new RouteSearchPredictionsAsyncTask(realTimeApiKey, selectedRoute,
-                        selectedDirectionId, new PredictionsPostExecuteListener());
-                predictionsAsyncTask.execute();
-
-            } else {
-                errorManager.setNetworkError(true);
-                refreshing = false;
-                swipeRefreshLayout.setRefreshing(false);
+            if (predictionsAsyncTask != null) {
+                predictionsAsyncTask.cancel(true);
             }
+
+            predictionsAsyncTask = new PredictionsByTripAsyncTask(realTimeApiKey, selectedTripId,
+                    DateUtil.getMbtaDateOffset(selectedDate), new PredictionsPostExecuteListener());
+            predictionsAsyncTask.execute();
+
         } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    refreshPredictions(true);
-                }
-            });
+            errorManager.setNetworkError(true);
+            refreshing = false;
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    private void getShapes() {
-        // Hard coding to save the user time and data
-        if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
-            if (BlueLine.isBlueLine(selectedRoute.getId())) {
-                selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_blue));
-
-            } else if (OrangeLine.isOrangeLine(selectedRoute.getId())) {
-                selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_orange));
-
-            } else if (RedLine.isRedLine(selectedRoute.getId()) && !RedLine.isMattapanLine(selectedRoute.getId())) {
-                selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_red));
-
-            } else if (RedLine.isRedLine(selectedRoute.getId()) && RedLine.isMattapanLine(selectedRoute.getId())) {
-                selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_mattapan));
-
-            } else if (GreenLine.isGreenLine(selectedRoute.getId())) {
-                if (GreenLineCombined.isGreenLineCombined(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_combined));
-                } else if (GreenLine.isGreenLineB(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_b));
-
-                } else if (GreenLine.isGreenLineC(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_c));
-
-                } else if (GreenLine.isGreenLineD(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_d));
-
-                } else if (GreenLine.isGreenLineE(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_e));
-
-                }
-            }
-
-            refreshShapes();
-            populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
-
-        } else if (networkConnectivityClient.isConnected()) {
+    private void getTrip() {
+        if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
-            if (shapesAsyncTask != null) {
-                shapesAsyncTask.cancel(true);
+            if (tripsAsyncTask != null) {
+                tripsAsyncTask.cancel(true);
             }
 
-            shapesAsyncTask = new ShapesAsyncTask(
-                    realTimeApiKey, selectedRoute.getId(), new ShapesPostExecuteListener());
-            shapesAsyncTask.execute();
+            tripsAsyncTask = new TripsAsyncTask(
+                    realTimeApiKey, selectedTripId, new TripsPostExecuteListener());
+            tripsAsyncTask.execute();
 
         } else {
             errorManager.setNetworkError(true);
@@ -562,8 +441,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 vehiclesAsyncTask.cancel(true);
             }
 
-            vehiclesAsyncTask = new VehiclesByRouteAsyncTask(
-                    realTimeApiKey, selectedRoute.getId(), new VehiclesPostExecuteListener());
+            vehiclesAsyncTask = new VehiclesByTripAsyncTask(
+                    realTimeApiKey, selectedTripId, new VehiclesPostExecuteListener());
             vehiclesAsyncTask.execute();
 
         } else {
@@ -571,16 +450,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void refreshPredictions(boolean returnToTop) {
-        if (!userIsScrolling) {
-            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-                recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
-                swipeRefreshLayout.setRefreshing(false);
-
-                if (returnToTop) {
-                    recyclerView.scrollToPosition(0);
-                }
-            }
+    private void refreshPredictions() {
+        if (!userIsScrolling && predictions != null && predictions.size() > 0) {
+            recyclerViewAdapter.setPredictions(predictions);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -588,32 +461,30 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         if (!userIsScrolling) {
             clearShapes();
 
-            Stop selectedStop = selectedRoute.getNearestStop(selectedDirectionId);
+            Shape shape = trip.getShape();
 
-            for (Shape shape : selectedRoute.getShapes(selectedDirectionId)) {
-                if (shape.getPriority() >= 0 && shape.getStops().length > 0) {
-                    // Draw the polyline
-                    polylines.addAll(Arrays.asList(drawPolyline(shape)));
+            if (shape != null && shape.getStops().length > 0) {
+                // Draw the polyline
+                polylines.addAll(Arrays.asList(drawPolyline(shape)));
 
-                    // Draw each stop that hasn't been drawn yet
-                    for (Stop stop : shape.getStops()) {
-                        if (!stopMarkers.containsKey(stop.getId())) {
-                            // Draw the stop marker
-                            Marker currentMarker = drawStopMarker(stop);
+                // Draw each stop that hasn't been drawn yet
+                for (Stop stop : shape.getStops()) {
+                    if (!stopMarkers.containsKey(stop.getId())) {
+                        // Draw the stop marker
+                        Marker currentMarker = drawStopMarker(stop);
 
-                            // Use selected stop marker if this stop is the selected stop
-                            if (selectedStop != null && selectedStopMarker == null &&
-                                    (selectedStop.equals(stop) ||
-                                            selectedStop.isParentOf(stop.getId()) ||
-                                            stop.isParentOf(selectedStop.getId()))) {
-                                selectedStopMarker = currentMarker;
-                                selectedStopMarker.setIcon(BitmapDescriptorFactory
-                                        .fromResource(R.drawable.icon_selected_stop));
-                            }
-
-                            // Add stop to the drawn stops hash map
-                            stopMarkers.put(stop.getId(), currentMarker);
+                        // Use selected stop marker if this stop is the selected stop
+                        if (selectedStop != null && selectedStopMarker == null &&
+                                (selectedStop.equals(stop) ||
+                                        selectedStop.isParentOf(stop.getId()) ||
+                                        stop.isParentOf(selectedStop.getId()))) {
+                            selectedStopMarker = currentMarker;
+                            selectedStopMarker.setIcon(BitmapDescriptorFactory
+                                    .fromResource(R.drawable.icon_selected_stop));
                         }
+
+                        // Add stop to the drawn stops hash map
+                        stopMarkers.put(stop.getId(), currentMarker);
                     }
                 }
             }
@@ -643,8 +514,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
             // Find the currently displayed vehicles that are no longer being tracked/now expired
             for (String vehicleId : vehicleMarkers.keySet()) {
-                if (!trackedVehicleIds.contains(vehicleId))
+                if (!trackedVehicleIds.contains(vehicleId)) {
                     expiredVehicleIds.add(vehicleId);
+                }
             }
 
             // Removed the expired vehicles
@@ -666,12 +538,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     }
                 } else {
                     String vehicleTitle;
+
                     if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
                         vehicleTitle = getResources().getString(R.string.train) + " " + vehicle.getTripName();
-
                     } else {
                         vehicleTitle = getResources().getString(R.string.vehicle) + " " + vehicle.getLabel();
                     }
+
                     vehicleMarkers.put(vehicle.getId(), drawVehicleMarker(vehicle, vehicleTitle));
                 }
             }
@@ -680,7 +553,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void clearPredictions() {
         recyclerViewAdapter.clear();
-        appBarLayout.setExpanded(true);
     }
 
     private void clearShapes() {
@@ -712,10 +584,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             vm.remove();
         }
         vehicleMarkers.clear();
-    }
-
-    private Shape[] getShapesFromJson(int jsonFile) {
-        return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
 
     private Polyline[] drawPolyline(@NonNull Shape shape) {
@@ -780,107 +648,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         return vehicleMarker;
     }
 
-    private void populateDirectionSpinner(Direction[] directions) {
-        if (directions[0].getId() == Direction.SOUTHBOUND) {
-            Direction d = directions[0];
-            directions[0] = directions[1];
-            directions[1] = d;
-        }
-
-        routeDetailSpinners.populateDirectionSpinner(directions);
-        routeDetailSpinners.selectDirection(selectedDirectionId);
-    }
-
-    private void populateStopSpinner(Stop[] stops) {
-        ArrayList<Stop> stopsList = new ArrayList<>(Arrays.asList(stops));
-        Stop selectedStop = selectedRoute.getNearestStop(selectedDirectionId);
-
-        if (selectedStop != null && !stopsList.contains(selectedStop)) {
-            stopsList.add(selectedStop);
-            stops = stopsList.toArray(new Stop[0]);
-        }
-
-        routeDetailSpinners.populateStopSpinner(stops);
-
-        if (selectedStop != null) {
-            routeDetailSpinners.selectStop(selectedStop.getId());
-        } else if (stops.length > 0 && userLocation.getLatitude() != 0 &&
-                userLocation.getLongitude() != 0) {
-            // Locate stop nearest to user's location
-            Stop nearestStop = stops[0];
-            double nearestDistance = stops[0].getLocation().distanceTo(userLocation);
-
-            for (int i = 1; i < stops.length; i++) {
-                double d = stops[i].getLocation().distanceTo(userLocation);
-                if (stops[i].getLocation().distanceTo(userLocation) < nearestDistance) {
-                    nearestStop = stops[i];
-                    nearestDistance = d;
-                }
-            }
-
-            routeDetailSpinners.selectStop(nearestStop.getId());
-        }
-    }
-
-    @Override
-    public void onDirectionSelected(Direction selectedDirection) {
-        selectedDirectionId = selectedDirection.getId();
-
-        populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
-
-        if (shapesLoaded) {
-            refreshShapes();
-            refreshVehicles();
-        }
-    }
-
-    @Override
-    public void onStopSelected(Stop selectedStop) {
-        // Otherwise set the nearest stop to the selected stop
-        selectedRoute.setNearestStop(selectedDirectionId, selectedStop);
-
-        // Find the nearest stop in the opposite direction
-        Stop nearestOppositeStop = null;
-        float oppositeStopDistance = 0;
-        int oppositeDirectionId = (selectedDirectionId + 1) % 2;
-
-        for (Stop s : selectedRoute.getStops(oppositeDirectionId)) {
-            float dist = s.getLocation().distanceTo(selectedStop.getLocation());
-            if (nearestOppositeStop == null || dist < oppositeStopDistance) {
-                nearestOppositeStop = s;
-                oppositeStopDistance = dist;
-            }
-        }
-
-        selectedRoute.setNearestStop(oppositeDirectionId, nearestOppositeStop);
-
-        // Get the predictions for the selected stop
-        swipeRefreshLayout.setRefreshing(true);
-        getPredictions();
-
-
-        // Update the stop markers on the map
-        if (selectedStopMarker != null) {
-            selectedStopMarker.setIcon(selectedRoute.getStopMarkerIcon());
-        }
-
-        if (mapReady) {
-            selectedStopMarker = stopMarkers.get(selectedStop.getId());
-
-            if (selectedStopMarker == null) {
-                selectedStopMarker = drawStopMarker(selectedStop);
-                stopMarkers.put(selectedStop.getId(), selectedStopMarker);
-            }
-
-            selectedStopMarker.setIcon(
-                    BitmapDescriptorFactory.fromResource(R.drawable.icon_selected_stop));
-            selectedStopMarker.showInfoWindow();
-
-            // Center the map on the selected stop
-            gMap.animateCamera(CameraUpdateFactory.newLatLng(selectedStopMarker.getPosition()));
-        }
-    }
-
     private void backgroundUpdate() {
         if (!refreshing) {
             getPredictions();
@@ -891,24 +658,16 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         getPredictions();
     }
 
-    private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
+    private class PredictionsPostExecuteListener implements PredictionsByTripAsyncTask.OnPostExecuteListener {
         @Override
-        public void onSuccess(List<Prediction> predictions) {
+        public void onSuccess(Prediction[] p, boolean live) {
             refreshing = false;
             refreshTime = new Date().getTime();
 
-            for (Prediction prediction : predictions) {
-                if (vehicleMarkers.get(prediction.getVehicleId()) != null) {
-                    prediction.setVehicle(
-                            (Vehicle) (vehicleMarkers.get(prediction.getVehicleId()).getTag()));
-                }
-            }
+            predictions.clear();
+            predictions.addAll(Arrays.asList(p));
 
-            selectedRoute.clearPredictions(0);
-            selectedRoute.clearPredictions(1);
-            selectedRoute.addAllPredictions(predictions);
-
-            refreshPredictions(false);
+            refreshPredictions();
         }
 
         @Override
@@ -916,29 +675,25 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             refreshing = false;
             refreshTime = new Date().getTime();
 
-            selectedRoute.clearPredictions(0);
-            selectedRoute.clearPredictions(1);
-
-            refreshPredictions(true);
+            refreshPredictions();
         }
     }
 
-    private class ShapesPostExecuteListener implements ShapesAsyncTask.OnPostExecuteListener {
+    private class TripsPostExecuteListener implements TripsAsyncTask.OnPostExecuteListener {
         @Override
-        public void onSuccess(Shape[] shapes) {
-            selectedRoute.addShapes(shapes);
+        public void onSuccess(Trip[] trips) {
+            trip = trips[0];
 
             refreshShapes();
-            populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
         }
 
         @Override
         public void onError() {
-            getShapes();
+            getTrip();
         }
     }
 
-    private class VehiclesPostExecuteListener implements VehiclesByRouteAsyncTask.OnPostExecuteListener {
+    private class VehiclesPostExecuteListener implements VehiclesByTripAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Vehicle[] vehicles) {
             selectedRoute.setVehicles(vehicles);

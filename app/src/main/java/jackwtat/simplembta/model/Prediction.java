@@ -30,6 +30,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     public static final int ARRIVAL = 0;
     public static final int DEPARTURE = 1;
 
+    // Sort methods
+    public static final int PREDICTION_TIME = 0;
+    public static final int STOP_SEQUENCE = 1;
+
     // Prediction data
     private String id;
     private int stopSequence = -1;
@@ -55,6 +59,9 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     // Vehicle data
     private String vehicleId = null;
     private Vehicle vehicle = null;
+
+    // Meta data
+    private int sortMethod = PREDICTION_TIME;
 
     public Prediction(String id) {
         this.id = id;
@@ -155,13 +162,18 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         return tripName;
     }
 
-    // Vehicle data gettings
+    // Vehicle data getters
     public String getVehicleId() {
         return vehicleId;
     }
 
-    public Vehicle getVehicle(){
+    public Vehicle getVehicle() {
         return vehicle;
+    }
+
+    // Meta data getters
+    public int getSortMethod() {
+        return sortMethod;
     }
 
     // Prediction data setters
@@ -228,22 +240,32 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         this.vehicleId = vehicleId;
     }
 
-    public void setVehicle(Vehicle vehicle){
+    public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
+    }
+
+    // Meta data setters
+    public void setSortMethod(int sortMethod) {
+        this.sortMethod = sortMethod;
     }
 
     @Override
     public int compareTo(@NonNull Prediction otherPred) {
-        Date otherTime = otherPred.getPredictionTime();
+        if (sortMethod == STOP_SEQUENCE) {
+            return stopSequence - otherPred.stopSequence;
 
-        if (getPredictionTime() == null && otherTime == null) {
-            return 0;
-        } else if (getPredictionTime() == null) {
-            return 1;
-        } else if (otherTime == null) {
-            return -1;
         } else {
-            return getPredictionTime().compareTo(otherTime);
+            Date otherTime = otherPred.getPredictionTime();
+
+            if (getPredictionTime() == null && otherTime == null) {
+                return 0;
+            } else if (getPredictionTime() == null) {
+                return 1;
+            } else if (otherTime == null) {
+                return -1;
+            } else {
+                return getPredictionTime().compareTo(otherTime);
+            }
         }
     }
 }

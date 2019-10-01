@@ -107,20 +107,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
             minuteTextView.setVisibility(VISIBLE);
         }
 
-        /*
-        if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                prediction.getTripName() != null &&
-                !prediction.getTripName().equalsIgnoreCase("null")) {
-            String trainNumber = getResources().getString(R.string.train) +
-                    " " + prediction.getTripName();
-
-            vehicleNumberTextView.setText(trainNumber);
-            vehicleNumberTextView.setVisibility(VISIBLE);
-        } else {
-            vehicleNumberTextView.setVisibility(GONE);
-        }
-        */
-
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {
             dropOffIndicator.setVisibility(VISIBLE);

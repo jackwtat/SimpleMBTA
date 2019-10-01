@@ -23,7 +23,6 @@ public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnI
     private Spinner routeSpinner;
     private Spinner directionSpinner;
     private Spinner stopSpinner;
-    private LinearLayout mapButton;
 
     private RoutesSpinnerAdapter routesAdapter;
     private DirectionsSpinnerAdapter directionsAdapter;
@@ -79,8 +78,6 @@ public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnI
                 stopSpinner.performClick();
             }
         });
-
-        mapButton = rootView.findViewById(R.id.map_button);
     }
 
     public void populateRouteSpinner(Route[] routes) {
@@ -148,10 +145,6 @@ public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnI
 
     public void setOnStopSelectedListener(OnStopSelectedListener onStopSelectedListener) {
         this.onStopSelectedListener = onStopSelectedListener;
-    }
-
-    public void setOnMapButtonClickListener(OnClickListener onClickListener) {
-        mapButton.setOnClickListener(onClickListener);
     }
 
     @Override
