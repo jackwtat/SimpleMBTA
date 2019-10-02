@@ -17,6 +17,7 @@ public class TripDetailRecyclerViewAdapter
 
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private Stop selectedStop = null;
+    private int selectedStopSequence = 0;
 
     public TripDetailRecyclerViewAdapter() {
     }
@@ -65,7 +66,8 @@ public class TripDetailRecyclerViewAdapter
         this.predictions.clear();
 
         for (Prediction prediction : predictions) {
-            if (prediction.getPredictionTime() != null) {
+            if (prediction.getPredictionTime() != null &&
+                    prediction.getStopSequence() >= selectedStopSequence) {
                 prediction.setSortMethod(Prediction.STOP_SEQUENCE);
                 this.predictions.add(prediction);
             }
@@ -78,6 +80,10 @@ public class TripDetailRecyclerViewAdapter
 
     public void setSelectedStop(Stop stop) {
         this.selectedStop = stop;
+    }
+
+    public void setSelectedStopSequence(int selectedStopSequence) {
+        this.selectedStopSequence = selectedStopSequence;
     }
 
     public void clear() {

@@ -1,5 +1,7 @@
 package jackwtat.simplembta.asyncTasks;
 
+import java.util.HashMap;
+
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.PredictionsJsonParser;
 import jackwtat.simplembta.jsonParsers.SchedulesJsonParser;
@@ -26,34 +28,35 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
     protected Prediction[] doInBackground(Void... voids) {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
-        String[] predictionsArgs = {
-                "filter[trip]=" + tripId,
-                "include=route,trip,stop,schedule,vehicle"
-        };
+        HashMap<String, Prediction> predictions = new HashMap<>();
 
-        String jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
-
-        if (jsonResponse != null) {
-            Prediction[] predictions = PredictionsJsonParser.parse(jsonResponse);
-            if (predictions.length > 0) {
-                return predictions;
-            }
-        }
-
-        // Failed to get predictions, get schedules
         String[] scheduleArgs = {
                 "filter[trip]=" + tripId,
                 "filter[date]=" + DateUtil.getMbtaDate(dateOffset),
                 "include=route,trip,stop,prediction"
         };
 
-        jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
+        String jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
+        if (jsonResponse != null) {
+            for (Prediction p : SchedulesJsonParser.parse(jsonResponse)) {
+                predictions.put(p.getId(), p);
+            }
+        }
+
+        String[] predictionsArgs = {
+                "filter[trip]=" + tripId,
+                "include=route,trip,stop,schedule,vehicle"
+        };
+
+        jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
 
         if (jsonResponse != null) {
-            return SchedulesJsonParser.parse(jsonResponse);
-        } else {
-            return null;
+            for (Prediction p : PredictionsJsonParser.parse(jsonResponse)) {
+                predictions.put(p.getId(), p);
+            }
         }
+
+        return predictions.values().toArray(new Prediction[0]);
     }
 
     @Override

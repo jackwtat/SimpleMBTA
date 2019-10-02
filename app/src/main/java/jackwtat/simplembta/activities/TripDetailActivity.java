@@ -452,6 +452,13 @@ public class TripDetailActivity extends AppCompatActivity implements
 
     private void refreshPredictions() {
         if (!userIsScrolling && predictions != null && predictions.size() > 0) {
+            for (int i = 0; i < predictions.size(); i++) {
+                Prediction p = predictions.get(i);
+                if (p.getStop().equals(selectedStop)) {
+                    recyclerViewAdapter.setSelectedStopSequence(p.getStopSequence());
+                }
+            }
+
             recyclerViewAdapter.setPredictions(predictions);
             swipeRefreshLayout.setRefreshing(false);
         }
