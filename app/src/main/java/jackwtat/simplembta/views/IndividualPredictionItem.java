@@ -51,11 +51,11 @@ public class IndividualPredictionItem extends LinearLayout {
         String timeText;
         String minuteText;
 
-        long countdownTime = prediction.getCountdownTime();
+        long countdownTime = prediction.getCountdownTime() + 15000;
 
         if (countdownTime <= 60 * 60000) {
             if (countdownTime > 0) {
-                countdownTime = (countdownTime + 15000) / 60000;
+                countdownTime /= 60000;
             }
 
             if (countdownTime > 0 || !prediction.isLive()) {

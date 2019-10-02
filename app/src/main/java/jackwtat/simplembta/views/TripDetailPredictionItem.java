@@ -2,6 +2,7 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -51,19 +52,12 @@ public class TripDetailPredictionItem extends LinearLayout {
     }
 
     public void setPrediction(Prediction prediction, int stopSequence, boolean showCountdown) {
+        long countdownTime = prediction.getCountdownTime() + 15000;
         String timeText;
         String minuteText;
 
-        if (showCountdown) {
-            long countdownTime = prediction.getCountdownTime();
-
-            if (countdownTime > 0) {
-                countdownTime = (countdownTime + 15000) / 60000;
-            } else {
-                countdownTime = 0;
-            }
-
-            timeText = countdownTime + "";
+        if (showCountdown && countdownTime >= 0) {
+            timeText = (countdownTime / 60000) + "";
             minuteText = min;
 
             timeTextView.setText(timeText);

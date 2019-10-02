@@ -54,7 +54,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         String timeText;
         String minuteText;
 
-        long countdownTime = prediction.getCountdownTime();
+        long countdownTime = prediction.getCountdownTime() + 15000;
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prediction.getPredictionTime());
@@ -69,7 +69,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
 
         if (countdownTime <= 60 * 60000) {
             if (countdownTime > 0) {
-                countdownTime = (countdownTime + 15000) / 60000;
+                countdownTime /= 60000;
             }
 
             if (countdownTime > 0 || !prediction.isLive()) {
