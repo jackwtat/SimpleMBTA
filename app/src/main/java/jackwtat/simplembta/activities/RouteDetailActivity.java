@@ -67,6 +67,7 @@ import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.RawResourceReader;
@@ -162,22 +163,24 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Set action bar
         setTitle(DisplayNameUtil.getLongDisplayName(this, selectedRoute));
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            // Create color for status bar
-            float[] hsv = new float[3];
-            Color.colorToHSV(Color.parseColor(selectedRoute.getPrimaryColor()), hsv);
-            hsv[2] *= .8f;
+        if (selectedRoute.getMode() != Route.BUS || SilverLine.isSilverLine(selectedRoute.getId())) {
+            if (Build.VERSION.SDK_INT >= 21) {
+                // Create color for status bar
+                float[] hsv = new float[3];
+                Color.colorToHSV(Color.parseColor(selectedRoute.getPrimaryColor()), hsv);
+                hsv[2] *= .8f;
 
-            // Set status bar color
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(Color.HSVToColor(hsv));
+                // Set status bar color
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(Color.HSVToColor(hsv));
 
-            // Set action bar background color
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setBackgroundDrawable(
-                    new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
+                // Set action bar background color
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.setBackgroundDrawable(
+                        new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
+            }
         }
 
         // Get error text view

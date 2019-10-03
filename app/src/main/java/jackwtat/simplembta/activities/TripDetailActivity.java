@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,10 +15,13 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -62,6 +67,7 @@ import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
@@ -160,6 +166,25 @@ public class TripDetailActivity extends AppCompatActivity implements
         // Set action bar
         String title = DisplayNameUtil.getLongDisplayName(this, selectedRoute);
         setTitle(title);
+        if (selectedRoute.getMode() != Route.BUS || SilverLine.isSilverLine(selectedRoute.getId())) {
+            if (Build.VERSION.SDK_INT >= 21) {
+                // Create color for status bar
+                float[] hsv = new float[3];
+                Color.colorToHSV(Color.parseColor(selectedRoute.getPrimaryColor()), hsv);
+                hsv[2] *= .8f;
+
+                // Set status bar color
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(Color.HSVToColor(hsv));
+
+                // Set action bar background color
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.setBackgroundDrawable(
+                        new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
+            }
+        }
 
         // Get app bar and app bar params
         appBarLayout = findViewById(R.id.app_bar_layout);
@@ -475,7 +500,7 @@ public class TripDetailActivity extends AppCompatActivity implements
         if (!userIsScrolling) {
             clearShapes();
 
-            if(trip.getShape() == null || trip.getShape().getPolyline().equals("")) {
+            if (trip.getShape() == null || trip.getShape().getPolyline().equals("")) {
                 if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
                     if (BlueLine.isBlueLine(selectedRoute.getId())) {
                         trip.setShape(getShapesFromJson(R.raw.shapes_blue)[0]);
