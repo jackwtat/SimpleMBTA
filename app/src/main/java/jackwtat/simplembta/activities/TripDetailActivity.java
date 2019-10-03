@@ -50,15 +50,22 @@ import jackwtat.simplembta.asyncTasks.PredictionsByTripAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByTripAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Trip;
 import jackwtat.simplembta.model.Vehicle;
+import jackwtat.simplembta.model.routes.BlueLine;
+import jackwtat.simplembta.model.routes.GreenLine;
+import jackwtat.simplembta.model.routes.GreenLineCombined;
+import jackwtat.simplembta.model.routes.OrangeLine;
+import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
+import jackwtat.simplembta.utilities.RawResourceReader;
 
 public class TripDetailActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -468,9 +475,42 @@ public class TripDetailActivity extends AppCompatActivity implements
         if (!userIsScrolling) {
             clearShapes();
 
+            if(trip.getShape() == null || trip.getShape().getPolyline().equals("")) {
+                if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
+                    if (BlueLine.isBlueLine(selectedRoute.getId())) {
+                        trip.setShape(getShapesFromJson(R.raw.shapes_blue)[0]);
+
+                    } else if (OrangeLine.isOrangeLine(selectedRoute.getId())) {
+                        trip.setShape(getShapesFromJson(R.raw.shapes_orange)[0]);
+
+                    } else if (RedLine.isRedLine(selectedRoute.getId()) && !RedLine.isMattapanLine(selectedRoute.getId())) {
+                        trip.setShape(getShapesFromJson(R.raw.shapes_red)[0]);
+
+                    } else if (RedLine.isRedLine(selectedRoute.getId()) && RedLine.isMattapanLine(selectedRoute.getId())) {
+                        trip.setShape(getShapesFromJson(R.raw.shapes_mattapan)[0]);
+
+                    } else if (GreenLine.isGreenLine(selectedRoute.getId())) {
+                        if (GreenLineCombined.isGreenLineCombined(selectedRoute.getId())) {
+                            trip.setShape(getShapesFromJson(R.raw.shapes_green_combined)[0]);
+                        } else if (GreenLine.isGreenLineB(selectedRoute.getId())) {
+                            trip.setShape(getShapesFromJson(R.raw.shapes_green_b)[0]);
+
+                        } else if (GreenLine.isGreenLineC(selectedRoute.getId())) {
+                            trip.setShape(getShapesFromJson(R.raw.shapes_green_c)[0]);
+
+                        } else if (GreenLine.isGreenLineD(selectedRoute.getId())) {
+                            trip.setShape(getShapesFromJson(R.raw.shapes_green_d)[0]);
+
+                        } else if (GreenLine.isGreenLineE(selectedRoute.getId())) {
+                            trip.setShape(getShapesFromJson(R.raw.shapes_green_e)[0]);
+                        }
+                    }
+                }
+            }
+
             Shape shape = trip.getShape();
 
-            if (shape != null && shape.getStops().length > 0) {
+            if (shape != null) {
                 // Draw the polyline
                 polylines.addAll(Arrays.asList(drawPolyline(shape)));
 
@@ -591,6 +631,11 @@ public class TripDetailActivity extends AppCompatActivity implements
             vm.remove();
         }
         vehicleMarkers.clear();
+    }
+
+    private Shape[] getShapesFromJson(int jsonFile) {
+        return ShapesJsonParser.parse(
+                RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
 
     private Polyline[] drawPolyline(@NonNull Shape shape) {
