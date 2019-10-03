@@ -178,8 +178,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
                 // Set action bar background color
                 ActionBar actionBar = getSupportActionBar();
-                actionBar.setBackgroundDrawable(
-                        new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
+                if (actionBar != null) {
+                    actionBar.setBackgroundDrawable(
+                            new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
+                }
             }
         }
 
