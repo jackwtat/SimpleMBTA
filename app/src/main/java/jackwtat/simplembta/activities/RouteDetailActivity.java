@@ -267,12 +267,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             public void onItemClick(int position) {
                 Prediction prediction = recyclerViewAdapter.getPrediction(position);
 
-                Intent intent = new Intent(RouteDetailActivity.this, TripDetailActivity.class);
-                intent.putExtra("route", prediction.getRoute());
-                intent.putExtra("stop", prediction.getStop());
-                intent.putExtra("trip", prediction.getTripId());
-                intent.putExtra("date", prediction.getPredictionTime());
-                startActivity(intent);
+                if (prediction != null) {
+                    Intent intent = new Intent(RouteDetailActivity.this, TripDetailActivity.class);
+                    intent.putExtra("route", prediction.getRoute());
+                    intent.putExtra("stop", prediction.getStop());
+                    intent.putExtra("trip", prediction.getTripId());
+                    intent.putExtra("date", prediction.getPredictionTime());
+                    startActivity(intent);
+                }
             }
         });
     }
