@@ -338,7 +338,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     selectedVehicleMarker.showInfoWindow();
                 }
 
-                return true;
+                return false;
             }
         });
         gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {

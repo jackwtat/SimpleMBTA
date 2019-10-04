@@ -575,7 +575,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     forceUpdate();
                 }
 
-                return true;
+                return false;
             }
         });
         gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
