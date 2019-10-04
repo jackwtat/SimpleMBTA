@@ -127,7 +127,6 @@ public class TripDetailActivity extends AppCompatActivity implements
     private String selectedTripId;
     private Date selectedDate;
     private Marker selectedStopMarker;
-    private Marker selectedVehicleMarker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -286,28 +285,7 @@ public class TripDetailActivity extends AppCompatActivity implements
                 }
             }
         });
-        /*
-        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if (marker.getTag() instanceof Stop) {
-                    Stop selectedStop = (Stop) marker.getTag();
 
-                    routeDetailSpinners.selectStop(selectedStop.getId());
-
-                } else if (marker.getTag() instanceof Vehicle) {
-                    if (selectedVehicleMarker != null)
-                        selectedVehicleMarker.hideInfoWindow();
-
-                    selectedVehicleMarker = marker;
-
-                    selectedVehicleMarker.showInfoWindow();
-                }
-
-                return true;
-            }
-        });
-         */
         gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
