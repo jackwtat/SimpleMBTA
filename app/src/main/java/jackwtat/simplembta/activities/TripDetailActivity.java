@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -116,17 +117,17 @@ public class TripDetailActivity extends AppCompatActivity implements
     private boolean mapCameraIsMoving = false;
 
     private Trip trip;
+    private ArrayList<Prediction> predictions = new ArrayList<>();
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
-    private Marker selectedStopMarker;
-    private Marker selectedVehicleMarker;
 
     private Route selectedRoute;
     private Stop selectedStop;
     private String selectedTripId;
     private Date selectedDate;
-    private ArrayList<Prediction> predictions = new ArrayList<>();
+    private Marker selectedStopMarker;
+    private Marker selectedVehicleMarker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -181,7 +182,7 @@ public class TripDetailActivity extends AppCompatActivity implements
 
                 // Set action bar background color
                 ActionBar actionBar = getSupportActionBar();
-                if(actionBar!=null) {
+                if (actionBar != null) {
                     actionBar.setBackgroundDrawable(
                             new ColorDrawable(Color.parseColor(selectedRoute.getPrimaryColor())));
                 }
@@ -488,6 +489,12 @@ public class TripDetailActivity extends AppCompatActivity implements
         if (!userIsScrolling && predictions != null && predictions.size() > 0) {
             for (int i = 0; i < predictions.size(); i++) {
                 Prediction p = predictions.get(i);
+
+                Marker stopMarker = stopMarkers.get(p.getStopId());
+                if (stopMarker != null) {
+                    stopMarker.setSnippet(getPredictionSnippet(p));
+                }
+
                 if (p.getStop().equals(selectedStop)) {
                     recyclerViewAdapter.setSelectedStopSequence(p.getStopSequence());
                 }
@@ -569,6 +576,15 @@ public class TripDetailActivity extends AppCompatActivity implements
                 selectedStopMarker.setIcon(BitmapDescriptorFactory
                         .fromResource(R.drawable.icon_selected_stop));
                 stopMarkers.put(selectedStop.getId(), selectedStopMarker);
+            }
+
+            // Add predictions to stop markers
+            for (Prediction prediction : predictions) {
+                Marker marker = stopMarkers.get(prediction.getStopId());
+
+                if (marker != null) {
+                    marker.setSnippet(getPredictionSnippet(prediction));
+                }
             }
 
             mapProgressBar.setVisibility(View.GONE);
@@ -714,7 +730,6 @@ public class TripDetailActivity extends AppCompatActivity implements
                 .zIndex(20)
                 .flat(true)
                 .title(vehicleTitle)
-                //.title(getResources().getString(R.string.vehicle) + " " + vehicle.getLabel())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))
         );
 
@@ -725,6 +740,40 @@ public class TripDetailActivity extends AppCompatActivity implements
         vehicleMarker.setTag(vehicle);
 
         return vehicleMarker;
+    }
+
+    private String getPredictionSnippet(Prediction prediction) {
+        String snippet;
+        Date predictionTime = prediction.getPredictionTime();
+
+        if (predictionTime.getTime() - new Date().getTime() > 0) {
+            long countdownTime = prediction.getCountdownTime() + 15000;
+
+            if (prediction.willPickUpPassengers()) {
+                snippet = "Departs ";
+            } else {
+                snippet = "Arrives ";
+            }
+
+            if (countdownTime < 60 * 60000) {
+                snippet += "in " + prediction.getCountdownTime() / 60000 + " min";
+            } else {
+                snippet += "at " +
+                        new SimpleDateFormat("h:mm").format(predictionTime) + " " +
+                        new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+            }
+        } else {
+            if (prediction.willPickUpPassengers()) {
+                snippet = "Already departed at ";
+            } else {
+                snippet = "Already arrived at ";
+            }
+
+            snippet += new SimpleDateFormat("h:mm").format(predictionTime) + " " +
+                    new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+        }
+
+        return snippet;
     }
 
     private void backgroundUpdate() {
