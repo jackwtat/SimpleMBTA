@@ -265,15 +265,14 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         recyclerViewAdapter.setOnItemClickListener(new RouteSearchRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Vehicle vehicle = recyclerViewAdapter.getPrediction(position).getVehicle();
+                Prediction prediction = recyclerViewAdapter.getPrediction(position);
 
-                if (vehicle != null) {
-                    Marker marker = vehicleMarkers.get(vehicle.getId());
-
-                    if (marker != null) {
-                        marker.showInfoWindow();
-                    }
-                }
+                Intent intent = new Intent(RouteDetailActivity.this, TripDetailActivity.class);
+                intent.putExtra("route", prediction.getRoute());
+                intent.putExtra("stop", prediction.getStop());
+                intent.putExtra("trip", prediction.getTripId());
+                intent.putExtra("date", prediction.getPredictionTime());
+                startActivity(intent);
             }
         });
     }
