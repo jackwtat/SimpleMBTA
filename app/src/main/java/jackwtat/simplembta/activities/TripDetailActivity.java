@@ -117,16 +117,17 @@ public class TripDetailActivity extends AppCompatActivity implements
     private boolean mapCameraIsMoving = false;
 
     private Trip trip;
+    private Vehicle vehicle;
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
-    private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
+    private Marker vehicleMarker;
 
     private Route selectedRoute;
     private Stop selectedStop;
     private String selectedTripId;
     private Date selectedDate;
-    private Marker selectedStopMarker;
+    private Marker selectedMarker = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -285,7 +286,6 @@ public class TripDetailActivity extends AppCompatActivity implements
                 }
             }
         });
-
         gMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
@@ -533,12 +533,11 @@ public class TripDetailActivity extends AppCompatActivity implements
                         Marker currentMarker = drawStopMarker(stop);
 
                         // Use selected stop marker if this stop is the selected stop
-                        if (selectedStop != null && selectedStopMarker == null &&
+                        if (selectedStop != null &&
                                 (selectedStop.equals(stop) ||
                                         selectedStop.isParentOf(stop.getId()) ||
                                         stop.isParentOf(selectedStop.getId()))) {
-                            selectedStopMarker = currentMarker;
-                            selectedStopMarker.setIcon(BitmapDescriptorFactory
+                            currentMarker.setIcon(BitmapDescriptorFactory
                                     .fromResource(R.drawable.icon_selected_stop));
                         }
 
@@ -546,14 +545,6 @@ public class TripDetailActivity extends AppCompatActivity implements
                         stopMarkers.put(stop.getId(), currentMarker);
                     }
                 }
-            }
-
-            // If the selected stop is not a stop included in the shape objects
-            if (selectedStopMarker == null && selectedStop != null) {
-                selectedStopMarker = drawStopMarker(selectedStop);
-                selectedStopMarker.setIcon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.icon_selected_stop));
-                stopMarkers.put(selectedStop.getId(), selectedStopMarker);
             }
 
             // Add predictions to stop markers
@@ -572,49 +563,43 @@ public class TripDetailActivity extends AppCompatActivity implements
 
     private void refreshVehicles() {
         if (!userIsScrolling && mapReady) {
-            ArrayList<String> trackedVehicleIds = new ArrayList<>();
-            ArrayList<String> expiredVehicleIds = new ArrayList<>();
-
-            // Get all vehicles moving in selected direction
-            for (Vehicle vehicle : selectedRoute.getAllVehicles()) {
-                trackedVehicleIds.add(vehicle.getId());
-            }
-
-            // Find the currently displayed vehicles that are no longer being tracked/now expired
-            for (String vehicleId : vehicleMarkers.keySet()) {
-                if (!trackedVehicleIds.contains(vehicleId)) {
-                    expiredVehicleIds.add(vehicleId);
-                }
-            }
-
-            // Removed the expired vehicles
-            for (String vehicleId : expiredVehicleIds) {
-                vehicleMarkers.get(vehicleId).remove();
-                vehicleMarkers.remove(vehicleId);
-            }
-
-            for (Vehicle vehicle : selectedRoute.getAllVehicles()) {
-                Marker vMarker = vehicleMarkers.get(vehicle.getId());
-                if (vMarker != null) {
-                    vMarker.setPosition(new LatLng(
-                            vehicle.getLocation().getLatitude(),
-                            vehicle.getLocation().getLongitude()));
-                    vMarker.setRotation(vehicle.getLocation().getBearing());
-
-                    if (vehicle.getDestination() != null) {
-                        vMarker.setSnippet("To " + vehicle.getDestination());
+            if (vehicle != null) {
+                // Draw vehicle marker
+                if (vehicleMarker == null) {
+                    if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
+                        vehicleMarker = drawVehicleMarker(vehicle,
+                                getResources().getString(R.string.train) + " " + vehicle.getTripName());
+                    } else {
+                        vehicleMarker = drawVehicleMarker(vehicle,
+                                getResources().getString(R.string.vehicle) + " " + vehicle.getLabel());
                     }
                 } else {
-                    String vehicleTitle;
-
-                    if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
-                        vehicleTitle = getResources().getString(R.string.train) + " " + vehicle.getTripName();
-                    } else {
-                        vehicleTitle = getResources().getString(R.string.vehicle) + " " + vehicle.getLabel();
-                    }
-
-                    vehicleMarkers.put(vehicle.getId(), drawVehicleMarker(vehicle, vehicleTitle));
+                    vehicleMarker.setPosition(new LatLng(
+                            vehicle.getLocation().getLatitude(),
+                            vehicle.getLocation().getLongitude()));
+                    vehicleMarker.setRotation(vehicle.getLocation().getBearing());
                 }
+
+                // Set snippet
+                vehicleMarker.setSnippet("");
+                for (Prediction p : predictions) {
+                    if (p.getStopSequence() == vehicle.getCurrentStopSequence()) {
+                        vehicleMarker.setSnippet(vehicle.getCurrentStatus().getText() + " " +
+                                p.getStop().getName());
+                        break;
+                    }
+                }
+
+                // Refresh info window
+                if(vehicleMarker.isInfoWindowShown()){
+                    vehicleMarker.hideInfoWindow();
+                    vehicleMarker.showInfoWindow();
+                }
+            } else {
+                if (vehicleMarker != null) {
+                    vehicleMarker.remove();
+                }
+                vehicleMarker = null;
             }
         }
     }
@@ -641,17 +626,6 @@ public class TripDetailActivity extends AppCompatActivity implements
         }
         stopMarkers.clear();
 
-        if (selectedStopMarker != null) {
-            selectedStopMarker.remove();
-            selectedStopMarker = null;
-        }
-    }
-
-    private void clearVehicleMarkers() {
-        for (Marker vm : vehicleMarkers.values()) {
-            vm.remove();
-        }
-        vehicleMarkers.clear();
     }
 
     private Shape[] getShapesFromJson(int jsonFile) {
@@ -710,10 +684,6 @@ public class TripDetailActivity extends AppCompatActivity implements
                 .title(vehicleTitle)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_vehicle))
         );
-
-        if (vehicle.getDestination() != null) {
-            vehicleMarker.setSnippet("To " + vehicle.getDestination());
-        }
 
         vehicleMarker.setTag(vehicle);
 
@@ -802,7 +772,11 @@ public class TripDetailActivity extends AppCompatActivity implements
     private class VehiclesPostExecuteListener implements VehiclesByTripAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Vehicle[] vehicles) {
-            selectedRoute.setVehicles(vehicles);
+            if (vehicles != null && vehicles.length > 0) {
+                vehicle = vehicles[0];
+            } else {
+                vehicle = null;
+            }
 
             refreshVehicles();
         }

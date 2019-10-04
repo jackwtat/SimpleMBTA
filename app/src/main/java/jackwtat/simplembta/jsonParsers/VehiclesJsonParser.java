@@ -60,6 +60,8 @@ public class VehiclesJsonParser {
                 JSONObject jAttributes = jVehicle.getJSONObject("attributes");
                 vehicle.setLabel(jAttributes.getString("label"));
                 vehicle.setDirection(jAttributes.getInt("direction_id"));
+                vehicle.setCurrentStopSequence(jAttributes.getInt("current_stop_sequence"));
+                vehicle.setCurrentStatus(jAttributes.getString("current_status"));
 
                 // Get vehicle location and bearing
                 Location location = new Location("");

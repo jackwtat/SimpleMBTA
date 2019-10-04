@@ -5,6 +5,27 @@ import android.location.Location;
 import java.io.Serializable;
 
 public class Vehicle implements Serializable {
+    public static final int INCOMING_AT = 0;
+    public static final int STOPPED_AT = 1;
+    public static final int IN_TRANSIT_TO = 2;
+
+    public enum Status {
+        UNKNOWN(""),
+        INCOMING("Approaching"),
+        STOPPED("Stopped at"),
+        IN_TRANSIT("Enroute to");
+
+        private String text;
+
+        Status(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
+
     private String id;
     private String label;
     private String route;
@@ -14,6 +35,8 @@ public class Vehicle implements Serializable {
     private double latitude;
     private double longitude;
     private float bearing;
+    private int currentStopSequence;
+    private Status currentStatus;
 
     public Vehicle(String id) {
         this.id = id;
@@ -51,6 +74,14 @@ public class Vehicle implements Serializable {
         return location;
     }
 
+    public int getCurrentStopSequence() {
+        return currentStopSequence;
+    }
+
+    public Status getCurrentStatus() {
+        return currentStatus;
+    }
+
     public void setLabel(String label) {
         this.label = label;
     }
@@ -75,6 +106,22 @@ public class Vehicle implements Serializable {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         bearing = location.getBearing();
+    }
+
+    public void setCurrentStopSequence(int currentStopSequence) {
+        this.currentStopSequence = currentStopSequence;
+    }
+
+    public void setCurrentStatus(String status) {
+        if (status.equalsIgnoreCase("INCOMING_AT")) {
+            this.currentStatus = Status.INCOMING;
+        } else if (status.equalsIgnoreCase("STOPPED_AT")) {
+            this.currentStatus = Status.STOPPED;
+        } else if (status.equalsIgnoreCase("IN_TRANSIT_TO")) {
+            this.currentStatus = Status.IN_TRANSIT;
+        } else {
+            this.currentStatus = Status.UNKNOWN;
+        }
     }
 
     @Override
