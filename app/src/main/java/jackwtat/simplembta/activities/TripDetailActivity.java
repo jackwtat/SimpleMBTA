@@ -113,7 +113,6 @@ public class TripDetailActivity extends AppCompatActivity implements
     private long refreshTime = 0;
 
     private boolean mapReady = false;
-    private boolean shapesLoaded = false;
     private boolean mapCameraIsMoving = false;
 
     private Trip trip;
@@ -127,7 +126,6 @@ public class TripDetailActivity extends AppCompatActivity implements
     private Stop selectedStop;
     private String selectedTripId;
     private Date selectedDate;
-    private Marker selectedMarker = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -557,7 +555,6 @@ public class TripDetailActivity extends AppCompatActivity implements
             }
 
             mapProgressBar.setVisibility(View.GONE);
-            shapesLoaded = true;
         }
     }
 
