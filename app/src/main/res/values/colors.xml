@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#F44336</color>
     <color name="list_view_background">#EEEEEE</color>
+    <color name="card_view_background">#FFFFFF</color>
     <color name="selected_prediction_background">#0D3F51B5</color>
     <color name="error_message_background">#323232</color>
     <color name="header_background">#323232</color>
