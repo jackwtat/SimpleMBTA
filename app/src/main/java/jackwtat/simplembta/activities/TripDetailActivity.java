@@ -563,9 +563,13 @@ public class TripDetailActivity extends AppCompatActivity implements
             if (vehicle != null) {
                 // Draw vehicle marker
                 if (vehicleMarker == null) {
-                    if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
+                    int mode = selectedRoute.getMode();
+                    if (mode == Route.COMMUTER_RAIL) {
                         vehicleMarker = drawVehicleMarker(vehicle,
                                 getResources().getString(R.string.train) + " " + vehicle.getTripName());
+                    } else if (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL) {
+                        vehicleMarker = drawVehicleMarker(vehicle,
+                                getResources().getString(R.string.train) + " " + vehicle.getLabel());
                     } else {
                         vehicleMarker = drawVehicleMarker(vehicle,
                                 getResources().getString(R.string.vehicle) + " " + vehicle.getLabel());
@@ -588,7 +592,7 @@ public class TripDetailActivity extends AppCompatActivity implements
                 }
 
                 // Refresh info window
-                if(vehicleMarker.isInfoWindowShown()){
+                if (vehicleMarker.isInfoWindowShown()) {
                     vehicleMarker.hideInfoWindow();
                     vehicleMarker.showInfoWindow();
                 }

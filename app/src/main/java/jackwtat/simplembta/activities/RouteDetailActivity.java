@@ -672,9 +672,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     }
                 } else {
                     String vehicleTitle;
-                    if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
+                    int mode = selectedRoute.getMode();
+                    if (mode == Route.COMMUTER_RAIL) {
                         vehicleTitle = getResources().getString(R.string.train) + " " + vehicle.getTripName();
-
+                    } else if (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL) {
+                        vehicleTitle = getResources().getString(R.string.train) + " " + vehicle.getLabel();
                     } else {
                         vehicleTitle = getResources().getString(R.string.vehicle) + " " + vehicle.getLabel();
                     }
