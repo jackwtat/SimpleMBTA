@@ -90,7 +90,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopIcon.setBackground(icon);
 
         Drawable fill = stopIconFill.getDrawable();
-        DrawableCompat.setTint(fill, getContext().getResources().getColor(R.color.list_view_background));
+        DrawableCompat.setTint(fill, Color.WHITE);
         stopIconFill.setVisibility(VISIBLE);
 
         // Set line visibility
