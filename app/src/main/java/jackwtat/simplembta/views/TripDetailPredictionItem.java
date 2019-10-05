@@ -24,6 +24,7 @@ public class TripDetailPredictionItem extends LinearLayout {
     public static final int FIRST_STOP = 0;
     public static final int INTERMEDIATE_STOP = 1;
     public static final int LAST_STOP = 2;
+    public static final int ONLY_STOP = 3;
 
     View rootView;
     View topLineView;
@@ -99,6 +100,10 @@ public class TripDetailPredictionItem extends LinearLayout {
 
         } else if (stopSequence == LAST_STOP) {
             topLineView.setVisibility(VISIBLE);
+            bottomLineView.setVisibility(INVISIBLE);
+
+        } else if (stopSequence == ONLY_STOP) {
+            topLineView.setVisibility(INVISIBLE);
             bottomLineView.setVisibility(INVISIBLE);
 
         } else {

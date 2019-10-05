@@ -38,7 +38,9 @@ public class TripDetailRecyclerViewAdapter
         Prediction prediction = predictions.get(position);
 
         int stopSequence;
-        if (position == 0) {
+        if (predictions.size() == 1) {
+            stopSequence = TripDetailPredictionItem.ONLY_STOP;
+        } else if (position == 0) {
             stopSequence = TripDetailPredictionItem.FIRST_STOP;
         } else if (position == predictions.size() - 1) {
             stopSequence = TripDetailPredictionItem.LAST_STOP;
