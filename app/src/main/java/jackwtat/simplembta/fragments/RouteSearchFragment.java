@@ -524,9 +524,22 @@ public class RouteSearchFragment extends Fragment implements
         if (!userIsScrolling) {
             if (selectedRoute != null) {
                 if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-                    recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
+                    ArrayList<Prediction> predictions =
+                            selectedRoute.getPredictions(selectedDirectionId);
+
+                    // Set vehicles for predictions
+                    for (Prediction p : predictions) {
+                        Vehicle v = vehicles.get(p.getVehicleId());
+                        if (v != null) {
+                            p.setVehicle(v);
+                        }
+                    }
+
+                    // Set set predictions in recycler view adapter
+                    recyclerViewAdapter.setPredictions(predictions);
                     swipeRefreshLayout.setRefreshing(false);
 
+                    // Show no predictions text if there are no predictions
                     if (recyclerViewAdapter.getItemCount() == 0) {
                         noPredictionsTextView.setText(getResources()
                                 .getString(R.string.no_predictions_this_stop));
@@ -542,6 +555,7 @@ public class RouteSearchFragment extends Fragment implements
                         recyclerView.scrollToPosition(0);
                     }
                 } else {
+                    // Show no stops text if there are no stops for the selected direction
                     noPredictionsTextView.setText(getResources().getString(R.string.no_stops));
                     noPredictionsTextView.setVisibility(View.VISIBLE);
 
@@ -807,13 +821,6 @@ public class RouteSearchFragment extends Fragment implements
         public void onSuccess(List<Prediction> predictions) {
             dataRefreshing = false;
             refreshTime = new Date().getTime();
-
-            for (Prediction p : predictions) {
-                Vehicle v = vehicles.get(p.getVehicleId());
-                if (v != null) {
-                    p.setVehicle(v);
-                }
-            }
 
             // Lock the views to prevent UI changes while loading new data to views
             viewsRefreshing = true;
