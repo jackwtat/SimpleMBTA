@@ -122,7 +122,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
 
     // Distance in meters from last target location before visible refresh
-    public static final int DISTANCE_TO_FORCE_REFRESH = 200;
+    public static final int DISTANCE_TO_FORCE_REFRESH = 400;
 
     // Map interaction statuses
     public static final int USER_HAS_NOT_MOVED_MAP = 0;
