@@ -47,7 +47,7 @@ public class SchedulesAsyncTask extends PredictionsAsyncTask {
                 "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                 "filter[min_time]=" + DateUtil.getMbtaTime(0),
                 "filter[max_time]=" + DateUtil.getMbtaTime(3),
-                "include=route,trip,stop,prediction,vehicle"
+                "include=route,trip,stop,prediction"
         };
 
         String jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
