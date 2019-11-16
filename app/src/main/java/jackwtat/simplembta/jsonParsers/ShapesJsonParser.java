@@ -72,7 +72,7 @@ public class ShapesJsonParser {
                             stops.add(includedStops.get(stopId));
                         }
                     }
-                    shape.setStops(stops.toArray(new Stop[stops.size()]));
+                    shape.setStops(stops.toArray(new Stop[0]));
 
                     shapes.add(shape);
                 } catch (JSONException e) {
@@ -84,7 +84,7 @@ public class ShapesJsonParser {
             Log.e(LOG_TAG, "Unable to parse Shapes from JSON");
         }
 
-        return shapes.toArray(new Shape[shapes.size()]);
+        return shapes.toArray(new Shape[0]);
     }
 
     private static HashMap<String, Stop> includedStopsJsonToHashMap(JSONArray jStops) {
@@ -108,6 +108,10 @@ public class ShapesJsonParser {
                 location.setLatitude(jAttributes.getDouble("latitude"));
                 location.setLongitude(jAttributes.getDouble("longitude"));
                 stop.setLocation(location);
+
+                // Get wheelchair accessibility
+                stop.setWheelchairAccessible(
+                        jAttributes.getInt("wheelchair_boarding") == 1);
 
                 // Get the parent stop id
                 try {
