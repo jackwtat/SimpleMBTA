@@ -39,10 +39,11 @@ public class RoutesByStopsAsyncTask extends AsyncTask<Void, Void, Route[]> {
 
     @Override
     protected void onPostExecute(Route[] routes) {
-        if (routes != null)
+        if (routes != null) {
             onPostExecuteListener.onSuccess(routes);
-        else
+        }else {
             onPostExecuteListener.onError();
+        }
     }
 
     public interface OnPostExecuteListener {
