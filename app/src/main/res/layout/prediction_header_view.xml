@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:gravity="left"
             android:paddingLeft="12dp"
-            android:paddingRight="4dp"
+            android:paddingRight="12dp"
             android:textColor="#FFFFFF"
             android:textSize="@dimen/large_header_text_size"
             android:textStyle="bold"
@@ -32,7 +32,6 @@
             android:id="@+id/wheelchair_accessible_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
             android:paddingRight="12dp"
             android:src="@drawable/ic_accessible" />
     </LinearLayout>
