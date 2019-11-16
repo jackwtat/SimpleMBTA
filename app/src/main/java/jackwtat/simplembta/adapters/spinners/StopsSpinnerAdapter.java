@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
@@ -47,11 +48,20 @@ public class StopsSpinnerAdapter extends ArrayAdapter<Stop> {
         View listItem = LayoutInflater.from(context).inflate(layout, parent, false);
 
         TextView nameTextView = listItem.findViewById(R.id.stop_name_text_view);
+        ImageView wheelchairAccessibleIcon = listItem.findViewById(R.id.wheelchair_accessible_icon);
 
-        if (stop != null)
+        if (stop != null) {
             nameTextView.setText(stop.getName());
-        else
+
+            if (stop.isWheelchairAccessible()) {
+                wheelchairAccessibleIcon.setVisibility(View.VISIBLE);
+            } else {
+                wheelchairAccessibleIcon.setVisibility(View.GONE);
+            }
+        } else {
             nameTextView.setText("null");
+            wheelchairAccessibleIcon.setVisibility(View.GONE);
+        }
 
         return listItem;
     }
