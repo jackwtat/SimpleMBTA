@@ -13,7 +13,7 @@ public class Vehicle implements Serializable {
         UNKNOWN(""),
         INCOMING("Approaching"),
         STOPPED("Stopped at"),
-        IN_TRANSIT("Enroute to");
+        IN_TRANSIT("Next stop is");
 
         private String text;
 
@@ -23,6 +23,10 @@ public class Vehicle implements Serializable {
 
         public String getText() {
             return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
         }
     }
 
@@ -121,6 +125,7 @@ public class Vehicle implements Serializable {
             this.currentStatus = Status.IN_TRANSIT;
         } else {
             this.currentStatus = Status.UNKNOWN;
+            this.currentStatus.setText(status);
         }
     }
 
