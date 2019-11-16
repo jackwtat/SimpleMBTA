@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ public class PredictionHeaderView extends LinearLayout {
     View rootView;
     TextView headerTextView;
     View[] secondaryColors;
+    ImageView wheelchairAccessibleIcon;
 
     int defaultPrimaryColor;
 
@@ -68,20 +70,30 @@ public class PredictionHeaderView extends LinearLayout {
         }
     }
 
+    public void setWheelchairAccessible(boolean visible) {
+        if (visible) {
+            wheelchairAccessibleIcon.setVisibility(VISIBLE);
+        } else {
+            wheelchairAccessibleIcon.setVisibility(GONE);
+        }
+    }
+
     public void reset() {
         setText("");
         for (View v : secondaryColors) {
             v.setVisibility(GONE);
         }
+        wheelchairAccessibleIcon.setVisibility(GONE);
     }
 
     private void initializeViews(Context context) {
         rootView = inflate(context, R.layout.prediction_header_view, this);
         secondaryColors = new View[3];
-        secondaryColors[0] = rootView.findViewById((R.id.secondary_color_0));
-        secondaryColors[1] = rootView.findViewById((R.id.secondary_color_1));
-        secondaryColors[2] = rootView.findViewById((R.id.secondary_color_2));
+        secondaryColors[0] = rootView.findViewById(R.id.secondary_color_0);
+        secondaryColors[1] = rootView.findViewById(R.id.secondary_color_1);
+        secondaryColors[2] = rootView.findViewById(R.id.secondary_color_2);
         headerTextView = rootView.findViewById(R.id.header_text_view);
         defaultPrimaryColor = ContextCompat.getColor(context, R.color.error_message_background);
+        wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
     }
 }

@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import jackwtat.simplembta.model.Stop;
 
@@ -74,6 +73,10 @@ public class StopsJsonParser {
                         location.setLatitude(jAttributes.getDouble("latitude"));
                         location.setLongitude(jAttributes.getDouble("longitude"));
                         stop.setLocation(location);
+
+                        // Get handicap accessibility
+                        stop.setWheelchairAccessible(
+                                jAttributes.getInt("wheelchair_boarding") == 1);
 
                         stops.add(stop);
                     }

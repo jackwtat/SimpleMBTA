@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
-import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
@@ -95,6 +94,8 @@ public class MapSearchRecyclerViewAdapter
             if (colors.size() == 0) {
                 header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
             }
+
+            header.setWheelchairAccessible(thisStop.isWheelchairAccessible());
 
             header.setVisibility(View.VISIBLE);
 

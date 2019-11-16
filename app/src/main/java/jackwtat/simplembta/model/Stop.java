@@ -16,6 +16,7 @@ public class Stop implements Comparable<Stop>, Serializable {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private ArrayList<Route> routes = new ArrayList<>();
+    private boolean wheelchairAccessible = false;
 
     public Stop(String id) {
         if (id.equals("64") || id.equals("64000"))
@@ -91,6 +92,10 @@ public class Stop implements Comparable<Stop>, Serializable {
         longitude = location.getLongitude();
     }
 
+    public void setWheelchairAccessible(boolean wheelchairAccessible){
+        this.wheelchairAccessible = wheelchairAccessible;
+    }
+
     public void addRoute(Route route) {
         routes.add(route);
     }
@@ -125,6 +130,10 @@ public class Stop implements Comparable<Stop>, Serializable {
                 id.equals("place-brntn") || // Braintree
                 id.equals("place-asmnl") || // Ashmont
                 id.equals("place-aport"); // Airport
+    }
+
+    public boolean isWheelchairAccessible(){
+        return wheelchairAccessible;
     }
 
     @Override
