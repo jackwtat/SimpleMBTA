@@ -371,41 +371,8 @@ public class RouteSearchFragment extends Fragment implements
 
     private void getShapes() {
         if (selectedRoute != null) {
-            // Hard coding to save the user time and data
-            if (selectedRoute.getMode() == Route.HEAVY_RAIL || selectedRoute.getMode() == Route.LIGHT_RAIL) {
-                if (BlueLine.isBlueLine(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_blue));
 
-                } else if (OrangeLine.isOrangeLine(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_orange));
-
-                } else if (RedLine.isRedLine(selectedRoute.getId()) && !RedLine.isMattapanLine(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_red));
-
-                } else if (RedLine.isRedLine(selectedRoute.getId()) && RedLine.isMattapanLine(selectedRoute.getId())) {
-                    selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_mattapan));
-
-                } else if (GreenLine.isGreenLine(selectedRoute.getId())) {
-                    if (GreenLineCombined.isGreenLineCombined(selectedRoute.getId())) {
-                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_combined));
-                    } else if (GreenLine.isGreenLineB(selectedRoute.getId())) {
-                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_b));
-
-                    } else if (GreenLine.isGreenLineC(selectedRoute.getId())) {
-                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_c));
-
-                    } else if (GreenLine.isGreenLineD(selectedRoute.getId())) {
-                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_d));
-
-                    } else if (GreenLine.isGreenLineE(selectedRoute.getId())) {
-                        selectedRoute.addShapes(getShapesFromJson(R.raw.shapes_green_e));
-
-                    }
-                }
-
-                refreshShapes();
-
-            } else if (networkConnectivityClient.isConnected()) {
+            if (networkConnectivityClient.isConnected()) {
                 errorManager.setNetworkError(false);
 
                 if (shapesAsyncTask != null) {
