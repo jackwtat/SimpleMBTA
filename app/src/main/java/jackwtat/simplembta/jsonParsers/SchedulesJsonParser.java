@@ -92,6 +92,10 @@ public class SchedulesJsonParser {
                         location.setLongitude(jStopAttr.getDouble("longitude"));
                         stop.setLocation(location);
 
+                        // Get wheelchair accessibility
+                        stop.setWheelchairAccessible(
+                                jStopAttr.getInt("wheelchair_boarding") == 1);
+
                         // Get the parent stop id
                         try {
                             stop.setParentId(jStop.getJSONObject("relationships")

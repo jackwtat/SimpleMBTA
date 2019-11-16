@@ -31,6 +31,7 @@ public class TripDetailPredictionItem extends LinearLayout {
     View bottomLineView;
     ImageView stopIcon;
     ImageView stopIconFill;
+    ImageView wheelchairAccessibleIcon;
     TextView stopName;
     TextView timeTextView;
     TextView minuteTextView;
@@ -110,6 +111,13 @@ public class TripDetailPredictionItem extends LinearLayout {
             topLineView.setVisibility(VISIBLE);
             bottomLineView.setVisibility(VISIBLE);
         }
+
+        // Set wheelchair accessibility icon visibility
+        if (prediction.getStop().isWheelchairAccessible()) {
+            wheelchairAccessibleIcon.setVisibility(VISIBLE);
+        } else {
+            wheelchairAccessibleIcon.setVisibility(GONE);
+        }
     }
 
     public void emphasize() {
@@ -121,6 +129,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         bottomLineView.setVisibility(INVISIBLE);
         stopName.setText("");
         stopName.setTypeface(Typeface.DEFAULT);
+        wheelchairAccessibleIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
     }
@@ -132,6 +141,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopIcon = rootView.findViewById(R.id.stop_icon);
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
         stopName = rootView.findViewById(R.id.stop_name_text_view);
+        wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
 
