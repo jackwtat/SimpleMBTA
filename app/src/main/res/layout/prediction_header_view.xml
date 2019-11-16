@@ -32,7 +32,7 @@
             android:id="@+id/wheelchair_accessible_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="12dp"
+            android:paddingRight="16dp"
             android:src="@drawable/ic_accessible_large" />
     </LinearLayout>
 
