@@ -692,34 +692,36 @@ public class TripDetailActivity extends AppCompatActivity implements
     }
 
     private String getPredictionSnippet(Prediction prediction) {
-        String snippet;
+        String snippet = "";
         Date predictionTime = prediction.getPredictionTime();
 
-        if (predictionTime.getTime() - new Date().getTime() > 0) {
-            long countdownTime = prediction.getCountdownTime() + 15000;
+        if (predictionTime != null) {
+            if (predictionTime.getTime() - new Date().getTime() > 0) {
+                long countdownTime = prediction.getCountdownTime() + 15000;
 
-            if (prediction.willPickUpPassengers()) {
-                snippet = "Departs ";
-            } else {
-                snippet = "Arrives ";
-            }
+                if (prediction.willPickUpPassengers()) {
+                    snippet = "Departs ";
+                } else {
+                    snippet = "Arrives ";
+                }
 
-            if (countdownTime < 60 * 60000) {
-                snippet += "in " + prediction.getCountdownTime() / 60000 + " min";
+                if (countdownTime < 60 * 60000) {
+                    snippet += "in " + prediction.getCountdownTime() / 60000 + " min";
+                } else {
+                    snippet += "at " +
+                            new SimpleDateFormat("h:mm").format(predictionTime) + " " +
+                            new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                }
             } else {
-                snippet += "at " +
-                        new SimpleDateFormat("h:mm").format(predictionTime) + " " +
+                if (prediction.willPickUpPassengers()) {
+                    snippet = "Already departed at ";
+                } else {
+                    snippet = "Already arrived at ";
+                }
+
+                snippet += new SimpleDateFormat("h:mm").format(predictionTime) + " " +
                         new SimpleDateFormat("a").format(predictionTime).toLowerCase();
             }
-        } else {
-            if (prediction.willPickUpPassengers()) {
-                snippet = "Already departed at ";
-            } else {
-                snippet = "Already arrived at ";
-            }
-
-            snippet += new SimpleDateFormat("h:mm").format(predictionTime) + " " +
-                    new SimpleDateFormat("a").format(predictionTime).toLowerCase();
         }
 
         return snippet;
