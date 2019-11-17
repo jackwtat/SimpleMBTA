@@ -52,12 +52,14 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
+import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.GreenLineCombined;
@@ -84,6 +86,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     // Vehicle locations auto update rate
     public static final long VEHICLES_UPDATE_RATE = 5000;
 
+    // Service alerts auto update rate
+    public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
+
     // Maximum age of prediction
     public static final long MAXIMUM_PREDICTION_AGE = 90000;
 
@@ -103,6 +108,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
     private VehiclesByRouteAsyncTask vehiclesAsyncTask;
+    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
     private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
@@ -259,6 +265,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
+        recyclerViewAdapter.setServiceAlertsView(selectedRoute);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set OnClickListener
@@ -397,6 +404,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         timer = new Timer();
         timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
         timer.schedule(new VehiclesUpdateTimerTask(), 0, VEHICLES_UPDATE_RATE);
+        timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
     }
 
     @Override
@@ -418,6 +426,10 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         if (vehiclesAsyncTask != null) {
             vehiclesAsyncTask.cancel(true);
+        }
+
+        if (serviceAlertsAsyncTask != null) {
+            serviceAlertsAsyncTask.cancel(true);
         }
 
         if (timer != null) {
@@ -577,6 +589,27 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    private void getServiceAlerts() {
+        if (selectedRoute != null) {
+            if (networkConnectivityClient.isConnected()) {
+                errorManager.setNetworkError(false);
+
+                if (serviceAlertsAsyncTask != null) {
+                    serviceAlertsAsyncTask.cancel(true);
+                }
+
+                String[] routeId = {selectedRoute.getId()};
+
+                serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(
+                        realTimeApiKey, routeId, new ServiceAlertsPostExecuteListener());
+                serviceAlertsAsyncTask.execute();
+
+            } else {
+                errorManager.setNetworkError(true);
+            }
+        }
+    }
+
     private void refreshPredictions(boolean returnToTop) {
         if (!userIsScrolling) {
             if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
@@ -685,6 +718,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
         }
     }
+
+    private void refreshServiceAlerts() {
+        if (selectedRoute != null) {
+            recyclerViewAdapter.setServiceAlertsView(selectedRoute);
+        }
+    }
+
 
     private void clearPredictions() {
         recyclerViewAdapter.clear();
@@ -959,6 +999,21 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    private class ServiceAlertsPostExecuteListener implements ServiceAlertsAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] serviceAlerts) {
+            selectedRoute.clearServiceAlerts();
+            selectedRoute.addAllServiceAlerts(serviceAlerts);
+
+            refreshServiceAlerts();
+        }
+
+        @Override
+        public void onError() {
+            getServiceAlerts();
+        }
+    }
+
     private class PredictionsUpdateTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -970,6 +1025,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         @Override
         public void run() {
             getVehicles();
+        }
+    }
+
+    private class ServiceAlertsUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            getServiceAlerts();
         }
     }
 }

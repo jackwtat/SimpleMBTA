@@ -34,9 +34,10 @@ public class RouteSearchRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull RouteSearchRecyclerViewAdapter.ViewHolder holder, int i) {
-        final int position = routeServiceAlerts == null ?
-                i :
-                i - 1;
+        final int position =
+                (routeServiceAlerts != null && routeServiceAlerts.getServiceAlerts().size() > 0) ?
+                        i - 1 :
+                        i;
 
         holder.predictionView.clear();
 
