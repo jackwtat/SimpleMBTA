@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:lines="1"
+        android:maxLines="1"
         android:textColor="@color/PrimaryText"
         android:textStyle="bold"
         tools:text="Northbound" />
