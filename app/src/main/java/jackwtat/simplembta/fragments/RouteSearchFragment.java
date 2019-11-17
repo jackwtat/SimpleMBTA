@@ -272,6 +272,10 @@ public class RouteSearchFragment extends Fragment implements
             vehiclesAsyncTask.cancel(true);
         }
 
+        if (serviceAlertsAsyncTask != null) {
+            serviceAlertsAsyncTask.cancel(true);
+        }
+
         if (timer != null) {
             timer.cancel();
         }
