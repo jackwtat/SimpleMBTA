@@ -45,6 +45,7 @@ public class MapSearchRecyclerViewAdapter
 
         MapSearchPredictionItem predictionItem = holder.predictionView;
         PredictionHeaderView header = predictionItem.findViewById(R.id.prediction_header);
+        View body = predictionItem.findViewById(R.id.predictions_card_body);
         View bottomBorder = predictionItem.findViewById(R.id.bottom_border);
 
         Route thisRoute = adapterItems.get(i).route;
@@ -116,7 +117,7 @@ public class MapSearchRecyclerViewAdapter
             bottomBorder.setVisibility(View.GONE);
         }
 
-        holder.predictionView.setOnClickListener(new View.OnClickListener() {
+        body.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
@@ -125,7 +126,7 @@ public class MapSearchRecyclerViewAdapter
             }
         });
 
-        holder.predictionView.setOnLongClickListener(new View.OnLongClickListener() {
+        body.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 if (onItemLongClickListener != null) {
