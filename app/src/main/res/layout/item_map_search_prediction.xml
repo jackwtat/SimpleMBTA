@@ -11,80 +11,85 @@
         android:layout_height="wrap_content" />
 
     <RelativeLayout
-        android:id="@+id/route_header_layout"
+        android:id="@+id/predictions_card_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/prediction_header"
-        android:background="?android:attr/selectableItemBackground"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="8dp">
+        android:background="?android:attr/selectableItemBackground">
 
-        <jackwtat.simplembta.views.RouteNameView
-            android:id="@+id/route_name_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="4dp"
-            android:gravity="center_vertical"
-            android:paddingTop="8dp" />
-
-        <ImageView
-            android:id="@+id/service_advisory_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/route_name_view"
-            android:contentDescription="@string/service_advisory"
-            android:paddingTop="8dp"
-            android:src="@drawable/ic_service_advisory"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/service_alert_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/route_name_view"
-            android:contentDescription="@string/service_alert"
-            android:paddingTop="8dp"
-            android:src="@drawable/ic_service_alert"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/predictions_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/route_header_layout"
-        android:background="?android:attr/selectableItemBackground"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="16dp">
-
-        <TextView
-            android:id="@+id/no_predictions_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:textSize="@dimen/small_header_text_size" />
-
-        <LinearLayout
-            android:id="@+id/predictions_list_layout"
+        <RelativeLayout
+            android:id="@+id/route_header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp">
 
+            <jackwtat.simplembta.views.RouteNameView
+                android:id="@+id/route_name_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="4dp"
+                android:gravity="center_vertical"
+                android:paddingTop="8dp" />
+
+            <ImageView
+                android:id="@+id/service_advisory_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/route_name_view"
+                android:contentDescription="@string/service_advisory"
+                android:paddingTop="8dp"
+                android:src="@drawable/ic_service_advisory"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/service_alert_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/route_name_view"
+                android:contentDescription="@string/service_alert"
+                android:paddingTop="8dp"
+                android:src="@drawable/ic_service_alert"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/predictions_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/route_header_layout"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/no_predictions_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="@dimen/small_header_text_size" />
+
+            <LinearLayout
+                android:id="@+id/predictions_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <View
         android:id="@+id/bottom_edge"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/predictions_layout"
+        android:layout_below="@id/predictions_card_body"
         android:background="#CCCCCC" />
 
     <View
