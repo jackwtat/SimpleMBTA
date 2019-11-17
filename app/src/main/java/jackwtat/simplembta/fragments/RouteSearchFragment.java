@@ -36,7 +36,6 @@ import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
-import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -45,7 +44,6 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
-import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.RouteSearchSpinners;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
@@ -532,10 +530,6 @@ public class RouteSearchFragment extends Fragment implements
         recyclerViewAdapter.clear();
         noPredictionsTextView.setVisibility(View.GONE);
         recyclerView.setNestedScrollingEnabled(false);
-    }
-
-    private Shape[] getShapesFromJson(int jsonFile) {
-        return ShapesJsonParser.parse(RawResourceReader.toString(getResources().openRawResource(jsonFile)));
     }
 
     private void populateRouteSpinner(Route[] routes) {
