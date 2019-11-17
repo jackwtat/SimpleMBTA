@@ -5,7 +5,10 @@
     android:background="@color/selected_spinner_item"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="4dp">
+    android:paddingLeft="8dp"
+    android:paddingTop="16dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="16dp">
 
     <jackwtat.simplembta.views.RouteNameView
         android:id="@+id/route_name_view"

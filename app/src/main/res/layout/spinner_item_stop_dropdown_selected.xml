@@ -6,9 +6,9 @@
     android:background="@color/selected_spinner_item"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="8dp"
+    android:paddingLeft="16dp"
     android:paddingTop="16dp"
-    android:paddingRight="8dp"
+    android:paddingRight="16dp"
     android:paddingBottom="16dp">
 
     <TextView
