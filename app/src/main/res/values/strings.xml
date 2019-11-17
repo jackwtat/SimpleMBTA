@@ -13,7 +13,7 @@
     <!-- Spinner Titles -->
     <string name="route">Route</string>
     <string name="direction">Direction</string>
-    <string name="from">From</string>
+    <string name="from">Stop</string>
     <string name="map">Map</string>
 
     <!-- Service Alerts -->
