@@ -117,7 +117,11 @@ public class RouteSearchRecyclerViewAdapter
     }
 
     public void setServiceAlertsView(Route route) {
-        routeServiceAlerts = route;
+        if (route != null && route.getServiceAlerts().size() > 0) {
+            routeServiceAlerts = route;
+        } else {
+            routeServiceAlerts = null;
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
