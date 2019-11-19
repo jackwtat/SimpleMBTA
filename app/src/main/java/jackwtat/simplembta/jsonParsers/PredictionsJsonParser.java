@@ -105,6 +105,9 @@ public class PredictionsJsonParser {
                                 stop.setParentId("");
                             }
 
+                            // Get track number
+                            prediction.setTrackNumber(jStopAttr.getString("platform_code"));
+
                         }
                         prediction.setStop(stop);
 

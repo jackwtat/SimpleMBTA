@@ -17,6 +17,7 @@ import java.util.Date;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.routes.Route;
 
 public class TripDetailPredictionItem extends LinearLayout {
 
@@ -35,6 +36,7 @@ public class TripDetailPredictionItem extends LinearLayout {
     TextView timeTextView;
     TextView minuteTextView;
     TextView statusTextView;
+    TextView trackNumberTextView;
 
     String min;
 
@@ -168,6 +170,17 @@ public class TripDetailPredictionItem extends LinearLayout {
             }
         }
 
+        // Show track number
+        String trackNumber = prediction.getTrackNumber();
+        if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                trackNumber != null && !trackNumber.equals("") && !trackNumber.equals("null")) {
+            trackNumber = getContext().getResources().getString(R.string.track) + " " + trackNumber;
+            trackNumberTextView.setText(trackNumber);
+            trackNumberTextView.setVisibility(VISIBLE);
+        } else {
+            trackNumberTextView.setVisibility(GONE);
+        }
+
         // Show stop name
         stopName.setText(prediction.getStop().getName());
 
@@ -226,6 +239,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         minuteTextView.setText("");
         statusTextView.setText("");
         statusTextView.setVisibility(GONE);
+        trackNumberTextView.setVisibility(GONE);
     }
 
     private void init(Context context) {
@@ -239,6 +253,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         statusTextView = rootView.findViewById(R.id.status_text_view);
+        trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
 
         min = context.getResources().getString(R.string.min);
     }

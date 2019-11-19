@@ -110,6 +110,19 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/track_number_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/border_track"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/trackNumber"
+                android:textSize="@dimen/body_text_size"
+                android:textStyle="bold"
+                tools:text="Track 4" />
+
+            <TextView
                 android:id="@+id/tomorrow_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

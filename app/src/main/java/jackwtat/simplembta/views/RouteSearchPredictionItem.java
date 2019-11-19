@@ -24,6 +24,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView timeTextView;
     TextView minuteTextView;
     TextView liveIndicator;
+    TextView trackNumberIndicator;
     TextView tomorrowIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
@@ -112,8 +113,20 @@ public class RouteSearchPredictionItem extends LinearLayout {
             dropOffIndicator.setVisibility(VISIBLE);
             liveIndicator.setVisibility(GONE);
         } else if (prediction.isLive()) {
-            liveIndicator.setVisibility(VISIBLE);
-            dropOffIndicator.setVisibility(GONE);
+            int mode = prediction.getRoute().getMode();
+            String trackNumber = prediction.getTrackNumber();
+
+            if (mode == Route.COMMUTER_RAIL &&
+                    trackNumber != null && !trackNumber.equals("") && !trackNumber.equals("null")) {
+                trackNumber = getContext().getResources().getString(R.string.track) + " " + trackNumber;
+                trackNumberIndicator.setText(trackNumber);
+                trackNumberIndicator.setVisibility(VISIBLE);
+                liveIndicator.setVisibility(GONE);
+
+            } else {
+                trackNumberIndicator.setVisibility(GONE);
+                liveIndicator.setVisibility(VISIBLE);
+            }
         }
         if (predictionDay - todayDay > 0 ||
                 predictionMonth - todayMonth > 0 ||
@@ -121,6 +134,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
             tomorrowIndicator.setVisibility(VISIBLE);
         }
         if (liveIndicator.getVisibility() == GONE &&
+                trackNumberIndicator.getVisibility() == GONE &&
                 dropOffIndicator.getVisibility() == GONE &&
                 tomorrowIndicator.getVisibility() == GONE) {
             liveIndicator.setVisibility(INVISIBLE);
@@ -198,6 +212,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         timeTextView.setText("");
         minuteTextView.setText("");
         liveIndicator.setVisibility(GONE);
+        trackNumberIndicator.setVisibility(GONE);
         tomorrowIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
         destinationTextView.setText("");
@@ -213,6 +228,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
+        trackNumberIndicator = rootView.findViewById(R.id.track_number_text_view);
         tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);

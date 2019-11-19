@@ -18,6 +18,7 @@ public class IndividualPredictionItem extends LinearLayout {
     View rootView;
     TextView destinationTextView;
     TextView trainNumberTextView;
+    TextView trackNumberTextView;
     TextView timeTextView;
     TextView minuteTextView;
 
@@ -93,16 +94,29 @@ public class IndividualPredictionItem extends LinearLayout {
             minuteTextView.setVisibility(VISIBLE);
         }
 
-        if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                prediction.getTripName() != null &&
-                !prediction.getTripName().equalsIgnoreCase("null")) {
-            String trainNumber = getResources().getString(R.string.train) +
-                    " " + prediction.getTripName();
+        int mode = prediction.getRoute().getMode();
+        String tripName = prediction.getTripName();
+        String trackNumber = prediction.getTrackNumber();
 
-            trainNumberTextView.setText(trainNumber);
+        // Train number
+        if (mode == Route.COMMUTER_RAIL &&
+                tripName != null && !tripName.equalsIgnoreCase("null")) {
+            tripName = getResources().getString(R.string.train) + " " + tripName;
+
+            trainNumberTextView.setText(tripName);
             trainNumberTextView.setVisibility(VISIBLE);
         } else {
             trainNumberTextView.setVisibility(GONE);
+        }
+
+        // Track number
+        if (mode == Route.COMMUTER_RAIL &&
+                trackNumber != null && !trackNumber.equals("") && !trackNumber.equals("null")) {
+            trackNumber = getContext().getResources().getString(R.string.track) + " " + trackNumber;
+            trackNumberTextView.setText(trackNumber);
+            trackNumberTextView.setVisibility(VISIBLE);
+        } else {
+            trackNumberTextView.setVisibility(GONE);
         }
     }
 
@@ -110,6 +124,7 @@ public class IndividualPredictionItem extends LinearLayout {
         rootView = inflate(context, R.layout.item_individual_prediction, this);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         trainNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
+        trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
 
