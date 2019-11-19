@@ -84,7 +84,8 @@ public class TripDetailPredictionItem extends LinearLayout {
 
                 // Vehicle is currently at or approaching selected stop
             } else if (vehicleStopSequence == prediction.getStopSequence()) {
-                if (countdownTime / 60000 > 0) {
+                // Vehicle is more than one minute away, display countdown
+                if (countdownTime / 60000 > 1) {
                     String timeText = (countdownTime / 60000) + "";
                     String minuteText = min;
 
@@ -95,8 +96,13 @@ public class TripDetailPredictionItem extends LinearLayout {
                     minuteTextView.setVisibility(VISIBLE);
                     statusTextView.setVisibility(GONE);
 
+                    // Vehicle is less than a minute away and less than 30 seconds past arrival time
                 } else if (countdownTime > -30000) {
-                    statusTextView.setText(getContext().getResources().getString(R.string.trip_arriving));
+                    if (prediction.getStopSequence() == 1) {
+                        statusTextView.setText(getContext().getResources().getString(R.string.trip_departing));
+                    } else {
+                        statusTextView.setText(getContext().getResources().getString(R.string.trip_arriving));
+                    }
 
                     timeTextView.setVisibility(GONE);
                     minuteTextView.setVisibility(GONE);

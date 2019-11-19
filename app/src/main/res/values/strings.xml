@@ -54,7 +54,7 @@
     <string name="near_this_stop">Near This Stop</string>
 
     <!-- Trip Prediction Statuses -->
-    <string name="trip_boarding">Boarding</string>
+    <string name="trip_departing">Departing</string>
     <string name="trip_arriving">Arriving</string>
     <string name="trip_already_departed">Already departed</string>
     <string name="trip_already_arrived">Already arrived</string>
