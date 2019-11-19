@@ -34,12 +34,13 @@ public class Vehicle implements Serializable {
     private String label;
     private String route;
     private String destination;
+    private String tripId;
     private String tripName;
     private int direction;
     private double latitude;
     private double longitude;
     private float bearing;
-    private int currentStopSequence;
+    private int currentStopSequence = -1;
     private Status currentStatus;
 
     public Vehicle(String id) {
@@ -60,6 +61,10 @@ public class Vehicle implements Serializable {
 
     public String getDestination() {
         return destination;
+    }
+
+    public String getTripId() {
+        return tripId;
     }
 
     public String getTripName() {
@@ -96,6 +101,10 @@ public class Vehicle implements Serializable {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public void setTripId(String tripId) {
+        this.tripId = tripId;
     }
 
     public void setTripName(String tripName) {

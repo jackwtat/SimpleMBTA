@@ -2,7 +2,6 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -35,6 +34,7 @@ public class TripDetailPredictionItem extends LinearLayout {
     TextView stopName;
     TextView timeTextView;
     TextView minuteTextView;
+    TextView statusTextView;
 
     String min;
 
@@ -53,27 +53,119 @@ public class TripDetailPredictionItem extends LinearLayout {
         init(context);
     }
 
-    public void setPrediction(Prediction prediction, int stopSequence, boolean showCountdown) {
-        long countdownTime = prediction.getCountdownTime() + 15000;
-        String timeText;
-        String minuteText;
+    public void setPrediction(
+            Prediction prediction, int stopSequenceType, int vehicleStopSequence,
+            String selectedTripId, String vehicleTripId) {
 
-        if (showCountdown && countdownTime >= 0) {
-            timeText = (countdownTime / 60000) + "";
-            minuteText = min;
+        long countdownTime = prediction.getCountdownTime();
 
-            timeTextView.setText(timeText);
-            minuteTextView.setText(minuteText);
-            minuteTextView.setVisibility(VISIBLE);
+        // Vehicle is currently on selected trip
+        if (selectedTripId.equals(vehicleTripId)) {
 
+            // Vehicle has already passed selected stop
+            if (vehicleStopSequence > prediction.getStopSequence()) {
+                String statusText;
+
+                if (stopSequenceType == LAST_STOP || stopSequenceType == ONLY_STOP) {
+                    statusText = getContext().getResources()
+                            .getString(R.string.trip_already_arrived);
+                } else {
+                    statusText = getContext().getResources()
+                            .getString(R.string.trip_already_departed);
+                }
+
+                statusTextView.setText(statusText);
+
+                timeTextView.setVisibility(GONE);
+                minuteTextView.setVisibility(GONE);
+                statusTextView.setVisibility(VISIBLE);
+
+                // Vehicle is currently at or approaching selected stop
+            } else if (vehicleStopSequence == prediction.getStopSequence()) {
+                if (countdownTime / 60000 > 0) {
+                    String timeText = (countdownTime / 60000) + "";
+                    String minuteText = min;
+
+                    timeTextView.setText(timeText);
+                    minuteTextView.setText(minuteText);
+
+                    timeTextView.setVisibility(VISIBLE);
+                    minuteTextView.setVisibility(VISIBLE);
+                    statusTextView.setVisibility(GONE);
+
+                } else if (countdownTime > -30000) {
+                    statusTextView.setText(getContext().getResources().getString(R.string.trip_arriving));
+
+                    timeTextView.setVisibility(GONE);
+                    minuteTextView.setVisibility(GONE);
+                    statusTextView.setVisibility(VISIBLE);
+
+                } else {
+                    statusTextView.setText(getContext().getResources().getString(R.string.trip_already_departed));
+
+                    timeTextView.setVisibility(GONE);
+                    minuteTextView.setVisibility(GONE);
+                    statusTextView.setVisibility(VISIBLE);
+                }
+
+                // Vehicle has not yet reached selected stop
+            } else {
+                String timeText;
+                if (countdownTime > 0) {
+                    timeText = (countdownTime / 60000) + "";
+                } else {
+                    timeText = "0";
+                }
+                String minuteText = min;
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+
+                timeTextView.setVisibility(VISIBLE);
+                minuteTextView.setVisibility(VISIBLE);
+                statusTextView.setVisibility(GONE);
+            }
+
+            // Vehicle is not on selected trip
         } else {
-            Date predictionTime = prediction.getPredictionTime();
-            timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-            minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+            if (countdownTime > 0) {
+                String timeText;
+                String minuteText;
 
-            timeTextView.setText(timeText);
-            minuteTextView.setText(minuteText);
-            minuteTextView.setVisibility(VISIBLE);
+                if (countdownTime < 3600000) {
+                    timeText = (countdownTime / 60000) + "";
+                    minuteText = min;
+
+                } else {
+                    Date predictionTime = prediction.getPredictionTime();
+                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+
+                timeTextView.setVisibility(VISIBLE);
+                minuteTextView.setVisibility(VISIBLE);
+                statusTextView.setVisibility(GONE);
+
+            } else {
+                String statusText;
+
+                if (stopSequenceType == LAST_STOP || stopSequenceType == ONLY_STOP) {
+                    statusText = getContext().getResources()
+                            .getString(R.string.trip_already_arrived);
+                } else {
+                    statusText = getContext().getResources()
+                            .getString(R.string.trip_already_departed);
+                }
+
+                statusTextView.setText(statusText);
+
+                timeTextView.setVisibility(GONE);
+                minuteTextView.setVisibility(GONE);
+                statusTextView.setVisibility(VISIBLE);
+            }
         }
 
         // Show stop name
@@ -95,15 +187,15 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopIconFill.setVisibility(VISIBLE);
 
         // Set line visibility
-        if (stopSequence == FIRST_STOP) {
+        if (stopSequenceType == FIRST_STOP) {
             topLineView.setVisibility(INVISIBLE);
             bottomLineView.setVisibility(VISIBLE);
 
-        } else if (stopSequence == LAST_STOP) {
+        } else if (stopSequenceType == LAST_STOP) {
             topLineView.setVisibility(VISIBLE);
             bottomLineView.setVisibility(INVISIBLE);
 
-        } else if (stopSequence == ONLY_STOP) {
+        } else if (stopSequenceType == ONLY_STOP) {
             topLineView.setVisibility(INVISIBLE);
             bottomLineView.setVisibility(INVISIBLE);
 
@@ -132,6 +224,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         wheelchairAccessibleIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
+        statusTextView.setText("");
+        statusTextView.setVisibility(GONE);
     }
 
     private void init(Context context) {
@@ -144,6 +238,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
+        statusTextView = rootView.findViewById(R.id.status_text_view);
 
         min = context.getResources().getString(R.string.min);
     }

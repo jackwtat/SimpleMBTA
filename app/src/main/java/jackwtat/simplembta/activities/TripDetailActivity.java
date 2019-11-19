@@ -239,6 +239,7 @@ public class TripDetailActivity extends AppCompatActivity implements
         recyclerViewAdapter = new TripDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.setSelectedStop(selectedStop);
+        recyclerViewAdapter.setSelectedTripId(selectedTripId);
     }
 
     @Override
@@ -561,6 +562,10 @@ public class TripDetailActivity extends AppCompatActivity implements
     private void refreshVehicles() {
         if (!userIsScrolling && mapReady) {
             if (vehicle != null) {
+                // Notify recycle view adapter of vehicle stop sequence
+                recyclerViewAdapter.setVehicleStopSequence(vehicle.getCurrentStopSequence());
+                recyclerViewAdapter.setVehicleTripId(vehicle.getTripId());
+
                 // Draw vehicle marker
                 if (vehicleMarker == null) {
                     int mode = selectedRoute.getMode();
@@ -786,6 +791,8 @@ public class TripDetailActivity extends AppCompatActivity implements
 
         @Override
         public void onError() {
+            vehicle = null;
+            refreshVehicles();
         }
     }
 
