@@ -56,8 +56,8 @@ public class TripDetailPredictionItem extends LinearLayout {
     }
 
     public void setPrediction(
-            Prediction prediction, int stopSequenceType, int vehicleStopSequence,
-            String selectedTripId, String vehicleTripId) {
+            Prediction prediction, @Nullable Prediction nextPrediction, int stopSequenceType,
+            int vehicleStopSequence, String selectedTripId, String vehicleTripId) {
 
         long countdownTime = prediction.getCountdownTime();
 
@@ -65,7 +65,9 @@ public class TripDetailPredictionItem extends LinearLayout {
         if (selectedTripId.equals(vehicleTripId)) {
 
             // Vehicle has already passed selected stop
-            if (vehicleStopSequence > prediction.getStopSequence()) {
+            if (vehicleStopSequence > prediction.getStopSequence() ||
+                    (nextPrediction != null &&
+                            prediction.getCountdownTime() > nextPrediction.getCountdownTime())) {
                 String statusText;
 
                 if (stopSequenceType == LAST_STOP || stopSequenceType == ONLY_STOP) {
@@ -85,7 +87,7 @@ public class TripDetailPredictionItem extends LinearLayout {
                 // Vehicle is currently at or approaching selected stop
             } else if (vehicleStopSequence == prediction.getStopSequence()) {
                 // Vehicle is more than one minute away, display countdown
-                if (countdownTime / 60000 > 1) {
+                if (countdownTime > 60000) {
                     String timeText = (countdownTime / 60000) + "";
                     String minuteText = min;
 

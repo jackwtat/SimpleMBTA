@@ -50,8 +50,13 @@ public class TripDetailRecyclerViewAdapter
             stopSequenceType = TripDetailPredictionItem.INTERMEDIATE_STOP;
         }
 
-        holder.predictionView.setPrediction(prediction, stopSequenceType, vehicleStopSequence,
-                selectedTripId, vehicleTripId);
+        if (position + 1 < predictions.size()) {
+            holder.predictionView.setPrediction(prediction, predictions.get(position + 1),
+                    stopSequenceType, vehicleStopSequence, selectedTripId, vehicleTripId);
+        } else {
+            holder.predictionView.setPrediction(prediction, null, stopSequenceType,
+                    vehicleStopSequence, selectedTripId, vehicleTripId);
+        }
 
         if (prediction.getStop().equals(selectedStop)) {
             holder.predictionView.emphasize();
