@@ -463,7 +463,7 @@ public class TripDetailActivity extends AppCompatActivity implements
     }
 
     private void refreshPredictions() {
-        if (!userIsScrolling && predictions != null && predictions.size() > 0) {
+        if (!userIsScrolling && predictions != null) {
             for (int i = 0; i < predictions.size(); i++) {
                 Prediction p = predictions.get(i);
 
@@ -560,7 +560,7 @@ public class TripDetailActivity extends AppCompatActivity implements
     }
 
     private void refreshVehicles() {
-        if (!userIsScrolling && mapReady) {
+        if (mapReady) {
             if (vehicle != null) {
                 // Notify recycle view adapter of vehicle stop sequence
                 recyclerViewAdapter.setVehicleStopSequence(vehicle.getCurrentStopSequence());
@@ -602,11 +602,18 @@ public class TripDetailActivity extends AppCompatActivity implements
                     vehicleMarker.showInfoWindow();
                 }
             } else {
+                recyclerViewAdapter.setVehicleStopSequence(-1);
+                recyclerViewAdapter.setVehicleTripId("null");
+
                 if (vehicleMarker != null) {
                     vehicleMarker.remove();
                 }
                 vehicleMarker = null;
             }
+        }
+
+        if(!userIsScrolling){
+            recyclerViewAdapter.notifyDataSetChanged();
         }
     }
 
