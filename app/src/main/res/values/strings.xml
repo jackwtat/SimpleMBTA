@@ -53,6 +53,12 @@
     <string name="other_nearby_services">Other Nearby Services</string>
     <string name="near_this_stop">Near This Stop</string>
 
+    <!-- Individual Prediction Statuses -->
+    <string name="individual_departing">Departing</string>
+    <string name="individual_arriving">Arriving</string>
+    <string name="individual_departed">Departed</string>
+    <string name="individual_arrived">Arrived</string>
+
     <!-- Trip Prediction Statuses -->
     <string name="trip_departing">Departing</string>
     <string name="trip_arriving">Arriving</string>

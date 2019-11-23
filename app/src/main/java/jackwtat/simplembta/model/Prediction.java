@@ -115,12 +115,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     }
 
     public int getPredictionType() {
-        if (arrivalTime != null && departureTime == null) {
+        if (departureTime == null) {
             return ARRIVAL;
-        } else if (arrivalTime == null && departureTime != null) {
-            return DEPARTURE;
         } else {
-            return ARRIVAL;
+            return DEPARTURE;
         }
     }
 

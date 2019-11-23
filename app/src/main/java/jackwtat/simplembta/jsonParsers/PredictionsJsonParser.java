@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.Bus;
 import jackwtat.simplembta.model.routes.CommuterRail;
@@ -213,6 +214,35 @@ public class PredictionsJsonParser {
                                     .getJSONObject("vehicle")
                                     .getJSONObject("data")
                                     .getString("id");
+
+                            Vehicle vehicle = new Vehicle(vehicleId);
+
+                            JSONObject jVehicle = includedData.get("vehicle" + vehicleId);
+                            if (jVehicle != null) {
+                                // Get vehicle attributes
+                                JSONObject jVehicleAttr = jVehicle.getJSONObject("attributes");
+                                vehicle.setLabel(jVehicleAttr.getString("label"));
+                                vehicle.setDirection(jVehicleAttr.getInt("direction_id"));
+                                vehicle.setCurrentStopSequence(jVehicleAttr.getInt("current_stop_sequence"));
+                                vehicle.setCurrentStatus(jVehicleAttr.getString("current_status"));
+
+                                // Get vehicle location and bearing
+                                Location location = new Location("");
+                                location.setLatitude(jVehicleAttr.getDouble("latitude"));
+                                location.setLongitude(jVehicleAttr.getDouble("longitude"));
+                                location.setBearing((float) jVehicleAttr.getDouble("bearing"));
+                                vehicle.setLocation(location);
+
+                                // Get vehicle trip
+                                vehicle.setTripId(jVehicle
+                                        .getJSONObject("relationships")
+                                        .getJSONObject("trip")
+                                        .getJSONObject("data")
+                                        .getString("id"));
+
+                                prediction.setVehicle(vehicle);
+                            }
+
                             prediction.setVehicleId(vehicleId);
 
                         } catch (JSONException e) {

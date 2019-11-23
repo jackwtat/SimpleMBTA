@@ -92,7 +92,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final long MAX_PREDICTION_AGE = 90000;
 
     // Predictions auto update rate
-    public static final long PREDICTIONS_UPDATE_RATE = 15000;
+    public static final long PREDICTIONS_UPDATE_RATE = 5000;
 
     // Location auto update rate
     public static final long LOCATION_UPDATE_RATE = 1000;
@@ -813,7 +813,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void backgroundUpdate() {
-        if (!dataRefreshing && new Date().getTime() - refreshTime > PREDICTIONS_UPDATE_RATE) {
+        if (!dataRefreshing) {
             update();
         }
     }
