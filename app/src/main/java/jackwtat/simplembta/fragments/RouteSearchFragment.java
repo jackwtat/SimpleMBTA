@@ -59,7 +59,7 @@ public class RouteSearchFragment extends Fragment implements
     public static final long MAX_PREDICTION_AGE = 90000;
 
     // Predictions auto update rate
-    public static final long PREDICTIONS_UPDATE_RATE = 15000;
+    public static final long PREDICTIONS_UPDATE_RATE = 5000;
 
     // Service alerts auto update rate
     public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
@@ -341,7 +341,7 @@ public class RouteSearchFragment extends Fragment implements
                             searchSpinners.selectRoute(route.getId());
                         } else {
                             swipeRefreshLayout.setRefreshing(true);
-                            getPredictions();
+                            forceUpdate();
                             getVehicles();
                         }
                     }
