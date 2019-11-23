@@ -57,9 +57,9 @@ public class IndividualPredictionItem extends LinearLayout {
             if (vehicle.getCurrentStopSequence() > prediction.getStopSequence()) {
                 String statusText;
                 if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                    statusText = getContext().getResources().getString(R.string.individual_departed);
+                    statusText = getContext().getResources().getString(R.string.map_departed);
                 } else {
-                    statusText = getContext().getResources().getString(R.string.individual_arrived);
+                    statusText = getContext().getResources().getString(R.string.map_arrived);
                 }
 
                 timeTextView.setText(statusText);
@@ -92,9 +92,9 @@ public class IndividualPredictionItem extends LinearLayout {
                     String statusText;
                     if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
                             prediction.getPredictionType() == Prediction.DEPARTURE) {
-                        statusText = getContext().getResources().getString(R.string.individual_departing);
+                        statusText = getContext().getResources().getString(R.string.map_departing);
                     } else {
-                        statusText = getContext().getResources().getString(R.string.individual_arriving);
+                        statusText = getContext().getResources().getString(R.string.map_arriving);
                     }
 
                     timeTextView.setText(statusText);
