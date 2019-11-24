@@ -44,16 +44,16 @@ public class MapSearchPredictionItem extends LinearLayout {
     }
 
     public void setPredictions(Route route, int direction) {
-        Stop stop = route.getNearestStop(direction);
         ArrayList<Prediction> predictions = route.getPredictions(direction);
 
         ArrayList<Prediction> pickUps = new ArrayList<>();
 
         // Find only predictions that pick up passengers
         for (Prediction p : predictions) {
-            if (p.getPredictionTime() != null &&
-                    p.willPickUpPassengers() &&
-                    p.getCountdownTime() >= 0) {
+            if (p.getPredictionTime() != null && p.willPickUpPassengers() &&
+                    (p.getVehicle() == null ||
+                            !p.getVehicle().getTripId().equalsIgnoreCase(p.getTripId()) ||
+                            p.getVehicle().getCurrentStopSequence() <= p.getStopSequence())) {
                 pickUps.add(p);
             }
         }
