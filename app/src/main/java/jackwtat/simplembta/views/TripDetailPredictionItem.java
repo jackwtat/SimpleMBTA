@@ -132,7 +132,11 @@ public class TripDetailPredictionItem extends LinearLayout {
                 String minuteText;
 
                 if (countdownTime < 3600000) {
-                    timeText = (countdownTime / 60000) + "";
+                    if (countdownTime > 0) {
+                        timeText = (countdownTime / 60000) + "";
+                    } else {
+                        timeText = "0";
+                    }
                     minuteText = min;
 
                 } else {
@@ -156,11 +160,7 @@ public class TripDetailPredictionItem extends LinearLayout {
                 String minuteText;
 
                 if (countdownTime < 3600000) {
-                    if (countdownTime > 0) {
-                        timeText = (countdownTime / 60000) + "";
-                    } else {
-                        timeText = "0";
-                    }
+                    timeText = (countdownTime / 60000) + "";
                     minuteText = min;
 
                 } else {
