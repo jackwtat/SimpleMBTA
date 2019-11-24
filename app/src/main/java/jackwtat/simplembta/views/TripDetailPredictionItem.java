@@ -128,49 +128,29 @@ public class TripDetailPredictionItem extends LinearLayout {
 
                 // Vehicle is not yet approaching this stop
             } else {
-                if (countdownTime > -180000) {
-                    String timeText;
-                    String minuteText;
+                String timeText;
+                String minuteText;
 
-                    if (countdownTime < 3600000) {
-                        if (countdownTime > 0) {
-                            timeText = (countdownTime / 60000) + "";
-                        } else {
-                            timeText = "0";
-                        }
-                        minuteText = min;
-
+                if (countdownTime < 3600000) {
+                    if (countdownTime > 0) {
+                        timeText = (countdownTime / 60000) + "";
                     } else {
-                        Date predictionTime = prediction.getPredictionTime();
-                        timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                        minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                        timeText = "0";
                     }
-
-                    timeTextView.setText(timeText);
-                    minuteTextView.setText(minuteText);
-
-                    timeTextView.setVisibility(VISIBLE);
-                    minuteTextView.setVisibility(VISIBLE);
-                    statusTextView.setVisibility(GONE);
+                    minuteText = min;
 
                 } else {
-                    String statusText;
-
-                    if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                        statusText = getContext().getResources()
-                                .getString(R.string.trip_already_departed);
-                    } else {
-
-                        statusText = getContext().getResources()
-                                .getString(R.string.trip_already_arrived);
-                    }
-
-                    statusTextView.setText(statusText);
-
-                    timeTextView.setVisibility(GONE);
-                    minuteTextView.setVisibility(GONE);
-                    statusTextView.setVisibility(VISIBLE);
+                    Date predictionTime = prediction.getPredictionTime();
+                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
                 }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+
+                timeTextView.setVisibility(VISIBLE);
+                minuteTextView.setVisibility(VISIBLE);
+                statusTextView.setVisibility(GONE);
             }
 
             // No vehicle is on this trip
