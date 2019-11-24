@@ -98,9 +98,12 @@ public class RouteSearchRecyclerViewAdapter
         this.predictions.clear();
         cleared = false;
 
-        for (Prediction prediction : predictions) {
-            if (prediction.getPredictionTime() != null && prediction.getCountdownTime() >= 0) {
-                this.predictions.add(prediction);
+        for (Prediction p : predictions) {
+            if (p.getPredictionTime() != null &&
+                    (p.getVehicle() == null ||
+                            !p.getVehicle().getTripId().equalsIgnoreCase(p.getTripId()) ||
+                            p.getVehicle().getCurrentStopSequence() <= p.getStopSequence())) {
+                this.predictions.add(p);
             }
         }
 
