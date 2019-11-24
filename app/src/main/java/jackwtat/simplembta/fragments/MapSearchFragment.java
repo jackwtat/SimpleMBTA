@@ -319,7 +319,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         refreshPredictionViews();
                     }
 
-                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                } else {
                     userIsScrolling = true;
                 }
             }
