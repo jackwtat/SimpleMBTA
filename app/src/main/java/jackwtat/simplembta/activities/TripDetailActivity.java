@@ -614,7 +614,7 @@ public class TripDetailActivity extends AppCompatActivity implements
             }
         }
 
-        if(!userIsScrolling){
+        if (!userIsScrolling) {
             recyclerViewAdapter.notifyDataSetChanged();
         }
     }
@@ -766,7 +766,7 @@ public class TripDetailActivity extends AppCompatActivity implements
                     long priorCountdown = priorPrediction.getCountdownTime();
                     long timeDifference = thisCountdown - priorCountdown;
 
-                    if (priorCountdown < 30000 || timeDifference < 60000 && timeDifference > 0) {
+                    if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
                         prediction.setArrivalTime(priorPrediction.getArrivalTime());
                         prediction.setDepartureTime(priorPrediction.getDepartureTime());
                     }
