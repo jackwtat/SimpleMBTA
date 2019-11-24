@@ -53,6 +53,7 @@ public class IndividualPredictionItem extends LinearLayout {
 
         // There is a vehicle currently on this trip
         if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
+
             // Vehicle has already passed this stop
             if (vehicle.getCurrentStopSequence() > prediction.getStopSequence()) {
                 String statusText;
@@ -68,6 +69,7 @@ public class IndividualPredictionItem extends LinearLayout {
                 // Vehicle is at or approaching this stop
             } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() ||
                     countdownTime < 30000) {
+
                 // Vehicle is more than one minute away
                 if (countdownTime > 60000) {
                     String timeText;
@@ -90,8 +92,10 @@ public class IndividualPredictionItem extends LinearLayout {
                     // Vehicle is less than one minute away
                 } else {
                     String statusText;
-                    if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
-                            prediction.getPredictionType() == Prediction.DEPARTURE) {
+                    if (prediction.getStopSequence() == 1 ||
+                            (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
+                                    prediction.getPredictionType() == Prediction.DEPARTURE &&
+                                    countdownTime < 15000)) {
                         statusText = getContext().getResources().getString(R.string.map_departing);
                     } else {
                         statusText = getContext().getResources().getString(R.string.map_arriving);
@@ -121,7 +125,6 @@ public class IndividualPredictionItem extends LinearLayout {
                 minuteTextView.setVisibility(VISIBLE);
             }
 
-
             // No vehicle is on this trip
         } else {
             String timeText;
@@ -141,7 +144,7 @@ public class IndividualPredictionItem extends LinearLayout {
                 minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
             }
 
-            if(!prediction.isLive()) {
+            if (!prediction.isLive()) {
                 minuteText += "*";
             }
 

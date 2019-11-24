@@ -14,6 +14,7 @@ import java.util.Date;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.Route;
 
 public class RouteSearchPredictionItem extends LinearLayout {
@@ -52,10 +53,111 @@ public class RouteSearchPredictionItem extends LinearLayout {
     }
 
     public void setPrediction(Prediction prediction) {
-        String timeText;
-        String minuteText;
+        // Departure time
+        long countdownTime = prediction.getCountdownTime();
+        Vehicle vehicle = prediction.getVehicle();
 
-        long countdownTime = prediction.getCountdownTime() + 15000;
+        // There is a vehicle currently on this trip
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
+
+            // Vehicle has already passed this stop
+            if (vehicle.getCurrentStopSequence() > prediction.getStopSequence()) {
+                String statusText;
+                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
+                    statusText = getContext().getResources().getString(R.string.route_departed);
+                } else {
+                    statusText = getContext().getResources().getString(R.string.route_arrived);
+                }
+
+                timeTextView.setText(statusText);
+                minuteTextView.setVisibility(GONE);
+
+                // Vehicle is at or approaching this stop
+            } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() ||
+                    countdownTime < 30000) {
+
+                // Vehicle is more than one minute away
+                if (countdownTime > 60000) {
+                    String timeText;
+                    String minuteText;
+
+                    if (countdownTime < 3600000) {
+                        timeText = (countdownTime / 60000) + "";
+                        minuteText = min;
+
+                    } else {
+                        Date predictionTime = prediction.getPredictionTime();
+                        timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                        minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                    }
+
+                    timeTextView.setText(timeText);
+                    minuteTextView.setText(minuteText);
+                    minuteTextView.setVisibility(VISIBLE);
+
+                    // Vehicle is less than one minute away
+                } else {
+                    String statusText;
+                    if (prediction.getStopSequence() == 1 ||
+                            (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
+                                    prediction.getPredictionType() == Prediction.DEPARTURE &&
+                                    countdownTime < 15000)) {
+                        statusText = getContext().getResources().getString(R.string.route_departing);
+                    } else {
+                        statusText = getContext().getResources().getString(R.string.route_arriving);
+                    }
+
+                    timeTextView.setText(statusText);
+                    minuteTextView.setVisibility(GONE);
+                }
+
+                // Vehicle is not yet approaching this stop
+            } else {
+                String timeText;
+                String minuteText;
+
+                if (countdownTime < 3600000) {
+                    timeText = (countdownTime / 60000) + "";
+                    minuteText = min;
+
+                } else {
+                    Date predictionTime = prediction.getPredictionTime();
+                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+                minuteTextView.setVisibility(VISIBLE);
+            }
+
+            // No vehicle is on this trip
+        } else {
+            String timeText;
+            String minuteText;
+
+            if (countdownTime < 3600000) {
+                if (countdownTime > 0) {
+                    timeText = (countdownTime / 60000) + "";
+                } else {
+                    timeText = "0";
+                }
+                minuteText = min;
+
+            } else {
+                Date predictionTime = prediction.getPredictionTime();
+                timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+            }
+
+            if (!prediction.isLive()) {
+                minuteText += "*";
+            }
+
+            timeTextView.setText(timeText);
+            minuteTextView.setText(minuteText);
+            minuteTextView.setVisibility(VISIBLE);
+        }
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prediction.getPredictionTime());
@@ -67,46 +169,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
         int todayMonth = calendar.get(Calendar.MONTH);
         int todayYear = calendar.get(Calendar.YEAR);
-
-        if (countdownTime <= 60 * 60000) {
-            if (countdownTime > 0) {
-                countdownTime /= 60000;
-            }
-
-            if (countdownTime > 0 || !prediction.isLive()) {
-                timeText = countdownTime + "";
-                minuteText = min;
-
-                if (!prediction.isLive()) {
-                    minuteText += "*";
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(minuteText);
-                minuteTextView.setVisibility(VISIBLE);
-            } else {
-                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                    timeText = getContext().getResources().getString(R.string.departing);
-                } else {
-                    timeText = getContext().getResources().getString(R.string.arriving);
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setVisibility(GONE);
-            }
-        } else {
-            Date predictionTime = prediction.getPredictionTime();
-            timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-            minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-
-            if (!prediction.isLive()) {
-                minuteText += "*";
-            }
-
-            timeTextView.setText(timeText);
-            minuteTextView.setText(minuteText);
-            minuteTextView.setVisibility(VISIBLE);
-        }
 
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {
