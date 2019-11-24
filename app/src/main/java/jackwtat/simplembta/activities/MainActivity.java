@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
         super.onStop();
 
         PastPredictionsHolder.getHolder().clear();
-        System.out.println("***** onStop - PastPredictionsHolder cleared *****");
     }
 
     @Override
