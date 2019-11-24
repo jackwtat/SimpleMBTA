@@ -152,6 +152,7 @@ public class TripDetailPredictionItem extends LinearLayout {
                     timeTextView.setVisibility(VISIBLE);
                     minuteTextView.setVisibility(VISIBLE);
                     statusTextView.setVisibility(GONE);
+
                 } else {
                     String statusText;
 
