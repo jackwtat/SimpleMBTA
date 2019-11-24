@@ -10,6 +10,7 @@ import java.util.List;
 
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.views.TripDetailPredictionItem;
 
 public class TripDetailRecyclerViewAdapter
@@ -18,9 +19,7 @@ public class TripDetailRecyclerViewAdapter
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private Stop selectedStop = null;
     private int selectedStopSequence = -1;
-    private int vehicleStopSequence = -1;
-    private String selectedTripId;
-    private String vehicleTripId;
+    private Vehicle vehicle;
 
     public TripDetailRecyclerViewAdapter() {
     }
@@ -52,10 +51,10 @@ public class TripDetailRecyclerViewAdapter
 
         if (position + 1 < predictions.size()) {
             holder.predictionView.setPrediction(prediction, predictions.get(position + 1),
-                    stopSequenceType, vehicleStopSequence, selectedTripId, vehicleTripId);
+                    stopSequenceType, vehicle);
         } else {
             holder.predictionView.setPrediction(prediction, null, stopSequenceType,
-                    vehicleStopSequence, selectedTripId, vehicleTripId);
+                    vehicle);
         }
 
         if (prediction.getStop().equals(selectedStop)) {
@@ -66,10 +65,6 @@ public class TripDetailRecyclerViewAdapter
     @Override
     public int getItemCount() {
         return predictions.size();
-    }
-
-    public Prediction getPrediction(int position) {
-        return predictions.get(position);
     }
 
     public void setPredictions(List<Prediction> predictions) {
@@ -96,16 +91,8 @@ public class TripDetailRecyclerViewAdapter
         this.selectedStopSequence = selectedStopSequence;
     }
 
-    public void setVehicleStopSequence(int vehicleStopSequence) {
-        this.vehicleStopSequence = vehicleStopSequence;
-    }
-
-    public void setSelectedTripId(String selectedTripId) {
-        this.selectedTripId = selectedTripId;
-    }
-
-    public void setVehicleTripId(String vehicleTripId) {
-        this.vehicleTripId = vehicleTripId;
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
     public void clear() {

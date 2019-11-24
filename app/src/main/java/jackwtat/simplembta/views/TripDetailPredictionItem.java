@@ -17,6 +17,7 @@ import java.util.Date;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.Route;
 
 public class TripDetailPredictionItem extends LinearLayout {
@@ -57,8 +58,142 @@ public class TripDetailPredictionItem extends LinearLayout {
 
     public void setPrediction(
             Prediction prediction, @Nullable Prediction nextPrediction, int stopSequenceType,
-            int vehicleStopSequence, String selectedTripId, String vehicleTripId) {
+            Vehicle vehicle) {
+        // Departure time
+        long countdownTime = prediction.getCountdownTime();
 
+        // There is a vehicle currently on this trip
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
+
+            // Vehicle has already passed this stop
+            if (vehicle.getCurrentStopSequence() > prediction.getStopSequence() ||
+                    (nextPrediction != null &&
+                            prediction.getCountdownTime() > nextPrediction.getCountdownTime())) {
+                String statusText;
+                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
+                    statusText = getContext().getResources().getString(R.string.trip_already_departed);
+                } else {
+                    statusText = getContext().getResources().getString(R.string.trip_already_arrived);
+                }
+
+                statusTextView.setText(statusText);
+
+                timeTextView.setVisibility(GONE);
+                minuteTextView.setVisibility(GONE);
+                statusTextView.setVisibility(VISIBLE);
+
+                // Vehicle is at or approaching this stop
+            } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence()) {
+                // Vehicle is more than one minute away
+                if (countdownTime > 60000) {
+                    String timeText;
+                    String minuteText;
+
+                    if (countdownTime < 3600000) {
+                        timeText = (countdownTime / 60000) + "";
+                        minuteText = min;
+
+                    } else {
+                        Date predictionTime = prediction.getPredictionTime();
+                        timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                        minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                    }
+
+                    timeTextView.setText(timeText);
+                    minuteTextView.setText(minuteText);
+
+                    timeTextView.setVisibility(VISIBLE);
+                    minuteTextView.setVisibility(VISIBLE);
+                    statusTextView.setVisibility(GONE);
+
+                    // Vehicle is less than one minute away
+                } else {
+                    String statusText;
+                    if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
+                            prediction.getPredictionType() == Prediction.DEPARTURE) {
+                        statusText = getContext().getResources().getString(R.string.trip_departing);
+                    } else {
+                        statusText = getContext().getResources().getString(R.string.trip_arriving);
+                    }
+
+                    statusTextView.setText(statusText);
+
+                    timeTextView.setVisibility(GONE);
+                    minuteTextView.setVisibility(GONE);
+                    statusTextView.setVisibility(VISIBLE);
+                }
+
+                // Vehicle is not yet approaching this stop
+            } else {
+                String timeText;
+                String minuteText;
+
+                if (countdownTime < 3600000) {
+                    timeText = (countdownTime / 60000) + "";
+                    minuteText = min;
+
+                } else {
+                    Date predictionTime = prediction.getPredictionTime();
+                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+
+                timeTextView.setVisibility(VISIBLE);
+                minuteTextView.setVisibility(VISIBLE);
+                statusTextView.setVisibility(GONE);
+            }
+
+            // No vehicle is on this trip
+        } else {
+            if (countdownTime > 0) {
+                String timeText;
+                String minuteText;
+
+                if (countdownTime < 3600000) {
+                    if (countdownTime > 0) {
+                        timeText = (countdownTime / 60000) + "";
+                    } else {
+                        timeText = "0";
+                    }
+                    minuteText = min;
+
+                } else {
+                    Date predictionTime = prediction.getPredictionTime();
+                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
+                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+                }
+
+                timeTextView.setText(timeText);
+                minuteTextView.setText(minuteText);
+
+                timeTextView.setVisibility(VISIBLE);
+                minuteTextView.setVisibility(VISIBLE);
+                statusTextView.setVisibility(GONE);
+            } else {
+                String statusText;
+
+                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
+                    statusText = getContext().getResources()
+                            .getString(R.string.trip_already_departed);
+                } else {
+
+                    statusText = getContext().getResources()
+                            .getString(R.string.trip_already_arrived);
+                }
+
+                statusTextView.setText(statusText);
+
+                timeTextView.setVisibility(GONE);
+                minuteTextView.setVisibility(GONE);
+                statusTextView.setVisibility(VISIBLE);
+            }
+        }
+
+
+        /*
         long countdownTime = prediction.getCountdownTime();
 
         // Vehicle is currently on selected trip
@@ -177,6 +312,7 @@ public class TripDetailPredictionItem extends LinearLayout {
                 statusTextView.setVisibility(VISIBLE);
             }
         }
+         */
 
         // Show track number
         String trackNumber = prediction.getTrackNumber();
