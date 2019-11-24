@@ -72,6 +72,7 @@ import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
+import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.RouteDetailSpinners;
 
@@ -129,6 +130,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
     private Marker selectedStopMarker;
     private Marker selectedVehicleMarker;
+    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -946,6 +948,23 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             refreshTime = new Date().getTime();
 
             for (Prediction prediction : predictions) {
+                // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                // time if one exists if they are within one minute
+                Prediction priorPrediction = pastPredictions.get(prediction.getId());
+                if (priorPrediction != null) {
+                    long thisCountdown = prediction.getCountdownTime();
+                    long priorCountdown = priorPrediction.getCountdownTime();
+                    long timeDifference = thisCountdown - priorCountdown;
+
+                    if (priorCountdown < 30000 || timeDifference < 30000 && timeDifference > 0) {
+                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
+                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
+                    }
+                }
+
+                // Put this prediction into list of prior predictions
+                pastPredictions.add(prediction);
+
                 if (vehicleMarkers.get(prediction.getVehicleId()) != null) {
                     prediction.setVehicle(
                             (Vehicle) (vehicleMarkers.get(prediction.getVehicleId()).getTag()));

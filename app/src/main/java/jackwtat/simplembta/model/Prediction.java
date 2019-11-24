@@ -88,6 +88,14 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         }
     }
 
+    public Date getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public Date getDepartureTime() {
+        return departureTime;
+    }
+
     public long getCountdownTime() {
         if (arrivalTime != null) {
             return arrivalTime.getTime() - new Date().getTime();

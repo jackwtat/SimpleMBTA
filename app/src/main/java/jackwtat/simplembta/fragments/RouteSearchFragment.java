@@ -44,6 +44,7 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.utilities.ErrorManager;
+import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.views.RouteSearchSpinners;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
@@ -93,6 +94,8 @@ public class RouteSearchFragment extends Fragment implements
     private ArrayList<Route> allRoutes = new ArrayList<>();
     private Route selectedRoute;
     private int selectedDirectionId;
+
+    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
 
     private boolean queryInProgress = false;
     private Route queryRoute = null;
@@ -781,6 +784,25 @@ public class RouteSearchFragment extends Fragment implements
         public void onSuccess(List<Prediction> predictions) {
             dataRefreshing = false;
             refreshTime = new Date().getTime();
+
+            for (Prediction prediction : predictions) {
+                // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                // time if one exists if they are within one minute
+                Prediction priorPrediction = pastPredictions.get(prediction.getId());
+                if (priorPrediction != null) {
+                    long thisCountdown = prediction.getCountdownTime();
+                    long priorCountdown = priorPrediction.getCountdownTime();
+                    long timeDifference = thisCountdown - priorCountdown;
+
+                    if (priorCountdown < 30000 || timeDifference < 30000 && timeDifference > 0) {
+                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
+                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
+                    }
+                }
+
+                // Put this prediction into list of prior predictions
+                pastPredictions.add(prediction);
+            }
 
             // Lock the views to prevent UI changes while loading new data to views
             viewsRefreshing = true;

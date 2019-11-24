@@ -72,6 +72,7 @@ import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
+import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 
 public class TripDetailActivity extends AppCompatActivity implements
@@ -121,6 +122,7 @@ public class TripDetailActivity extends AppCompatActivity implements
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private Marker vehicleMarker;
+    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
 
     private Route selectedRoute;
     private Stop selectedStop;
@@ -754,6 +756,25 @@ public class TripDetailActivity extends AppCompatActivity implements
         public void onSuccess(Prediction[] p, boolean live) {
             refreshing = false;
             refreshTime = new Date().getTime();
+
+            for (Prediction prediction : p) {
+                // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                // time if one exists if they are within one minute
+                Prediction priorPrediction = pastPredictions.get(prediction.getId());
+                if (priorPrediction != null) {
+                    long thisCountdown = prediction.getCountdownTime();
+                    long priorCountdown = priorPrediction.getCountdownTime();
+                    long timeDifference = thisCountdown - priorCountdown;
+
+                    if (priorCountdown < 30000 || timeDifference < 30000 && timeDifference > 0) {
+                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
+                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
+                    }
+                }
+
+                // Put this prediction into list of prior predictions
+                pastPredictions.add(prediction);
+            }
 
             predictions.clear();
             predictions.addAll(Arrays.asList(p));

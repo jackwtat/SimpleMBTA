@@ -40,7 +40,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -81,6 +80,7 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.SilverLineCombined;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 
@@ -92,7 +92,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public static final long MAX_PREDICTION_AGE = 90000;
 
     // Predictions auto update rate
-    public static final long PREDICTIONS_UPDATE_RATE = 5000;
+    public static final long PREDICTIONS_UPDATE_RATE = 15000;
 
     // Location auto update rate
     public static final long LOCATION_UPDATE_RATE = 1000;
@@ -184,6 +184,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Selected stop data
     private Stop selectedStop = null;
     private Marker selectedStopMarker = null;
+
+    // Prior predictions
+    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
 
     // Key stop/route data
     private HashMap<String, Stop> keyStops = new HashMap<>();
@@ -1320,6 +1323,23 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onSuccess(Prediction[] predictions, boolean live) {
             for (Prediction prediction : predictions) {
+                // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                // time if one exists if they are within one minute
+                Prediction priorPrediction = pastPredictions.get(prediction.getId());
+                if (priorPrediction != null) {
+                    long thisCountdown = prediction.getCountdownTime();
+                    long priorCountdown = priorPrediction.getCountdownTime();
+                    long timeDifference = thisCountdown - priorCountdown;
+
+                    if (priorCountdown < 30000 || timeDifference < 30000 && timeDifference > 0) {
+                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
+                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
+                    }
+                }
+
+                // Put this prediction into list of prior predictions
+                pastPredictions.add(prediction);
+
                 // Replace prediction's stop ID with its parent stop ID
                 if (targetStops.containsKey(prediction.getParentStopId())) {
                     prediction.setStop(targetStops.get(prediction.getParentStopId()));
