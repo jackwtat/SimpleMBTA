@@ -1331,7 +1331,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     long priorCountdown = priorPrediction.getCountdownTime();
                     long timeDifference = thisCountdown - priorCountdown;
 
-                    if (priorCountdown < 30000 || timeDifference < 30000 && timeDifference > 0) {
+                    if (priorCountdown < 30000 || timeDifference < 60000 && timeDifference > 0) {
                         prediction.setArrivalTime(priorPrediction.getArrivalTime());
                         prediction.setDepartureTime(priorPrediction.getDepartureTime());
                     }
