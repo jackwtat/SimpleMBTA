@@ -59,6 +59,12 @@
     <string name="map_departed">Departed</string>
     <string name="map_arrived">Arrived</string>
 
+    <!-- Route Search Prediction Statuses -->
+    <string name="route_departing">Departing</string>
+    <string name="route_arriving">Arriving</string>
+    <string name="route_departed">Departed</string>
+    <string name="route_arrived">Arrived</string>
+
     <!-- Trip Prediction Statuses -->
     <string name="trip_departing">Departing</string>
     <string name="trip_arriving">Arriving</string>
