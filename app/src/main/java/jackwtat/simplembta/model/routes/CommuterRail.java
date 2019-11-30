@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.CommuterRailStopMarkerFactory;
+import jackwtat.simplembta.map.CommuterRailStopMarkerFactory;
 
 public class CommuterRail extends RailRoute {
     public CommuterRail(String id) {

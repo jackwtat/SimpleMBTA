@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.SilverLineStopMarkerFactory;
+import jackwtat.simplembta.map.SilverLineStopMarkerFactory;
 import jackwtat.simplembta.model.Prediction;
 
 public class SilverLine extends Bus {

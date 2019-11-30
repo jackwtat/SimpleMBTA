@@ -1,7 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.GreenLineStopMarkerFactory;
-import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.map.GreenLineStopMarkerFactory;
 import jackwtat.simplembta.model.Prediction;
 
 public class GreenLine extends RailRoute {

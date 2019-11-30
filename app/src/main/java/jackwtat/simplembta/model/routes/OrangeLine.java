@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.OrangeLineStopMarkerFactory;
+import jackwtat.simplembta.map.OrangeLineStopMarkerFactory;
 
 public class OrangeLine extends RailRoute {
     public OrangeLine(String id) {

@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.BusStopMarkerFactory;
+import jackwtat.simplembta.map.BusStopMarkerFactory;
 
 public class Bus extends Route {
     public Bus(String id) {

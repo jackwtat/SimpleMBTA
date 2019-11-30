@@ -1,8 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.GreenLineStopMarkerFactory;
+import jackwtat.simplembta.map.GreenLineStopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
-import jackwtat.simplembta.model.Stop;
 
 public class GreenLineCombined extends GreenLine {
     private String[] ids = {"Green-B", "Green-C", "Green-D", "Green-E"};

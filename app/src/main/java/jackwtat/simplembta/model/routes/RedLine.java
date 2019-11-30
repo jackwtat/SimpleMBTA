@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.RedLineStopMarkerFactory;
+import jackwtat.simplembta.map.RedLineStopMarkerFactory;
 
 public class RedLine extends RailRoute {
     public RedLine(String id) {

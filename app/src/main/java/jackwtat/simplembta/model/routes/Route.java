@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import jackwtat.simplembta.map.markers.StopMarkerFactory;
+import jackwtat.simplembta.map.StopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;

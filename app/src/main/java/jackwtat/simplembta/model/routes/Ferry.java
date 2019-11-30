@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.FerryStopMarkerFactory;
+import jackwtat.simplembta.map.FerryStopMarkerFactory;
 
 public class Ferry extends Route {
     public Ferry(String id) {

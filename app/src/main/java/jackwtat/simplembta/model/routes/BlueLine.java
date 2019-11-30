@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model.routes;
 
-import jackwtat.simplembta.map.markers.BlueLineStopMarkerFactory;
+import jackwtat.simplembta.map.BlueLineStopMarkerFactory;
 
 public class BlueLine extends RailRoute {
     public BlueLine(String id) {
