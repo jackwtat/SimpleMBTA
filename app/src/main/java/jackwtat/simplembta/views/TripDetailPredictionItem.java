@@ -169,6 +169,10 @@ public class TripDetailPredictionItem extends LinearLayout {
                     minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
                 }
 
+                if (!prediction.isLive()) {
+                    minuteText += "*";
+                }
+
                 timeTextView.setText(timeText);
                 minuteTextView.setText(minuteText);
 
