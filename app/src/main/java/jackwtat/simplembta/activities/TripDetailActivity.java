@@ -418,6 +418,10 @@ public class TripDetailActivity extends AppCompatActivity implements
                 predictionsAsyncTask.cancel(true);
             }
 
+            if (selectedDate == null) {
+                selectedDate = new Date();
+            }
+
             predictionsAsyncTask = new PredictionsByTripAsyncTask(realTimeApiKey, selectedTripId,
                     DateUtil.getMbtaDateOffset(selectedDate), new PredictionsPostExecuteListener());
             predictionsAsyncTask.execute();
