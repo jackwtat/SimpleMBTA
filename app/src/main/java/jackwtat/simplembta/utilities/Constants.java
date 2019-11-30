@@ -20,7 +20,6 @@ public interface Constants {
     /*******************************
      ***** DISTANCE / LOCATION *****
      *******************************/
-
     // Distance in meters from last target location before target location can be updated
     int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
 
