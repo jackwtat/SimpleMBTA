@@ -34,7 +34,6 @@ public class Route implements Comparable<Route>, Serializable {
             new Direction(Direction.INBOUND, "Inbound")};
     private HashMap<String, Shape> shapes = new HashMap<>();
     private StopMarkerFactory markerFactory = new StopMarkerFactory();
-    private Vehicle[] vehicles = {};
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
 
     private Stop[] nearestStops = new Stop[2];
@@ -114,22 +113,6 @@ public class Route implements Comparable<Route>, Serializable {
 
     public BitmapDescriptor getStopMarkerIcon() {
         return markerFactory.getIcon();
-    }
-
-    public Vehicle[] getAllVehicles() {
-        return vehicles;
-    }
-
-    public Vehicle[] getVehicles(int directionId) {
-        ArrayList<Vehicle> directionalVehicles = new ArrayList<>();
-
-        for (Vehicle v : vehicles) {
-            if (v.getDirection() == directionId) {
-                directionalVehicles.add(v);
-            }
-        }
-
-        return directionalVehicles.toArray(new Vehicle[0]);
     }
 
     public ArrayList<ServiceAlert> getServiceAlerts() {
@@ -251,10 +234,6 @@ public class Route implements Comparable<Route>, Serializable {
 
     public void setStopMarkerFactory(StopMarkerFactory factory) {
         this.markerFactory = factory;
-    }
-
-    public void setVehicles(Vehicle[] vehicles) {
-        this.vehicles = vehicles;
     }
 
     public void addServiceAlert(ServiceAlert serviceAlert) {
