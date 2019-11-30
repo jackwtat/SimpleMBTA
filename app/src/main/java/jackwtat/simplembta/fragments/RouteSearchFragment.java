@@ -43,6 +43,7 @@ import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.views.RouteSearchSpinners;
@@ -53,20 +54,9 @@ public class RouteSearchFragment extends Fragment implements
         RouteSearchSpinners.OnRouteSelectedListener,
         RouteSearchSpinners.OnDirectionSelectedListener,
         RouteSearchSpinners.OnStopSelectedListener,
-        MainActivity.OutsideQueryListener {
+        MainActivity.OutsideQueryListener,
+        Constants {
     public static final String LOG_TAG = "RouteSearchFragment";
-
-    // Maximum age of prediction
-    public static final long MAX_PREDICTION_AGE = 90000;
-
-    // Predictions auto update rate
-    public static final long PREDICTIONS_UPDATE_RATE = 5000;
-
-    // Service alerts auto update rate
-    public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
-
-    // Vehicle locations auto update rate
-    public static final long VEHICLES_UPDATE_RATE = 5000;
 
     private RouteSearchSpinners searchSpinners;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
@@ -228,7 +218,7 @@ public class RouteSearchFragment extends Fragment implements
         refreshServiceAlerts();
 
         // If too much time has elapsed since last refresh, then clear predictions and force update
-        if (new Date().getTime() - refreshTime > MAX_PREDICTION_AGE) {
+        if (new Date().getTime() - refreshTime > MAXIMUM_PREDICTION_AGE) {
             clearPredictions();
             swipeRefreshLayout.setRefreshing(true);
             forceUpdate();

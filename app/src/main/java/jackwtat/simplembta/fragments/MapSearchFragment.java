@@ -78,6 +78,7 @@ import jackwtat.simplembta.model.routes.Route;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.SilverLineCombined;
+import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
@@ -85,44 +86,8 @@ import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
-        ErrorManager.OnErrorChangedListener {
+        ErrorManager.OnErrorChangedListener, Constants {
     public static final String LOG_TAG = "MapSearchFragment";
-
-    // Maximum age of prediction
-    public static final long MAX_PREDICTION_AGE = 90000;
-
-    // Predictions auto update rate
-    public static final long PREDICTIONS_UPDATE_RATE = 15000;
-
-    // Location auto update rate
-    public static final long LOCATION_UPDATE_RATE = 1000;
-
-    // Time between location client updates
-    public static final long LOCATION_CLIENT_INTERVAL = 500;
-
-    // Fastest time between location updates
-    public static final long FASTEST_LOCATION_CLIENT_INTERVAL = 250;
-
-    // Time since last onStop() before restarting the location
-    public static final long LOCATION_UPDATE_RESTART_TIME = 180000;
-
-    // Default level of zoom for the map
-    public static final int DEFAULT_MAP_ZOOM_LEVEL = 16;
-
-    // Zoom level where stop markers become visible
-    public static final int STOP_MARKER_VISIBILITY_LEVEL = 15;
-
-    // Zoom level where key stop markers become visible
-    public static final int KEY_STOP_MARKER_VISIBILITY_LEVEL = 12;
-
-    // Zoom level where commuter rail stop markers become visible
-    public static final int COMMUTER_STOP_MARKER_VISIBILITY_LEVEL = 10;
-
-    // Distance in meters from last target location before target location can be updated
-    public static final int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
-
-    // Distance in meters from last target location before visible refresh
-    public static final int DISTANCE_TO_FORCE_REFRESH = 400;
 
     // Map interaction statuses
     public static final int USER_HAS_NOT_MOVED_MAP = 0;
@@ -393,7 +358,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // Move the map camera to the last known location
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
-                DEFAULT_MAP_ZOOM_LEVEL));
+                DEFAULT_MAP_NEAR_ZOOM_LEVEL));
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
@@ -661,7 +626,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         Long onResumeTime = new Date().getTime();
 
         // If too much time has elapsed since last refresh, then clear the predictions
-        if (onResumeTime - refreshTime > MAX_PREDICTION_AGE) {
+        if (onResumeTime - refreshTime > MAXIMUM_PREDICTION_AGE) {
             clearPredictions();
         }
 
@@ -697,7 +662,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 if (mapReady)
                     gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()),
-                            DEFAULT_MAP_ZOOM_LEVEL));
+                            DEFAULT_MAP_NEAR_ZOOM_LEVEL));
             }
 
             forceUpdate();

@@ -70,6 +70,7 @@ import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.SilverLine;
+import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
@@ -78,23 +79,8 @@ import jackwtat.simplembta.views.RouteDetailSpinners;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, RouteDetailSpinners.OnDirectionSelectedListener,
-        RouteDetailSpinners.OnStopSelectedListener {
+        RouteDetailSpinners.OnStopSelectedListener, Constants {
     public static final String LOG_TAG = "RouteDetailActivity";
-
-    // Predictions auto update rate
-    public static final long PREDICTIONS_UPDATE_RATE = 15000;
-
-    // Vehicle locations auto update rate
-    public static final long VEHICLES_UPDATE_RATE = 5000;
-
-    // Service alerts auto update rate
-    public static final long SERVICE_ALERTS_UPDATE_RATE = 60000;
-
-    // Maximum age of prediction
-    public static final long MAXIMUM_PREDICTION_AGE = 90000;
-
-    // Default level of zoom for the map
-    public static final int DEFAULT_MAP_ZOOM_LEVEL = 13;
 
     private AppBarLayout appBarLayout;
     private MapView mapView;
@@ -298,7 +284,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         LatLng latLng = (stop == null)
                 ? new LatLng(userLocation.getLatitude(), userLocation.getLongitude())
                 : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM_LEVEL));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_FAR_ZOOM_LEVEL));
 
         // Set the map style
         gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
