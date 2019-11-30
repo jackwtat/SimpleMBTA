@@ -3,8 +3,7 @@ package jackwtat.simplembta.utilities;
 import android.content.Context;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.routes.Bus;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.routes.SilverLine;
 
 public class DisplayNameUtil {

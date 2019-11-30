@@ -15,7 +15,7 @@ import java.util.Date;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Vehicle;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 
 public class RouteSearchPredictionItem extends LinearLayout {
     View rootView;

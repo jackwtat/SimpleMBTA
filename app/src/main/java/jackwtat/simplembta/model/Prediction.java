@@ -5,10 +5,6 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Date;
 
-import jackwtat.simplembta.model.routes.GreenLine;
-import jackwtat.simplembta.model.routes.GreenLineCombined;
-import jackwtat.simplembta.model.routes.Route;
-
 public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Pick up types

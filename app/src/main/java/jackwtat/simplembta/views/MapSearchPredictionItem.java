@@ -15,8 +15,7 @@ import java.util.Collections;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.routes.Route;
-import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.model.Route;
 
 public class MapSearchPredictionItem extends LinearLayout {
     View rootView;

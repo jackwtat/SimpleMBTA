@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
 import jackwtat.simplembta.views.PredictionHeaderView;

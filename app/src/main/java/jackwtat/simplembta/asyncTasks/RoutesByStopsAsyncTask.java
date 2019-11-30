@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.RoutesJsonParser;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 
 public class RoutesByStopsAsyncTask extends AsyncTask<Void, Void, Route[]> {
     private String realTimeApiKey;

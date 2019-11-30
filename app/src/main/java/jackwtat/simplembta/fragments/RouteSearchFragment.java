@@ -42,7 +42,7 @@ import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;

@@ -1,5 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
+import jackwtat.simplembta.model.Route;
+
 public class CommuterRailNorthSide extends CommuterRail {
     private String[] ids = {"CR-Fitchburg", "CR-Haverhill", "CR-Lowell", "CR-Newburyport"};
 

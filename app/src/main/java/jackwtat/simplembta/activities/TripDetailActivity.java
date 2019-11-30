@@ -67,7 +67,7 @@ import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.GreenLineCombined;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.DateUtil;

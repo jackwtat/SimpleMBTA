@@ -1,7 +1,5 @@
 package jackwtat.simplembta.model;
 
-import jackwtat.simplembta.model.routes.Route;
-
 public class Trip {
     private String id;
     private int direction = Direction.NULL_DIRECTION;

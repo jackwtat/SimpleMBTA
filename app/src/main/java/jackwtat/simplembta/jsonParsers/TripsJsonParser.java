@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Direction;
-import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Trip;
@@ -24,7 +23,7 @@ import jackwtat.simplembta.model.routes.Ferry;
 import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.routes.SilverLine;
 
 public class TripsJsonParser {

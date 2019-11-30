@@ -11,8 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import jackwtat.simplembta.fragments.RouteSearchFragment;
-import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;

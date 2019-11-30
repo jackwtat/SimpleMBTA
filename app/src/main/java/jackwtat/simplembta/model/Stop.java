@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import jackwtat.simplembta.model.routes.Route;
-
 public class Stop implements Comparable<Stop>, Serializable {
     private String id;
     private String name = "null";

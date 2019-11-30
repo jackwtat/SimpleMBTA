@@ -11,7 +11,7 @@ import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.views.RouteSearchPredictionItem;
 
 public class RouteSearchRecyclerViewAdapter

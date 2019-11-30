@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 
 public class RouteNameView extends RelativeLayout {

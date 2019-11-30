@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.routes.BlueLine;
@@ -18,7 +17,7 @@ import jackwtat.simplembta.model.routes.Ferry;
 import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.routes.SilverLine;
 
 public class RoutesJsonParser {

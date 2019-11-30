@@ -19,7 +19,7 @@ import jackwtat.simplembta.model.routes.Ferry;
 import jackwtat.simplembta.model.routes.GreenLine;
 import jackwtat.simplembta.model.routes.OrangeLine;
 import jackwtat.simplembta.model.routes.RedLine;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.DateUtil;

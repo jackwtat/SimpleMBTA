@@ -1,4 +1,4 @@
-package jackwtat.simplembta.model.routes;
+package jackwtat.simplembta.model;
 
 import android.support.annotation.NonNull;
 
@@ -12,12 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import jackwtat.simplembta.map.StopMarkerFactory;
-import jackwtat.simplembta.model.Direction;
-import jackwtat.simplembta.model.Prediction;
-import jackwtat.simplembta.model.ServiceAlert;
-import jackwtat.simplembta.model.Shape;
-import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.Vehicle;
 
 public class Route implements Comparable<Route>, Serializable {
     public static final int LIGHT_RAIL = 0;

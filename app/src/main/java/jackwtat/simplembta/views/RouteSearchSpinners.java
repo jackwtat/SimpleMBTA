@@ -14,7 +14,7 @@ import jackwtat.simplembta.adapters.spinners.RoutesSpinnerAdapter;
 import jackwtat.simplembta.adapters.spinners.StopsSpinnerAdapter;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Stop;
-import jackwtat.simplembta.model.routes.Route;
+import jackwtat.simplembta.model.Route;
 
 public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnItemSelectedListener {
     private View rootView;

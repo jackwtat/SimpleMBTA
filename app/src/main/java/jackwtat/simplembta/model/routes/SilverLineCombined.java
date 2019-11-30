@@ -1,6 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
 import jackwtat.simplembta.model.Direction;
+import jackwtat.simplembta.model.Route;
 
 public class SilverLineCombined extends SilverLine {
     private String[] ids = {"741", "742", "743", "746", "749", "751"};
