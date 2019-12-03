@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
@@ -27,6 +28,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView liveIndicator;
     TextView trackNumberIndicator;
     TextView tomorrowIndicator;
+    TextView weekDayIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
     TextView vehicleNumberTextView;
@@ -162,11 +164,15 @@ public class RouteSearchPredictionItem extends LinearLayout {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prediction.getPredictionTime());
         int predictionDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int predictionWeekday = calendar.get(Calendar.DAY_OF_WEEK);
         int predictionMonth = calendar.get(Calendar.MONTH);
         int predictionYear = calendar.get(Calendar.YEAR);
+        String predictionDayName = calendar.getDisplayName(
+                Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
 
         calendar.setTime(new Date());
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int todayWeekday = calendar.get(Calendar.DAY_OF_WEEK);
         int todayMonth = calendar.get(Calendar.MONTH);
         int todayYear = calendar.get(Calendar.YEAR);
 
@@ -193,12 +199,18 @@ public class RouteSearchPredictionItem extends LinearLayout {
         if (predictionDay - todayDay > 0 ||
                 predictionMonth - todayMonth > 0 ||
                 predictionYear - todayYear > 0) {
-            tomorrowIndicator.setVisibility(VISIBLE);
+            if ((predictionWeekday - todayWeekday) % 7 > 1) {
+                weekDayIndicator.setText(predictionDayName.toUpperCase());
+                weekDayIndicator.setVisibility(VISIBLE);
+            } else {
+                tomorrowIndicator.setVisibility(VISIBLE);
+            }
         }
         if (liveIndicator.getVisibility() == GONE &&
                 trackNumberIndicator.getVisibility() == GONE &&
                 dropOffIndicator.getVisibility() == GONE &&
-                tomorrowIndicator.getVisibility() == GONE) {
+                tomorrowIndicator.getVisibility() == GONE &&
+                weekDayIndicator.getVisibility() == GONE) {
             liveIndicator.setVisibility(INVISIBLE);
         }
 
@@ -276,6 +288,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         liveIndicator.setVisibility(GONE);
         trackNumberIndicator.setVisibility(GONE);
         tomorrowIndicator.setVisibility(GONE);
+        weekDayIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
         destinationTextView.setText("");
         vehicleNumberTextView.setText("");
@@ -292,6 +305,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         liveIndicator = rootView.findViewById(R.id.live_text_view);
         trackNumberIndicator = rootView.findViewById(R.id.track_number_text_view);
         tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
+        weekDayIndicator = rootView.findViewById(R.id.week_day_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         vehicleNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);

@@ -136,6 +136,18 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/week_day_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/border_tomorrow"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/tomorrowPrediction"
+                android:textSize="@dimen/body_text_size"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/drop_off_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
