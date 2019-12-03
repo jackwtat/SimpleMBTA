@@ -95,7 +95,7 @@ public class IndividualPredictionItem extends LinearLayout {
                     if (prediction.getStopSequence() == 1 ||
                             (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
                                     prediction.getPredictionType() == Prediction.DEPARTURE &&
-                                    countdownTime < 15000)) {
+                                    countdownTime < 10000)) {
                         statusText = getContext().getResources().getString(R.string.map_departing);
                     } else {
                         statusText = getContext().getResources().getString(R.string.map_arriving);
