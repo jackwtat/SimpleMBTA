@@ -97,6 +97,7 @@ public class RouteSearchFragment extends Fragment implements
     private String[] savedStopIds = new String[2];
 
     private HashMap<String, Vehicle> vehicles = new HashMap<>();
+    private HashMap<String, Vehicle> vehicleTrips = new HashMap<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -484,14 +485,6 @@ public class RouteSearchFragment extends Fragment implements
                     ArrayList<Prediction> predictions =
                             selectedRoute.getPredictions(selectedDirectionId);
 
-                    // Set vehicles for predictions
-                    for (Prediction p : predictions) {
-                        Vehicle v = vehicles.get(p.getVehicleId());
-                        if (v != null) {
-                            p.setVehicle(v);
-                        }
-                    }
-
                     // Set set predictions in recycler view adapter
                     recyclerViewAdapter.setPredictions(predictions);
                     swipeRefreshLayout.setRefreshing(false);
@@ -775,32 +768,43 @@ public class RouteSearchFragment extends Fragment implements
             dataRefreshing = false;
             refreshTime = new Date().getTime();
 
-            for (Prediction prediction : predictions) {
-                // Reduce 'time bounce' by replacing current prediction time with prior prediction
-                // time if one exists if they are within one minute
-                Prediction priorPrediction = pastPredictions.get(prediction.getId());
-                if (priorPrediction != null) {
-                    long thisCountdown = prediction.getCountdownTime();
-                    long priorCountdown = priorPrediction.getCountdownTime();
-                    long timeDifference = thisCountdown - priorCountdown;
-
-                    if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
-                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
-                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
-                    }
-                }
-
-                // Put this prediction into list of prior predictions
-                pastPredictions.add(prediction);
-            }
-
             // Lock the views to prevent UI changes while loading new data to views
             viewsRefreshing = true;
 
-            // Load new data to views
+            // Clear old predictions
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
-            selectedRoute.addAllPredictions(predictions);
+
+            for (Prediction p : predictions) {
+                if (selectedRoute.getMode() != Route.BUS || p.getVehicle() != null ||
+                        vehicleTrips.get(p.getTripId()) == null) {
+                    // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                    // time if one exists if they are within one minute
+                    Prediction priorPrediction = pastPredictions.get(p.getId());
+                    if (priorPrediction != null) {
+                        long thisCountdown = p.getCountdownTime();
+                        long priorCountdown = priorPrediction.getCountdownTime();
+                        long timeDifference = thisCountdown - priorCountdown;
+
+                        if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
+                            p.setArrivalTime(priorPrediction.getArrivalTime());
+                            p.setDepartureTime(priorPrediction.getDepartureTime());
+                        }
+                    }
+
+                    // Set vehicle for predictions
+                    Vehicle v = vehicles.get(p.getVehicleId());
+                    if (v != null) {
+                        p.setVehicle(v);
+                    }
+
+                    // Put this prediction into list of prior predictions
+                    pastPredictions.add(p);
+
+                    // Add prediction to route
+                    selectedRoute.addPrediction(p);
+                }
+            }
 
             // Unlock views
             viewsRefreshing = false;
@@ -824,9 +828,23 @@ public class RouteSearchFragment extends Fragment implements
         @Override
         public void onSuccess(Vehicle[] vs) {
             vehicles.clear();
+            vehicleTrips.clear();
 
             for (Vehicle v : vs) {
                 vehicles.put(v.getId(), v);
+                vehicleTrips.put(v.getTripId(), v);
+            }
+
+            List<Prediction> predictions = selectedRoute.getPredictions(selectedDirectionId);
+            if (predictions.size() > 0) {
+                for (Prediction p : predictions) {
+                    Vehicle v = vehicles.get(p.getVehicleId());
+                    if (v != null) {
+                        p.setVehicle(v);
+                    }
+                }
+
+                refreshPredictions(false);
             }
         }
 

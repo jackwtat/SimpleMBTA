@@ -47,16 +47,17 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         String jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
 
         if (jsonResponse != null) {
-            for (Prediction prediction : PredictionsJsonParser
-                    .parse(jsonResponse)) {
-                predictions.put(prediction.getId(), prediction);
+            for (Prediction p : PredictionsJsonParser.parse(jsonResponse)) {
+                if (predictions.get(p.getTripId()) == null || p.willPickUpPassengers()) {
+                    predictions.put(getHash(p), p);
+                }
             }
         } else {
             return null;
         }
 
+        // Get today's scheduled predictions
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
-            // Get non-live scheduled predictions
             String[] scheduleArgs = {
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
@@ -69,18 +70,17 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
             jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
 
             if (jsonResponse != null) {
-                for (Prediction prediction : SchedulesJsonParser
-                        .parse(jsonResponse)) {
-                    if (!predictions.containsKey(prediction.getId())) {
-                        predictions.put(prediction.getId(), prediction);
+                for (Prediction p : SchedulesJsonParser.parse(jsonResponse)) {
+                    Prediction sameTrip = predictions.get(getHash(p));
+
+                    if (sameTrip == null || !sameTrip.getId().equalsIgnoreCase(p.getId())) {
+                        predictions.put(getHash(p), p);
                     }
                 }
-            } else {
-                return null;
             }
         }
 
-        // Get the next day's predictions
+        // Get the next day's scheduled predictions
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
             String[] scheduleArgs = {
                     "filter[route]=" + route.getId(),
@@ -94,14 +94,13 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
             jsonResponse = realTimeApiClient.get("schedules", scheduleArgs);
 
             if (jsonResponse != null) {
-                for (Prediction prediction : SchedulesJsonParser
-                        .parse(jsonResponse)) {
-                    if (!predictions.containsKey(prediction.getId())) {
-                        predictions.put(prediction.getId(), prediction);
+                for (Prediction p : SchedulesJsonParser.parse(jsonResponse)) {
+                    Prediction sameTrip = predictions.get(getHash(p));
+
+                    if (sameTrip == null || !sameTrip.getId().equalsIgnoreCase(p.getId())) {
+                        predictions.put(getHash(p), p);
                     }
                 }
-            } else {
-                return null;
             }
         }
 
@@ -110,10 +109,15 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
 
     @Override
     protected void onPostExecute(List<Prediction> predictions) {
-        if (predictions != null)
+        if (predictions != null) {
             onPostExecuteListener.onSuccess(predictions);
-        else
+        } else {
             onPostExecuteListener.onError();
+        }
+    }
+
+    private String getHash(Prediction p) {
+        return p.getPredictionDay() + "," + p.getTripId();
     }
 
     public interface OnPostExecuteListener {

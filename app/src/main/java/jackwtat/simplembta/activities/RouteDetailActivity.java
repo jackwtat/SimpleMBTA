@@ -117,6 +117,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private Marker selectedStopMarker;
     private Marker selectedVehicleMarker;
     private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
+    private HashMap<String, Vehicle> vehicles = new HashMap<>();
+    private HashMap<String, Vehicle> vehicleTrips = new HashMap<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -664,7 +666,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             ArrayList<String> expiredVehicleIds = new ArrayList<>();
 
             // Get all vehicles moving in selected direction
-            for (Vehicle vehicle : selectedRoute.getAllVehicles()) {
+            for (Vehicle vehicle : vehicles.values()) {
                 trackedVehicleIds.add(vehicle.getId());
             }
 
@@ -680,7 +682,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 vehicleMarkers.remove(vehicleId);
             }
 
-            for (Vehicle vehicle : selectedRoute.getAllVehicles()) {
+            for (Vehicle vehicle : vehicles.values()) {
                 Marker vMarker = vehicleMarkers.get(vehicle.getId());
                 if (vMarker != null) {
                     vMarker.setPosition(new LatLng(
@@ -933,33 +935,40 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             refreshing = false;
             refreshTime = new Date().getTime();
 
-            for (Prediction prediction : predictions) {
-                // Reduce 'time bounce' by replacing current prediction time with prior prediction
-                // time if one exists if they are within one minute
-                Prediction priorPrediction = pastPredictions.get(prediction.getId());
-                if (priorPrediction != null) {
-                    long thisCountdown = prediction.getCountdownTime();
-                    long priorCountdown = priorPrediction.getCountdownTime();
-                    long timeDifference = thisCountdown - priorCountdown;
-
-                    if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
-                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
-                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
-                    }
-                }
-
-                // Put this prediction into list of prior predictions
-                pastPredictions.add(prediction);
-
-                if (vehicleMarkers.get(prediction.getVehicleId()) != null) {
-                    prediction.setVehicle(
-                            (Vehicle) (vehicleMarkers.get(prediction.getVehicleId()).getTag()));
-                }
-            }
-
+            // Clear old predictions
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
-            selectedRoute.addAllPredictions(predictions);
+
+            for (Prediction p : predictions) {
+                if (selectedRoute.getMode() != Route.BUS || p.getVehicle() != null ||
+                        vehicleTrips.get(p.getTripId()) == null) {
+                    // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                    // time if one exists if they are within one minute
+                    Prediction priorPrediction = pastPredictions.get(p.getId());
+                    if (priorPrediction != null) {
+                        long thisCountdown = p.getCountdownTime();
+                        long priorCountdown = priorPrediction.getCountdownTime();
+                        long timeDifference = thisCountdown - priorCountdown;
+
+                        if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
+                            p.setArrivalTime(priorPrediction.getArrivalTime());
+                            p.setDepartureTime(priorPrediction.getDepartureTime());
+                        }
+                    }
+
+                    // Set vehicle for predictions
+                    Vehicle v = vehicles.get(p.getVehicleId());
+                    if (v != null) {
+                        p.setVehicle(v);
+                    }
+
+                    // Put this prediction into list of prior predictions
+                    pastPredictions.add(p);
+
+                    // Add prediction to route
+                    selectedRoute.addPrediction(p);
+                }
+            }
 
             refreshPredictions(false);
         }
@@ -993,8 +1002,28 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private class VehiclesPostExecuteListener implements VehiclesByRouteAsyncTask.OnPostExecuteListener {
         @Override
-        public void onSuccess(Vehicle[] vehicles) {
-            selectedRoute.setVehicles(vehicles);
+        public void onSuccess(Vehicle[] vs) {
+            vehicles.clear();
+            vehicleTrips.clear();
+
+            for (Vehicle v : vs) {
+                vehicles.put(v.getId(), v);
+                vehicleTrips.put(v.getTripId(), v);
+            }
+
+            ArrayList<Prediction> predictions = selectedRoute.getPredictions(0);
+            predictions.addAll(selectedRoute.getPredictions(1));
+
+            if (predictions.size() > 0) {
+                for (Prediction p : predictions) {
+                    Vehicle v = vehicles.get(p.getVehicleId());
+                    if (v != null) {
+                        p.setVehicle(v);
+                    }
+                }
+
+                refreshPredictions(false);
+            }
 
             refreshVehicles();
         }

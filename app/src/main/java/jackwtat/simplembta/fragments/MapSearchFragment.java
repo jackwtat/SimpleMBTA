@@ -57,6 +57,7 @@ import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
+import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.map.StopMarkerFactory;
@@ -64,6 +65,7 @@ import jackwtat.simplembta.map.TransferStopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
+import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.routes.BlueLine;
 import jackwtat.simplembta.model.routes.CommuterRail;
 import jackwtat.simplembta.model.routes.CommuterRailNorthSide;
@@ -119,6 +121,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private PredictionsAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
+    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
 
     private boolean dataRefreshing = false;
     private boolean viewsRefreshing = false;
@@ -171,6 +174,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             new CommuterRailOldColony(),
             new Ferry("Boat-F1"),
             new Ferry("Boat-F4")};
+
+    private HashMap<String, Vehicle> vehicleTrips = new HashMap<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -623,7 +628,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         super.onResume();
 
         // Get the time
-        Long onResumeTime = new Date().getTime();
+        long onResumeTime = new Date().getTime();
 
         // If too much time has elapsed since last refresh, then clear the predictions
         if (onResumeTime - refreshTime > MAXIMUM_PREDICTION_AGE) {
@@ -880,8 +885,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         String[] stopIds = targetStops.keySet().toArray(new String[0]);
 
         predictionsAsyncTask = new SchedulesAsyncTask(realTimeApiKey,
-                routeIds.toArray(new String[0]), stopIds,
-                new PredictionsPostExecuteListener());
+                routeIds.toArray(new String[0]), stopIds, new PredictionsPostExecuteListener());
 
         predictionsAsyncTask.execute();
     }
@@ -909,10 +913,26 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
 
         shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
-                routeIds.toArray(new String[0]),
-                new ShapesPostExecuteListener());
+                routeIds.toArray(new String[0]), new ShapesPostExecuteListener());
 
         shapesAsyncTask.execute();
+    }
+
+    private void getVehicles() {
+        if (vehiclesAsyncTask != null) {
+            vehiclesAsyncTask.cancel(true);
+        }
+
+        ArrayList<String> routeIds = new ArrayList<>();
+
+        for (Route route : targetRoutes.values()) {
+            routeIds.add(route.getId());
+        }
+
+        vehiclesAsyncTask = new VehiclesByRouteAsyncTask(realTimeApiKey,
+                routeIds.toArray(new String[0]), new VehiclesPostExecuteListener());
+
+        vehiclesAsyncTask.execute();
     }
 
     private void refreshStopMarkers(Stop[] stops) {
@@ -1263,8 +1283,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
 
             getShapes();
-            getPredictions();
             getServiceAlerts();
+            getVehicles();
+            getPredictions();
         }
 
         @Override
@@ -1287,111 +1308,115 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private class PredictionsPostExecuteListener implements PredictionsAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Prediction[] predictions, boolean live) {
-            for (Prediction prediction : predictions) {
-                // Reduce 'time bounce' by replacing current prediction time with prior prediction
-                // time if one exists if they are within one minute
-                Prediction priorPrediction = pastPredictions.get(prediction.getId());
-                if (priorPrediction != null) {
-                    long thisCountdown = prediction.getCountdownTime();
-                    long priorCountdown = priorPrediction.getCountdownTime();
-                    long timeDifference = thisCountdown - priorCountdown;
+            for (Prediction p : predictions) {
+                if (p.getRoute().getMode() != Route.BUS || p.getVehicle() != null ||
+                        vehicleTrips.get(p.getTripId()) == null) {
 
-                    if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
-                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
-                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
-                    }
-                }
+                    // Reduce 'time bounce' by replacing current prediction time with prior prediction
+                    // time if one exists if they are within one minute
+                    Prediction priorPrediction = pastPredictions.get(p.getId());
+                    if (priorPrediction != null) {
+                        long thisCountdown = p.getCountdownTime();
+                        long priorCountdown = priorPrediction.getCountdownTime();
+                        long timeDifference = thisCountdown - priorCountdown;
 
-                // Put this prediction into list of prior predictions
-                pastPredictions.add(prediction);
-
-                // Replace prediction's stop ID with its parent stop ID
-                if (targetStops.containsKey(prediction.getParentStopId())) {
-                    prediction.setStop(targetStops.get(prediction.getParentStopId()));
-                }
-
-                // If the prediction is for the Green Line, then replace the route
-                // with the Green Line Grouped route. This is to reduce the maximum number of
-                // prediction cards displayed and reduces UI clutter.
-                if (prediction.getRoute().getMode() == Route.LIGHT_RAIL &&
-                        GreenLine.isGreenLineSubwayStop(prediction.getStopId())) {
-                    Route r = targetRoutes.get(prediction.getRouteId());
-                    if (r != null && !r.hasPickUps(0) && !r.hasPickUps(1)) {
-                        targetRoutes.remove(prediction.getRouteId());
+                        if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
+                            p.setArrivalTime(priorPrediction.getArrivalTime());
+                            p.setDepartureTime(priorPrediction.getDepartureTime());
+                        }
                     }
 
-                    prediction.setRoute(new GreenLineCombined());
-                }
+                    // Put this prediction into list of prior predictions
+                    pastPredictions.add(p);
 
-                // If the prediction is for the inbound Commuter Rail, then replace the route
-                // with the Commuter Rail Grouped route. This is to reduce the maximum number
-                // of prediction cards displayed and reduces UI clutter.
-                if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                        prediction.getDirection() == Direction.INBOUND &&
-                        CommuterRail.isCommuterRailHub(prediction.getStopId(), false)) {
-
-                    if (CommuterRailNorthSide.isNorthSideCommuterRail(prediction.getRoute().getId())) {
-                        prediction.setRoute(new CommuterRailNorthSide());
-
-                    } else if (CommuterRailSouthSide.isSouthSideCommuterRail(prediction.getRoute().getId())) {
-                        prediction.setRoute(new CommuterRailSouthSide());
-
-                    } else if (CommuterRailOldColony.isOldColonyCommuterRail(prediction.getRoute().getId())) {
-                        prediction.setRoute(new CommuterRailOldColony());
+                    // Replace prediction's stop ID with its parent stop ID
+                    if (targetStops.containsKey(p.getParentStopId())) {
+                        p.setStop(targetStops.get(p.getParentStopId()));
                     }
+
+                    // If the prediction is for the Green Line, then replace the route
+                    // with the Green Line Grouped route. This is to reduce the maximum number of
+                    // prediction cards displayed and reduces UI clutter.
+                    if (p.getRoute().getMode() == Route.LIGHT_RAIL &&
+                            GreenLine.isGreenLineSubwayStop(p.getStopId())) {
+                        Route r = targetRoutes.get(p.getRouteId());
+                        if (r != null && !r.hasPickUps(0) && !r.hasPickUps(1)) {
+                            targetRoutes.remove(p.getRouteId());
+                        }
+
+                        p.setRoute(new GreenLineCombined());
+                    }
+
+                    // If the prediction is for the inbound Commuter Rail, then replace the route
+                    // with the Commuter Rail Grouped route. This is to reduce the maximum number
+                    // of prediction cards displayed and reduces UI clutter.
+                    if (p.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                            p.getDirection() == Direction.INBOUND &&
+                            CommuterRail.isCommuterRailHub(p.getStopId(), false)) {
+
+                        if (CommuterRailNorthSide.isNorthSideCommuterRail(p.getRoute().getId())) {
+                            p.setRoute(new CommuterRailNorthSide());
+
+                        } else if (CommuterRailSouthSide.isSouthSideCommuterRail(p.getRoute().getId())) {
+                            p.setRoute(new CommuterRailSouthSide());
+
+                        } else if (CommuterRailOldColony.isOldColonyCommuterRail(p.getRoute().getId())) {
+                            p.setRoute(new CommuterRailOldColony());
+                        }
+                    }
+
+                    // If the prediction is at Harvard destined for Harvard, then set to drop-off only
+                    if (p.getStop().getName().equals(p.getDestination())) {
+                        p.setPickUpType(Prediction.NO_PICK_UP);
+                    }
+
+                    // Add route to routes list if not already there
+                    if (!targetRoutes.containsKey(p.getRouteId())) {
+                        targetRoutes.put(p.getRouteId(), p.getRoute());
+                    } else {
+                        p.setRoute(targetRoutes.get(p.getRouteId()));
+                    }
+
+                    // Add stop to stops list if not already there
+                    if (!targetStops.containsKey(p.getStopId())) {
+                        targetStops.put(p.getStopId(), p.getStop());
+                    } else {
+                        p.setStop(targetStops.get(p.getStopId()));
+                        p.getStop().addRoute(p.getRoute());
+                    }
+
+                    // Add prediction to its respective route
+                    Route route = p.getRoute();
+                    Stop stop = p.getStop();
+                    int direction = p.getDirection();
+
+                    // If this prediction's stop is the route's nearest stop
+                    if (stop.equals(route.getNearestStop(direction))) {
+                        route.addPrediction(p);
+
+                        // If route does not have predictions in this prediction's direction
+                    } else if (!route.hasPredictions(direction)) {
+                        route.setNearestStop(direction, stop);
+                        route.addPrediction(p);
+
+                        // If this prediction is live and closer than route's current nearest stop
+                    } else if (live && p.willPickUpPassengers() &&
+                            route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                    stop.getLocation().distanceTo(targetLocation)) {
+                        route.setNearestStop(direction, stop);
+                        route.addPrediction(p);
+
+                        // If this prediction is not live and closer than the current nearest stop
+                    } else if (!live && !route.hasLivePredictions(direction) &&
+                            p.willPickUpPassengers() &&
+                            route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                    stop.getLocation().distanceTo(targetLocation)) {
+                        route.setNearestStop(direction, stop);
+                        route.addPrediction(p);
+                    }
+
+                    predictionsCount++;
                 }
-
-                // If the prediction is at Harvard destined for Harvard, then set to drop-off only
-                if (prediction.getStop().getName().equals(prediction.getDestination())) {
-                    prediction.setPickUpType(Prediction.NO_PICK_UP);
-                }
-
-                // Add route to routes list if not already there
-                if (!targetRoutes.containsKey(prediction.getRouteId())) {
-                    targetRoutes.put(prediction.getRouteId(), prediction.getRoute());
-                } else {
-                    prediction.setRoute(targetRoutes.get(prediction.getRouteId()));
-                }
-
-                // Add stop to stops list if not already there
-                if (!targetStops.containsKey(prediction.getStopId())) {
-                    targetStops.put(prediction.getStopId(), prediction.getStop());
-                } else {
-                    prediction.setStop(targetStops.get(prediction.getStopId()));
-                    prediction.getStop().addRoute(prediction.getRoute());
-                }
-
-                // Add prediction to its respective route
-                Route route = prediction.getRoute();
-                Stop stop = prediction.getStop();
-                int direction = prediction.getDirection();
-
-                // If this prediction's stop is the route's nearest stop
-                if (stop.equals(route.getNearestStop(direction))) {
-                    route.addPrediction(prediction);
-
-                    // If route does not have predictions in this prediction's direction
-                } else if (!route.hasPredictions(direction)) {
-                    route.setNearestStop(direction, stop);
-                    route.addPrediction(prediction);
-
-                    // If this prediction is live and closer than route's current nearest stop
-                } else if (live && prediction.willPickUpPassengers() &&
-                        route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
-                                stop.getLocation().distanceTo(targetLocation)) {
-                    route.setNearestStop(direction, stop);
-                    route.addPrediction(prediction);
-
-                    // If this prediction is not live and closer than the current nearest stop
-                } else if (!live && !route.hasLivePredictions(direction) &&
-                        prediction.willPickUpPassengers() &&
-                        route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
-                                stop.getLocation().distanceTo(targetLocation)) {
-                    route.setNearestStop(direction, stop);
-                    route.addPrediction(prediction);
-                }
-
-                predictionsCount++;
             }
 
             if (live) {
@@ -1450,7 +1475,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         @Override
         public void onError() {
-            getServiceAlerts();
         }
     }
 
@@ -1468,7 +1492,21 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         @Override
         public void onError() {
-            getShapes();
+        }
+    }
+
+    private class VehiclesPostExecuteListener implements VehiclesByRouteAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Vehicle[] vehicles) {
+            vehicleTrips.clear();
+
+            for (Vehicle v : vehicles) {
+                vehicleTrips.put(v.getTripId(), v);
+            }
+        }
+
+        @Override
+        public void onError() {
         }
     }
 

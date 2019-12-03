@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Date;
 
+import jackwtat.simplembta.utilities.DateUtil;
+
 public class Prediction implements Comparable<Prediction>, Serializable {
 
     // Pick up types
@@ -100,6 +102,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         } else {
             return -1;
         }
+    }
+
+    public int getPredictionDay() {
+        return DateUtil.getDayOfMonth(getPredictionTime());
     }
 
     public String getRouteId() {

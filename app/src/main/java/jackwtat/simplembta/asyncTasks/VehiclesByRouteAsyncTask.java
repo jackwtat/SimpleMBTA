@@ -19,6 +19,18 @@ public class VehiclesByRouteAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
+    public VehiclesByRouteAsyncTask(String realTimeApiKey,
+                                    String[] routeIds,
+                                    OnPostExecuteListener onPostExecuteListener) {
+        this.realTimeApiKey = realTimeApiKey;
+        this.routeId = "";
+        this.onPostExecuteListener = onPostExecuteListener;
+
+        for (String id : routeIds) {
+            routeId += id + ",";
+        }
+    }
+
     @Override
     protected Vehicle[] doInBackground(Void... voids) {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
