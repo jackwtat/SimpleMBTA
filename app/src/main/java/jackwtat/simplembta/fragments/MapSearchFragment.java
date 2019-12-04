@@ -808,7 +808,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             getStops();
         } else {
-            enableOnErrorView(getResources().getString(R.string.error_network));
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        enableOnErrorView(getResources().getString(R.string.error_network));
+                    }
+                });
+            }
             errorManager.setNetworkError(true);
             dataRefreshing = false;
 
