@@ -117,7 +117,11 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
     }
 
     private String getHash(Prediction p) {
-        return p.getPredictionDay() + "," + p.getTripId();
+        if (p.getPredictionTime() != null) {
+            return p.getPredictionDay() + "," + p.getTripId();
+        } else {
+            return "0," + p.getTripId();
+        }
     }
 
     public interface OnPostExecuteListener {
