@@ -1293,9 +1293,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
 
             getShapes();
-            getServiceAlerts();
             getVehicles();
             getPredictions();
+            getServiceAlerts();
         }
 
         @Override
