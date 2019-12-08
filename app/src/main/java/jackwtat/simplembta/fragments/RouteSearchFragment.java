@@ -665,7 +665,7 @@ public class RouteSearchFragment extends Fragment implements
             Collections.sort(allRoutes);
             populateRouteSpinner(allRoutes.toArray(new Route[0]));
 
-        } else if (!selectedRoute.equals(queryRoute)) {
+        } else if (!selectedRoute.getId().equals(queryRoute.getId())) {
             searchSpinners.selectRoute(queryRoute.getId());
 
         } else if (selectedDirectionId != queryDirectionId) {
