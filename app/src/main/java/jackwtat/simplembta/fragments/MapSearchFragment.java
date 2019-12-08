@@ -884,7 +884,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         for (Route route : targetRoutes.values()) {
             if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL &&
                     (route.getPredictions(Direction.INBOUND).size() == 0 ||
-                            route.getPredictions(Direction.OUTBOUND).size() == 0)) {
+                            route.getPredictions(Direction.OUTBOUND).size() == 0 ||
+                            route.getMode() == Route.COMMUTER_RAIL ||
+                            route.getMode() == Route.FERRY ||
+                            route.getMode() == Route.UNKNOWN_MODE)) {
                 routeIds.add(route.getId());
             }
         }

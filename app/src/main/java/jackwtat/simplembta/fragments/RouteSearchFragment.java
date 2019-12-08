@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -768,6 +769,10 @@ public class RouteSearchFragment extends Fragment implements
             dataRefreshing = false;
             refreshTime = new Date().getTime();
 
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            int today = calendar.get(Calendar.DAY_OF_MONTH);
+
             // Lock the views to prevent UI changes while loading new data to views
             viewsRefreshing = true;
 
@@ -777,7 +782,10 @@ public class RouteSearchFragment extends Fragment implements
 
             for (Prediction p : predictions) {
                 Vehicle vt = vehicleTrips.get(p.getTripId());
-                if (selectedRoute.getMode() != Route.BUS || vt == null ||
+                calendar.setTime(p.getPredictionTime());
+                int pDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                if (selectedRoute.getMode() != Route.BUS || vt == null || pDay != today ||
                         (p.getVehicle() != null &&
                                 vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction

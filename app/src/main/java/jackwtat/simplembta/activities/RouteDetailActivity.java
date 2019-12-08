@@ -43,6 +43,7 @@ import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -950,13 +951,22 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             refreshing = false;
             refreshTime = new Date().getTime();
 
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            int today = calendar.get(Calendar.DAY_OF_MONTH);
+
             // Clear old predictions
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
 
             for (Prediction p : predictions) {
-                if (selectedRoute.getMode() != Route.BUS || p.getVehicle() != null ||
-                        vehicleTrips.get(p.getTripId()) == null) {
+                Vehicle vt = vehicleTrips.get(p.getTripId());
+                calendar.setTime(p.getPredictionTime());
+                int pDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                if (selectedRoute.getMode() != Route.BUS || vt == null || pDay != today ||
+                        (p.getVehicle() != null &&
+                                vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
                     Prediction priorPrediction = pastPredictions.get(p.getId());
