@@ -776,8 +776,10 @@ public class RouteSearchFragment extends Fragment implements
             selectedRoute.clearPredictions(1);
 
             for (Prediction p : predictions) {
-                if (selectedRoute.getMode() != Route.BUS || p.getVehicle() != null ||
-                        vehicleTrips.get(p.getTripId()) == null) {
+                Vehicle vt = vehicleTrips.get(p.getTripId());
+                if (selectedRoute.getMode() != Route.BUS || vt == null ||
+                        (p.getVehicle() != null &&
+                                vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
                     Prediction priorPrediction = pastPredictions.get(p.getId());
