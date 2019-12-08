@@ -19,7 +19,6 @@ public class RouteSearchRecyclerViewAdapter
 
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private OnItemClickListener onItemClickListener = null;
-    private Route routeServiceAlerts = null;
 
     private boolean cleared = true;
 
@@ -34,17 +33,11 @@ public class RouteSearchRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(@NonNull RouteSearchRecyclerViewAdapter.ViewHolder holder, int i) {
-        final int position =
-                (routeServiceAlerts != null && routeServiceAlerts.getServiceAlerts().size() > 0) ?
-                        i - 1 :
-                        i;
+        final int position = i;
 
         holder.predictionView.clear();
 
-        if (position == -1) {
-            holder.predictionView.setServiceAlerts(routeServiceAlerts);
-
-        } else if (position == predictions.size()) {
+        if (position == predictions.size()) {
             if (!cleared && predictions.size() == 0) {
                 holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_departures));
             } else {
@@ -85,9 +78,7 @@ public class RouteSearchRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return routeServiceAlerts == null ?
-                predictions.size() + 1 :
-                predictions.size() + 2;
+        return predictions.size() + 1;
     }
 
     public Prediction getPrediction(int position) {
@@ -117,14 +108,6 @@ public class RouteSearchRecyclerViewAdapter
         cleared = true;
 
         notifyDataSetChanged();
-    }
-
-    public void setServiceAlertsView(Route route) {
-        if (route != null && route.getServiceAlerts().size() > 0) {
-            routeServiceAlerts = route;
-        } else {
-            routeServiceAlerts = null;
-        }
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

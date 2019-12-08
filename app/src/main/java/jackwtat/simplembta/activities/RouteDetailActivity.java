@@ -76,6 +76,7 @@ import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.RouteDetailSpinners;
+import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
 public class RouteDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, RouteDetailSpinners.OnDirectionSelectedListener,
@@ -86,6 +87,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private MapView mapView;
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private RecyclerView recyclerView;
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
@@ -227,6 +229,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 R.color.colorAccent));
         swipeRefreshLayout.setEnabled(false);
 
+        // Get service alerts indicator
+        serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
+
         // Get recycler view
         recyclerView = findViewById(R.id.predictions_recycler_view);
 
@@ -255,7 +260,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Create and set the recycler view adapter
         recyclerViewAdapter = new RouteSearchRecyclerViewAdapter();
-        recyclerViewAdapter.setServiceAlertsView(selectedRoute);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set OnClickListener
@@ -274,6 +278,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 }
             }
         });
+
+        // Refresh service alerts
+        refreshServiceAlerts();
     }
 
     @Override
@@ -711,7 +718,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void refreshServiceAlerts() {
         if (selectedRoute != null) {
-            recyclerViewAdapter.setServiceAlertsView(selectedRoute);
+            if (!userIsScrolling) {
+                if (selectedRoute.getServiceAlerts().size() > 0) {
+                    serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);
+                    serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
+
+                } else {
+                    serviceAlertsIndicatorView.setVisibility(View.GONE);
+                }
+            }
         }
     }
 
