@@ -253,7 +253,8 @@ public class PredictionsJsonParser {
                         // or if the existing prediction is for the child route of this route
                         // and the destination is not null,
                         // then add this prediction
-                        if (!prediction.getDestination().equals("null")) {
+                        if (!prediction.getDestination().equals("null") &&
+                                prediction.getPredictionTime() != null) {
                             if (!predictions.containsKey(id) || Bus.isParentOf(
                                     prediction.getRoute().getId(),
                                     predictions.get(id).getRouteId())) {
