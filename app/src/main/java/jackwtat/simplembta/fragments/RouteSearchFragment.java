@@ -782,8 +782,11 @@ public class RouteSearchFragment extends Fragment implements
 
             for (Prediction p : predictions) {
                 Vehicle vt = vehicleTrips.get(p.getTripId());
-                calendar.setTime(p.getPredictionTime());
-                int pDay = calendar.get(Calendar.DAY_OF_MONTH);
+                int pDay = -1;
+                if (p.getPredictionTime() != null) {
+                    calendar.setTime(p.getPredictionTime());
+                    pDay = calendar.get(Calendar.DAY_OF_MONTH);
+                }
 
                 if (selectedRoute.getMode() != Route.BUS || vt == null || pDay != today ||
                         (p.getVehicle() != null &&

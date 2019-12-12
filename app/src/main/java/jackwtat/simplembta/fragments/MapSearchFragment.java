@@ -285,7 +285,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    if (!viewsRefreshing) {
+                    if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
+                            noPredictionsTextView.getVisibility() != View.VISIBLE) {
                         refreshPredictionViews();
                     }
 
@@ -999,8 +1000,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
 
-            recyclerViewAdapter.setData(targetLocation,
-                    displayedRoutes.values().toArray(new Route[0]), selectedStop);
+            if (!userIsScrolling) {
+                recyclerViewAdapter.setData(targetLocation,
+                        displayedRoutes.values().toArray(new Route[0]), selectedStop);
+            }
+
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
