@@ -189,7 +189,8 @@ public class SchedulesJsonParser {
                     }
 
                     if (jRelationships.getJSONObject("prediction").getString("data").equals("null") &&
-                            !schedule.getDestination().equals("null")) {
+                            !schedule.getDestination().equals("null") &&
+                            schedule.getPredictionTime() != null) {
                         // If we don't already have a prediction with the same ID
                         // or if the existing prediction is for the child route of this route,
                         // then add this prediction

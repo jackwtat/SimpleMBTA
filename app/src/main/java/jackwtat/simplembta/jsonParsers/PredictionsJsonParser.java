@@ -128,6 +128,7 @@ public class PredictionsJsonParser {
                                 prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
                             }
                         } catch (JSONException e) {
+                            Log.i(LOG_TAG, "Unable to get schedule ID for prediction " + id);
                         }
 
 
