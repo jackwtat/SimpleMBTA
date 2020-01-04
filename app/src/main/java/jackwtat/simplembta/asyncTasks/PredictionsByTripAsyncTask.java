@@ -31,6 +31,8 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
 
         HashMap<String, Prediction> predictions = new HashMap<>();
 
+        long lowestCountdown = 1000 * 60 * 60 * 24;
+
         String[] scheduleArgs = {
                 "filter[trip]=" + tripId,
                 "filter[date]=" + DateUtil.getMbtaDate(date),
@@ -41,19 +43,25 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
         if (jsonResponse != null) {
             for (Prediction p : SchedulesJsonParser.parse(jsonResponse)) {
                 predictions.put(p.getId(), p);
+
+                if (p.getCountdownTime() < lowestCountdown) {
+                    lowestCountdown = p.getCountdownTime();
+                }
             }
         }
 
-        String[] predictionsArgs = {
-                "filter[trip]=" + tripId,
-                "include=route,trip,stop,schedule,vehicle"
-        };
+        if (predictions.size() == 0 || lowestCountdown < 1000 * 60 * 60 * 6) {
+            String[] predictionsArgs = {
+                    "filter[trip]=" + tripId,
+                    "include=route,trip,stop,schedule,vehicle"
+            };
 
-        jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
+            jsonResponse = realTimeApiClient.get("predictions", predictionsArgs);
 
-        if (jsonResponse != null) {
-            for (Prediction p : PredictionsJsonParser.parse(jsonResponse)) {
-                predictions.put(p.getId(), p);
+            if (jsonResponse != null) {
+                for (Prediction p : PredictionsJsonParser.parse(jsonResponse)) {
+                    predictions.put(p.getId(), p);
+                }
             }
         }
 
