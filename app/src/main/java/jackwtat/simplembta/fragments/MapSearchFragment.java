@@ -778,6 +778,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         }
 
                         if (mapReady) {
+                            swipeRefreshLayout.setRefreshing(true);
                             locationClient.updateLocation(new MapSearchFragment.LocationClientCallbacks());
                         }
                     }
