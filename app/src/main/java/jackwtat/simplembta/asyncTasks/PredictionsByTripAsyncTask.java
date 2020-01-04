@@ -1,5 +1,6 @@
 package jackwtat.simplembta.asyncTasks;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import jackwtat.simplembta.clients.RealTimeApiClient;
@@ -11,16 +12,16 @@ import jackwtat.simplembta.utilities.DateUtil;
 public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
     private String realTimeApiKey;
     private String tripId;
-    private int dateOffset;
+    private Date date;
     private OnPostExecuteListener onPostExecuteListener;
 
     public PredictionsByTripAsyncTask(String realTimeApiKey,
                                       String tripId,
-                                      int dateOffset,
+                                      Date date,
                                       OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.tripId = tripId;
-        this.dateOffset = dateOffset;
+        this.date = date;
         this.onPostExecuteListener = onPostExecuteListener;
     }
 
@@ -32,7 +33,7 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
 
         String[] scheduleArgs = {
                 "filter[trip]=" + tripId,
-                "filter[date]=" + DateUtil.getMbtaDate(dateOffset),
+                "filter[date]=" + DateUtil.getMbtaDate(date),
                 "include=route,trip,stop,prediction"
         };
 

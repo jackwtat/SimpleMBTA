@@ -26,8 +26,12 @@ public class DateUtil {
     }
 
     public static String getCurrentMbtaDate() {
+        return getMbtaDate(new Date());
+    }
+
+    public static String getMbtaDate(Date date) {
         Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(new Date());
+        calendar.setTime(date);
 
         if (calendar.get(Calendar.HOUR_OF_DAY) < 3) {
             calendar.add(Calendar.DATE, -1);
@@ -46,30 +50,6 @@ public class DateUtil {
         }
 
         return new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
-    }
-
-    public static int getMbtaDateOffset(Date date) {
-        Calendar inputDate = GregorianCalendar.getInstance();
-        inputDate.setTime(date);
-
-        Calendar currentDate = GregorianCalendar.getInstance();
-        currentDate.setTime(new Date());
-
-        int inputDay = inputDate.get(Calendar.DAY_OF_MONTH);
-        int inputHour = inputDate.get(Calendar.HOUR_OF_DAY);
-        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
-        int currentHour = currentDate.get(Calendar.HOUR_OF_DAY);
-
-        if ((inputHour < 3 && currentHour < 3) ||
-                (inputHour >= 3 && currentHour >= 3)) {
-            return inputDay - currentDay;
-        } else {
-            if (inputHour < 3) {
-                return inputDay - currentDay - 1;
-            } else {
-                return inputDay - currentDay + 1;
-            }
-        }
     }
 
     public static String getMbtaTime(int hourOffset) {

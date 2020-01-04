@@ -411,7 +411,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             }
 
             predictionsAsyncTask = new PredictionsByTripAsyncTask(realTimeApiKey, selectedTripId,
-                    DateUtil.getMbtaDateOffset(selectedDate), new PredictionsPostExecuteListener());
+                    selectedDate, new PredictionsPostExecuteListener());
             predictionsAsyncTask.execute();
 
         } else {
