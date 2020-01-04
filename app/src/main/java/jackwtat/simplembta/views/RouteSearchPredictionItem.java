@@ -165,16 +165,12 @@ public class RouteSearchPredictionItem extends LinearLayout {
         calendar.setTime(prediction.getPredictionTime());
         int predictionDay = calendar.get(Calendar.DAY_OF_MONTH);
         int predictionWeekday = calendar.get(Calendar.DAY_OF_WEEK);
-        int predictionMonth = calendar.get(Calendar.MONTH);
-        int predictionYear = calendar.get(Calendar.YEAR);
         String predictionDayName = calendar.getDisplayName(
                 Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
 
         calendar.setTime(new Date());
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
         int todayWeekday = calendar.get(Calendar.DAY_OF_WEEK);
-        int todayMonth = calendar.get(Calendar.MONTH);
-        int todayYear = calendar.get(Calendar.YEAR);
 
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {
@@ -196,10 +192,8 @@ public class RouteSearchPredictionItem extends LinearLayout {
                 liveIndicator.setVisibility(VISIBLE);
             }
         }
-        if (predictionDay - todayDay > 0 ||
-                predictionMonth - todayMonth > 0 ||
-                predictionYear - todayYear > 0) {
-            if ((predictionWeekday - todayWeekday) % 7 > 1) {
+        if (predictionDay - todayDay != 0) {
+            if ((predictionWeekday - todayWeekday + 7) % 7 > 1) {
                 weekDayIndicator.setText(predictionDayName.toUpperCase());
                 weekDayIndicator.setVisibility(VISIBLE);
             } else {
