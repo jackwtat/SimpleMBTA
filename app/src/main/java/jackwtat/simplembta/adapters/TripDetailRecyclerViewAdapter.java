@@ -57,7 +57,9 @@ public class TripDetailRecyclerViewAdapter
                     vehicle);
         }
 
-        if (prediction.getStop().equals(selectedStop)) {
+        if (prediction.getStop().equals(selectedStop) ||
+                prediction.getStop().isParentOf(selectedStop.getId()) ||
+                selectedStop.isParentOf(prediction.getStopId())) {
             holder.predictionView.emphasize();
         }
     }

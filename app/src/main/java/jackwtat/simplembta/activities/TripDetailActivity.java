@@ -487,7 +487,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     stopMarker.setSnippet(getPredictionSnippet(p));
                 }
 
-                if (p.getStop().equals(selectedStop)) {
+                if (p.getStop().equals(selectedStop) ||
+                        p.getStop().isParentOf(selectedStop.getId()) ||
+                        selectedStop.isParentOf(p.getStopId())) {
                     recyclerViewAdapter.setSelectedStopSequence(p.getStopSequence());
                 }
             }
