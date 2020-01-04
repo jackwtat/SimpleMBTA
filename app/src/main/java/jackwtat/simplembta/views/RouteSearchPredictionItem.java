@@ -55,6 +55,19 @@ public class RouteSearchPredictionItem extends LinearLayout {
     }
 
     public void setPrediction(Prediction prediction) {
+        setTime(prediction);
+        setDestination(prediction.getDestination());
+        setFutureIndicator(prediction);
+        setLiveIndicator(prediction);
+
+        mainContent.setVisibility(VISIBLE);
+        bottomDivider.setVisibility(VISIBLE);
+        bottomBorder.setVisibility(GONE);
+        serviceAlertsIndicatorView.setVisibility(GONE);
+        noPredictionsTextView.setVisibility(GONE);
+    }
+
+    public void setTime(Prediction prediction) {
         // Departure time
         long countdownTime = prediction.getCountdownTime();
         Vehicle vehicle = prediction.getVehicle();
@@ -160,7 +173,9 @@ public class RouteSearchPredictionItem extends LinearLayout {
             minuteTextView.setText(minuteText);
             minuteTextView.setVisibility(VISIBLE);
         }
+    }
 
+    public void setFutureIndicator(Prediction prediction) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prediction.getPredictionTime());
         int predictionDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -172,6 +187,17 @@ public class RouteSearchPredictionItem extends LinearLayout {
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
         int todayWeekday = calendar.get(Calendar.DAY_OF_WEEK);
 
+        if (predictionDay - todayDay != 0) {
+            if ((predictionWeekday - todayWeekday + 7) % 7 > 1) {
+                weekDayIndicator.setText(predictionDayName.toUpperCase());
+                weekDayIndicator.setVisibility(VISIBLE);
+            } else {
+                tomorrowIndicator.setVisibility(VISIBLE);
+            }
+        }
+    }
+
+    public void setLiveIndicator(Prediction prediction) {
         // Show the appropriate status indicators
         if (!prediction.willPickUpPassengers()) {
             dropOffIndicator.setVisibility(VISIBLE);
@@ -192,14 +218,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
                 liveIndicator.setVisibility(VISIBLE);
             }
         }
-        if (predictionDay - todayDay != 0) {
-            if ((predictionWeekday - todayWeekday + 7) % 7 > 1) {
-                weekDayIndicator.setText(predictionDayName.toUpperCase());
-                weekDayIndicator.setVisibility(VISIBLE);
-            } else {
-                tomorrowIndicator.setVisibility(VISIBLE);
-            }
-        }
+
         if (liveIndicator.getVisibility() == GONE &&
                 trackNumberIndicator.getVisibility() == GONE &&
                 dropOffIndicator.getVisibility() == GONE &&
@@ -207,14 +226,10 @@ public class RouteSearchPredictionItem extends LinearLayout {
                 weekDayIndicator.getVisibility() == GONE) {
             liveIndicator.setVisibility(INVISIBLE);
         }
+    }
 
-        destinationTextView.setText(prediction.getDestination());
-
-        mainContent.setVisibility(VISIBLE);
-        bottomDivider.setVisibility(VISIBLE);
-        bottomBorder.setVisibility(GONE);
-        serviceAlertsIndicatorView.setVisibility(GONE);
-        noPredictionsTextView.setVisibility(GONE);
+    public void setDestination(String destination){
+        destinationTextView.setText(destination);
     }
 
     public void setTrainNumber(String trainNumber) {
