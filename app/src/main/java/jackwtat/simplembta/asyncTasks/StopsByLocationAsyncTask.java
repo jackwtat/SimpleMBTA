@@ -32,10 +32,11 @@ public class StopsByLocationAsyncTask extends AsyncTask<Void, Void, Stop[]> {
 
         String jsonResponse = realTimeApiClient.get("stops", stopArgs);
 
-        if (jsonResponse != null)
+        if (jsonResponse != null) {
             return StopsJsonParser.parse(jsonResponse);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override
