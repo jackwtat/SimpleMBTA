@@ -53,6 +53,7 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.TripDetailRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.PredictionsByTripAsyncTask;
+import jackwtat.simplembta.asyncTasks.StopsByIdAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByTripAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
@@ -70,7 +71,6 @@ import jackwtat.simplembta.model.routes.RedLine;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.Constants;
-import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
@@ -92,6 +92,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private PredictionsByTripAsyncTask predictionsAsyncTask;
     private TripsAsyncTask tripsAsyncTask;
     private VehiclesByTripAsyncTask vehiclesAsyncTask;
+    private StopsByIdAsyncTask stopsAsyncTask;
     private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
     private TripDetailRecyclerViewAdapter recyclerViewAdapter;
@@ -346,6 +347,10 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             vehiclesAsyncTask.cancel(true);
         }
 
+        if (stopsAsyncTask != null) {
+            stopsAsyncTask.cancel(true);
+        }
+
         if (timer != null) {
             timer.cancel();
         }
@@ -449,6 +454,23 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             vehiclesAsyncTask = new VehiclesByTripAsyncTask(
                     realTimeApiKey, selectedTripId, new VehiclesPostExecuteListener());
             vehiclesAsyncTask.execute();
+
+        } else {
+            errorManager.setNetworkError(true);
+        }
+    }
+
+    private void getParentStops(String[] stopIds) {
+        if (networkConnectivityClient.isConnected()) {
+            errorManager.setNetworkError(false);
+
+            if (stopsAsyncTask != null) {
+                stopsAsyncTask.cancel(true);
+            }
+
+            stopsAsyncTask = new StopsByIdAsyncTask(
+                    realTimeApiKey, stopIds, new StopsPostExecuteListener());
+            stopsAsyncTask.execute();
 
         } else {
             errorManager.setNetworkError(true);
@@ -743,6 +765,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             refreshing = false;
             refreshTime = new Date().getTime();
 
+            ArrayList<String> parentStopIds = new ArrayList<>();
+
             for (Prediction prediction : p) {
                 // Reduce 'time bounce' by replacing current prediction time with prior prediction
                 // time if one exists if they are within one minute
@@ -758,6 +782,12 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 }
 
+                // If this prediction's stop has a parent stop, add it to the stop query
+                String parentStopId = prediction.getParentStopId();
+                if (parentStopId != null && !parentStopId.equals("")) {
+                    parentStopIds.add(parentStopId);
+                }
+
                 // Put this prediction into list of prior predictions
                 pastPredictions.add(prediction);
             }
@@ -765,7 +795,11 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             predictions.clear();
             predictions.addAll(Arrays.asList(p));
 
-            refreshPredictions();
+            if (parentStopIds.size() > 0) {
+                getParentStops(parentStopIds.toArray(new String[0]));
+            } else {
+                refreshPredictions();
+            }
         }
 
         @Override
@@ -807,6 +841,31 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         public void onError() {
             vehicle = null;
             refreshVehicles();
+        }
+    }
+
+    private class StopsPostExecuteListener implements StopsByIdAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(Stop[] stopsArray) {
+            HashMap<String, Stop> stops = new HashMap<>();
+
+            for (Stop s : stopsArray) {
+                stops.put(s.getId(), s);
+            }
+
+            for (Prediction p : predictions) {
+                String parentId = p.getParentStopId();
+
+                if (parentId != null && stops.get(parentId) != null) {
+                    p.setStop(stops.get(parentId));
+                }
+            }
+            refreshPredictions();
+        }
+
+        @Override
+        public void onError() {
+            refreshPredictions();
         }
     }
 
