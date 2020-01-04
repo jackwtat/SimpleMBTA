@@ -57,7 +57,12 @@ public class RouteSearchRecyclerViewAdapter
             } else if (prediction.getVehicle() != null &&
                     prediction.getVehicle().getLabel() != null &&
                     !prediction.getVehicle().getLabel().equalsIgnoreCase("null")) {
-                holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
+                if (prediction.getRoute().getMode() == Route.LIGHT_RAIL ||
+                        prediction.getRoute().getMode() == Route.HEAVY_RAIL) {
+                    holder.predictionView.setTrainNumber(prediction.getVehicle().getLabel());
+                } else {
+                    holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
+                }
 
             } else if (prediction.getVehicleId() != null &&
                     prediction.getVehicleId().equalsIgnoreCase("null")) {
