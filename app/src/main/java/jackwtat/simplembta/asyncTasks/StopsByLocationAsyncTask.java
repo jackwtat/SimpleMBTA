@@ -25,8 +25,8 @@ public class StopsByLocationAsyncTask extends AsyncTask<Void, Void, Stop[]> {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] stopArgs = {
-                "filter[latitude]=" + Double.toString(targetLocation.getLatitude()),
-                "filter[longitude]=" + Double.toString(targetLocation.getLongitude()),
+                "filter[latitude]=" + targetLocation.getLatitude(),
+                "filter[longitude]=" + targetLocation.getLongitude(),
                 "include=child_stops"
         };
 
@@ -40,10 +40,11 @@ public class StopsByLocationAsyncTask extends AsyncTask<Void, Void, Stop[]> {
 
     @Override
     protected void onPostExecute(Stop[] stops) {
-        if (stops != null)
+        if (stops != null) {
             onPostExecuteListener.onSuccess(stops);
-        else
+        } else {
             onPostExecuteListener.onError();
+        }
     }
 
     public interface OnPostExecuteListener {
