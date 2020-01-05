@@ -74,13 +74,12 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                android:layout_height="match_parent">
 
                 <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/nested_scroll_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -97,9 +96,23 @@
                     android:id="@+id/predictions_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_below="@id/nested_scroll_view"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/no_predictions_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nested_scroll_view"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:text="@string/no_nearby_services"
+                    android:textSize="@dimen/small_header_text_size"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

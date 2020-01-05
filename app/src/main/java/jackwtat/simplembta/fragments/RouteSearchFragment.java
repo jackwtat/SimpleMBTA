@@ -320,8 +320,8 @@ public class RouteSearchFragment extends Fragment implements
                             selectedRoute.clearPredictions(Direction.OUTBOUND);
                             selectedRoute.clearServiceAlerts();
 
-                            refreshPredictions(true);
-                            refreshServiceAlerts();
+                            clearPredictions();
+                            noPredictionsTextView.setText(R.string.network_error_text);
                         }
                     } else {
                         errorTextView.setVisibility(View.GONE);

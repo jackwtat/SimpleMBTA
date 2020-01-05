@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <jackwtat.simplembta.views.ServiceAlertsIndicatorView
-        android:id="@+id/service_alerts_indicator_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
@@ -163,25 +157,14 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/no_predictions_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:padding="24dp"
-        android:text="@string/no_predictions_this_stop"
-        android:textSize="@dimen/small_header_text_size"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
     <View
         android:id="@+id/bottom_border"
         android:layout_width="match_parent"
         android:layout_height="16dp"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:visibility="gone" />
+        android:layout_below="@id/bottom_divider"
+        android:visibility="visible" />
 
     <View
         android:id="@+id/on_click_animation"

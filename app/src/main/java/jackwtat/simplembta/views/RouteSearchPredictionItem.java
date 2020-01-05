@@ -252,33 +252,8 @@ public class RouteSearchPredictionItem extends LinearLayout {
         vehicleNumberTextView.setVisibility(VISIBLE);
     }
 
-    public void setServiceAlerts(Route route) {
-        serviceAlertsIndicatorView.setServiceAlerts(route);
-        serviceAlertsIndicatorView.setVisibility(VISIBLE);
-
-        mainContent.setVisibility(GONE);
-        bottomDivider.setVisibility(GONE);
-        noPredictionsTextView.setVisibility(GONE);
-        bottomBorder.setVisibility(GONE);
-    }
-
-    public void setNoPredictionsTextView(String message) {
-        noPredictionsTextView.setText(message);
-        noPredictionsTextView.setVisibility(VISIBLE);
-
-        mainContent.setVisibility(GONE);
-        bottomDivider.setVisibility(GONE);
-        serviceAlertsIndicatorView.setVisibility(GONE);
-        bottomBorder.setVisibility(GONE);
-    }
-
     public void setBottomBorderVisible() {
         bottomBorder.setVisibility(VISIBLE);
-
-        mainContent.setVisibility(GONE);
-        bottomDivider.setVisibility(GONE);
-        serviceAlertsIndicatorView.setVisibility(GONE);
-        noPredictionsTextView.setVisibility(GONE);
     }
 
     public void enableOnClickAnimation(boolean enabled) {

@@ -90,6 +90,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private SwipeRefreshLayout swipeRefreshLayout;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private RecyclerView recyclerView;
+    private TextView noPredictionsTextView;
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
     private RouteDetailSpinners routeDetailSpinners;
@@ -184,6 +185,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
         }
 
+        // Set the no predictions indicator
+        noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
+
         // Get error text view
         errorTextView = findViewById(R.id.error_message_text_view);
 
@@ -248,7 +252,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions(false);
+
+                    if (!swipeRefreshLayout.isRefreshing() &&
+                            noPredictionsTextView.getVisibility() != View.VISIBLE) {
+                        refreshPredictions(false);
+                    }
+
                     if (!shapesLoaded) {
                         refreshShapes();
                     }
@@ -375,7 +384,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         // Refresh the activity to update UI so that the predictions are accurate
         // as of the last update
-        refreshPredictions(false);
+        //refreshPredictions(false);
         refreshVehicles();
 
         // Get the route shapes if there aren't any
@@ -477,12 +486,19 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     selectedRoute.clearPredictions(Direction.OUTBOUND);
 
                     clearVehicleMarkers();
+                    clearPredictions();
 
+                    enableOnErrorView(getResources().getString(R.string.network_error_text));
+
+                    /*
                     refreshPredictions(true);
                     refreshVehicles();
+                     */
 
                 } else if (!errorManager.hasNetworkError()) {
                     errorTextView.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(true);
+                    forceUpdate();
                 }
             }
         });
@@ -614,8 +630,18 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (returnToTop) {
-                    recyclerView.scrollToPosition(0);
+                if (recyclerViewAdapter.getItemCount() == 0) {
+                    noPredictionsTextView.setText(getResources().getString(R.string.no_predictions_this_stop));
+                    noPredictionsTextView.setVisibility(View.VISIBLE);
+                    appBarLayout.setExpanded(true);
+                    recyclerView.setNestedScrollingEnabled(false);
+                } else {
+                    noPredictionsTextView.setVisibility(View.GONE);
+                    recyclerView.setNestedScrollingEnabled(true);
+
+                    if (returnToTop) {
+                        recyclerView.scrollToPosition(0);
+                    }
                 }
             }
         }
@@ -731,6 +757,24 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    private void enableOnErrorView(String message) {
+        final String m = message;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewAdapter.clear();
+
+                recyclerView.setNestedScrollingEnabled(false);
+
+                swipeRefreshLayout.setRefreshing(false);
+
+                appBarLayout.setExpanded(true);
+
+                noPredictionsTextView.setText(m);
+                noPredictionsTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     private void clearPredictions() {
         recyclerViewAdapter.clear();

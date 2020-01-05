@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.views.RouteSearchPredictionItem;
@@ -19,8 +18,6 @@ public class RouteSearchRecyclerViewAdapter
 
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private OnItemClickListener onItemClickListener = null;
-
-    private boolean cleared = true;
 
     public RouteSearchRecyclerViewAdapter() {
     }
@@ -37,41 +34,37 @@ public class RouteSearchRecyclerViewAdapter
 
         holder.predictionView.clear();
 
-        if (position == predictions.size()) {
-            if (!cleared && predictions.size() == 0) {
-                holder.predictionView.setNoPredictionsTextView(holder.predictionView.getContext().getResources().getString(R.string.no_departures));
+        Prediction prediction = predictions.get(position);
+        holder.predictionView.setPrediction(prediction);
+
+        if (prediction.getRoute() != null &&
+                prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                prediction.getTripName() != null &&
+                !prediction.getTripName().equalsIgnoreCase("null")) {
+            holder.predictionView.setTrainNumber(prediction.getTripName());
+
+        } else if (prediction.getVehicle() != null &&
+                prediction.getVehicle().getLabel() != null &&
+                !prediction.getVehicle().getLabel().equalsIgnoreCase("null")) {
+            if (prediction.getRoute().getMode() == Route.LIGHT_RAIL ||
+                    prediction.getRoute().getMode() == Route.HEAVY_RAIL) {
+                holder.predictionView.setTrainNumber(prediction.getVehicle().getLabel());
             } else {
-                holder.predictionView.setBottomBorderVisible();
+                holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
             }
 
-        } else {
-            Prediction prediction = predictions.get(position);
-            holder.predictionView.setPrediction(prediction);
+        } else if (prediction.getVehicleId() != null &&
+                prediction.getVehicleId().equalsIgnoreCase("null")) {
+            holder.predictionView.setVehicleNumber(prediction.getVehicleId());
+        }
 
-            if (prediction.getRoute() != null &&
-                    prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
-                    prediction.getTripName() != null &&
-                    !prediction.getTripName().equalsIgnoreCase("null")) {
-                holder.predictionView.setTrainNumber(prediction.getTripName());
-
-            } else if (prediction.getVehicle() != null &&
-                    prediction.getVehicle().getLabel() != null &&
-                    !prediction.getVehicle().getLabel().equalsIgnoreCase("null")) {
-                if (prediction.getRoute().getMode() == Route.LIGHT_RAIL ||
-                        prediction.getRoute().getMode() == Route.HEAVY_RAIL) {
-                    holder.predictionView.setTrainNumber(prediction.getVehicle().getLabel());
-                } else {
-                    holder.predictionView.setVehicleNumber(prediction.getVehicle().getLabel());
-                }
-
-            } else if (prediction.getVehicleId() != null &&
-                    prediction.getVehicleId().equalsIgnoreCase("null")) {
-                holder.predictionView.setVehicleNumber(prediction.getVehicleId());
-            }
+        if (position == predictions.size() - 1) {
+            holder.predictionView.setBottomBorderVisible();
         }
 
         if (onItemClickListener != null) {
             holder.predictionView.enableOnClickAnimation(true);
+
             holder.predictionView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -83,7 +76,7 @@ public class RouteSearchRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return predictions.size() + 1;
+        return predictions.size();
     }
 
     public Prediction getPrediction(int position) {
@@ -92,7 +85,6 @@ public class RouteSearchRecyclerViewAdapter
 
     public void setPredictions(List<Prediction> predictions) {
         this.predictions.clear();
-        cleared = false;
 
         for (Prediction p : predictions) {
             if (p.getPredictionTime() != null &&
@@ -110,7 +102,6 @@ public class RouteSearchRecyclerViewAdapter
 
     public void clear() {
         this.predictions.clear();
-        cleared = true;
 
         notifyDataSetChanged();
     }
