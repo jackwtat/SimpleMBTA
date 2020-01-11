@@ -21,8 +21,6 @@ import jackwtat.simplembta.model.Route;
 public class RouteSearchPredictionItem extends LinearLayout {
     View rootView;
     View mainContent;
-    ServiceAlertsIndicatorView serviceAlertsIndicatorView;
-    TextView noPredictionsTextView;
     TextView timeTextView;
     TextView minuteTextView;
     TextView liveIndicator;
@@ -63,8 +61,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
         mainContent.setVisibility(VISIBLE);
         bottomDivider.setVisibility(VISIBLE);
         bottomBorder.setVisibility(GONE);
-        serviceAlertsIndicatorView.setVisibility(GONE);
-        noPredictionsTextView.setVisibility(GONE);
     }
 
     public void setTime(Prediction prediction) {
@@ -264,9 +260,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
     }
 
     public void clear() {
-        serviceAlertsIndicatorView.setVisibility(GONE);
-        noPredictionsTextView.setVisibility(GONE);
-        noPredictionsTextView.setText("");
         timeTextView.setText("");
         minuteTextView.setText("");
         liveIndicator.setVisibility(GONE);
@@ -282,8 +275,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_route_search_prediction, this);
         mainContent = rootView.findViewById(R.id.main_content);
-        serviceAlertsIndicatorView = rootView.findViewById(R.id.service_alerts_indicator_view);
-        noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);

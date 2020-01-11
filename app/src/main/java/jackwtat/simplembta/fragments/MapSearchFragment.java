@@ -86,6 +86,7 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
+import jackwtat.simplembta.views.NoPredictionsView;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
@@ -105,7 +106,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap gMap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private TextView noPredictionsTextView;
+    private NoPredictionsView noPredictionsView;
     private TextView errorTextView;
     private TextView debugTextView;
 
@@ -286,7 +287,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
                     if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
-                            noPredictionsTextView.getVisibility() != View.VISIBLE) {
+                            !noPredictionsView.isError()) {
                         refreshPredictionViews();
                     }
 
@@ -345,7 +346,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         });
 
         // Set the no predictions indicator
-        noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
+        noPredictionsView = rootView.findViewById(R.id.no_predictions_view);
 
         // Set the error text message
         errorTextView = rootView.findViewById(R.id.error_message_text_view);
@@ -634,6 +635,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         // If too much time has elapsed since last refresh, then clear the predictions
         if (onResumeTime - refreshTime > MAXIMUM_PREDICTION_AGE) {
             clearPredictions();
+            noPredictionsView.clearError();
+            noPredictionsView.clearNoPredictions();
         }
 
         swipeRefreshLayout.setRefreshing(true);
@@ -803,12 +806,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
-
             dataRefreshing = true;
-
             refreshTime = new Date().getTime();
-
             getStops();
+
         } else {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -820,7 +821,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
             errorManager.setNetworkError(true);
             dataRefreshing = false;
-
             targetStops.clear();
             targetRoutes.clear();
         }
@@ -841,8 +841,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void getStops() {
-        if (stopsAsyncTask != null)
+        if (stopsAsyncTask != null) {
             stopsAsyncTask.cancel(true);
+        }
 
         stopsAsyncTask = new StopsByLocationAsyncTask(realTimeApiKey, targetLocation,
                 new StopsPostExecuteListener());
@@ -851,8 +852,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void getRoutes() {
-        if (routesAsyncTask != null)
+        if (routesAsyncTask != null) {
             routesAsyncTask.cancel(true);
+        }
 
         String[] stopIds = targetStops.keySet().toArray(new String[0]);
 
@@ -863,8 +865,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void getPredictions() {
-        if (predictionsAsyncTask != null)
+        if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
+        }
 
         String[] stopIds = targetStops.keySet().toArray(new String[0]);
 
@@ -875,8 +878,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void getSchedules() {
-        if (predictionsAsyncTask != null)
+        if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
+        }
 
         ArrayList<String> routeIds = new ArrayList<>();
 
@@ -903,8 +907,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void getServiceAlerts() {
-        if (serviceAlertsAsyncTask != null)
+        if (serviceAlertsAsyncTask != null) {
             serviceAlertsAsyncTask.cancel(true);
+        }
 
         serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
                 targetRoutes.keySet().toArray(new String[0]),
@@ -1009,18 +1014,17 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             swipeRefreshLayout.setRefreshing(false);
 
             if (recyclerViewAdapter.getItemCount() == 0) {
-                noPredictionsTextView.setText(getResources().getString(R.string.no_nearby_services));
-                noPredictionsTextView.setVisibility(View.VISIBLE);
+                noPredictionsView.setNoPredictions(getResources().getString(R.string.no_nearby_services));
                 appBarLayout.setExpanded(true);
                 recyclerView.setNestedScrollingEnabled(false);
             } else {
-                noPredictionsTextView.setVisibility(View.GONE);
+                noPredictionsView.clearNoPredictions();
                 recyclerView.setNestedScrollingEnabled(true);
             }
         }
     }
 
-    private void enableOnErrorView(String message) {
+    private void enableOnErrorView(final String message) {
         final String m = message;
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
@@ -1034,8 +1038,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     appBarLayout.setExpanded(true);
 
-                    noPredictionsTextView.setText(m);
-                    noPredictionsTextView.setVisibility(View.VISIBLE);
+                    noPredictionsView.setError(message);
                 }
             });
         }
@@ -1043,10 +1046,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void clearPredictions() {
         recyclerViewAdapter.clear();
-        noPredictionsTextView.setVisibility(View.GONE);
         appBarLayout.setExpanded(true);
         recyclerView.setNestedScrollingEnabled(false);
-
         targetStops.clear();
         targetRoutes.clear();
     }
@@ -1461,12 +1462,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         @Override
         public void onError() {
-            // Refresh views
-            refreshPredictionViews();
-
             dataRefreshing = false;
-
-            update();
+            enableOnErrorView(getResources().getString(R.string.error_predictions));
+            forceUpdate();
         }
     }
 

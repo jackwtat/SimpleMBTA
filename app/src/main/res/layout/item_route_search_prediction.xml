@@ -8,7 +8,6 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/service_alerts_indicator_view"
         android:background="@color/card_view_background"
         android:orientation="horizontal"
         android:paddingLeft="20dp"

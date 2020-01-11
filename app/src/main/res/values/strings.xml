@@ -35,6 +35,7 @@
     <string name="error_location">Unable to get your current location</string>
     <string name="error_stops">Unable to retrieve nearby stops</string>
     <string name="error_routes">Unable to retrieve nearby MBTA services</string>
+    <string name="error_predictions">Unable to retrieve predictions</string>
 
     <!-- No Predictions Messages -->
     <string name="no_nearby_services">No MBTA services near this location</string>
