@@ -1026,7 +1026,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void enableOnErrorView(final String message) {
-        final String m = message;
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
