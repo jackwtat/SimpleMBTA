@@ -17,9 +17,7 @@ public class Stop implements Comparable<Stop>, Serializable {
     private boolean wheelchairAccessible = false;
 
     public Stop(String id) {
-        if (id.equals("64") || id.equals("64000"))
-            this.id = "64,64000";
-        else if (id.equals("3") || id.equals("61"))
+        if (id.equals("3") || id.equals("61"))
             this.id = "3,61";
         else if (id.equals("4") || id.equals("60"))
             this.id = "4,60";
@@ -35,8 +33,6 @@ public class Stop implements Comparable<Stop>, Serializable {
             this.id = "5095,5098";
         else if (id.equals("15095") || id.equals("49003"))
             this.id = "15095,49003";
-        else if (id.equals("74614") || id.equals("74624"))
-            this.id = "74614,74624";
         else if (id.equals("247") || id.equals("31256"))
             this.id = "247,31256";
         else if (id.equals("30249") || id.equals("31257"))
