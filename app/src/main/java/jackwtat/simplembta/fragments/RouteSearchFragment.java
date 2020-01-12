@@ -47,6 +47,7 @@ import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
+import jackwtat.simplembta.views.NoPredictionsView;
 import jackwtat.simplembta.views.RouteSearchSpinners;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
@@ -63,7 +64,7 @@ public class RouteSearchFragment extends Fragment implements
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private TextView noPredictionsTextView;
+    private NoPredictionsView noPredictionsView;
     private TextView errorTextView;
 
     private String realTimeApiKey;
@@ -141,7 +142,7 @@ public class RouteSearchFragment extends Fragment implements
         swipeRefreshLayout.setEnabled(false);
 
         // Set the no predictions indicator
-        noPredictionsTextView = rootView.findViewById(R.id.no_predictions_text_view);
+        noPredictionsView = rootView.findViewById(R.id.no_predictions_view);
 
         // Get recycler view
         recyclerView = rootView.findViewById(R.id.predictions_recycler_view);
@@ -319,7 +320,7 @@ public class RouteSearchFragment extends Fragment implements
                             selectedRoute.clearServiceAlerts();
 
                             clearPredictions();
-                            noPredictionsTextView.setText(R.string.network_error_text);
+                            enableOnErrorView(getResources().getString(R.string.network_error_text));
                         }
                     } else {
                         errorTextView.setVisibility(View.GONE);
@@ -356,6 +357,7 @@ public class RouteSearchFragment extends Fragment implements
 
         } else {
             errorManager.setNetworkError(true);
+            enableOnErrorView(getResources().getString(R.string.error_network));
         }
     }
 
@@ -375,6 +377,7 @@ public class RouteSearchFragment extends Fragment implements
 
             } else {
                 errorManager.setNetworkError(true);
+                enableOnErrorView(getResources().getString(R.string.error_network));
             }
         }
     }
@@ -417,9 +420,9 @@ public class RouteSearchFragment extends Fragment implements
                     predictionsAsyncTask.execute();
 
                 } else {
-                    errorManager.setNetworkError(true);
                     dataRefreshing = false;
-                    swipeRefreshLayout.setRefreshing(false);
+                    errorManager.setNetworkError(true);
+                    enableOnErrorView(getResources().getString(R.string.error_network));
                 }
             } else {
                 if (getActivity() != null) {
@@ -484,40 +487,80 @@ public class RouteSearchFragment extends Fragment implements
                     ArrayList<Prediction> predictions =
                             selectedRoute.getPredictions(selectedDirectionId);
 
-                    // Set set predictions in recycler view adapter
                     recyclerViewAdapter.setPredictions(predictions);
                     swipeRefreshLayout.setRefreshing(false);
+                    clearOnErrorView();
 
                     // Show no predictions text if there are no predictions
                     if (recyclerViewAdapter.getItemCount() == 0) {
-                        noPredictionsTextView.setText(getResources()
-                                .getString(R.string.no_predictions_this_stop));
-                        noPredictionsTextView.setVisibility(View.VISIBLE);
-
-                        recyclerView.setNestedScrollingEnabled(false);
-                    } else {
-                        noPredictionsTextView.setVisibility(View.GONE);
-                        recyclerView.setNestedScrollingEnabled(true);
+                        enableNoPredictionsView(getResources().getString(R.string.no_departures));
                     }
 
                     if (returnToTop) {
                         recyclerView.scrollToPosition(0);
                     }
+
                 } else {
                     // Show no stops text if there are no stops for the selected direction
-                    noPredictionsTextView.setText(getResources().getString(R.string.no_stops));
-                    noPredictionsTextView.setVisibility(View.VISIBLE);
-
-                    recyclerView.setNestedScrollingEnabled(false);
-                    swipeRefreshLayout.setRefreshing(false);
+                    enableNoPredictionsView(getResources().getString(R.string.no_stops));
                 }
             }
         }
     }
 
+    private void enableOnErrorView(final String message) {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.setNestedScrollingEnabled(false);
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    noPredictionsView.setError(message);
+                }
+            });
+        }
+    }
+
+    private void enableNoPredictionsView(final String message) {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewAdapter.clear();
+                    recyclerView.setNestedScrollingEnabled(false);
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    noPredictionsView.setNoPredictions(message);
+                }
+            });
+        }
+    }
+
+    private void clearOnErrorView() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    noPredictionsView.clearError();
+                }
+            });
+        }
+    }
+
+    private void clearNoPredictionsView() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    noPredictionsView.clearNoPredictions();
+                }
+            });
+        }
+    }
+
     private void clearPredictions() {
         recyclerViewAdapter.clear();
-        noPredictionsTextView.setVisibility(View.GONE);
         recyclerView.setNestedScrollingEnabled(false);
     }
 
@@ -728,6 +771,7 @@ public class RouteSearchFragment extends Fragment implements
 
         @Override
         public void onError() {
+            enableOnErrorView(getResources().getString(R.string.error_routes));
             getRoutes();
         }
     }
@@ -742,6 +786,7 @@ public class RouteSearchFragment extends Fragment implements
 
         @Override
         public void onError() {
+            enableOnErrorView(getResources().getString(R.string.error_stops));
             getShapes();
         }
     }
@@ -827,6 +872,7 @@ public class RouteSearchFragment extends Fragment implements
         public void onError() {
             dataRefreshing = false;
             refreshTime = new Date().getTime();
+            enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
 
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);

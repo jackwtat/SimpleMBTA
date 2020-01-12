@@ -48,17 +48,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/no_predictions_text_view"
+            <jackwtat.simplembta.views.NoPredictionsView
+                android:id="@+id/no_predictions_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:text="@string/no_nearby_services"
-                android:textSize="@dimen/small_header_text_size"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="24dp"
+                android:visibility="visible" />
+
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -1015,9 +1015,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             clearOnErrorView();
 
             if (recyclerViewAdapter.getItemCount() == 0) {
-                noPredictionsView.setNoPredictions(getResources().getString(R.string.no_nearby_services));
-                appBarLayout.setExpanded(true);
-                recyclerView.setNestedScrollingEnabled(false);
+                enableNoPredictionsView(getResources().getString(R.string.no_nearby_services));
             } else {
                 noPredictionsView.clearNoPredictions();
                 recyclerView.setNestedScrollingEnabled(true);
@@ -1041,12 +1039,37 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void enableNoPredictionsView(final String message){
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.setNestedScrollingEnabled(false);
+                    swipeRefreshLayout.setRefreshing(false);
+                    appBarLayout.setExpanded(true);
+
+                    noPredictionsView.setNoPredictions(message);
+                }
+            });
+        }
+    }
+
     private void clearOnErrorView() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     noPredictionsView.clearError();
+                }
+            });
+        }
+    }
+
+    private void clearNoPredictionsView(){
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     noPredictionsView.clearNoPredictions();
                 }
             });
@@ -1292,7 +1315,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             } else {
                 // If we have no stops, then show error message
                 dataRefreshing = false;
-                enableOnErrorView(getResources().getString(R.string.error_stops));
+                enableOnErrorView(getResources().getString(R.string.error_nearby_stops));
                 forceUpdate();
             }
         }
@@ -1324,7 +1347,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             } else {
                 // If we have no routes, then show error message
                 dataRefreshing = false;
-                enableOnErrorView(getResources().getString(R.string.error_routes));
+                enableOnErrorView(getResources().getString(R.string.error_nearby_routes));
                 forceUpdate();
             }
         }
@@ -1472,7 +1495,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onError() {
             dataRefreshing = false;
-            enableOnErrorView(getResources().getString(R.string.error_predictions));
+            enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
             forceUpdate();
         }
     }

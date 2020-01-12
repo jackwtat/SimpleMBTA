@@ -33,9 +33,11 @@
     <string name="network_error_text">Unable to connect to the internet</string>
     <string name="error_network">Unable to connect to the internet</string>
     <string name="error_location">Unable to get your current location</string>
-    <string name="error_stops">Unable to get nearby MBTA stops</string>
-    <string name="error_routes">Unable to get nearby MBTA services</string>
-    <string name="error_predictions">Unable to get upcoming departures</string>
+    <string name="error_stops">Unable to get stops</string>
+    <string name="error_routes">Unable to get routes</string>
+    <string name="error_nearby_stops">Unable to get nearby MBTA stops</string>
+    <string name="error_nearby_routes">Unable to get nearby MBTA services</string>
+    <string name="error_upcoming_predictions">Unable to get upcoming departures</string>
 
     <!-- No Predictions Messages -->
     <string name="no_nearby_services">No MBTA services near this location</string>
