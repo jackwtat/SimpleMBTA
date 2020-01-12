@@ -31,9 +31,8 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView destinationTextView;
     TextView vehicleNumberTextView;
     ImageView enrouteIcon;
-    View bottomDivider;
+    View bottomEdge;
     View bottomBorder;
-    View onClickAnimation;
 
     String min;
 
@@ -59,7 +58,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         setLiveIndicator(prediction);
 
         mainContent.setVisibility(VISIBLE);
-        bottomDivider.setVisibility(VISIBLE);
+        bottomEdge.setVisibility(VISIBLE);
         bottomBorder.setVisibility(GONE);
     }
 
@@ -252,13 +251,6 @@ public class RouteSearchPredictionItem extends LinearLayout {
         bottomBorder.setVisibility(VISIBLE);
     }
 
-    public void enableOnClickAnimation(boolean enabled) {
-        if (enabled)
-            onClickAnimation.setVisibility(VISIBLE);
-        else
-            onClickAnimation.setVisibility(GONE);
-    }
-
     public void clear() {
         timeTextView.setText("");
         minuteTextView.setText("");
@@ -274,7 +266,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_route_search_prediction, this);
-        mainContent = rootView.findViewById(R.id.main_content);
+        mainContent = rootView.findViewById(R.id.predictions_card_body);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
@@ -285,9 +277,8 @@ public class RouteSearchPredictionItem extends LinearLayout {
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         vehicleNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
         enrouteIcon = rootView.findViewById(R.id.enroute_icon);
-        bottomDivider = rootView.findViewById(R.id.bottom_divider);
+        bottomEdge = rootView.findViewById(R.id.bottom_edge);
         bottomBorder = rootView.findViewById(R.id.bottom_border);
-        onClickAnimation = rootView.findViewById(R.id.on_click_animation);
 
         min = context.getResources().getString(R.string.min);
     }

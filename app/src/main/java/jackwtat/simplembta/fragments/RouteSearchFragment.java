@@ -176,17 +176,15 @@ public class RouteSearchFragment extends Fragment implements
         recyclerViewAdapter.setOnItemClickListener(new RouteSearchRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if (position < recyclerViewAdapter.getItemCount() - 1) {
-                    Prediction prediction = recyclerViewAdapter.getPrediction(position);
+                Prediction prediction = recyclerViewAdapter.getPrediction(position);
 
-                    if (prediction != null) {
-                        Intent intent = new Intent(getActivity(), TripDetailActivity.class);
-                        intent.putExtra("route", prediction.getRoute());
-                        intent.putExtra("stop", prediction.getStop());
-                        intent.putExtra("trip", prediction.getTripId());
-                        intent.putExtra("date", prediction.getPredictionTime());
-                        startActivity(intent);
-                    }
+                if (prediction != null) {
+                    Intent intent = new Intent(getActivity(), TripDetailActivity.class);
+                    intent.putExtra("route", prediction.getRoute());
+                    intent.putExtra("stop", prediction.getStop());
+                    intent.putExtra("trip", prediction.getTripId());
+                    intent.putExtra("date", prediction.getPredictionTime());
+                    startActivity(intent);
                 }
             }
         });

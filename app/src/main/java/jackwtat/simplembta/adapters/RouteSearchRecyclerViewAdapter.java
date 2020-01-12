@@ -63,8 +63,6 @@ public class RouteSearchRecyclerViewAdapter
         }
 
         if (onItemClickListener != null) {
-            holder.predictionView.enableOnClickAnimation(true);
-
             holder.predictionView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
