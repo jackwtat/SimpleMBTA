@@ -1065,17 +1065,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void clearNoPredictionsView(){
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    noPredictionsView.clearNoPredictions();
-                }
-            });
-        }
-    }
-
     private void clearPredictions() {
         recyclerViewAdapter.clear();
         appBarLayout.setExpanded(true);

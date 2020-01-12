@@ -547,18 +547,7 @@ public class RouteSearchFragment extends Fragment implements
             });
         }
     }
-
-    private void clearNoPredictionsView() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    noPredictionsView.clearNoPredictions();
-                }
-            });
-        }
-    }
-
+    
     private void clearPredictions() {
         recyclerViewAdapter.clear();
         recyclerView.setNestedScrollingEnabled(false);
