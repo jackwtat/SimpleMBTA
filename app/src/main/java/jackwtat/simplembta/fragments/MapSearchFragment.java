@@ -1012,6 +1012,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
 
             swipeRefreshLayout.setRefreshing(false);
+            clearOnErrorView();
 
             if (recyclerViewAdapter.getItemCount() == 0) {
                 noPredictionsView.setNoPredictions(getResources().getString(R.string.no_nearby_services));
@@ -1031,14 +1032,23 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 @Override
                 public void run() {
                     recyclerViewAdapter.clear();
-
                     recyclerView.setNestedScrollingEnabled(false);
-
                     swipeRefreshLayout.setRefreshing(false);
-
                     appBarLayout.setExpanded(true);
 
                     noPredictionsView.setError(message);
+                }
+            });
+        }
+    }
+
+    private void clearOnErrorView() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    noPredictionsView.clearError();
+                    noPredictionsView.clearNoPredictions();
                 }
             });
         }
