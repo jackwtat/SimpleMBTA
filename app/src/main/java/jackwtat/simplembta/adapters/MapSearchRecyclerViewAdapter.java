@@ -76,6 +76,20 @@ public class MapSearchRecyclerViewAdapter
             // Set the header text as the stop name
             header.setText(thisStop.getName());
 
+            // Prevent most occurrences of scroll bug
+            header.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+
+            header.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return true;
+                }
+            });
+
             // Add the colors
             Collections.sort(adapterItems.get(i).getStop().getRoutes());
             HashMap<String, Void> colors = new HashMap<>();
