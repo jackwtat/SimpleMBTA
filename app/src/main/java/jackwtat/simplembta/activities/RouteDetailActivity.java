@@ -1060,6 +1060,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         public void onError() {
             refreshing = false;
             refreshTime = new Date().getTime();
+            enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
 
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
@@ -1079,6 +1080,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         @Override
         public void onError() {
+            enableOnErrorView(getResources().getString(R.string.error_stops));
             getShapes();
         }
     }
