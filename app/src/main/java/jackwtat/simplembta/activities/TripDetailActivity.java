@@ -75,6 +75,7 @@ import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
+import jackwtat.simplembta.views.NoPredictionsView;
 
 public class TripDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
@@ -86,6 +87,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private ProgressBar mapProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private NoPredictionsView noPredictionsView;
     private TextView errorTextView;
 
     private String realTimeApiKey;
@@ -99,6 +101,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private Timer timer;
 
     private boolean refreshing = false;
+    private boolean loaded = false;
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
 
@@ -122,8 +125,6 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_detail);
-        recyclerView = findViewById(R.id.predictions_recycler_view);
-        errorTextView = findViewById(R.id.error_message_text_view);
 
         // Get MBTA realTime API key
         realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
@@ -201,6 +202,12 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         // Get map progress bar
         mapProgressBar = findViewById(R.id.map_progress_bar);
+
+        // Get error text view
+        errorTextView = findViewById(R.id.error_message_text_view);
+
+        // Set the no predictions indicator
+        noPredictionsView = findViewById(R.id.no_predictions_view);
 
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
@@ -394,8 +401,14 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     errorTextView.setText(R.string.network_error_text);
                     errorTextView.setVisibility(View.VISIBLE);
 
+                    clearPredictions();
+                    enableOnErrorView(getResources().getString(R.string.network_error_text));
+
                 } else if (!errorManager.hasNetworkError()) {
                     errorTextView.setVisibility(View.GONE);
+                    clearOnErrorView();
+                    swipeRefreshLayout.setRefreshing(true);
+                    forceUpdate();
                 }
             }
         });
@@ -421,6 +434,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         } else {
             errorManager.setNetworkError(true);
+            enableOnErrorView(getResources().getString(R.string.error_network));
             refreshing = false;
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -496,6 +510,14 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
             recyclerViewAdapter.setPredictions(predictions);
             swipeRefreshLayout.setRefreshing(false);
+
+            if (loaded && predictions.size() == 0) {
+                enableNoPredictionsView(getResources().getString(R.string.no_predictions_this_stop));
+            } else {
+                loaded = true;
+                noPredictionsView.clearNoPredictions();
+                recyclerView.setNestedScrollingEnabled(true);
+            }
         }
     }
 
@@ -629,7 +651,43 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    private void enableOnErrorView(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewAdapter.clear();
+                recyclerView.setNestedScrollingEnabled(false);
+                swipeRefreshLayout.setRefreshing(false);
+                appBarLayout.setExpanded(true);
+                noPredictionsView.setError(message);
+            }
+        });
+    }
+
+    private void enableNoPredictionsView(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+                appBarLayout.setExpanded(true);
+                predictions.clear();
+                noPredictionsView.setNoPredictions(message);
+            }
+        });
+    }
+
+    private void clearOnErrorView() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                noPredictionsView.clearError();
+            }
+        });
+
+    }
+
     private void clearPredictions() {
+        predictions.clear();
         recyclerViewAdapter.clear();
     }
 
@@ -808,6 +866,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         public void onError() {
             refreshing = false;
             refreshTime = new Date().getTime();
+            enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
 
             refreshPredictions();
         }
