@@ -76,6 +76,7 @@ import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastPredictionsHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
+import jackwtat.simplembta.views.NoPredictionsView;
 import jackwtat.simplembta.views.RouteDetailSpinners;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 
@@ -90,7 +91,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private SwipeRefreshLayout swipeRefreshLayout;
     private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private RecyclerView recyclerView;
-    private TextView noPredictionsTextView;
+    private NoPredictionsView noPredictionsView;
     private ProgressBar mapProgressBar;
     private TextView errorTextView;
     private RouteDetailSpinners routeDetailSpinners;
@@ -186,7 +187,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
 
         // Set the no predictions indicator
-        noPredictionsTextView = findViewById(R.id.no_predictions_text_view);
+        noPredictionsView = findViewById(R.id.no_predictions_view);
 
         // Get error text view
         errorTextView = findViewById(R.id.error_message_text_view);
@@ -254,7 +255,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     userIsScrolling = false;
 
                     if (!swipeRefreshLayout.isRefreshing() &&
-                            noPredictionsTextView.getVisibility() != View.VISIBLE) {
+                            !noPredictionsView.isError()) {
                         refreshPredictions(false);
                     }
 
@@ -490,11 +491,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
                     enableOnErrorView(getResources().getString(R.string.network_error_text));
 
-                    /*
-                    refreshPredictions(true);
-                    refreshVehicles();
-                     */
-
                 } else if (!errorManager.hasNetworkError()) {
                     errorTextView.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(true);
@@ -521,6 +517,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
             } else {
                 errorManager.setNetworkError(true);
+                enableOnErrorView(getResources().getString(R.string.error_network));
                 refreshing = false;
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -631,13 +628,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (recyclerViewAdapter.getItemCount() == 0) {
-                    noPredictionsTextView.setText(getResources().getString(R.string.no_predictions_this_stop));
-                    noPredictionsTextView.setVisibility(View.VISIBLE);
+                    enableNoPredictionsView(getResources().getString(R.string.no_predictions_this_stop));
                     appBarLayout.setExpanded(true);
-                    recyclerView.setNestedScrollingEnabled(false);
+
                 } else {
-                    noPredictionsTextView.setVisibility(View.GONE);
-                    recyclerView.setNestedScrollingEnabled(true);
+                    clearOnErrorView();
 
                     if (returnToTop) {
                         recyclerView.scrollToPosition(0);
@@ -757,23 +752,39 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void enableOnErrorView(String message) {
-        final String m = message;
+    private void enableOnErrorView(final String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 recyclerViewAdapter.clear();
-
-                recyclerView.setNestedScrollingEnabled(false);
-
                 swipeRefreshLayout.setRefreshing(false);
-
                 appBarLayout.setExpanded(true);
 
-                noPredictionsTextView.setText(m);
-                noPredictionsTextView.setVisibility(View.VISIBLE);
+                noPredictionsView.setError(message);
             }
         });
+    }
+
+    private void enableNoPredictionsView(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+                appBarLayout.setExpanded(true);
+
+                noPredictionsView.setNoPredictions(message);
+            }
+        });
+    }
+
+    private void clearOnErrorView() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                noPredictionsView.clearError();
+            }
+        });
+
     }
 
     private void clearPredictions() {
