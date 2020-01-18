@@ -107,6 +107,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private Timer timer;
 
     private boolean refreshing = false;
+    private boolean loaded = false;
     private boolean mapReady = false;
     private boolean shapesLoaded = false;
     private boolean mapCameraIsMoving = false;
@@ -244,8 +245,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         // Set recycler view layout
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
-        // Enable nested scrolling
-        recyclerView.setNestedScrollingEnabled(true);
+        // Disable scrolling while activity is still initializing
+        recyclerView.setNestedScrollingEnabled(false);
 
         // Add on scroll listener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -629,10 +630,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
                 if (recyclerViewAdapter.getItemCount() == 0) {
                     enableNoPredictionsView(getResources().getString(R.string.no_predictions_this_stop));
-                    appBarLayout.setExpanded(true);
 
                 } else {
+                    loaded = true;
                     clearOnErrorView();
+                    noPredictionsView.clearNoPredictions();
+                    recyclerView.setNestedScrollingEnabled(true);
 
                     if (returnToTop) {
                         recyclerView.scrollToPosition(0);
@@ -757,6 +760,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void run() {
                 recyclerViewAdapter.clear();
+                recyclerView.setNestedScrollingEnabled(false);
                 swipeRefreshLayout.setRefreshing(false);
                 appBarLayout.setExpanded(true);
 
@@ -769,10 +773,13 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                recyclerView.setNestedScrollingEnabled(false);
                 swipeRefreshLayout.setRefreshing(false);
                 appBarLayout.setExpanded(true);
 
-                noPredictionsView.setNoPredictions(message);
+                if(loaded) {
+                    noPredictionsView.setNoPredictions(message);
+                }
             }
         });
     }

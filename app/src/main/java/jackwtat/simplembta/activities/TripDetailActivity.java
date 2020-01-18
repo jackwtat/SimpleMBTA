@@ -219,6 +219,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         recyclerView = findViewById(R.id.predictions_recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
+        // Disable scrolling while activity is still initializing
+        recyclerView.setNestedScrollingEnabled(false);
+
         // Add on scroll listener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -511,10 +514,11 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             recyclerViewAdapter.setPredictions(predictions);
             swipeRefreshLayout.setRefreshing(false);
 
-            if (loaded && predictions.size() == 0) {
+            if (predictions.size() == 0) {
                 enableNoPredictionsView(getResources().getString(R.string.no_predictions_this_stop));
             } else {
                 loaded = true;
+                clearOnErrorView();
                 noPredictionsView.clearNoPredictions();
                 recyclerView.setNestedScrollingEnabled(true);
             }
@@ -671,7 +675,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 swipeRefreshLayout.setRefreshing(false);
                 appBarLayout.setExpanded(true);
                 predictions.clear();
-                noPredictionsView.setNoPredictions(message);
+                if (loaded) {
+                    noPredictionsView.setNoPredictions(message);
+                }
             }
         });
     }
