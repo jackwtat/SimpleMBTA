@@ -134,6 +134,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private int cameraMoveReason = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
     private long refreshTime = 0;
     private long onPauseTime = 0;
+    private long viewsTime = 0;
     private int predictionsCount = 0;
 
     // Data surrounding the user's current location
@@ -1011,6 +1012,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         displayedRoutes.values().toArray(new Route[0]), selectedStop);
             }
 
+            viewsTime = new Date().getTime();
             swipeRefreshLayout.setRefreshing(false);
             clearOnErrorView();
 
@@ -1039,7 +1041,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    private void enableNoPredictionsView(final String message){
+    private void enableNoPredictionsView(final String message) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -1471,7 +1473,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 viewsRefreshing = false;
 
                 // Refresh views
-                refreshPredictionViews();
+                if (recyclerViewAdapter.getItemCount() == 0 ||
+                        new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2 ||
+                        swipeRefreshLayout.isRefreshing()) {
+                    refreshPredictionViews();
+                }
 
                 dataRefreshing = false;
 
