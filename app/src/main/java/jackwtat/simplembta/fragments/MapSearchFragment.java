@@ -1473,9 +1473,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 viewsRefreshing = false;
 
                 // Refresh views
-                if (recyclerViewAdapter.getItemCount() == 0 ||
-                        new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2 ||
-                        swipeRefreshLayout.isRefreshing()) {
+                if (swipeRefreshLayout.isRefreshing() ||
+                        recyclerViewAdapter.getItemCount() == 0 ||
+                        new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2) {
                     refreshPredictionViews();
                 }
 
