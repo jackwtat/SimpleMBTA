@@ -1265,7 +1265,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             DISTANCE_TO_TARGET_LOCATION_UPDATE) {
                         targetLocation = userLocation;
                         backgroundUpdate();
-
                     }
                 }
             }
