@@ -1249,14 +1249,18 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     if (staleLocation) {
                         gMap.moveCamera(CameraUpdateFactory.newLatLng(
                                 new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
-                        staleLocation = false;
                     } else {
                         gMap.animateCamera(CameraUpdateFactory.newLatLng(
                                 new LatLng(userLocation.getLatitude(), userLocation.getLongitude())));
                     }
 
-                    if (targetLocation.distanceTo(userLocation) >
-                            DISTANCE_TO_FORCE_REFRESH) {
+                    if (staleLocation) {
+                        staleLocation = false;
+                        targetLocation = userLocation;
+                        swipeRefreshLayout.setRefreshing(true);
+                        forceUpdate();
+
+                    } else if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_FORCE_REFRESH) {
                         targetLocation = userLocation;
                         swipeRefreshLayout.setRefreshing(true);
                         forceUpdate();
