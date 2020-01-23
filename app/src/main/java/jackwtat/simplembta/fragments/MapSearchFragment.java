@@ -1485,15 +1485,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 // Unlock views
                 viewsRefreshing = false;
 
-                // Show refresh icon if location change
-                if (targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE) {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-
                 // Refresh views
                 if (swipeRefreshLayout.isRefreshing() ||
                         recyclerViewAdapter.getItemCount() == 0 ||
-                        new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2) {
+                        new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2 ||
+                        targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE) {
                     refreshPredictionViews();
                 }
 
