@@ -1266,8 +1266,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         targetLocation = userLocation;
                         backgroundUpdate();
 
-                    } else {
-                        backgroundUpdate();
                     }
                 }
             }
