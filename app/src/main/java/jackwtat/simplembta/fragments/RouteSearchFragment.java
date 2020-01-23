@@ -69,14 +69,15 @@ public class RouteSearchFragment extends Fragment implements
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
-    private RoutesAsyncTask routesAsyncTask;
-    private ShapesAsyncTask shapesAsyncTask;
-    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
-    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
-    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
     private ErrorManager errorManager;
     private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
+
+    private RoutesAsyncTask routesAsyncTask;
+    private ShapesAsyncTask shapesAsyncTask;
+    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
+    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
+    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
 
     private boolean dataRefreshing = false;
     private boolean viewsRefreshing = false;
@@ -250,29 +251,11 @@ public class RouteSearchFragment extends Fragment implements
 
         swipeRefreshLayout.setRefreshing(false);
 
-        if (routesAsyncTask != null) {
-            routesAsyncTask.cancel(true);
-        }
-
-        if (shapesAsyncTask != null) {
-            shapesAsyncTask.cancel(true);
-        }
-
-        if (predictionsAsyncTask != null) {
-            predictionsAsyncTask.cancel(true);
-        }
-
-        if (vehiclesAsyncTask != null) {
-            vehiclesAsyncTask.cancel(true);
-        }
-
-        if (serviceAlertsAsyncTask != null) {
-            serviceAlertsAsyncTask.cancel(true);
-        }
-
         if (timer != null) {
             timer.cancel();
         }
+
+        cancelUpdate();
 
         // Save the location the user last viewed
         if (selectedRoute != null) {
@@ -547,7 +530,7 @@ public class RouteSearchFragment extends Fragment implements
             });
         }
     }
-    
+
     private void clearPredictions() {
         recyclerViewAdapter.clear();
         recyclerView.setNestedScrollingEnabled(false);
@@ -746,6 +729,28 @@ public class RouteSearchFragment extends Fragment implements
 
     private void forceUpdate() {
         getPredictions();
+    }
+
+    private void cancelUpdate() {
+        if (routesAsyncTask != null) {
+            routesAsyncTask.cancel(true);
+        }
+
+        if (shapesAsyncTask != null) {
+            shapesAsyncTask.cancel(true);
+        }
+
+        if (predictionsAsyncTask != null) {
+            predictionsAsyncTask.cancel(true);
+        }
+
+        if (serviceAlertsAsyncTask != null) {
+            serviceAlertsAsyncTask.cancel(true);
+        }
+
+        if (vehiclesAsyncTask != null) {
+            vehiclesAsyncTask.cancel(true);
+        }
     }
 
     private class RoutesPostExecuteListener implements RoutesAsyncTask.OnPostExecuteListener {

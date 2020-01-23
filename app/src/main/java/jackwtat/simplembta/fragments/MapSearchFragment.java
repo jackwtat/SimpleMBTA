@@ -688,11 +688,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
         dataRefreshing = false;
 
-        cancelUpdate();
-
         if (timer != null) {
             timer.cancel();
         }
+
+        cancelUpdate();
 
         locationClient.disconnect();
 
@@ -828,17 +828,29 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void cancelUpdate() {
-        if (stopsAsyncTask != null)
+        if (stopsAsyncTask != null) {
             stopsAsyncTask.cancel(true);
+        }
 
-        if (routesAsyncTask != null)
+        if (routesAsyncTask != null) {
             routesAsyncTask.cancel(true);
+        }
 
-        if (predictionsAsyncTask != null)
+        if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
+        }
 
-        if (serviceAlertsAsyncTask != null)
+        if (serviceAlertsAsyncTask != null) {
             serviceAlertsAsyncTask.cancel(true);
+        }
+
+        if (shapesAsyncTask != null) {
+            shapesAsyncTask.cancel(true);
+        }
+
+        if (vehiclesAsyncTask != null) {
+            vehiclesAsyncTask.cancel(true);
+        }
     }
 
     private void getStops() {

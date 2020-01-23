@@ -91,14 +91,15 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private TextView errorTextView;
 
     private String realTimeApiKey;
-    private PredictionsByTripAsyncTask predictionsAsyncTask;
-    private TripsAsyncTask tripsAsyncTask;
-    private VehiclesByTripAsyncTask vehiclesAsyncTask;
-    private StopsByIdAsyncTask stopsAsyncTask;
     private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
     private TripDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
+
+    private PredictionsByTripAsyncTask predictionsAsyncTask;
+    private TripsAsyncTask tripsAsyncTask;
+    private VehiclesByTripAsyncTask vehiclesAsyncTask;
+    private StopsByIdAsyncTask stopsAsyncTask;
 
     private boolean refreshing = false;
     private boolean loaded = false;
@@ -345,25 +346,11 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         swipeRefreshLayout.setRefreshing(false);
 
-        if (predictionsAsyncTask != null) {
-            predictionsAsyncTask.cancel(true);
-        }
-
-        if (tripsAsyncTask != null) {
-            tripsAsyncTask.cancel(true);
-        }
-
-        if (vehiclesAsyncTask != null) {
-            vehiclesAsyncTask.cancel(true);
-        }
-
-        if (stopsAsyncTask != null) {
-            stopsAsyncTask.cancel(true);
-        }
-
         if (timer != null) {
             timer.cancel();
         }
+
+        cancelUpdate();
     }
 
     @Override
@@ -823,6 +810,25 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     private void forceUpdate() {
         getPredictions();
+    }
+
+    private void cancelUpdate() {
+        if (predictionsAsyncTask != null) {
+            predictionsAsyncTask.cancel(true);
+        }
+
+        if (tripsAsyncTask != null) {
+            tripsAsyncTask.cancel(true);
+        }
+
+        if (vehiclesAsyncTask != null) {
+            vehiclesAsyncTask.cancel(true);
+        }
+
+        if (stopsAsyncTask != null) {
+            stopsAsyncTask.cancel(true);
+        }
+
     }
 
     private class PredictionsPostExecuteListener implements PredictionsByTripAsyncTask.OnPostExecuteListener {

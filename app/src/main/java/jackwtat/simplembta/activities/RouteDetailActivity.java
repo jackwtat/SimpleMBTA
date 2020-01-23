@@ -97,14 +97,15 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RouteDetailSpinners routeDetailSpinners;
 
     private String realTimeApiKey;
-    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
-    private ShapesAsyncTask shapesAsyncTask;
-    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
-    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private NetworkConnectivityClient networkConnectivityClient;
     private ErrorManager errorManager;
     private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
+
+    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
+    private ShapesAsyncTask shapesAsyncTask;
+    private VehiclesByRouteAsyncTask vehiclesAsyncTask;
+    private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
 
     private boolean refreshing = false;
     private boolean loaded = false;
@@ -425,25 +426,11 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         swipeRefreshLayout.setRefreshing(false);
 
-        if (predictionsAsyncTask != null) {
-            predictionsAsyncTask.cancel(true);
-        }
-
-        if (shapesAsyncTask != null) {
-            shapesAsyncTask.cancel(true);
-        }
-
-        if (vehiclesAsyncTask != null) {
-            vehiclesAsyncTask.cancel(true);
-        }
-
-        if (serviceAlertsAsyncTask != null) {
-            serviceAlertsAsyncTask.cancel(true);
-        }
-
         if (timer != null) {
             timer.cancel();
         }
+
+        cancelUpdate();
     }
 
     @Override
@@ -777,7 +764,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 swipeRefreshLayout.setRefreshing(false);
                 appBarLayout.setExpanded(true);
 
-                if(loaded) {
+                if (loaded) {
                     noPredictionsView.setNoPredictions(message);
                 }
             }
@@ -1005,6 +992,24 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void forceUpdate() {
         getPredictions();
+    }
+
+    private void cancelUpdate() {
+        if (predictionsAsyncTask != null) {
+            predictionsAsyncTask.cancel(true);
+        }
+
+        if (shapesAsyncTask != null) {
+            shapesAsyncTask.cancel(true);
+        }
+
+        if (vehiclesAsyncTask != null) {
+            vehiclesAsyncTask.cancel(true);
+        }
+
+        if (serviceAlertsAsyncTask != null) {
+            serviceAlertsAsyncTask.cancel(true);
+        }
     }
 
     private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
