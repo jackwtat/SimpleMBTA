@@ -16,16 +16,6 @@ public interface Constants {
     // Service alerts auto update rate
     long SERVICE_ALERTS_UPDATE_RATE = 60000;
 
-
-    /*******************************
-     ***** DISTANCE / LOCATION *****
-     *******************************/
-    // Distance in meters from last target location before target location can be updated
-    int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
-
-    // Distance in meters from last target location before visible refresh
-    int DISTANCE_TO_FORCE_REFRESH = 400;
-
     // Location auto update rate
     long LOCATION_UPDATE_RATE = 1000;
 
@@ -37,6 +27,16 @@ public interface Constants {
 
     // Time since last onStop() before restarting the location
     long LOCATION_UPDATE_RESTART_TIME = 180000;
+
+
+    /*******************************
+     ***** DISTANCE / LOCATION *****
+     *******************************/
+    // Distance in meters from last target location before target location can be updated
+    int DISTANCE_TO_TARGET_LOCATION_UPDATE = 50;
+
+    // Distance in meters from last target location before visible refresh
+    int DISTANCE_TO_FORCE_REFRESH = 400;
 
 
     /***************
