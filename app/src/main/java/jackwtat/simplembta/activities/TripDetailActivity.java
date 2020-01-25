@@ -115,7 +115,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
     private Marker vehicleMarker;
-    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
+    private PastDataHolder pastData = PastDataHolder.getHolder();
 
     private Route selectedRoute;
     private Stop selectedStop;
@@ -842,7 +842,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             for (Prediction prediction : p) {
                 // Reduce 'time bounce' by replacing current prediction time with prior prediction
                 // time if one exists if they are within one minute
-                Prediction priorPrediction = pastPredictions.getPrediction(prediction.getId());
+                Prediction priorPrediction = pastData.getPrediction(prediction.getId());
                 if (priorPrediction != null) {
                     long thisCountdown = prediction.getCountdownTime();
                     long priorCountdown = priorPrediction.getCountdownTime();
@@ -861,7 +861,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 }
 
                 // Put this prediction into list of prior predictions
-                pastPredictions.add(prediction);
+                pastData.add(prediction);
             }
 
             predictions.clear();

@@ -123,7 +123,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
     private Marker selectedStopMarker;
     private Marker selectedVehicleMarker;
-    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
+    private PastDataHolder pastData = PastDataHolder.getHolder();
     private HashMap<String, Vehicle> vehicles = new HashMap<>();
     private HashMap<String, Vehicle> vehicleTrips = new HashMap<>();
 
@@ -1045,7 +1045,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                                 vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastPredictions.getPrediction(p.getId());
+                    Prediction priorPrediction = pastData.getPrediction(p.getId());
                     if (priorPrediction != null) {
                         long thisCountdown = p.getCountdownTime();
                         long priorCountdown = priorPrediction.getCountdownTime();
@@ -1064,7 +1064,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     }
 
                     // Put this prediction into list of prior predictions
-                    pastPredictions.add(p);
+                    pastData.add(p);
 
                     // Add prediction to route
                     selectedRoute.addPrediction(p);

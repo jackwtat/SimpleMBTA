@@ -89,7 +89,7 @@ public class RouteSearchFragment extends Fragment implements
     private Route selectedRoute;
     private int selectedDirectionId;
 
-    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
+    private PastDataHolder pastData = PastDataHolder.getHolder();
 
     private boolean queryInProgress = false;
     private Route queryRoute = null;
@@ -836,7 +836,7 @@ public class RouteSearchFragment extends Fragment implements
                                 vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastPredictions.getPrediction(p.getId());
+                    Prediction priorPrediction = pastData.getPrediction(p.getId());
                     if (priorPrediction != null) {
                         long thisCountdown = p.getCountdownTime();
                         long priorCountdown = priorPrediction.getCountdownTime();
@@ -855,7 +855,7 @@ public class RouteSearchFragment extends Fragment implements
                     }
 
                     // Put this prediction into list of prior predictions
-                    pastPredictions.add(p);
+                    pastData.add(p);
 
                     // Add prediction to route
                     selectedRoute.addPrediction(p);

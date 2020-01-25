@@ -156,7 +156,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private Marker selectedStopMarker = null;
 
     // Prior predictions
-    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
+    private PastDataHolder pastData = PastDataHolder.getHolder();
 
     // Key stop/route data
     private HashMap<String, Stop> keyStops = new HashMap<>();
@@ -1366,7 +1366,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastPredictions.getPrediction(p.getId());
+                    Prediction priorPrediction = pastData.getPrediction(p.getId());
                     if (priorPrediction != null) {
                         long thisCountdown = p.getCountdownTime();
                         long priorCountdown = priorPrediction.getCountdownTime();
@@ -1379,7 +1379,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
 
                     // Put this prediction into list of prior predictions
-                    pastPredictions.add(p);
+                    pastData.add(p);
 
                     // Replace prediction's stop ID with its parent stop ID
                     if (targetStops.containsKey(p.getParentStopId())) {
@@ -1523,6 +1523,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             }
                         }
                     }
+
+
                 }
             }
         }
