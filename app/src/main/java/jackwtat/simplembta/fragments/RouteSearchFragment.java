@@ -82,6 +82,7 @@ public class RouteSearchFragment extends Fragment implements
     private boolean dataRefreshing = false;
     private boolean viewsRefreshing = false;
     private boolean userIsScrolling = false;
+    private boolean loaded = false;
     private long refreshTime = 0;
 
     private ArrayList<Route> allRoutes = new ArrayList<>();
@@ -514,7 +515,9 @@ public class RouteSearchFragment extends Fragment implements
                     recyclerView.setNestedScrollingEnabled(false);
                     swipeRefreshLayout.setRefreshing(false);
 
-                    noPredictionsView.setNoPredictions(message);
+                    if (loaded) {
+                        noPredictionsView.setNoPredictions(message);
+                    }
                 }
             });
         }
@@ -805,6 +808,7 @@ public class RouteSearchFragment extends Fragment implements
         public void onSuccess(List<Prediction> predictions) {
             dataRefreshing = false;
             refreshTime = new Date().getTime();
+            loaded = true;
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
