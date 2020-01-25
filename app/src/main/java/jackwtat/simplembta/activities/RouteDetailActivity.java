@@ -614,12 +614,12 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
                 recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
                 swipeRefreshLayout.setRefreshing(false);
+                clearOnErrorView();
 
                 if (recyclerViewAdapter.getItemCount() == 0) {
-                    enableNoPredictionsView(getResources().getString(R.string.no_predictions_this_stop));
+                    enableNoPredictionsView(getResources().getString(R.string.no_departures));
 
                 } else {
-                    loaded = true;
                     clearOnErrorView();
                     noPredictionsView.clearNoPredictions();
                     recyclerView.setNestedScrollingEnabled(true);
@@ -1017,6 +1017,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         public void onSuccess(List<Prediction> predictions) {
             refreshing = false;
             refreshTime = new Date().getTime();
+            loaded = true;
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
