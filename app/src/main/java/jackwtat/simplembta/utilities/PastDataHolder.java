@@ -4,16 +4,16 @@ import java.util.HashMap;
 
 import jackwtat.simplembta.model.Prediction;
 
-public class PastPredictionsHolder {
-    private static PastPredictionsHolder holder;
+public class PastDataHolder {
+    private static PastDataHolder holder;
     private static HashMap<String, Prediction> predictions = new HashMap<>();
 
-    private PastPredictionsHolder() {
+    private PastDataHolder() {
     }
 
-    public static synchronized PastPredictionsHolder getHolder() {
+    public static synchronized PastDataHolder getHolder() {
         if (holder == null) {
-            holder = new PastPredictionsHolder();
+            holder = new PastDataHolder();
         }
         return holder;
     }
@@ -22,7 +22,7 @@ public class PastPredictionsHolder {
         predictions.put(prediction.getId(), prediction);
     }
 
-    public Prediction get(String id) {
+    public Prediction getPrediction(String id) {
         return predictions.get(id);
     }
 

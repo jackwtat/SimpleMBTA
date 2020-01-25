@@ -46,7 +46,7 @@ import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.ErrorManager;
-import jackwtat.simplembta.utilities.PastPredictionsHolder;
+import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.views.NoPredictionsView;
 import jackwtat.simplembta.views.RouteSearchSpinners;
 import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
@@ -89,7 +89,7 @@ public class RouteSearchFragment extends Fragment implements
     private Route selectedRoute;
     private int selectedDirectionId;
 
-    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
+    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
 
     private boolean queryInProgress = false;
     private Route queryRoute = null;
@@ -834,7 +834,7 @@ public class RouteSearchFragment extends Fragment implements
                                 vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastPredictions.get(p.getId());
+                    Prediction priorPrediction = pastPredictions.getPrediction(p.getId());
                     if (priorPrediction != null) {
                         long thisCountdown = p.getCountdownTime();
                         long priorCountdown = priorPrediction.getCountdownTime();

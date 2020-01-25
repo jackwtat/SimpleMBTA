@@ -15,7 +15,7 @@ import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
-import jackwtat.simplembta.utilities.PastPredictionsHolder;
+import jackwtat.simplembta.utilities.PastDataHolder;
 
 
 public class MainActivity extends AppCompatActivity implements MapSearchFragment.PredictionClickListener {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
     protected void onStop() {
         super.onStop();
 
-        PastPredictionsHolder.getHolder().clear();
+        PastDataHolder.getHolder().clear();
     }
 
     @Override

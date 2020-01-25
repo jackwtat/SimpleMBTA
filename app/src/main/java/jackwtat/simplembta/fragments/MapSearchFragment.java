@@ -83,7 +83,7 @@ import jackwtat.simplembta.model.routes.SilverLineCombined;
 import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
-import jackwtat.simplembta.utilities.PastPredictionsHolder;
+import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.views.NoPredictionsView;
@@ -156,7 +156,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private Marker selectedStopMarker = null;
 
     // Prior predictions
-    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
+    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
 
     // Key stop/route data
     private HashMap<String, Stop> keyStops = new HashMap<>();
@@ -1366,7 +1366,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastPredictions.get(p.getId());
+                    Prediction priorPrediction = pastPredictions.getPrediction(p.getId());
                     if (priorPrediction != null) {
                         long thisCountdown = p.getCountdownTime();
                         long priorCountdown = priorPrediction.getCountdownTime();

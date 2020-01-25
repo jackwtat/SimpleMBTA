@@ -74,7 +74,7 @@ import jackwtat.simplembta.model.routes.SilverLine;
 import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.DisplayNameUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
-import jackwtat.simplembta.utilities.PastPredictionsHolder;
+import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.NoPredictionsView;
 import jackwtat.simplembta.views.RouteDetailSpinners;
@@ -123,7 +123,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private HashMap<String, Marker> vehicleMarkers = new HashMap<>();
     private Marker selectedStopMarker;
     private Marker selectedVehicleMarker;
-    private PastPredictionsHolder pastPredictions = PastPredictionsHolder.getHolder();
+    private PastDataHolder pastPredictions = PastDataHolder.getHolder();
     private HashMap<String, Vehicle> vehicles = new HashMap<>();
     private HashMap<String, Vehicle> vehicleTrips = new HashMap<>();
 
@@ -1040,7 +1040,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                                 vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastPredictions.get(p.getId());
+                    Prediction priorPrediction = pastPredictions.getPrediction(p.getId());
                     if (priorPrediction != null) {
                         long thisCountdown = p.getCountdownTime();
                         long priorCountdown = priorPrediction.getCountdownTime();
