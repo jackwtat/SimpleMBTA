@@ -620,6 +620,7 @@ public class RouteSearchFragment extends Fragment implements
         selectedDirectionId = direction.getId();
 
         clearPredictions();
+        clearOnErrorView();
 
         if (selectedRoute.getShapes(selectedDirectionId).length == 0) {
             searchSpinners.clearStops();
@@ -652,6 +653,7 @@ public class RouteSearchFragment extends Fragment implements
 
         // Clear the current predictions and get the predictions for the selected stop
         clearPredictions();
+        clearOnErrorView();
         swipeRefreshLayout.setRefreshing(true);
         forceUpdate();
     }

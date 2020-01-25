@@ -929,6 +929,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     public void onDirectionSelected(Direction selectedDirection) {
         selectedDirectionId = selectedDirection.getId();
 
+        clearPredictions();
+        clearOnErrorView();
+
         populateStopSpinner(selectedRoute.getStops(selectedDirectionId));
 
         if (shapesLoaded) {
@@ -958,6 +961,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         selectedRoute.setNearestStop(oppositeDirectionId, nearestOppositeStop);
 
         // Get the predictions for the selected stop
+        clearPredictions();
+        clearOnErrorView();
         swipeRefreshLayout.setRefreshing(true);
         getPredictions();
 
