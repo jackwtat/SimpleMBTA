@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import jackwtat.simplembta.model.Prediction;
@@ -86,6 +87,7 @@ public class RouteSearchRecyclerViewAdapter
 
         for (Prediction p : predictions) {
             if (p.getPredictionTime() != null &&
+                    (p.isLive() || p.getCountdownTime() >= 0) &&
                     (p.getVehicle() == null ||
                             !p.getVehicle().getTripId().equalsIgnoreCase(p.getTripId()) ||
                             p.getVehicle().getCurrentStopSequence() <= p.getStopSequence())) {
