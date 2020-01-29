@@ -120,6 +120,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private Route selectedRoute;
     private Stop selectedStop;
     private String selectedTripId;
+    private String selectedTripName;
+    private String selectedTripDestination;
     private String selectedVehicleId;
     private Date selectedDate;
 
@@ -139,6 +141,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             selectedRoute = (Route) savedInstanceState.getSerializable("route");
             selectedStop = (Stop) savedInstanceState.getSerializable("stop");
             selectedTripId = savedInstanceState.getString("trip");
+            selectedTripName = savedInstanceState.getString("name");
+            selectedTripDestination = savedInstanceState.getString("destination");
             selectedVehicleId = savedInstanceState.getString("vehicle");
             selectedDate = (Date) savedInstanceState.getSerializable("date");
             refreshTime = savedInstanceState.getLong("refreshTime");
@@ -153,14 +157,27 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             selectedRoute = (Route) intent.getSerializableExtra("route");
             selectedStop = (Stop) intent.getSerializableExtra("stop");
             selectedTripId = intent.getStringExtra("trip");
+            selectedTripName = intent.getStringExtra("name");
+            selectedTripDestination = intent.getStringExtra("destination");
             selectedVehicleId = intent.getStringExtra("vehicle");
             selectedDate = (Date) intent.getSerializableExtra("date");
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
         }
 
-        // Set action bar
-        String title = DisplayNameUtil.getLongDisplayName(this, selectedRoute);
+        // Set action bar title
+        String title = " "
+                + getResources().getString(R.string.trip_detail_to_title)
+                + " "
+                + selectedTripDestination;
+
+        if (selectedRoute.getMode() == Route.COMMUTER_RAIL) {
+            title = getResources().getString(R.string.train) + " " + selectedTripName + title;
+        } else {
+            title = DisplayNameUtil.getLongDisplayName(this, selectedRoute) + title;
+        }
         setTitle(title);
+
+        // Set action bar color
         if (selectedRoute.getMode() != Route.BUS || SilverLine.isSilverLine(selectedRoute.getId())) {
             if (Build.VERSION.SDK_INT >= 21) {
                 // Create color for status bar
@@ -373,6 +390,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         outState.putSerializable("route", selectedRoute);
         outState.putSerializable("stop", selectedStop);
         outState.putString("trip", selectedTripId);
+        outState.putString("name", selectedTripName);
+        outState.putString("destination", selectedTripDestination);
         outState.putString("vehicle", selectedVehicleId);
         outState.putLong("refreshTime", refreshTime);
 
@@ -630,17 +649,19 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 } else {
                     // 'Currently on '
-                    String snippet = getResources().getString(R.string.map_currently_on);
+                    String snippet = getResources().getString(R.string.map_currently_on) + " ";
 
                     // 'route ' (Optional)
                     if (selectedRoute.getMode() == Route.BUS) {
-                        snippet += getResources().getString(R.string.map_route);
+                        snippet += getResources().getString(R.string.map_route) + " ";
                     }
 
                     // route_id + ' to ' + destination
-                    snippet += vehicle.getRoute() +
-                            getResources().getString(R.string.map_to) +
-                            vehicle.getDestination();
+                    snippet += vehicle.getRoute()
+                            + " "
+                            + getResources().getString(R.string.map_to)
+                            + " "
+                            + vehicle.getDestination();
 
                     // Set snippet text
                     vehicleMarker.setSnippet(snippet);

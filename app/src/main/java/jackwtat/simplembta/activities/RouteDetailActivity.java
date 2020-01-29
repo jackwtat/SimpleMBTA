@@ -286,6 +286,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     intent.putExtra("route", prediction.getRoute());
                     intent.putExtra("stop", prediction.getStop());
                     intent.putExtra("trip", prediction.getTripId());
+                    intent.putExtra("name", prediction.getTripName());
+                    intent.putExtra("destination", prediction.getDestination());
                     intent.putExtra("vehicle", prediction.getVehicleId());
                     intent.putExtra("date", prediction.getPredictionTime());
                     startActivity(intent);
