@@ -55,7 +55,7 @@ import jackwtat.simplembta.adapters.TripDetailRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.PredictionsByTripAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByIdAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
-import jackwtat.simplembta.asyncTasks.VehiclesByTripAsyncTask;
+import jackwtat.simplembta.asyncTasks.VehiclesByIdAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Prediction;
@@ -98,7 +98,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     private PredictionsByTripAsyncTask predictionsAsyncTask;
     private TripsAsyncTask tripsAsyncTask;
-    private VehiclesByTripAsyncTask vehiclesAsyncTask;
+    private VehiclesByIdAsyncTask vehiclesAsyncTask;
     private StopsByIdAsyncTask stopsAsyncTask;
 
     private boolean refreshing = false;
@@ -120,6 +120,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private Route selectedRoute;
     private Stop selectedStop;
     private String selectedTripId;
+    private String selectedVehicleId;
     private Date selectedDate;
 
     @Override
@@ -138,6 +139,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             selectedRoute = (Route) savedInstanceState.getSerializable("route");
             selectedStop = (Stop) savedInstanceState.getSerializable("stop");
             selectedTripId = savedInstanceState.getString("trip");
+            selectedVehicleId = savedInstanceState.getString("vehicle");
             selectedDate = (Date) savedInstanceState.getSerializable("date");
             refreshTime = savedInstanceState.getLong("refreshTime");
 
@@ -151,6 +153,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             selectedRoute = (Route) intent.getSerializableExtra("route");
             selectedStop = (Stop) intent.getSerializableExtra("stop");
             selectedTripId = intent.getStringExtra("trip");
+            selectedVehicleId = intent.getStringExtra("vehicle");
             selectedDate = (Date) intent.getSerializableExtra("date");
             refreshTime = intent.getLongExtra("refreshTime", MAXIMUM_PREDICTION_AGE + 1);
         }
@@ -370,6 +373,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         outState.putSerializable("route", selectedRoute);
         outState.putSerializable("stop", selectedStop);
         outState.putString("trip", selectedTripId);
+        outState.putString("vehicle", selectedVehicleId);
         outState.putLong("refreshTime", refreshTime);
 
         super.onSaveInstanceState(outState);
@@ -455,8 +459,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 vehiclesAsyncTask.cancel(true);
             }
 
-            vehiclesAsyncTask = new VehiclesByTripAsyncTask(
-                    realTimeApiKey, selectedTripId, new VehiclesPostExecuteListener());
+            vehiclesAsyncTask = new VehiclesByIdAsyncTask(
+                    realTimeApiKey, selectedVehicleId, new VehiclesPostExecuteListener());
             vehiclesAsyncTask.execute();
 
         } else {
@@ -599,13 +603,13 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     int mode = selectedRoute.getMode();
                     if (mode == Route.COMMUTER_RAIL) {
                         vehicleMarker = drawVehicleMarker(vehicle,
-                                getResources().getString(R.string.train) + " " + vehicle.getTripName());
+                                getResources().getString(R.string.map_train) + " " + vehicle.getTripName());
                     } else if (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL) {
                         vehicleMarker = drawVehicleMarker(vehicle,
-                                getResources().getString(R.string.train) + " " + vehicle.getLabel());
+                                getResources().getString(R.string.map_train) + " " + vehicle.getLabel());
                     } else {
                         vehicleMarker = drawVehicleMarker(vehicle,
-                                getResources().getString(R.string.vehicle) + " " + vehicle.getLabel());
+                                getResources().getString(R.string.map_vehicle) + " " + vehicle.getLabel());
                     }
                 } else {
                     vehicleMarker.setPosition(new LatLng(
@@ -616,12 +620,30 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
                 // Set snippet
                 vehicleMarker.setSnippet("");
-                for (Prediction p : predictions) {
-                    if (p.getStopSequence() == vehicle.getCurrentStopSequence()) {
-                        vehicleMarker.setSnippet(vehicle.getCurrentStatus().getText() + " " +
-                                p.getStop().getName());
-                        break;
+                if (vehicle.getTripId().equalsIgnoreCase(selectedTripId)) {
+                    for (Prediction p : predictions) {
+                        if (p.getStopSequence() == vehicle.getCurrentStopSequence()) {
+                            vehicleMarker.setSnippet(vehicle.getCurrentStatus().getText() + " " +
+                                    p.getStop().getName());
+                            break;
+                        }
                     }
+                } else {
+                    // 'Currently on '
+                    String snippet = getResources().getString(R.string.map_currently_on);
+
+                    // 'route ' (Optional)
+                    if (selectedRoute.getMode() == Route.BUS) {
+                        snippet += getResources().getString(R.string.map_route);
+                    }
+
+                    // route_id + ' to ' + destination
+                    snippet += vehicle.getRoute() +
+                            getResources().getString(R.string.map_to) +
+                            vehicle.getDestination();
+
+                    // Set snippet text
+                    vehicleMarker.setSnippet(snippet);
                 }
 
                 // Refresh info window
@@ -898,7 +920,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private class VehiclesPostExecuteListener implements VehiclesByTripAsyncTask.OnPostExecuteListener {
+    private class VehiclesPostExecuteListener implements VehiclesByIdAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Vehicle[] vehicles) {
             if (vehicles != null && vehicles.length > 0) {
@@ -952,7 +974,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private class VehiclesUpdateTimerTask extends TimerTask {
         @Override
         public void run() {
-            getVehicles();
+            if (selectedVehicleId != null && !selectedVehicleId.equalsIgnoreCase("")) {
+                getVehicles();
+            }
         }
     }
 }

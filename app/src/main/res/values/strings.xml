@@ -62,6 +62,13 @@
     <string name="map_departed">Departed</string>
     <string name="map_arrived">Arrived</string>
 
+    <!-- Map Info Window Strings -->
+    <string name="map_train">Train</string>
+    <string name="map_vehicle">Vehicle</string>
+    <string name="map_currently_on">Currently on </string>
+    <string name="map_route">route </string>
+    <string name="map_to"> to </string>
+
     <!-- Route Search Prediction Statuses -->
     <string name="route_departing">Departing</string>
     <string name="route_arriving">Arriving</string>
