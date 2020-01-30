@@ -25,12 +25,13 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView minuteTextView;
     TextView liveIndicator;
     TextView trackNumberIndicator;
+    TextView enRouteIndicator;
     TextView tomorrowIndicator;
     TextView weekDayIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
     TextView vehicleNumberTextView;
-    ImageView enrouteIcon;
+    ImageView enRouteIcon;
     View bottomEdge;
     View bottomBorder;
 
@@ -197,6 +198,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         if (!prediction.willPickUpPassengers()) {
             dropOffIndicator.setVisibility(VISIBLE);
             liveIndicator.setVisibility(GONE);
+
         } else if (prediction.isLive()) {
             int mode = prediction.getRoute().getMode();
             String trackNumber = prediction.getTrackNumber();
@@ -208,14 +210,22 @@ public class RouteSearchPredictionItem extends LinearLayout {
                 trackNumberIndicator.setVisibility(VISIBLE);
                 liveIndicator.setVisibility(GONE);
 
+            } else if (prediction.getVehicle() != null &&
+                    prediction.getVehicle().getCurrentStopSequence() > 1 &&
+                    prediction.getTripId().equalsIgnoreCase(prediction.getVehicle().getTripId())) {
+                enRouteIndicator.setVisibility(VISIBLE);
+                liveIndicator.setVisibility(GONE);
+
             } else {
                 trackNumberIndicator.setVisibility(GONE);
+                enRouteIndicator.setVisibility(GONE);
                 liveIndicator.setVisibility(VISIBLE);
             }
         }
 
         if (liveIndicator.getVisibility() == GONE &&
                 trackNumberIndicator.getVisibility() == GONE &&
+                enRouteIndicator.getVisibility() == GONE &&
                 dropOffIndicator.getVisibility() == GONE &&
                 tomorrowIndicator.getVisibility() == GONE &&
                 weekDayIndicator.getVisibility() == GONE) {
@@ -223,7 +233,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         }
     }
 
-    public void setDestination(String destination){
+    public void setDestination(String destination) {
         destinationTextView.setText(destination);
     }
 
@@ -256,6 +266,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         minuteTextView.setText("");
         liveIndicator.setVisibility(GONE);
         trackNumberIndicator.setVisibility(GONE);
+        enRouteIndicator.setVisibility(GONE);
         tomorrowIndicator.setVisibility(GONE);
         weekDayIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
@@ -271,12 +282,13 @@ public class RouteSearchPredictionItem extends LinearLayout {
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
         trackNumberIndicator = rootView.findViewById(R.id.track_number_text_view);
+        enRouteIndicator = rootView.findViewById(R.id.en_route_text_view);
         tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
         weekDayIndicator = rootView.findViewById(R.id.week_day_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         vehicleNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
-        enrouteIcon = rootView.findViewById(R.id.enroute_icon);
+        enRouteIcon = rootView.findViewById(R.id.enroute_icon);
         bottomEdge = rootView.findViewById(R.id.bottom_edge);
         bottomBorder = rootView.findViewById(R.id.bottom_border);
 

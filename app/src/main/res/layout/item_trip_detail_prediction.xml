@@ -118,7 +118,7 @@
                 android:id="@+id/track_number_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_track"
+                android:background="@drawable/border_in_progress"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
