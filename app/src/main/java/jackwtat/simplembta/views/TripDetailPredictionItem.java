@@ -180,8 +180,8 @@ public class TripDetailPredictionItem extends LinearLayout {
                     minuteText += "*";
                 }
 
-                if (prediction.getStatus() != Prediction.SKIPPED ||
-                        prediction.getStatus() != Prediction.CANCELLED) {
+                if (prediction.getStatus() == Prediction.SKIPPED ||
+                        prediction.getStatus() == Prediction.CANCELLED) {
                     timeTextView.setPaintFlags(timeTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 } else {
