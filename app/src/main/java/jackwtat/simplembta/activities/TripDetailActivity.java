@@ -812,33 +812,43 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private String getPredictionSnippet(Prediction prediction) {
         String snippet = "";
         Date predictionTime = prediction.getPredictionTime();
+        boolean predictionCancelled = prediction.getStatus() == Prediction.CANCELLED ||
+                prediction.getStatus() == Prediction.SKIPPED;
 
-        if (predictionTime != null) {
+        if (predictionTime != null && !predictionCancelled) {
             if (predictionTime.getTime() - new Date().getTime() > 0) {
                 long countdownTime = prediction.getCountdownTime() + 15000;
 
                 if (prediction.willPickUpPassengers()) {
-                    snippet = "Departs ";
+                    snippet = getResources().getString(R.string.map_departs) + " ";
                 } else {
-                    snippet = "Arrives ";
+                    snippet = getResources().getString(R.string.map_arrives) + " ";
                 }
 
                 if (countdownTime < 60 * 60000) {
-                    snippet += "in " + prediction.getCountdownTime() / 60000 + " min";
+                    snippet += getResources().getString(R.string.map_in) + " " +
+                            prediction.getCountdownTime() / 60000 + " " +
+                            getResources().getString(R.string.map_min);
                 } else {
-                    snippet += "at " +
+                    snippet += getResources().getString(R.string.map_at) + " " +
                             new SimpleDateFormat("h:mm").format(predictionTime) + " " +
                             new SimpleDateFormat("a").format(predictionTime).toLowerCase();
                 }
             } else {
                 if (prediction.willPickUpPassengers()) {
-                    snippet = "Already departed at ";
+                    snippet = getResources().getString(R.string.map_already_departed_at) + " ";
                 } else {
-                    snippet = "Already arrived at ";
+                    snippet = getResources().getString(R.string.map_already_arrived_at) + " ";
                 }
 
                 snippet += new SimpleDateFormat("h:mm").format(predictionTime) + " " +
                         new SimpleDateFormat("a").format(predictionTime).toLowerCase();
+            }
+        } else if (predictionCancelled) {
+            if (prediction.getStatus() == Prediction.CANCELLED) {
+                snippet = getResources().getString(R.string.map_cancelled);
+            } else {
+                snippet = getResources().getString(R.string.map_skipped);
             }
         }
 

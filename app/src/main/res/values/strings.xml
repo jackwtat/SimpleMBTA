@@ -69,6 +69,15 @@
     <string name="map_currently_on">Currently on</string>
     <string name="map_route">Route</string>
     <string name="map_to">to</string>
+    <string name="map_cancelled">Cancelled</string>
+    <string name="map_skipped">Skipped</string>
+    <string name="map_departs">Departs</string>
+    <string name="map_arrives">Arrives</string>
+    <string name="map_in">in</string>
+    <string name="map_at">at</string>
+    <string name="map_min">min</string>
+    <string name="map_already_departed_at">Already departed at</string>
+    <string name="map_already_arrived_at">Already arrived at</string>
 
     <!-- Route Search Prediction Statuses -->
     <string name="route_departing">Departing</string>
