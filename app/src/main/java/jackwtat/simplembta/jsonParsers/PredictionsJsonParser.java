@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Direction;
@@ -65,9 +66,32 @@ public class PredictionsJsonParser {
                         JSONObject jAttributes = jPrediction.getJSONObject("attributes");
 
                         prediction.setStopSequence(jAttributes.getInt("stop_sequence"));
-                        prediction.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
-                        prediction.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
+                        prediction.setArrivalTime(
+                                DateUtil.parse(jAttributes.getString("arrival_time")));
+                        prediction.setDepartureTime(
+                                DateUtil.parse(jAttributes.getString("departure_time")));
+
                         prediction.setIsLive(true);
+
+                        String status = jAttributes.getString("schedule_relationship");
+                        if (status.equalsIgnoreCase("null")) {
+                            prediction.setStatus(Prediction.SCHEDULED);
+
+                        } else if (status.equalsIgnoreCase("ADDED")) {
+                            prediction.setStatus(Prediction.ADDED);
+
+                        } else if (status.equalsIgnoreCase("UNSCHEDULED")) {
+                            prediction.setStatus(Prediction.UNSCHEDULED);
+
+                        } else if (status.equalsIgnoreCase("NO_DATA")) {
+                            prediction.setStatus(Prediction.NO_DATA);
+
+                        } else if (status.equalsIgnoreCase("CANCELLED")) {
+                            prediction.setStatus(Prediction.CANCELLED);
+
+                        } else if (status.equalsIgnoreCase("SKIPPED")) {
+                            prediction.setStatus(Prediction.SKIPPED);
+                        }
 
                         // Get IDs of related objects
                         JSONObject jRelationships = jPrediction.getJSONObject("relationships");
@@ -126,7 +150,15 @@ public class PredictionsJsonParser {
 
                                 prediction.setId(scheduleId);
                                 prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
+
+                                if (prediction.getPredictionTime() == null) {
+                                    prediction.setArrivalTime(DateUtil.parse(
+                                            jScheduleAttr.getString("arrival_time")));
+                                    prediction.setDepartureTime(DateUtil.parse(
+                                            jScheduleAttr.getString("departure_time")));
+                                }
                             }
+
                         } catch (JSONException e) {
                             Log.i(LOG_TAG, "Unable to get schedule ID for prediction " + id);
                         }
@@ -255,7 +287,8 @@ public class PredictionsJsonParser {
                         // and the destination is not null,
                         // then add this prediction
                         if (!prediction.getDestination().equals("null") &&
-                                prediction.getPredictionTime() != null) {
+                                prediction.getPredictionTime() != null &&
+                                prediction.getCountdownTime() >= -60000) {
                             if (!predictions.containsKey(id) || Bus.isParentOf(
                                     prediction.getRoute().getId(),
                                     predictions.get(id).getRouteId())) {

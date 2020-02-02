@@ -17,12 +17,13 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     public static final int FLAG_PICK_UP = 3;
 
     // Status types
-    public static final String UNKNOWN_STATUS = "UNKNOWN_STATUS";
-    public static final String ADDED = "ADDED";
-    public static final String CANCELLED = "CANCELLED";
-    public static final String NO_DATA = "NO_DATA";
-    public static final String SKIPPED = "SKIPPED";
-    public static final String UNSCHEDULED = "UNSCHEDULED";
+    public static final int UNKNOWN_STATUS = 0;
+    public static final int ADDED = 1;
+    public static final int CANCELLED = 2;
+    public static final int NO_DATA = 3;
+    public static final int SKIPPED = 4;
+    public static final int UNSCHEDULED = 5;
+    public static final int SCHEDULED = 6;
 
     // Prediction types
     public static final int ARRIVAL = 0;
@@ -40,7 +41,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     private Date departureTime = null;
     private boolean isLive = false;
     private int pickUpType = UNKNOWN_PICK_UP;
-    private String status = UNKNOWN_STATUS;
+    private int status = UNKNOWN_STATUS;
 
     // Route data
     private Route route = null;
@@ -120,7 +121,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         return pickUpType;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -137,7 +138,8 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     }
 
     public boolean willPickUpPassengers() {
-        return pickUpType != NO_PICK_UP && (arrivalTime != null || departureTime != null);
+        return pickUpType != NO_PICK_UP && (arrivalTime != null || departureTime != null) &&
+                status != Prediction.SKIPPED && status != Prediction.CANCELLED;
     }
 
     // Stop data getters
@@ -217,7 +219,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         this.pickUpType = pickUpType;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

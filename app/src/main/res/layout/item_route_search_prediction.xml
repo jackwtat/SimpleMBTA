@@ -159,6 +159,20 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/cancelled_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/background_cancelled"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/cancelled"
+                    android:textColor="@color/HighlightedText"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:id="@+id/drop_off_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

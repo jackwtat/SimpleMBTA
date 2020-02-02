@@ -156,6 +156,8 @@
     <string name="en_route">EN ROUTE</string>
     <string name="tomorrow">TOMORROW</string>
     <string name="drop_off">DROP-OFF ONLY</string>
+    <string name="cancelled">CANCELLED</string>
+    <string name="skipped">SKIPPED</string>
     <string name="title_activity_maps">Map</string>
     <string name="arriving">Arriving</string>
     <string name="departing">Departing</string>

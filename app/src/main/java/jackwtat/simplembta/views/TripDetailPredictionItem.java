@@ -2,6 +2,7 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -38,6 +39,8 @@ public class TripDetailPredictionItem extends LinearLayout {
     TextView minuteTextView;
     TextView statusTextView;
     TextView trackNumberTextView;
+    TextView cancelledIndicator;
+    TextView dropOffIndicator;
 
     String min;
 
@@ -62,8 +65,10 @@ public class TripDetailPredictionItem extends LinearLayout {
         // Departure time
         long countdownTime = prediction.getCountdownTime();
 
-        // There is a vehicle currently on this trip
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
+        // There is a vehicle currently on this trip and trip is not skipped or cancalled
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId()) &&
+                prediction.getStatus() != Prediction.SKIPPED &&
+                prediction.getStatus() != Prediction.CANCELLED) {
 
             // Vehicle has already passed this stop
             if (vehicle.getCurrentStopSequence() > prediction.getStopSequence() ||
@@ -153,13 +158,15 @@ public class TripDetailPredictionItem extends LinearLayout {
                 statusTextView.setVisibility(GONE);
             }
 
-            // No vehicle is on this trip
+            // No vehicle is on this trip or trip is skipped or cancelled
         } else {
             if (countdownTime > 0) {
                 String timeText;
                 String minuteText;
 
-                if (countdownTime < 3600000) {
+                if (countdownTime < 3600000 &&
+                        prediction.getStatus() != Prediction.SKIPPED &&
+                        prediction.getStatus() != Prediction.CANCELLED) {
                     timeText = (countdownTime / 60000) + "";
                     minuteText = min;
 
@@ -171,6 +178,15 @@ public class TripDetailPredictionItem extends LinearLayout {
 
                 if (!prediction.isLive()) {
                     minuteText += "*";
+                }
+
+                if (prediction.getStatus() != Prediction.SKIPPED ||
+                        prediction.getStatus() != Prediction.CANCELLED) {
+                    timeTextView.setPaintFlags(timeTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    timeTextView.setPaintFlags(timeTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
 
                 timeTextView.setText(timeText);
@@ -208,6 +224,26 @@ public class TripDetailPredictionItem extends LinearLayout {
             trackNumberTextView.setVisibility(VISIBLE);
         } else {
             trackNumberTextView.setVisibility(GONE);
+        }
+
+        // Show skipped or cancelled indicators
+        if (prediction.getStatus() == Prediction.SKIPPED) {
+            cancelledIndicator.setText(R.string.skipped);
+            cancelledIndicator.setVisibility(VISIBLE);
+            dropOffIndicator.setVisibility(GONE);
+
+        } else if (prediction.getStatus() == Prediction.CANCELLED) {
+            cancelledIndicator.setText(R.string.cancelled);
+            cancelledIndicator.setVisibility(VISIBLE);
+            dropOffIndicator.setVisibility(GONE);
+
+        } else if (!prediction.willPickUpPassengers()) {
+            cancelledIndicator.setVisibility(GONE);
+            dropOffIndicator.setVisibility(VISIBLE);
+
+        } else {
+            cancelledIndicator.setVisibility(GONE);
+            dropOffIndicator.setVisibility(GONE);
         }
 
         // Show stop name
@@ -269,6 +305,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         statusTextView.setText("");
         statusTextView.setVisibility(GONE);
         trackNumberTextView.setVisibility(GONE);
+        cancelledIndicator.setVisibility(GONE);
+        dropOffIndicator.setVisibility(GONE);
     }
 
     private void init(Context context) {
@@ -283,6 +321,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         statusTextView = rootView.findViewById(R.id.status_text_view);
         trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
+        cancelledIndicator = rootView.findViewById(R.id.cancelled_text_view);
+        dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
 
         min = context.getResources().getString(R.string.min);
     }

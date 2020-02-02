@@ -1,6 +1,7 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,6 +29,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
     TextView enRouteIndicator;
     TextView tomorrowIndicator;
     TextView weekDayIndicator;
+    TextView cancelledIndicator;
     TextView dropOffIndicator;
     TextView destinationTextView;
     TextView vehicleNumberTextView;
@@ -68,8 +70,10 @@ public class RouteSearchPredictionItem extends LinearLayout {
         long countdownTime = prediction.getCountdownTime();
         Vehicle vehicle = prediction.getVehicle();
 
-        // There is a vehicle currently on this trip
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
+        // There is a vehicle currently on this trip and trip is not skipped or cancelled
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId()) &&
+                prediction.getStatus() != Prediction.SKIPPED &&
+                prediction.getStatus() != Prediction.CANCELLED) {
 
             // Vehicle has already passed this stop
             if (vehicle.getCurrentStopSequence() > prediction.getStopSequence()) {
@@ -142,12 +146,14 @@ public class RouteSearchPredictionItem extends LinearLayout {
                 minuteTextView.setVisibility(VISIBLE);
             }
 
-            // No vehicle is on this trip
+            // No vehicle is on this trip or trip is skipped or cancelled
         } else {
             String timeText;
             String minuteText;
 
-            if (countdownTime < 3600000) {
+            if (countdownTime < 3600000 &&
+                    prediction.getStatus() != Prediction.SKIPPED &&
+                    prediction.getStatus() != Prediction.CANCELLED) {
                 if (countdownTime > 0) {
                     timeText = (countdownTime / 60000) + "";
                 } else {
@@ -163,6 +169,15 @@ public class RouteSearchPredictionItem extends LinearLayout {
 
             if (!prediction.isLive()) {
                 minuteText += "*";
+            }
+
+            if (prediction.getStatus() == Prediction.SKIPPED ||
+                    prediction.getStatus() == Prediction.CANCELLED) {
+                timeTextView.setPaintFlags(timeTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                timeTextView.setPaintFlags(timeTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
 
             timeTextView.setText(timeText);
@@ -195,7 +210,19 @@ public class RouteSearchPredictionItem extends LinearLayout {
 
     public void setLiveIndicator(Prediction prediction) {
         // Show the appropriate status indicators
-        if (!prediction.willPickUpPassengers()) {
+        if (prediction.getStatus() == Prediction.CANCELLED ||
+                prediction.getStatus() == Prediction.SKIPPED) {
+
+            if (prediction.getStatus() == Prediction.CANCELLED) {
+                cancelledIndicator.setText(R.string.cancelled);
+            } else {
+                cancelledIndicator.setText(R.string.skipped);
+            }
+
+            cancelledIndicator.setVisibility(VISIBLE);
+            liveIndicator.setVisibility(GONE);
+
+        } else if (!prediction.willPickUpPassengers()) {
             dropOffIndicator.setVisibility(VISIBLE);
             liveIndicator.setVisibility(GONE);
 
@@ -226,6 +253,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         if (liveIndicator.getVisibility() == GONE &&
                 trackNumberIndicator.getVisibility() == GONE &&
                 enRouteIndicator.getVisibility() == GONE &&
+                cancelledIndicator.getVisibility() == GONE &&
                 dropOffIndicator.getVisibility() == GONE &&
                 tomorrowIndicator.getVisibility() == GONE &&
                 weekDayIndicator.getVisibility() == GONE) {
@@ -269,6 +297,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         enRouteIndicator.setVisibility(GONE);
         tomorrowIndicator.setVisibility(GONE);
         weekDayIndicator.setVisibility(GONE);
+        cancelledIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
         destinationTextView.setText("");
         vehicleNumberTextView.setText("");
@@ -285,6 +314,7 @@ public class RouteSearchPredictionItem extends LinearLayout {
         enRouteIndicator = rootView.findViewById(R.id.en_route_text_view);
         tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
         weekDayIndicator = rootView.findViewById(R.id.week_day_text_view);
+        cancelledIndicator = rootView.findViewById(R.id.cancelled_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         vehicleNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);

@@ -158,6 +158,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     // Prior predictions
     private PastDataHolder pastData = PastDataHolder.getHolder();
 
+    // Cancelled predictions
+    private HashMap<String, Prediction> cancelledPredictions = new HashMap<>();
+
     // Key stop/route data
     private HashMap<String, Stop> keyStops = new HashMap<>();
     private HashMap<String, Marker> rapidStopMarkers = new HashMap<>();
@@ -804,6 +807,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     private void update() {
         predictionsCount = 0;
+        cancelledPredictions.clear();
 
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
@@ -1437,34 +1441,42 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         p.getStop().addRoute(p.getRoute());
                     }
 
+                    // If prediction is skipped or cancelled, add to cancelledPredictions
+                    if (p.getStatus() == Prediction.CANCELLED ||
+                            p.getStatus() == Prediction.SKIPPED) {
+                        cancelledPredictions.put(p.getId(), p);
+                    }
+
                     // Add prediction to its respective route
-                    Route route = p.getRoute();
-                    Stop stop = p.getStop();
-                    int direction = p.getDirection();
+                    else if (live || !cancelledPredictions.containsKey(p.getId())) {
+                        Route route = p.getRoute();
+                        Stop stop = p.getStop();
+                        int direction = p.getDirection();
 
-                    // If this prediction's stop is the route's nearest stop
-                    if (stop.equals(route.getNearestStop(direction))) {
-                        route.addPrediction(p);
+                        // If this prediction's stop is the route's nearest stop
+                        if (stop.equals(route.getNearestStop(direction))) {
+                            route.addPrediction(p);
 
-                        // If route does not have predictions in this prediction's direction
-                    } else if (!route.hasPredictions(direction)) {
-                        route.setNearestStop(direction, stop);
-                        route.addPrediction(p);
+                            // If route does not have predictions in this prediction's direction
+                        } else if (!route.hasPredictions(direction)) {
+                            route.setNearestStop(direction, stop);
+                            route.addPrediction(p);
 
-                        // If this prediction is live and closer than route's current nearest stop
-                    } else if (live && p.willPickUpPassengers() &&
-                            route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
-                                    stop.getLocation().distanceTo(targetLocation)) {
-                        route.setNearestStop(direction, stop);
-                        route.addPrediction(p);
+                            // If this prediction is live and closer than route's current nearest stop
+                        } else if (live && p.willPickUpPassengers() &&
+                                route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                        stop.getLocation().distanceTo(targetLocation)) {
+                            route.setNearestStop(direction, stop);
+                            route.addPrediction(p);
 
-                        // If this prediction is not live and closer than the current nearest stop
-                    } else if (!live && !route.hasLivePredictions(direction) &&
-                            p.willPickUpPassengers() &&
-                            route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
-                                    stop.getLocation().distanceTo(targetLocation)) {
-                        route.setNearestStop(direction, stop);
-                        route.addPrediction(p);
+                            // If this prediction is not live and closer than the current nearest stop
+                        } else if (!live && !route.hasLivePredictions(direction) &&
+                                p.willPickUpPassengers() &&
+                                route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                        stop.getLocation().distanceTo(targetLocation)) {
+                            route.setNearestStop(direction, stop);
+                            route.addPrediction(p);
+                        }
                     }
 
                     predictionsCount++;

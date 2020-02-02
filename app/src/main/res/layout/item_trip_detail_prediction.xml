@@ -114,18 +114,49 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/track_number_text_view"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_in_progress"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textColor="@color/trackNumber"
-                android:textSize="@dimen/body_text_size"
-                android:textStyle="bold"
-                tools:text="Track 4" />
+                android:gravity="right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/track_number_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_in_progress"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:textColor="@color/trackNumber"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold"
+                    tools:text="Track 4" />
+
+                <TextView
+                    android:id="@+id/cancelled_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_cancelled"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/cancelled"
+                    android:textColor="@color/HighlightedText"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/drop_off_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_dropoff"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/drop_off"
+                    android:textColor="@color/HighlightedText"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <View
