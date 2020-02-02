@@ -156,6 +156,8 @@ public class PredictionsJsonParser {
                                             jScheduleAttr.getString("arrival_time")));
                                     prediction.setDepartureTime(DateUtil.parse(
                                             jScheduleAttr.getString("departure_time")));
+
+                                    prediction.setIsLive(false);
                                 }
                             }
 

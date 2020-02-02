@@ -73,7 +73,8 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                 for (Prediction p : SchedulesJsonParser.parse(jsonResponse)) {
                     Prediction sameTrip = predictions.get(getHash(p));
 
-                    if (sameTrip == null || p.willPickUpPassengers()) {
+                    if (sameTrip == null ||
+                            (p.willPickUpPassengers() && sameTrip.willPickUpPassengers())) {
                         predictions.put(getHash(p), p);
                     }
                 }
@@ -97,7 +98,8 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                 for (Prediction p : SchedulesJsonParser.parse(jsonResponse)) {
                     Prediction sameTrip = predictions.get(getHash(p));
 
-                    if (sameTrip == null || p.willPickUpPassengers()) {
+                    if (sameTrip == null ||
+                            (p.willPickUpPassengers() && sameTrip.willPickUpPassengers())) {
                         predictions.put(getHash(p), p);
                     }
                 }
