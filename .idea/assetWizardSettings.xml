@@ -55,7 +55,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_accessible_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_close_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -65,8 +65,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="606060" />
-                            <entry key="outputName" value="ic_accessible_small" />
+                            <entry key="color" value="da291c" />
+                            <entry key="outputName" value="ic_line_stop_cancelled" />
                             <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\icon_external_link.svg" />
                           </map>
                         </option>

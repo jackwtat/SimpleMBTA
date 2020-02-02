@@ -31,8 +31,10 @@ public class TripDetailPredictionItem extends LinearLayout {
     View rootView;
     View topLineView;
     View bottomLineView;
+    LinearLayout predictionInfoLayout;
     ImageView stopIcon;
     ImageView stopIconFill;
+    ImageView stopIconCancelled;
     ImageView wheelchairAccessibleIcon;
     TextView stopName;
     TextView timeTextView;
@@ -65,14 +67,12 @@ public class TripDetailPredictionItem extends LinearLayout {
         // Departure time
         long countdownTime = prediction.getCountdownTime();
 
-        // There is a vehicle currently on this trip and trip is not skipped or cancalled
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId()) &&
-                prediction.getStatus() != Prediction.SKIPPED &&
-                prediction.getStatus() != Prediction.CANCELLED) {
+        // There is a vehicle currently on this trip and trip is not skipped or cancelled
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
 
             // Vehicle has already passed this stop
             if (vehicle.getCurrentStopSequence() > prediction.getStopSequence() ||
-                    (nextPrediction != null &&
+                    (nextPrediction != null && nextPrediction.isLive() &&
                             prediction.getCountdownTime() > nextPrediction.getCountdownTime())) {
                 String statusText;
                 if (prediction.getPredictionType() == Prediction.DEPARTURE) {
@@ -164,9 +164,7 @@ public class TripDetailPredictionItem extends LinearLayout {
                 String timeText;
                 String minuteText;
 
-                if (countdownTime < 3600000 &&
-                        prediction.getStatus() != Prediction.SKIPPED &&
-                        prediction.getStatus() != Prediction.CANCELLED) {
+                if (countdownTime < 3600000) {
                     timeText = (countdownTime / 60000) + "";
                     minuteText = min;
 
@@ -178,15 +176,6 @@ public class TripDetailPredictionItem extends LinearLayout {
 
                 if (!prediction.isLive()) {
                     minuteText += "*";
-                }
-
-                if (prediction.getStatus() == Prediction.SKIPPED ||
-                        prediction.getStatus() == Prediction.CANCELLED) {
-                    timeTextView.setPaintFlags(timeTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else {
-                    timeTextView.setPaintFlags(timeTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
 
                 timeTextView.setText(timeText);
@@ -231,19 +220,27 @@ public class TripDetailPredictionItem extends LinearLayout {
             cancelledIndicator.setText(R.string.skipped);
             cancelledIndicator.setVisibility(VISIBLE);
             dropOffIndicator.setVisibility(GONE);
+            stopIconCancelled.setVisibility(VISIBLE);
+            predictionInfoLayout.setVisibility(GONE);
 
         } else if (prediction.getStatus() == Prediction.CANCELLED) {
             cancelledIndicator.setText(R.string.cancelled);
             cancelledIndicator.setVisibility(VISIBLE);
             dropOffIndicator.setVisibility(GONE);
+            stopIconCancelled.setVisibility(VISIBLE);
+            predictionInfoLayout.setVisibility(GONE);
 
         } else if (!prediction.willPickUpPassengers()) {
             cancelledIndicator.setVisibility(GONE);
             dropOffIndicator.setVisibility(VISIBLE);
+            stopIconCancelled.setVisibility(GONE);
+            predictionInfoLayout.setVisibility(VISIBLE);
 
         } else {
             cancelledIndicator.setVisibility(GONE);
             dropOffIndicator.setVisibility(GONE);
+            stopIconCancelled.setVisibility(GONE);
+            predictionInfoLayout.setVisibility(VISIBLE);
         }
 
         // Show stop name
@@ -297,8 +294,10 @@ public class TripDetailPredictionItem extends LinearLayout {
     public void clear() {
         topLineView.setVisibility(INVISIBLE);
         bottomLineView.setVisibility(INVISIBLE);
+        predictionInfoLayout.setVisibility(VISIBLE);
         stopName.setText("");
         stopName.setTypeface(Typeface.DEFAULT);
+        stopIconCancelled.setVisibility(GONE);
         wheelchairAccessibleIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
@@ -313,8 +312,10 @@ public class TripDetailPredictionItem extends LinearLayout {
         rootView = inflate(context, R.layout.item_trip_detail_prediction, this);
         topLineView = rootView.findViewById(R.id.top_line_view);
         bottomLineView = rootView.findViewById(R.id.bottom_line_view);
+        predictionInfoLayout = rootView.findViewById(R.id.prediction_info_layout);
         stopIcon = rootView.findViewById(R.id.stop_icon);
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
+        stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
         stopName = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         timeTextView = rootView.findViewById(R.id.time_text_view);
