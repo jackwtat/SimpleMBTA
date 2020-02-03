@@ -1,6 +1,7 @@
 package jackwtat.simplembta.model.routes;
 
 import jackwtat.simplembta.map.GreenLineStopMarkerFactory;
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 
 public class GreenLine extends RailRoute {
@@ -17,8 +18,9 @@ public class GreenLine extends RailRoute {
     public void addPrediction(Prediction prediction) {
         // Out of service Green Line trains sometimes show up as in service on incorrect lines
         // if they're moving with their AVI turned on
-        if (isCorrectGreenLineStop(prediction.getRouteId(), prediction.getStopId()) ||
-                isCorrectGreenLineStop(prediction.getRouteId(), prediction.getParentStopId())) {
+        if ((isCorrectGreenLineStop(prediction.getRouteId(), prediction.getStopId()) ||
+                isCorrectGreenLineStop(prediction.getRouteId(), prediction.getParentStopId())) &&
+                isValidDestination(prediction.getDirection(), prediction.getStopId(), prediction.getDestination())) {
             super.addPrediction(prediction);
         } else {
             if (getNearestStop(0) != null &&
@@ -66,6 +68,40 @@ public class GreenLine extends RailRoute {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static boolean isValidDestination(int direction, String originStopId,
+                                             String destinationStopName) {
+        if (direction == Direction.EASTBOUND) {
+            if ((originStopId.equals("place-lech") || originStopId.equals("place-spmnl")) &&
+                    (destinationStopName.equals("North Station") ||
+                            destinationStopName.equals("Haymarket") ||
+                            destinationStopName.equals("Government Center") ||
+                            destinationStopName.equals("Park Street"))) {
+                return false;
+
+            } else if ((originStopId.equals("place-north") || originStopId.equals("place-haecl")) &&
+                    (destinationStopName.equals("Government Center") ||
+                            destinationStopName.equals("Park Street"))) {
+                return false;
+
+            } else if (originStopId.equals("place-gover") &&
+                    destinationStopName.equals("Park Street")) {
+                return false;
+
+            } else {
+                return true;
+            }
+        } else {
+            if ((originStopId.equals("place-hymnl") || originStopId.equals("place-kencl")) &&
+                    (destinationStopName.equals("Heath Street") ||
+                            destinationStopName.equals("Brigham Circle"))) {
+                return false;
+
+            } else {
+                return true;
+            }
         }
     }
 
