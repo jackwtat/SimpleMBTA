@@ -36,6 +36,8 @@ public class TripDetailPredictionItem extends LinearLayout {
     ImageView stopIconFill;
     ImageView stopIconCancelled;
     ImageView wheelchairAccessibleIcon;
+    ImageView serviceAdvisoryIcon;
+    ImageView serviceAlertIcon;
     TextView stopName;
     TextView timeTextView;
     TextView minuteTextView;
@@ -299,6 +301,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopName.setTypeface(Typeface.DEFAULT);
         stopIconCancelled.setVisibility(GONE);
         wheelchairAccessibleIcon.setVisibility(GONE);
+        serviceAdvisoryIcon.setVisibility(GONE);
+        serviceAlertIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
         statusTextView.setText("");
@@ -318,6 +322,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
         stopName = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
+        serviceAdvisoryIcon = rootView.findViewById(R.id.service_advisory_icon);
+        serviceAlertIcon = rootView.findViewById(R.id.service_alert_icon);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         statusTextView = rootView.findViewById(R.id.status_text_view);
