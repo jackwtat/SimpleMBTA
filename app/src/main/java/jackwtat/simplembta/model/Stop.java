@@ -14,6 +14,7 @@ public class Stop implements Comparable<Stop>, Serializable {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private ArrayList<Route> routes = new ArrayList<>();
+    private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
     private boolean wheelchairAccessible = false;
 
     public Stop(String id) {
@@ -61,6 +62,10 @@ public class Stop implements Comparable<Stop>, Serializable {
         return routes;
     }
 
+    public ArrayList<ServiceAlert> getServiceAlerts() {
+        return serviceAlerts;
+    }
+
     public String getParentId() {
         return parentId;
     }
@@ -86,12 +91,16 @@ public class Stop implements Comparable<Stop>, Serializable {
         longitude = location.getLongitude();
     }
 
-    public void setWheelchairAccessible(boolean wheelchairAccessible){
+    public void setWheelchairAccessible(boolean wheelchairAccessible) {
         this.wheelchairAccessible = wheelchairAccessible;
     }
 
     public void addRoute(Route route) {
         routes.add(route);
+    }
+
+    public void addServiceAlert(ServiceAlert serviceAlert) {
+        serviceAlerts.add(serviceAlert);
     }
 
     public boolean isParentOf(String id) {
@@ -126,7 +135,7 @@ public class Stop implements Comparable<Stop>, Serializable {
                 id.equals("place-aport"); // Airport
     }
 
-    public boolean isWheelchairAccessible(){
+    public boolean isWheelchairAccessible() {
         return wheelchairAccessible;
     }
 
