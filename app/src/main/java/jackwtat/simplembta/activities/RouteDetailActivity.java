@@ -1048,17 +1048,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                                 vt.getCurrentStopSequence() <= p.getStopSequence())) {
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastData.getPrediction(p.getId());
-                    if (priorPrediction != null) {
-                        long thisCountdown = p.getCountdownTime();
-                        long priorCountdown = priorPrediction.getCountdownTime();
-                        long timeDifference = thisCountdown - priorCountdown;
-
-                        if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
-                            p.setArrivalTime(priorPrediction.getArrivalTime());
-                            p.setDepartureTime(priorPrediction.getDepartureTime());
-                        }
-                    }
+                    pastData.normalizePrediction(p);
 
                     // Set vehicle for predictions
                     Vehicle v = vehicles.get(p.getVehicleId());
@@ -1070,7 +1060,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     pastData.add(p);
 
                     // Add prediction to route
-                    selectedRoute.addPrediction(p);
+                    if (p.getCountdownTime() > -60000) {
+                        selectedRoute.addPrediction(p);
+                    }
                 }
             }
 

@@ -26,7 +26,23 @@ public class PastDataHolder {
         return predictions.get(id);
     }
 
-    public void clear(){
+    public Prediction normalizePrediction(Prediction p) {
+        Prediction priorPrediction = predictions.get(p.getId());
+        if (priorPrediction != null) {
+            long thisCountdown = p.getCountdownTime();
+            long priorCountdown = priorPrediction.getCountdownTime();
+            long timeDifference = thisCountdown - priorCountdown;
+
+            if (priorCountdown < 30000 || (timeDifference < 90000 && timeDifference > 0)) {
+                p.setArrivalTime(priorPrediction.getArrivalTime());
+                p.setDepartureTime(priorPrediction.getDepartureTime());
+            }
+        }
+
+        return p;
+    }
+
+    public void clear() {
         predictions.clear();
     }
 }

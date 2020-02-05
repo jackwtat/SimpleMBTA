@@ -895,17 +895,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             for (Prediction prediction : p) {
                 // Reduce 'time bounce' by replacing current prediction time with prior prediction
                 // time if one exists if they are within one minute
-                Prediction priorPrediction = pastData.getPrediction(prediction.getId());
-                if (priorPrediction != null) {
-                    long thisCountdown = prediction.getCountdownTime();
-                    long priorCountdown = priorPrediction.getCountdownTime();
-                    long timeDifference = thisCountdown - priorCountdown;
-
-                    if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
-                        prediction.setArrivalTime(priorPrediction.getArrivalTime());
-                        prediction.setDepartureTime(priorPrediction.getDepartureTime());
-                    }
-                }
+                pastData.normalizePrediction(prediction);
 
                 // If this prediction's stop has a parent stop, add it to the stop query
                 String parentStopId = prediction.getParentStopId();

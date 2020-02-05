@@ -1370,17 +1370,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     // Reduce 'time bounce' by replacing current prediction time with prior prediction
                     // time if one exists if they are within one minute
-                    Prediction priorPrediction = pastData.getPrediction(p.getId());
-                    if (priorPrediction != null) {
-                        long thisCountdown = p.getCountdownTime();
-                        long priorCountdown = priorPrediction.getCountdownTime();
-                        long timeDifference = thisCountdown - priorCountdown;
-
-                        if (priorCountdown < 30000 || (timeDifference < 60000 && timeDifference > 0)) {
-                            p.setArrivalTime(priorPrediction.getArrivalTime());
-                            p.setDepartureTime(priorPrediction.getDepartureTime());
-                        }
-                    }
+                    pastData.normalizePrediction(p);
 
                     // Put this prediction into list of prior predictions
                     pastData.add(p);
@@ -1448,7 +1438,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
 
                     // Add prediction to its respective route
-                    else if (live || !cancelledPredictions.containsKey(p.getId())) {
+                    else if ((live || !cancelledPredictions.containsKey(p.getId())) &&
+                            p.getCountdownTime() > -60000) {
                         Route route = p.getRoute();
                         Stop stop = p.getStop();
                         int direction = p.getDirection();
