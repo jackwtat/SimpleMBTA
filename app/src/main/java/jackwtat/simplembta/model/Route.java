@@ -111,6 +111,10 @@ public class Route implements Comparable<Route>, Serializable {
         return markerFactory.createMarkerOptions();
     }
 
+    public MarkerOptions getClosedStopMarkerOptions(){
+        return markerFactory.createClosedMarkerOptions();
+    }
+
     public BitmapDescriptor getStopMarkerIcon() {
         return markerFactory.getIcon();
     }

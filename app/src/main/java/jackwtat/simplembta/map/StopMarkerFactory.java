@@ -19,7 +19,18 @@ public class StopMarkerFactory implements Serializable {
                 .icon(getIcon());
     }
 
+    public MarkerOptions createClosedMarkerOptions(){
+        return new MarkerOptions()
+                .anchor(0.5f, 0.5f)
+                .flat(true)
+                .icon(getClosedIcon());
+    }
+
     public BitmapDescriptor getIcon(){
         return BitmapDescriptorFactory.fromResource(R.drawable.icon_stop);
+    }
+
+    public BitmapDescriptor getClosedIcon(){
+        return BitmapDescriptorFactory.fromResource(R.drawable.icon_stop_closed);
     }
 }

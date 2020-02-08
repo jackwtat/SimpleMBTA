@@ -114,6 +114,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private ArrayList<Prediction> predictions = new ArrayList<>();
     private ArrayList<Polyline> polylines = new ArrayList<>();
     private HashMap<String, Marker> stopMarkers = new HashMap<>();
+    private HashMap<String, Marker> closedStopMarkers = new HashMap<>();
     private Marker vehicleMarker;
     private PastDataHolder pastData = PastDataHolder.getHolder();
 
@@ -514,6 +515,19 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     stopMarker.setSnippet(getPredictionSnippet(p));
                 }
 
+                if (p.getStatus() == Prediction.SKIPPED || p.getStatus() == Prediction.CANCELLED) {
+                    Marker closedStop = drawStopMarker(p.getStop(), true);
+                    closedStop.setSnippet(getPredictionSnippet(p));
+                    closedStopMarkers.put(p.getStopId(), closedStop);
+
+                } else {
+                    Marker closedStop = closedStopMarkers.get(p.getStopId());
+                    if (closedStop != null) {
+                        closedStop.remove();
+                        closedStopMarkers.remove(p.getStopId());
+                    }
+                }
+
                 if (p.getStop().equals(selectedStop) ||
                         p.getStop().isParentOf(selectedStop.getId()) ||
                         selectedStop.isParentOf(p.getStopId())) {
@@ -582,7 +596,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 for (Stop stop : shape.getStops()) {
                     if (!stopMarkers.containsKey(stop.getId())) {
                         // Draw the stop marker
-                        Marker currentMarker = drawStopMarker(stop);
+                        Marker currentMarker = drawStopMarker(stop, false);
 
                         // Use selected stop marker if this stop is the selected stop
                         if (selectedStop != null &&
@@ -600,11 +614,18 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             }
 
             // Add predictions to stop markers
-            for (Prediction prediction : predictions) {
-                Marker marker = stopMarkers.get(prediction.getStopId());
+            for (Prediction p : predictions) {
+                Marker marker = stopMarkers.get(p.getStopId());
 
                 if (marker != null) {
-                    marker.setSnippet(getPredictionSnippet(prediction));
+                    marker.setSnippet(getPredictionSnippet(p));
+                }
+
+                if (p.getStatus() == Prediction.SKIPPED ||
+                        p.getStatus() == Prediction.CANCELLED) {
+                    Marker closedStop = drawStopMarker(p.getStop(), true);
+                    closedStop.setSnippet(getPredictionSnippet(p));
+                    closedStopMarkers.put(p.getStopId(), closedStop);
                 }
             }
 
@@ -743,8 +764,13 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         for (Marker m : stopMarkers.values()) {
             m.remove();
         }
-        stopMarkers.clear();
 
+        for (Marker m : closedStopMarkers.values()) {
+            m.remove();
+        }
+
+        stopMarkers.clear();
+        closedStopMarkers.clear();
     }
 
     private Shape[] getShapesFromJson(int jsonFile) {
@@ -777,12 +803,18 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         return polylines;
     }
 
-    private Marker drawStopMarker(@NonNull Stop stop) {
-        MarkerOptions markerOptions = selectedRoute.getStopMarkerOptions();
+    private Marker drawStopMarker(@NonNull Stop stop, boolean closed) {
+        int zIndex = (closed)
+                ? 11
+                : 10;
+
+        MarkerOptions markerOptions = (closed)
+                ? selectedRoute.getClosedStopMarkerOptions()
+                : selectedRoute.getStopMarkerOptions();
 
         markerOptions.position(new LatLng(
                 stop.getLocation().getLatitude(), stop.getLocation().getLongitude()));
-        markerOptions.zIndex(10);
+        markerOptions.zIndex(zIndex);
         markerOptions.title(stop.getName());
 
         Marker stopMarker = gMap.addMarker(markerOptions);
