@@ -39,6 +39,10 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         // Get live predictions
         String[] predictionsArgs = {
                 "fields[prediction]=stop_sequence,arrival_time,departure_time,schedule_relationship",
+                "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                "fields[trip]=direction_id,headsign,name",
+                "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
+                "fields[schedule]=pickup_type,arrival_time,departure_time",
                 "filter[route]=" + route.getId(),
                 "filter[direction_id]=" + directionId,
                 "filter[stop]=" + route.getNearestStop(directionId).getId(),
@@ -61,6 +65,10 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
             String[] scheduleArgs = {
                     "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
+                    "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                    "fields[trip]=direction_id,headsign,name",
+                    "fields[stop]=name,latitude,longitude,wheelchair_boarding",
+                    "fields[prediction]=stop_sequence",
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
                     "filter[stop]=" + route.getNearestStop(directionId).getId(),
@@ -90,6 +98,10 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
             String[] scheduleArgs = {
                     "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
+                    "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                    "fields[trip]=direction_id,headsign,name",
+                    "fields[stop]=name,latitude,longitude,wheelchair_boarding",
+                    "fields[prediction]=stop_sequence",
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
                     "filter[stop]=" + route.getNearestStop(directionId).getId(),

@@ -25,6 +25,9 @@ public class TripsAsyncTask extends AsyncTask<Void, Void, Trip[]> {
 
         String[] tripArgs = {
                 "fields[trip]=direction_id,headsign,name",
+                "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                "fields[shape]=polyline,direction_id,priority",
+                "fields[stop]=name,latitude,longitude,wheelchair_boarding",
                 "filter[id]=" + tripId,
                 "include=route,shape,stops"
         };

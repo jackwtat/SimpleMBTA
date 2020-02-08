@@ -49,6 +49,10 @@ public class PredictionsByStopsAsyncTask extends PredictionsAsyncTask {
     private ArrayList<Prediction> makeQuery(RealTimeApiClient client, String stops, String routeTypes) {
         String[] predictionsArgs = {
                 "fields[prediction]=stop_sequence,arrival_time,departure_time,schedule_relationship",
+                "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                "fields[trip]=direction_id,headsign,name",
+                "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
+                "fields[schedule]=pickup_type,arrival_time,departure_time",
                 "filter[stop]=" + stops,
                 "filter[route_type]=" + routeTypes,
                 "include=route,trip,stop,schedule,vehicle"

@@ -37,8 +37,8 @@ public class VehiclesByRouteAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
 
         String[] routeArgs = {
                 "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
-                "filter[route]=" + routeId,
-                "include=trip"
+                "include=trip&fields[trip]=name,headsign",
+                "filter[route]=" + routeId
         };
 
         String jsonResponse = realTimeApiClient.get("vehicles", routeArgs);

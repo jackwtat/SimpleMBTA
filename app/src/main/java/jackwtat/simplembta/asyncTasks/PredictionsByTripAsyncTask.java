@@ -35,6 +35,10 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
 
         String[] scheduleArgs = {
                 "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
+                "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                "fields[trip]=direction_id,headsign,name",
+                "fields[stop]=name,latitude,longitude,wheelchair_boarding",
+                "fields[prediction]=stop_sequence",
                 "filter[trip]=" + tripId,
                 "filter[date]=" + DateUtil.getMbtaDate(date),
                 "include=route,trip,stop,prediction"
@@ -54,6 +58,10 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
         if (predictions.size() == 0 || lowestCountdown < 1000 * 60 * 60 * 6) {
             String[] predictionsArgs = {
                     "fields[prediction]=stop_sequence,arrival_time,departure_time,schedule_relationship",
+                    "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                    "fields[trip]=direction_id,headsign,name",
+                    "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
+                    "fields[schedule]=pickup_type,arrival_time,departure_time",
                     "filter[trip]=" + tripId,
                     "include=route,trip,stop,schedule,vehicle"
             };

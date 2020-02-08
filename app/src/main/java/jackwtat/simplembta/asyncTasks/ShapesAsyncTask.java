@@ -39,8 +39,10 @@ public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
 
         String[] shapeArgs = {
                 "fields[shape]=polyline,direction_id,priority",
+                "fields[stop]=name,latitude,longitude,wheelchair_boarding",
                 "filter[route]=" + routeArgBuilder.toString(),
-                "include=stops"
+                "include=stops",
+
         };
 
         String jsonResponse = realTimeApiClient.get("shapes", shapeArgs);

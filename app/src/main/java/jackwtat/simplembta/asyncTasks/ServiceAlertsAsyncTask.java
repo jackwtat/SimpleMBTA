@@ -39,8 +39,7 @@ public class ServiceAlertsAsyncTask extends AsyncTask<Void, Void, ServiceAlert[]
 
         String[] routeArgs = {
                 "fields[alert]=header,description,url,effect,severity,lifecycle,informed_entity,active_period",
-                "filter[route]=" + routeArgBuilder.toString(),
-                "include=stops"
+                "filter[route]=" + routeArgBuilder.toString()
         };
 
         String jsonResponse = realTimeApiClient.get("alerts", routeArgs);
