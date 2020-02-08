@@ -74,7 +74,10 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                     Prediction sameTrip = predictions.get(getHash(p));
 
                     if (sameTrip == null ||
-                            (p.willPickUpPassengers() && !sameTrip.willPickUpPassengers())) {
+                            (p.willPickUpPassengers() &&
+                                    !sameTrip.isLive() &&
+                                    sameTrip.getStatus() != Prediction.CANCELLED &&
+                                    sameTrip.getStatus() != Prediction.SKIPPED)) {
                         predictions.put(getHash(p), p);
                     }
                 }
@@ -99,7 +102,10 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
                     Prediction sameTrip = predictions.get(getHash(p));
 
                     if (sameTrip == null ||
-                            (p.willPickUpPassengers() && !sameTrip.willPickUpPassengers())) {
+                            (p.willPickUpPassengers() &&
+                                    !sameTrip.isLive() &&
+                                    sameTrip.getStatus() != Prediction.CANCELLED &&
+                                    sameTrip.getStatus() != Prediction.SKIPPED)) {
                         predictions.put(getHash(p), p);
                     }
                 }
