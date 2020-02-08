@@ -309,6 +309,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
+                        !noPredictionsView.isError()) {
+                    refreshPredictionViews();
+                }
+
                 Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
                 int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
 
@@ -336,6 +341,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerViewAdapter.setOnItemLongClickListener(new MapSearchRecyclerViewAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(int position) {
+                if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
+                        !noPredictionsView.isError()) {
+                    refreshPredictionViews();
+                }
+
                 Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
                 int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
 
