@@ -20,7 +20,9 @@ public class RoutesAsyncTask extends AsyncTask<Void, Void, Route[]> {
     protected Route[] doInBackground(Void... voids) {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
-        String jsonResponse = realTimeApiClient.get("routes", new String[0]);
+        String[] routeArgs = {"fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names"};
+
+        String jsonResponse = realTimeApiClient.get("routes", routeArgs);
 
         if (jsonResponse != null)
             return RoutesJsonParser.parse(jsonResponse);

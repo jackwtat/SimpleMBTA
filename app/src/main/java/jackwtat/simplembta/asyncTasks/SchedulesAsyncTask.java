@@ -42,6 +42,7 @@ public class SchedulesAsyncTask extends PredictionsAsyncTask {
         }
 
         String[] scheduleArgs = {
+                "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
                 "filter[route]=" + routeArgBuilder.toString(),
                 "filter[stop]=" + stopArgBuilder.toString(),
                 "filter[date]=" + DateUtil.getCurrentMbtaDate(),

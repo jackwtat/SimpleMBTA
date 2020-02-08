@@ -24,6 +24,7 @@ public class TripsAsyncTask extends AsyncTask<Void, Void, Trip[]> {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] tripArgs = {
+                "fields[trip]=direction_id,headsign,name",
                 "filter[id]=" + tripId,
                 "include=route,shape,stops"
         };

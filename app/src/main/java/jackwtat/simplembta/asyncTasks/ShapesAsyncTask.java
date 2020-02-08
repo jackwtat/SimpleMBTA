@@ -38,6 +38,7 @@ public class ShapesAsyncTask extends AsyncTask<Void, Void, Shape[]> {
         }
 
         String[] shapeArgs = {
+                "fields[shape]=polyline,direction_id,priority",
                 "filter[route]=" + routeArgBuilder.toString(),
                 "include=stops"
         };

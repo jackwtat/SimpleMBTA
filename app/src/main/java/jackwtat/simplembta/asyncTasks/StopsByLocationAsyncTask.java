@@ -25,6 +25,7 @@ public class StopsByLocationAsyncTask extends AsyncTask<Void, Void, Stop[]> {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] stopArgs = {
+                "fields[stop]=name,latitude,longitude,wheelchair_boarding",
                 "filter[latitude]=" + targetLocation.getLatitude(),
                 "filter[longitude]=" + targetLocation.getLongitude(),
                 "include=child_stops"

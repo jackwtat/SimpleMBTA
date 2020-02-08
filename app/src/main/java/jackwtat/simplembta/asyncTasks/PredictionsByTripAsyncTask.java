@@ -34,6 +34,7 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
         long lowestCountdown = 1000 * 60 * 60 * 24;
 
         String[] scheduleArgs = {
+                "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
                 "filter[trip]=" + tripId,
                 "filter[date]=" + DateUtil.getMbtaDate(date),
                 "include=route,trip,stop,prediction"
@@ -52,6 +53,7 @@ public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
 
         if (predictions.size() == 0 || lowestCountdown < 1000 * 60 * 60 * 6) {
             String[] predictionsArgs = {
+                    "fields[prediction]=stop_sequence,arrival_time,departure_time,schedule_relationship",
                     "filter[trip]=" + tripId,
                     "include=route,trip,stop,schedule,vehicle"
             };

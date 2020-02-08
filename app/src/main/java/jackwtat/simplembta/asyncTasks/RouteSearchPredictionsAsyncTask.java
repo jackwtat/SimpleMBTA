@@ -38,6 +38,7 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
 
         // Get live predictions
         String[] predictionsArgs = {
+                "fields[prediction]=stop_sequence,arrival_time,departure_time,schedule_relationship",
                 "filter[route]=" + route.getId(),
                 "filter[direction_id]=" + directionId,
                 "filter[stop]=" + route.getNearestStop(directionId).getId(),
@@ -59,6 +60,7 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         // Get today's scheduled predictions
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
             String[] scheduleArgs = {
+                    "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
                     "filter[stop]=" + route.getNearestStop(directionId).getId(),
@@ -87,6 +89,7 @@ public class RouteSearchPredictionsAsyncTask extends AsyncTask<Void, Void, List<
         // Get the next day's scheduled predictions
         if (route.getMode() != Route.LIGHT_RAIL && route.getMode() != Route.HEAVY_RAIL) {
             String[] scheduleArgs = {
+                    "fields[schedule]=stop_sequence,arrival_time,departure_time,pickup_type",
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
                     "filter[stop]=" + route.getNearestStop(directionId).getId(),

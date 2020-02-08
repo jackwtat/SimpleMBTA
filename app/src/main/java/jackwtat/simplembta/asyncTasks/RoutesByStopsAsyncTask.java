@@ -27,7 +27,9 @@ public class RoutesByStopsAsyncTask extends AsyncTask<Void, Void, Route[]> {
         for (String stopId : stopIds) {
             stopArgBuilder.append(stopId).append(",");
         }
-        String[] routesArgs = {"filter[stop]=" + stopArgBuilder.toString()};
+        String[] routesArgs = {
+                "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
+                "filter[stop]=" + stopArgBuilder.toString()};
 
         String jsonResponse = realTimeApiClient.get("routes", routesArgs);
 

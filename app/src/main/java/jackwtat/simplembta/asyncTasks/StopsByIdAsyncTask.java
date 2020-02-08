@@ -30,6 +30,7 @@ public class StopsByIdAsyncTask extends AsyncTask<Void, Void, Stop[]> {
         String stops = stopArgBuilder.toString();
 
         String[] stopArgs = {
+                "fields[stop]=name,latitude,longitude,wheelchair_boarding",
                 "filter[id]=" + stops,
                 "include=child_stops"
         };
