@@ -65,9 +65,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="da291c" />
-                            <entry key="outputName" value="ic_line_stop_cancelled" />
-                            <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\icon_external_link.svg" />
+                            <entry key="outputName" value="ic_line_stop_closed" />
+                            <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\icon_stop_closed.svg" />
                           </map>
                         </option>
                       </PersistentState>

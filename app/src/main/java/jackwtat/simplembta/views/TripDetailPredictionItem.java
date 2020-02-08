@@ -223,6 +223,7 @@ public class TripDetailPredictionItem extends LinearLayout {
             cancelledIndicator.setVisibility(VISIBLE);
             dropOffIndicator.setVisibility(GONE);
             stopIconCancelled.setVisibility(VISIBLE);
+            stopIcon.setVisibility(GONE);
             predictionInfoLayout.setVisibility(GONE);
 
         } else if (prediction.getStatus() == Prediction.CANCELLED) {
@@ -230,18 +231,21 @@ public class TripDetailPredictionItem extends LinearLayout {
             cancelledIndicator.setVisibility(VISIBLE);
             dropOffIndicator.setVisibility(GONE);
             stopIconCancelled.setVisibility(VISIBLE);
+            stopIcon.setVisibility(GONE);
             predictionInfoLayout.setVisibility(GONE);
 
         } else if (!prediction.willPickUpPassengers()) {
             cancelledIndicator.setVisibility(GONE);
             dropOffIndicator.setVisibility(VISIBLE);
             stopIconCancelled.setVisibility(GONE);
+            stopIcon.setVisibility(VISIBLE);
             predictionInfoLayout.setVisibility(VISIBLE);
 
         } else {
             cancelledIndicator.setVisibility(GONE);
             dropOffIndicator.setVisibility(GONE);
             stopIconCancelled.setVisibility(GONE);
+            stopIcon.setVisibility(VISIBLE);
             predictionInfoLayout.setVisibility(VISIBLE);
         }
 
