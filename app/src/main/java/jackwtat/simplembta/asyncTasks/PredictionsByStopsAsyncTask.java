@@ -53,6 +53,7 @@ public class PredictionsByStopsAsyncTask extends PredictionsAsyncTask {
                 "fields[trip]=direction_id,headsign,name",
                 "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
                 "fields[schedule]=pickup_type,arrival_time,departure_time",
+                "fields[stop]=name,latitude,longitude,wheelchair_boarding,platform_code",
                 "filter[stop]=" + stops,
                 "filter[route_type]=" + routeTypes,
                 "include=route,trip,stop,schedule,vehicle"
