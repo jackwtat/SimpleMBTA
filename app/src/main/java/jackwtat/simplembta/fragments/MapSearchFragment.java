@@ -136,6 +136,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private long onPauseTime = 0;
     private long viewsTime = 0;
     private int predictionsCount = 0;
+    private double searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
 
     // Data surrounding the user's current location
     private Location userLocation = new Location("");
@@ -891,14 +892,19 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         routesAsyncTask.execute();
     }
 
-    private void getPredictions(double distance, List<Route> routes) {
+    private void getPredictions(List<String> routes) {
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
         }
 
         if (routes == null) {
             predictionsAsyncTask = new PredictionsMapSearchAsyncTask(realTimeApiKey,
-                    targetLocation.getLatitude(), targetLocation.getLongitude(), distance,
+                    targetLocation.getLatitude(), targetLocation.getLongitude(), searchDistance,
+                    new PredictionsPostExecuteListener());
+        } else {
+            predictionsAsyncTask = new PredictionsMapSearchAsyncTask(realTimeApiKey,
+                    routes.toArray(new String[0]), targetLocation.getLatitude(),
+                    targetLocation.getLongitude(), searchDistance,
                     new PredictionsPostExecuteListener());
         }
 
@@ -1351,7 +1357,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             getShapes();
             getVehicles();
-            getPredictions(SEARCH_DISTANCE_HALF_MILE, null);
+
+            searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
+
+            getPredictions(null);
+
             getServiceAlerts();
         }
 
@@ -1360,7 +1370,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
                 getShapes();
-                getPredictions(SEARCH_DISTANCE_HALF_MILE, null);
+
+                searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
+                getPredictions(null);
+
                 getServiceAlerts();
 
             } else {
@@ -1397,10 +1410,15 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     if (p.getRoute().getMode() == Route.LIGHT_RAIL &&
                             GreenLine.isGreenLineSubwayStop(p.getStopId())) {
                         Route r = targetRoutes.get(p.getRouteId());
+                        ArrayList<ServiceAlert> sa = new ArrayList<>();
+
                         if (r != null && !r.hasPickUps(0) && !r.hasPickUps(1)) {
+                            sa = r.getServiceAlerts();
                             targetRoutes.remove(p.getRouteId());
                         }
 
+                        Route greenLineCombined = new GreenLineCombined();
+                        greenLineCombined.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
                         p.setRoute(new GreenLineCombined());
                     }
 
@@ -1410,15 +1428,27 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     if (p.getRoute().getMode() == Route.COMMUTER_RAIL &&
                             p.getDirection() == Direction.INBOUND &&
                             CommuterRail.isCommuterRailHub(p.getStopId(), false)) {
+                        Route r = targetRoutes.get(p.getRouteId());
+                        ArrayList<ServiceAlert> sa = new ArrayList<>();
 
-                        if (CommuterRailNorthSide.isNorthSideCommuterRail(p.getRoute().getId())) {
-                            p.setRoute(new CommuterRailNorthSide());
+                        if (r != null) {
+                            sa = r.getServiceAlerts();
+                        }
 
-                        } else if (CommuterRailSouthSide.isSouthSideCommuterRail(p.getRoute().getId())) {
-                            p.setRoute(new CommuterRailSouthSide());
+                        if (CommuterRailNorthSide.isNorthSideCommuterRail(p.getRouteId())) {
+                            Route crc = new CommuterRailNorthSide();
+                            crc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
+                            p.setRoute(crc);
 
-                        } else if (CommuterRailOldColony.isOldColonyCommuterRail(p.getRoute().getId())) {
-                            p.setRoute(new CommuterRailOldColony());
+                        } else if (CommuterRailSouthSide.isSouthSideCommuterRail(p.getRouteId())) {
+                            Route crc = new CommuterRailSouthSide();
+                            crc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
+                            p.setRoute(crc);
+
+                        } else if (CommuterRailOldColony.isOldColonyCommuterRail(p.getRouteId())) {
+                            Route crc = new CommuterRailOldColony();
+                            crc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
+                            p.setRoute(crc);
                         }
                     }
 
@@ -1486,7 +1516,23 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
 
             if (live) {
-                getSchedules();
+                if (searchDistance == SEARCH_DISTANCE_QUARTER_MILE) {
+                    searchDistance = SEARCH_DISTANCE_HALF_MILE;
+
+                    ArrayList<String> routeIds = new ArrayList<>();
+
+                    for (Route route : targetRoutes.values()) {
+                        if (route.getPredictions(Direction.INBOUND).size() == 0 ||
+                                route.getPredictions(Direction.OUTBOUND).size() == 0) {
+                            routeIds.add(route.getId());
+                        }
+                    }
+
+                    getPredictions(routeIds);
+
+                } else {
+                    getSchedules();
+                }
 
             } else {
                 // Lock the views to prevent UI changes while loading new data to views
