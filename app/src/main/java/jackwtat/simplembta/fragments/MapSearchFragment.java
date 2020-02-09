@@ -989,7 +989,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         vehiclesAsyncTask.execute();
     }
 
-    private void queriesComplete(){
+    private void queriesComplete() {
         // Lock the views to prevent UI changes while loading new data to views
         viewsRefreshing = true;
 
@@ -1439,16 +1439,20 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     if (p.getRoute().getMode() == Route.LIGHT_RAIL &&
                             GreenLine.isGreenLineSubwayStop(p.getStopId())) {
                         Route r = targetRoutes.get(p.getRouteId());
+                        ArrayList<Prediction> op = new ArrayList<>();
                         ArrayList<ServiceAlert> sa = new ArrayList<>();
 
                         if (r != null && !r.hasPickUps(0) && !r.hasPickUps(1)) {
-                            sa = r.getServiceAlerts();
+                            op.addAll(r.getPredictions(Direction.INBOUND));
+                            op.addAll(r.getPredictions(Direction.OUTBOUND));
+                            sa.addAll(r.getServiceAlerts());
                             targetRoutes.remove(p.getRouteId());
                         }
 
-                        Route greenLineCombined = new GreenLineCombined();
-                        greenLineCombined.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
-                        p.setRoute(new GreenLineCombined());
+                        Route glc = new GreenLineCombined();
+                        glc.addAllPredictions(op);
+                        glc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
+                        p.setRoute(glc);
                     }
 
                     // If the prediction is for the inbound Commuter Rail, then replace the route
@@ -1458,24 +1462,30 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             p.getDirection() == Direction.INBOUND &&
                             CommuterRail.isCommuterRailHub(p.getStopId(), false)) {
                         Route r = targetRoutes.get(p.getRouteId());
+                        ArrayList<Prediction> op = new ArrayList<>();
                         ArrayList<ServiceAlert> sa = new ArrayList<>();
 
                         if (r != null) {
-                            sa = r.getServiceAlerts();
+                            op.addAll(r.getPredictions(Direction.INBOUND));
+                            op.addAll(r.getPredictions(Direction.OUTBOUND));
+                            sa.addAll(r.getServiceAlerts());
                         }
 
                         if (CommuterRailNorthSide.isNorthSideCommuterRail(p.getRouteId())) {
                             Route crc = new CommuterRailNorthSide();
+                            crc.addAllPredictions(op);
                             crc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
                             p.setRoute(crc);
 
                         } else if (CommuterRailSouthSide.isSouthSideCommuterRail(p.getRouteId())) {
                             Route crc = new CommuterRailSouthSide();
+                            crc.addAllPredictions(op);
                             crc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
                             p.setRoute(crc);
 
                         } else if (CommuterRailOldColony.isOldColonyCommuterRail(p.getRouteId())) {
                             Route crc = new CommuterRailOldColony();
+                            crc.addAllPredictions(op);
                             crc.addAllServiceAlerts(sa.toArray(new ServiceAlert[0]));
                             p.setRoute(crc);
                         }
