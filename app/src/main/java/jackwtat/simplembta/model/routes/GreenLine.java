@@ -96,7 +96,8 @@ public class GreenLine extends RailRoute {
         } else {
             if ((originStopId.equals("place-hymnl") || originStopId.equals("place-kencl")) &&
                     (destinationStopName.equals("Heath Street") ||
-                            destinationStopName.equals("Brigham Circle"))) {
+                            destinationStopName.equals("Brigham Circle") ||
+                            destinationStopName.equals("Northeastern University"))) {
                 return false;
 
             } else {
