@@ -960,7 +960,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ArrayList<String> routeIds = new ArrayList<>();
 
         for (Route route : targetRoutes.values()) {
-            routeIds.add(route.getId());
+            if (route.getPredictions(Direction.INBOUND).size() == 0 ||
+                    route.getPredictions(Direction.OUTBOUND).size() == 0) {
+                routeIds.add(route.getId());
+            }
         }
 
         shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
@@ -984,6 +987,32 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 routeIds.toArray(new String[0]), new VehiclesPostExecuteListener());
 
         vehiclesAsyncTask.execute();
+    }
+
+    private void queriesComplete(){
+        // Lock the views to prevent UI changes while loading new data to views
+        viewsRefreshing = true;
+
+        // Load new data to views
+        displayedRoutes.clear();
+        displayedRoutes.putAll(targetRoutes);
+
+        // Unlock views
+        viewsRefreshing = false;
+
+        // Refresh views
+        if (swipeRefreshLayout.isRefreshing() ||
+                recyclerViewAdapter.getItemCount() == 0 ||
+                new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2 ||
+                targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE) {
+            refreshPredictionViews();
+        }
+
+        dataRefreshing = false;
+
+        if (predictionsCount == 0) {
+            forceUpdate();
+        }
     }
 
     private void refreshStopMarkers(Stop[] stops) {
@@ -1355,11 +1384,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 targetRoutes.put(route.getId(), route);
             }
 
-            getShapes();
+            //getShapes();
             getVehicles();
 
             searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
-
             getPredictions(null);
 
             getServiceAlerts();
@@ -1369,7 +1397,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         public void onError() {
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
-                getShapes();
+                //getShapes();
                 getVehicles();
 
                 searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
@@ -1536,29 +1564,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
             } else {
-                // Lock the views to prevent UI changes while loading new data to views
-                viewsRefreshing = true;
-
-                // Load new data to views
-                displayedRoutes.clear();
-                displayedRoutes.putAll(targetRoutes);
-
-                // Unlock views
-                viewsRefreshing = false;
-
-                // Refresh views
-                if (swipeRefreshLayout.isRefreshing() ||
-                        recyclerViewAdapter.getItemCount() == 0 ||
-                        new Date().getTime() - viewsTime > MAXIMUM_PREDICTION_AGE / 2 ||
-                        targetLocation.distanceTo(userLocation) > DISTANCE_TO_TARGET_LOCATION_UPDATE) {
-                    refreshPredictionViews();
-                }
-
-                dataRefreshing = false;
-
-                if (predictionsCount == 0) {
-                    forceUpdate();
-                }
+                getShapes();
             }
         }
 
@@ -1605,10 +1611,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     route.addShape(shape);
                 }
             }
+
+            queriesComplete();
         }
 
         @Override
         public void onError() {
+            queriesComplete();
         }
     }
 
