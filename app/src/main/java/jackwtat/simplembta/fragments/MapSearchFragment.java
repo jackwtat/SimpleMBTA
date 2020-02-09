@@ -1370,6 +1370,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
                 getShapes();
+                getVehicles();
 
                 searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
                 getPredictions(null);
