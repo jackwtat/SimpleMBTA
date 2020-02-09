@@ -8,7 +8,7 @@ public interface Constants {
     long MAXIMUM_PREDICTION_AGE = 90000;
 
     // Predictions auto update rate
-    long PREDICTIONS_UPDATE_RATE = 30000;
+    long PREDICTIONS_UPDATE_RATE = 15000;
 
     // Vehicle locations auto update rate
     long VEHICLES_UPDATE_RATE = 5000;
