@@ -38,6 +38,15 @@ public interface Constants {
     // Distance in meters from last target location before visible refresh
     int DISTANCE_TO_FORCE_REFRESH = 400;
 
+    // Quarter mile search distance
+    double SEARCH_DISTANCE_QUARTER_MILE = 0.005;
+
+    // Half mile search distance
+    double SEARCH_DISTANCE_HALF_MILE = 0.01;
+
+    // One mile search distance
+    double SEARCH_DISTANCE_ONE_MILE = 0.02;
+
 
     /***************
      ***** MAP *****
