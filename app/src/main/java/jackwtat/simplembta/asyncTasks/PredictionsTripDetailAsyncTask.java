@@ -9,16 +9,16 @@ import jackwtat.simplembta.jsonParsers.SchedulesJsonParser;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.utilities.DateUtil;
 
-public class PredictionsByTripAsyncTask extends PredictionsAsyncTask {
+public class PredictionsTripDetailAsyncTask extends PredictionsAsyncTask {
     private String realTimeApiKey;
     private String tripId;
     private Date date;
     private OnPostExecuteListener onPostExecuteListener;
 
-    public PredictionsByTripAsyncTask(String realTimeApiKey,
-                                      String tripId,
-                                      Date date,
-                                      OnPostExecuteListener onPostExecuteListener) {
+    public PredictionsTripDetailAsyncTask(String realTimeApiKey,
+                                          String tripId,
+                                          Date date,
+                                          OnPostExecuteListener onPostExecuteListener) {
         this.realTimeApiKey = realTimeApiKey;
         this.tripId = tripId;
         this.date = date;

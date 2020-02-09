@@ -51,7 +51,7 @@ import jackwtat.simplembta.activities.RouteDetailActivity;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter;
 import jackwtat.simplembta.adapters.MapSearchRecyclerViewAdapter.OnItemClickListener;
 import jackwtat.simplembta.asyncTasks.PredictionsAsyncTask;
-import jackwtat.simplembta.asyncTasks.PredictionsByStopsAsyncTask;
+import jackwtat.simplembta.asyncTasks.PredictionsMapSearchAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
@@ -891,15 +891,16 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         routesAsyncTask.execute();
     }
 
-    private void getPredictions() {
+    private void getPredictions(double distance, List<Route> routes) {
         if (predictionsAsyncTask != null) {
             predictionsAsyncTask.cancel(true);
         }
 
-        String[] stopIds = targetStops.keySet().toArray(new String[0]);
-
-        predictionsAsyncTask = new PredictionsByStopsAsyncTask(realTimeApiKey, stopIds,
-                new PredictionsPostExecuteListener());
+        if (routes == null) {
+            predictionsAsyncTask = new PredictionsMapSearchAsyncTask(realTimeApiKey,
+                    targetLocation.getLatitude(), targetLocation.getLongitude(), distance,
+                    new PredictionsPostExecuteListener());
+        }
 
         predictionsAsyncTask.execute();
     }
@@ -1350,7 +1351,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             getShapes();
             getVehicles();
-            getPredictions();
+            getPredictions(SEARCH_DISTANCE_HALF_MILE, null);
             getServiceAlerts();
         }
 
@@ -1359,7 +1360,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
                 getShapes();
-                getPredictions();
+                getPredictions(SEARCH_DISTANCE_HALF_MILE, null);
                 getServiceAlerts();
 
             } else {

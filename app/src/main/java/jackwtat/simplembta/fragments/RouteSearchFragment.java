@@ -31,7 +31,7 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.activities.MainActivity;
 import jackwtat.simplembta.activities.TripDetailActivity;
 import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
-import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
+import jackwtat.simplembta.asyncTasks.PredictionsRouteSearchAsyncTask;
 import jackwtat.simplembta.asyncTasks.RoutesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
@@ -75,7 +75,7 @@ public class RouteSearchFragment extends Fragment implements
 
     private RoutesAsyncTask routesAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
-    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
+    private PredictionsRouteSearchAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
     private VehiclesByRouteAsyncTask vehiclesAsyncTask;
 
@@ -402,7 +402,7 @@ public class RouteSearchFragment extends Fragment implements
                         predictionsAsyncTask.cancel(true);
                     }
 
-                    predictionsAsyncTask = new RouteSearchPredictionsAsyncTask(realTimeApiKey,
+                    predictionsAsyncTask = new PredictionsRouteSearchAsyncTask(realTimeApiKey,
                             selectedRoute, selectedDirectionId, new PredictionsPostExecuteListener());
                     predictionsAsyncTask.execute();
 
@@ -808,7 +808,7 @@ public class RouteSearchFragment extends Fragment implements
         }
     }
 
-    private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
+    private class PredictionsPostExecuteListener implements PredictionsRouteSearchAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
             dataRefreshing = false;

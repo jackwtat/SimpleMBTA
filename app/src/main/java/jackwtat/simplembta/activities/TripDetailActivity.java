@@ -52,7 +52,7 @@ import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.TripDetailRecyclerViewAdapter;
-import jackwtat.simplembta.asyncTasks.PredictionsByTripAsyncTask;
+import jackwtat.simplembta.asyncTasks.PredictionsTripDetailAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByIdAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByIdAsyncTask;
@@ -96,7 +96,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private TripDetailRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
-    private PredictionsByTripAsyncTask predictionsAsyncTask;
+    private PredictionsTripDetailAsyncTask predictionsAsyncTask;
     private TripsAsyncTask tripsAsyncTask;
     private VehiclesByIdAsyncTask vehiclesAsyncTask;
     private StopsByIdAsyncTask stopsAsyncTask;
@@ -442,7 +442,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 selectedDate = new Date();
             }
 
-            predictionsAsyncTask = new PredictionsByTripAsyncTask(realTimeApiKey, selectedTripId,
+            predictionsAsyncTask = new PredictionsTripDetailAsyncTask(realTimeApiKey, selectedTripId,
                     selectedDate, new PredictionsPostExecuteListener());
             predictionsAsyncTask.execute();
 
@@ -916,7 +916,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     }
 
-    private class PredictionsPostExecuteListener implements PredictionsByTripAsyncTask.OnPostExecuteListener {
+    private class PredictionsPostExecuteListener implements PredictionsTripDetailAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Prediction[] p, boolean live) {
             refreshing = false;

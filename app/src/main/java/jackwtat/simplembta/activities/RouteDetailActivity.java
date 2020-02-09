@@ -52,7 +52,7 @@ import java.util.TimerTask;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.RouteSearchRecyclerViewAdapter;
-import jackwtat.simplembta.asyncTasks.RouteSearchPredictionsAsyncTask;
+import jackwtat.simplembta.asyncTasks.PredictionsRouteSearchAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
@@ -102,7 +102,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private RouteSearchRecyclerViewAdapter recyclerViewAdapter;
     private Timer timer;
 
-    private RouteSearchPredictionsAsyncTask predictionsAsyncTask;
+    private PredictionsRouteSearchAsyncTask predictionsAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
     private VehiclesByRouteAsyncTask vehiclesAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
@@ -502,7 +502,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                     predictionsAsyncTask.cancel(true);
                 }
 
-                predictionsAsyncTask = new RouteSearchPredictionsAsyncTask(realTimeApiKey, selectedRoute,
+                predictionsAsyncTask = new PredictionsRouteSearchAsyncTask(realTimeApiKey, selectedRoute,
                         selectedDirectionId, new PredictionsPostExecuteListener());
                 predictionsAsyncTask.execute();
 
@@ -1020,7 +1020,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private class PredictionsPostExecuteListener implements RouteSearchPredictionsAsyncTask.OnPostExecuteListener {
+    private class PredictionsPostExecuteListener implements PredictionsRouteSearchAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
             refreshing = false;
