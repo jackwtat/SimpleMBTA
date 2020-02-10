@@ -31,8 +31,6 @@ public class RealTimeApiClient {
 
     // Queries the MBTA API and returns the response as a string representation of a JSON object
     public String get(String query, String[] args) {
-        Date startTime = new Date();
-
         // Build get URL as String
         StringBuilder requestUrl = new StringBuilder(MBTA_URL + query + "?api_key=" + apiKey);
 
@@ -48,15 +46,6 @@ public class RealTimeApiClient {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request");
-        }
-
-        Date endTime = new Date();
-        long duration = endTime.getTime()-startTime.getTime();
-
-        if(duration > 200) {
-            System.out.println("***********************");
-            System.out.println("***** " + requestUrl.toString());
-            System.out.println("***** " + duration + " m/s");
         }
 
         return jsonResponse;
