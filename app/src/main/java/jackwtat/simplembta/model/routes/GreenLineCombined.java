@@ -16,8 +16,8 @@ public class GreenLineCombined extends GreenLine {
         setTextColor("FFFFFF");
         setStopMarkerFactory(new GreenLineStopMarkerFactory());
         setSortOrder(10030);
-        setDirection(new Direction(Direction.WESTBOUND, "Westbound"));
-        setDirection(new Direction(Direction.EASTBOUND, "Eastbound"));
+        setDirection(new Direction(Direction.WESTBOUND, "West"));
+        setDirection(new Direction(Direction.EASTBOUND, "East"));
     }
 
     public static boolean isGreenLineCombined(String routeId) {
