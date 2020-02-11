@@ -773,7 +773,7 @@ public class RouteSearchFragment extends Fragment implements
 
         @Override
         public void onError() {
-            enableOnErrorView(getResources().getString(R.string.error_routes));
+            enableOnErrorView(getContext().getResources().getString(R.string.error_routes));
             getRoutes();
         }
     }
@@ -788,7 +788,7 @@ public class RouteSearchFragment extends Fragment implements
 
         @Override
         public void onError() {
-            enableOnErrorView(getResources().getString(R.string.error_stops));
+            enableOnErrorView(getContext().getResources().getString(R.string.error_stops));
             getShapes();
         }
     }
@@ -867,7 +867,7 @@ public class RouteSearchFragment extends Fragment implements
         public void onError() {
             dataRefreshing = false;
             refreshTime = new Date().getTime();
-            enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
+            enableOnErrorView(getContext().getResources().getString(R.string.error_upcoming_predictions));
 
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);
