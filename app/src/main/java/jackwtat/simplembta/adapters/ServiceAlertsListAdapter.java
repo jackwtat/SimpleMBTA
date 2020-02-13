@@ -84,7 +84,12 @@ public class ServiceAlertsListAdapter extends ArrayAdapter<ServiceAlert> {
         }
 
         if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN) ||
+                alert.getEffect().equalsIgnoreCase("cancellation") ||
+                alert.getEffect().equalsIgnoreCase("delay") ||
+                alert.getEffect().equalsIgnoreCase("detour") ||
+                alert.getEffect().equalsIgnoreCase("snow route") ||
+                alert.getEffect().equalsIgnoreCase("suspension")) {
             alertIcon.setVisibility(View.VISIBLE);
             advisoryIcon.setVisibility(View.GONE);
         } else {

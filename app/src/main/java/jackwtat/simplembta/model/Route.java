@@ -111,7 +111,7 @@ public class Route implements Comparable<Route>, Serializable {
         return markerFactory.createMarkerOptions();
     }
 
-    public MarkerOptions getClosedStopMarkerOptions(){
+    public MarkerOptions getClosedStopMarkerOptions() {
         return markerFactory.createClosedMarkerOptions();
     }
 
@@ -254,7 +254,12 @@ public class Route implements Comparable<Route>, Serializable {
         for (ServiceAlert serviceAlert : serviceAlerts) {
             if (serviceAlert.isActive() &&
                     (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN ||
+                            serviceAlert.getEffect().equalsIgnoreCase("cancellation") ||
+                            serviceAlert.getEffect().equalsIgnoreCase("delay") ||
+                            serviceAlert.getEffect().equalsIgnoreCase("detour") ||
+                            serviceAlert.getEffect().equalsIgnoreCase("snow route") ||
+                            serviceAlert.getEffect().equalsIgnoreCase("suspension"))) {
                 return true;
             }
         }
