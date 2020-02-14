@@ -73,12 +73,7 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
 
         for (ServiceAlert alert : route.getServiceAlerts()) {
             if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN ||
-                    alert.getEffect().equalsIgnoreCase("cancellation") ||
-                    alert.getEffect().equalsIgnoreCase("delay") ||
-                    alert.getEffect().equalsIgnoreCase("detour") ||
-                    alert.getEffect().equalsIgnoreCase("snow route") ||
-                    alert.getEffect().equalsIgnoreCase("suspension"))) {
+                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
                 alertsCount++;
             } else {
                 advisoriesCount++;
