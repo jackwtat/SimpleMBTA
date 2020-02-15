@@ -40,7 +40,6 @@ public class Stop implements Comparable<Stop>, Serializable {
             this.id = "30249,31257";
         else
             this.id = id;
-
     }
 
     public String getId() {

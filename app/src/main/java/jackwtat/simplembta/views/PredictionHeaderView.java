@@ -18,6 +18,8 @@ public class PredictionHeaderView extends LinearLayout {
     TextView headerTextView;
     View[] secondaryColors;
     ImageView wheelchairAccessibleIcon;
+    ImageView stopAlertIcon;
+    ImageView stopAdvisoryIcon;
 
     int defaultPrimaryColor;
 
@@ -38,20 +40,6 @@ public class PredictionHeaderView extends LinearLayout {
 
     public void setText(String name) {
         headerTextView.setText(name);
-    }
-
-    public void setSecondaryColors(int[] colors) {
-        for (int i = 0; i < secondaryColors.length; i++) {
-            if (i < colors.length) {
-                Drawable background = secondaryColors[i].getBackground();
-
-                DrawableCompat.setTint(background, colors[i]);
-
-                secondaryColors[i].setVisibility(VISIBLE);
-            } else {
-                secondaryColors[i].setVisibility(GONE);
-            }
-        }
     }
 
     public void addSecondaryColor(int color) {
@@ -78,12 +66,22 @@ public class PredictionHeaderView extends LinearLayout {
         }
     }
 
+    public void enableStopAlertIcon(boolean urgent) {
+        if (urgent) {
+            stopAlertIcon.setVisibility(VISIBLE);
+        } else {
+            stopAdvisoryIcon.setVisibility(VISIBLE);
+        }
+    }
+
     public void reset() {
         setText("");
         for (View v : secondaryColors) {
             v.setVisibility(GONE);
         }
         wheelchairAccessibleIcon.setVisibility(GONE);
+        stopAlertIcon.setVisibility(GONE);
+        stopAdvisoryIcon.setVisibility(GONE);
     }
 
     private void initializeViews(Context context) {
@@ -95,5 +93,7 @@ public class PredictionHeaderView extends LinearLayout {
         headerTextView = rootView.findViewById(R.id.header_text_view);
         defaultPrimaryColor = ContextCompat.getColor(context, R.color.error_message_background);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
+        stopAlertIcon = rootView.findViewById(R.id.stop_alert_icon);
+        stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
     }
 }

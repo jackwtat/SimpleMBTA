@@ -55,7 +55,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_close_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/alert/ic_error_outline_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -65,9 +65,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
-                            <entry key="color" value="da291c" />
-                            <entry key="outputName" value="ic_external_link" />
+                            <entry key="color" value="aaaaaa" />
+                            <entry key="outputName" value="ic_stop_advisory" />
                             <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\icon_external_link.svg" />
                           </map>
                         </option>

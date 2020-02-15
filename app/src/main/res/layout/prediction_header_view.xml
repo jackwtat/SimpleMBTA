@@ -12,7 +12,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingLeft="16dp"
         android:paddingTop="8dp"
+        android:paddingRight="16dp"
         android:paddingBottom="8dp">
 
         <TextView
@@ -21,8 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="left"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:textColor="#FFFFFF"
             android:textSize="@dimen/large_header_text_size"
             android:textStyle="bold"
@@ -32,8 +32,22 @@
             android:id="@+id/wheelchair_accessible_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="16dp"
+            android:paddingLeft="8dp"
             android:src="@drawable/ic_accessible_large" />
+
+        <ImageView
+            android:id="@+id/stop_alert_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:src="@drawable/ic_stop_alert" />
+
+        <ImageView
+            android:id="@+id/stop_advisory_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:src="@drawable/ic_stop_advisory" />
     </LinearLayout>
 
     <LinearLayout

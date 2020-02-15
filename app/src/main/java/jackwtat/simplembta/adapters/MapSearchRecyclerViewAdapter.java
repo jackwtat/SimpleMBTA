@@ -14,6 +14,7 @@ import java.util.HashMap;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.views.MapSearchPredictionItem;
 import jackwtat.simplembta.views.PredictionHeaderView;
@@ -26,6 +27,7 @@ public class MapSearchRecyclerViewAdapter
 
     private Stop selectedStop;
     private Location targetLocation;
+    private OnItemClickListener onHeaderClickListener;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
 
@@ -110,7 +112,30 @@ public class MapSearchRecyclerViewAdapter
                 header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
             }
 
+            // Enable wheelchair accessibility icon
             header.setWheelchairAccessible(thisStop.isWheelchairAccessible());
+
+            // Enable stop alert icon
+            if (thisStop.getServiceAlerts().size() > 0) {
+                boolean hasUrgentAlert = false;
+                for (ServiceAlert alert : thisStop.getServiceAlerts()) {
+                    if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
+                            alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                        hasUrgentAlert = true;
+                        break;
+                    }
+                }
+                header.enableStopAlertIcon(hasUrgentAlert);
+
+                header.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(onHeaderClickListener!=null){
+                            onHeaderClickListener.onItemClick(i);
+                        }
+                    }
+                });
+            }
 
             header.setVisibility(View.VISIBLE);
 
@@ -213,6 +238,12 @@ public class MapSearchRecyclerViewAdapter
     public void clear() {
         adapterItems.clear();
         notifyDataSetChanged();
+    }
+
+    public void setOnHeaderClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
+        if (listener != null) {
+            this.onHeaderClickListener = listener;
+        }
     }
 
     public void setOnItemClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {

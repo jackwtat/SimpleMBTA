@@ -254,12 +254,7 @@ public class Route implements Comparable<Route>, Serializable {
         for (ServiceAlert serviceAlert : serviceAlerts) {
             if (serviceAlert.isActive() &&
                     (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN ||
-                            serviceAlert.getEffect().equalsIgnoreCase("delay") ||
-                            serviceAlert.getEffect().equalsIgnoreCase("cancellation") ||
-                            serviceAlert.getEffect().equalsIgnoreCase("detour") ||
-                            serviceAlert.getEffect().equalsIgnoreCase("snow route") ||
-                            serviceAlert.getEffect().equalsIgnoreCase("suspension"))) {
+                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
                 return true;
             }
         }

@@ -40,6 +40,8 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
     private Lifecycle lifecycle = Lifecycle.UNKNOWN;
     private boolean[] affectedModes = {false, false, false, false, false};
     private ArrayList<String> affectedRoutes = new ArrayList<>();
+    private ArrayList<String> affectedStops = new ArrayList<>();
+    private ArrayList<String> affectedFacilities = new ArrayList<>();
     private ArrayList<ActivePeriod> activePeriods = new ArrayList<>();
 
     public ServiceAlert(String id) {
@@ -72,6 +74,14 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
 
     public List<String> getAffectedRoutes() {
         return affectedRoutes;
+    }
+
+    public List<String> getAffectedStops() {
+        return affectedStops;
+    }
+
+    public List<String> getAffectedFacilities() {
+        return affectedFacilities;
     }
 
     public Lifecycle getLifecycle() {
@@ -116,12 +126,28 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
         return affectedRoutes.contains(routeId);
     }
 
+    public boolean affectsStop(String stopId) {
+        return affectedStops.contains(stopId);
+    }
+
+    public boolean affectsFacility(String facilityId) {
+        return affectedFacilities.contains(facilityId);
+    }
+
     public boolean affectsMode(int mode) {
         return affectedModes[mode];
     }
 
     public void addAffectedRoute(String routeId) {
         affectedRoutes.add(routeId);
+    }
+
+    public void addAffectedStop(String stopId) {
+        affectedStops.add(stopId);
+    }
+
+    public void addAffectedFacility(String facilityId) {
+        affectedFacilities.add(facilityId);
     }
 
     public void addAffectedMode(int mode) {

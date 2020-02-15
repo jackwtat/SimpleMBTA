@@ -2,6 +2,7 @@ package jackwtat.simplembta.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +59,7 @@ import jackwtat.simplembta.asyncTasks.RoutesByStopsAsyncTask;
 import jackwtat.simplembta.asyncTasks.SchedulesAsyncTask;
 import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
+import jackwtat.simplembta.asyncTasks.StopAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
@@ -87,6 +91,8 @@ import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.views.NoPredictionsView;
+import jackwtat.simplembta.views.ServiceAlertsListView;
+import jackwtat.simplembta.views.StopAlertsTitleView;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
@@ -121,6 +127,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private RoutesByStopsAsyncTask routesAsyncTask;
     private PredictionsAsyncTask predictionsAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
+    private StopAlertsAsyncTask stopAlertsAsyncTask;
     private ShapesAsyncTask shapesAsyncTask;
     private VehiclesByRouteAsyncTask vehiclesAsyncTask;
 
@@ -307,6 +314,54 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Set OnClickListeners
+        recyclerViewAdapter.setOnHeaderClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
+                        !noPredictionsView.isError()) {
+                    refreshPredictionViews();
+                }
+
+                Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
+
+                List<ServiceAlert> serviceAlerts = stop.getServiceAlerts();
+                Collections.sort(serviceAlerts);
+
+                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+
+                StopAlertsTitleView titleView = new StopAlertsTitleView(getContext());
+                titleView.setText(stop.getName());
+                titleView.setTextColor(ContextCompat.getColor(getContext(), R.color.HighlightedText));
+                titleView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.header_background));
+
+                // Add secondary colors
+                Collections.sort(stop.getRoutes());
+                HashMap<String, Void> colors = new HashMap<>();
+                for (Route route : stop.getRoutes()) {
+                    int mode = route.getMode();
+                    String color = route.getPrimaryColor();
+
+                    if (!colors.containsKey(color) &&
+                            (mode == Route.LIGHT_RAIL ||
+                                    mode == Route.HEAVY_RAIL)) {
+                        titleView.addSecondaryColor(Color.parseColor(color));
+                        colors.put(color, null);
+                    }
+                }
+
+                dialog.setCustomTitle(titleView);
+                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                dialog.show();
+            }
+        });
+
         recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -859,6 +914,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             serviceAlertsAsyncTask.cancel(true);
         }
 
+        if (stopAlertsAsyncTask != null) {
+            stopAlertsAsyncTask.cancel(true);
+        }
+
         if (shapesAsyncTask != null) {
             shapesAsyncTask.cancel(true);
         }
@@ -950,6 +1009,18 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 new ServiceAlertsPostExecuteListener());
 
         serviceAlertsAsyncTask.execute();
+    }
+
+    private void getStopAlerts() {
+        if (stopAlertsAsyncTask != null) {
+            stopAlertsAsyncTask.cancel(true);
+        }
+
+        stopAlertsAsyncTask = new StopAlertsAsyncTask(realTimeApiKey,
+                targetStops.keySet().toArray(new String[0]),
+                new StopAlertsPostExecuteListener());
+
+        stopAlertsAsyncTask.execute();
     }
 
     private void getShapes() {
@@ -1389,8 +1460,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
             getPredictions(null);
-
-            getServiceAlerts();
         }
 
         @Override
@@ -1402,8 +1471,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
                 getPredictions(null);
-
-                getServiceAlerts();
 
             } else {
                 // If we have no routes, then show error message
@@ -1567,6 +1634,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
             } else {
+                getServiceAlerts();
+                getStopAlerts();
                 getShapes();
             }
         }
@@ -1593,8 +1662,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             }
                         }
                     }
+                }
+            }
+        }
 
+        @Override
+        public void onError() {
+        }
+    }
 
+    private class StopAlertsPostExecuteListener implements StopAlertsAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] serviceAlerts) {
+            for (ServiceAlert alert : serviceAlerts) {
+                if (alert.getAffectedStops().size() > 0 && alert.getAffectedRoutes().size() == 0) {
+                    for (Stop stop : targetStops.values()) {
+                        if (alert.affectsStop(stop.getId())) {
+                            stop.addServiceAlert(alert);
+                        }
+                    }
                 }
             }
         }

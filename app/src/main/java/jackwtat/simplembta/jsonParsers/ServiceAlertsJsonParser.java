@@ -52,15 +52,25 @@ public class ServiceAlertsJsonParser {
 
                     JSONArray jRoutes = jAttributes.getJSONArray("informed_entity");
                     for (int j = 0; j < jRoutes.length(); j++) {
-                        JSONObject jAffectedRoute = jRoutes.getJSONObject(j);
+                        JSONObject jInformedEntity = jRoutes.getJSONObject(j);
 
-                        if (jAffectedRoute.has("route_type")) {
-                            if (jAffectedRoute.has("route")) {
+                        if (jInformedEntity.has("route_type")) {
+                            if (jInformedEntity.has("route")) {
                                 alert.addAffectedRoute(
-                                        jAffectedRoute.getString("route"));
+                                        jInformedEntity.getString("route"));
                             } else {
-                                alert.addAffectedMode(jAffectedRoute.getInt("route_type"));
+                                alert.addAffectedMode(jInformedEntity.getInt("route_type"));
                             }
+                        }
+
+                        // Add affected stops
+                        if (jInformedEntity.has("stop")) {
+                            alert.addAffectedStop(jInformedEntity.getString("stop"));
+                        }
+
+                        // Add affected facilities
+                        if (jInformedEntity.has("facility")) {
+                            alert.addAffectedFacility(jInformedEntity.getString("facility"));
                         }
                     }
 
