@@ -184,12 +184,17 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
                 (lifecycle == ServiceAlert.Lifecycle.NEW ||
                         lifecycle == ServiceAlert.Lifecycle.UNKNOWN ||
                         effect.equalsIgnoreCase("AMBER_ALERT") ||
-                        effect.equalsIgnoreCase("ELEVATOR_CLOSURE"));
+                        effect.equalsIgnoreCase("ELEVATOR_CLOSURE") ||
+                        effect.equalsIgnoreCase("ESCALATOR_CLOSURE"));
     }
 
     @Override
     public int compareTo(@NonNull ServiceAlert serviceAlert) {
-        if (this.isActive() && !serviceAlert.isActive()) {
+        if (this.isUrgent() && !serviceAlert.isUrgent()) {
+            return -1;
+        } else if (!this.isUrgent() && serviceAlert.isUrgent()) {
+            return 1;
+        } else if (this.isActive() && !serviceAlert.isActive()) {
             return -1;
         } else if (!this.isActive() && serviceAlert.isActive()) {
             return 1;
