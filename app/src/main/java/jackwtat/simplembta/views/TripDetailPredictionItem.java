@@ -289,7 +289,7 @@ public class TripDetailPredictionItem extends LinearLayout {
         if (prediction.getStop().isWheelchairAccessible()) {
             wheelchairAccessibleIcon.setVisibility(VISIBLE);
         } else {
-            wheelchairAccessibleIcon.setVisibility(GONE);
+            wheelchairAccessibleIcon.setVisibility(INVISIBLE);
         }
     }
 
