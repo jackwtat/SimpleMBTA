@@ -337,7 +337,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 dialog.setCustomTitle(titleView);
                 dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.dialog_close_button),
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                        getResources().getString(R.string.dialog_close_button),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
