@@ -138,7 +138,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     }
 
     public boolean willPickUpPassengers() {
-        return pickUpType != NO_PICK_UP && (arrivalTime != null || departureTime != null) &&
+        return pickUpType != NO_PICK_UP && departureTime != null &&
                 status != Prediction.SKIPPED && status != Prediction.CANCELLED;
     }
 
