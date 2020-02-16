@@ -323,6 +323,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
                 Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
 
                 List<ServiceAlert> serviceAlerts = stop.getServiceAlerts();
                 Collections.sort(serviceAlerts);
@@ -331,23 +332,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 StopAlertsTitleView titleView = new StopAlertsTitleView(getContext());
                 titleView.setText(stop.getName());
-                titleView.setTextColor(ContextCompat.getColor(getContext(), R.color.HighlightedText));
-                titleView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.header_background));
-
-                // Add secondary colors
-                Collections.sort(stop.getRoutes());
-                HashMap<String, Void> colors = new HashMap<>();
-                for (Route route : stop.getRoutes()) {
-                    int mode = route.getMode();
-                    String color = route.getPrimaryColor();
-
-                    if (!colors.containsKey(color) &&
-                            (mode == Route.LIGHT_RAIL ||
-                                    mode == Route.HEAVY_RAIL)) {
-                        titleView.addSecondaryColor(Color.parseColor(color));
-                        colors.put(color, null);
-                    }
-                }
+                titleView.setTextColor(Color.parseColor(route.getTextColor()));
+                titleView.setBackgroundColor(Color.parseColor(route.getPrimaryColor()));
 
                 dialog.setCustomTitle(titleView);
                 dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
