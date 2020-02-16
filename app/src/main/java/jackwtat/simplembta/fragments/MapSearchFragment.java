@@ -357,7 +357,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     refreshPredictionViews();
                 }
 
-                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+                Route route = new Route(recyclerViewAdapter.getAdapterItem(position).getRoute());
                 int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
 
                 if (predictionClickListener != null) {

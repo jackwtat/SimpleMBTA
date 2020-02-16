@@ -47,6 +47,24 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
+    public Route(Route route) {
+        this.id = route.id;
+        this.mode = route.mode;
+        this.sortOrder = route.sortOrder;
+        this.shortName = route.shortName;
+        this.longName = route.longName;
+        this.primaryColor = route.primaryColor;
+        this.accentColor = route.accentColor;
+        this.textColor = route.textColor;
+        this.directions = route.directions;
+        this.shapes = route.shapes;
+        this.markerFactory = route.markerFactory;
+
+        for (int i = 0; i < 2; i++) {
+            predictions.add(new ArrayList<Prediction>());
+        }
+    }
+
     public String getId() {
         return id;
     }
