@@ -183,6 +183,7 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
         return isActive() &&
                 (lifecycle == ServiceAlert.Lifecycle.NEW ||
                         lifecycle == ServiceAlert.Lifecycle.UNKNOWN ||
+                        effect.equalsIgnoreCase("AMBER_ALERT") ||
                         effect.equalsIgnoreCase("ELEVATOR_CLOSURE"));
     }
 
