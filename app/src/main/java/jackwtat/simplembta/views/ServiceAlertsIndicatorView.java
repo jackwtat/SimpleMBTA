@@ -137,9 +137,7 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
                                 ? view.getContext().getString(R.string.service_advisories)
                                 : view.getContext().getString(R.string.service_advisory),
                         Color.parseColor(route.getTextColor()),
-                        Color.parseColor(route.getPrimaryColor()),
-                        route.getMode() == Route.BUS &&
-                                !SilverLine.isSilverLine(route.getId())));
+                        Color.parseColor(route.getPrimaryColor())));
 
                 dialog.setView(new ServiceAlertsListView(view.getContext(), serviceAlerts));
 

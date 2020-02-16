@@ -15,11 +15,4 @@
         android:paddingRight="8dp"
         android:textSize="24sp"
         android:textStyle="bold" />
-
-    <View
-        android:id="@+id/title_accent"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/bus_accent"
-        android:visibility="gone" />
 </LinearLayout>

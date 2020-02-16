@@ -13,7 +13,6 @@ import jackwtat.simplembta.R;
 public class ServiceAlertsTitleView extends RelativeLayout {
     View rootView;
     TextView textView;
-    View accentView;
 
     public ServiceAlertsTitleView(Context context) {
         super(context);
@@ -30,14 +29,12 @@ public class ServiceAlertsTitleView extends RelativeLayout {
         initializeViews(context);
     }
 
-    public ServiceAlertsTitleView(Context context, String text, int textColor, int backgroundColor,
-                                  boolean accentViewVisible) {
+    public ServiceAlertsTitleView(Context context, String text, int textColor, int backgroundColor) {
         super(context);
         initializeViews(context);
         setText(text);
         setTextColor(textColor);
         setBackgroundColor(backgroundColor);
-        setAccentViewVisible(accentViewVisible);
     }
 
     public void setText(String text) {
@@ -54,17 +51,8 @@ public class ServiceAlertsTitleView extends RelativeLayout {
         textView.setBackground(background);
     }
 
-    public void setAccentViewVisible(boolean visible) {
-        if (visible) {
-            accentView.setVisibility(VISIBLE);
-        } else {
-            accentView.setVisibility(GONE);
-        }
-    }
-
     private void initializeViews(Context context) {
         rootView = inflate(context, R.layout.service_alerts_title_view, this);
         textView = rootView.findViewById(R.id.title_text_view);
-        accentView = rootView.findViewById(R.id.title_accent);
     }
 }
