@@ -179,6 +179,13 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
         return false;
     }
 
+    public boolean isUrgent() {
+        return isActive() &&
+                (lifecycle == ServiceAlert.Lifecycle.NEW ||
+                        lifecycle == ServiceAlert.Lifecycle.UNKNOWN ||
+                        effect.equalsIgnoreCase("ELEVATOR_CLOSURE"));
+    }
+
     @Override
     public int compareTo(@NonNull ServiceAlert serviceAlert) {
         if (this.isActive() && !serviceAlert.isActive()) {

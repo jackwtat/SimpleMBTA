@@ -119,8 +119,7 @@ public class MapSearchRecyclerViewAdapter
             if (thisStop.getServiceAlerts().size() > 0) {
                 boolean hasUrgentAlert = false;
                 for (ServiceAlert alert : thisStop.getServiceAlerts()) {
-                    if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+                    if (alert.isUrgent()) {
                         hasUrgentAlert = true;
                         break;
                     }

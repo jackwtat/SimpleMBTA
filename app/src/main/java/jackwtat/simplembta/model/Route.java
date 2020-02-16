@@ -270,9 +270,7 @@ public class Route implements Comparable<Route>, Serializable {
 
     public boolean hasUrgentServiceAlerts() {
         for (ServiceAlert serviceAlert : serviceAlerts) {
-            if (serviceAlert.isActive() &&
-                    (serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                            serviceAlert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+            if (serviceAlert.isUrgent()) {
                 return true;
             }
         }

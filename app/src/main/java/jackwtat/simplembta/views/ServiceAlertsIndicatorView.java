@@ -72,8 +72,7 @@ public class ServiceAlertsIndicatorView extends LinearLayout {
         advisoriesCount = 0;
 
         for (ServiceAlert alert : route.getServiceAlerts()) {
-            if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                    alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+            if (alert.isUrgent()) {
                 alertsCount++;
             } else {
                 advisoriesCount++;

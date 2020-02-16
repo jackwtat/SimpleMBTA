@@ -75,8 +75,7 @@ public class ServiceAlertItem extends RelativeLayout {
             shortBodyTextView.setTypeface(null, Typeface.NORMAL);
         }
 
-        if (alert.isActive() && (alert.getLifecycle() == ServiceAlert.Lifecycle.NEW ||
-                alert.getLifecycle() == ServiceAlert.Lifecycle.UNKNOWN)) {
+        if (alert.isUrgent()) {
             alertIcon.setVisibility(View.VISIBLE);
             advisoryIcon.setVisibility(View.GONE);
         } else {
