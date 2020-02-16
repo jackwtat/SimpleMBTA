@@ -11,22 +11,22 @@ import android.widget.TextView;
 
 import jackwtat.simplembta.R;
 
-public class StopAlertsTitleView extends LinearLayout {
+public class StopInfoTitleView extends LinearLayout {
     private View rootView;
     private View[] secondaryColors;
     private TextView textView;
 
-    public StopAlertsTitleView(Context context) {
+    public StopInfoTitleView(Context context) {
         super(context);
         init(context);
     }
 
-    public StopAlertsTitleView(Context context, @Nullable AttributeSet attrs) {
+    public StopInfoTitleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public StopAlertsTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public StopInfoTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -60,7 +60,7 @@ public class StopAlertsTitleView extends LinearLayout {
     }
 
     private void init(Context context){
-        rootView = inflate(context, R.layout.stop_alerts_title_view, this);
+        rootView = inflate(context, R.layout.stop_info_title_view, this);
         secondaryColors = new View[3];
         secondaryColors[0] = rootView.findViewById(R.id.secondary_color_0);
         secondaryColors[1] = rootView.findViewById(R.id.secondary_color_1);

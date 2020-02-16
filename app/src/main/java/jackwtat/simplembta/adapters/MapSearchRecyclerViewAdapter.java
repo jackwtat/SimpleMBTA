@@ -125,16 +125,17 @@ public class MapSearchRecyclerViewAdapter
                     }
                 }
                 header.enableStopAlertIcon(hasUrgentAlert);
-
-                header.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(onHeaderClickListener!=null){
-                            onHeaderClickListener.onItemClick(i);
-                        }
-                    }
-                });
             }
+
+            // Set header OnClickListener
+            header.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onHeaderClickListener!=null){
+                        onHeaderClickListener.onItemClick(i);
+                    }
+                }
+            });
 
             header.setVisibility(View.VISIBLE);
 

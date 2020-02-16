@@ -29,9 +29,9 @@
     <string name="no_service_alerts">No Service Alerts</string>
 
     <!-- Accessibility -->
-    <string name="stop_is_wheelchair_accessible">This stop is wheelchair accessible</string>
-    <string name="stop_not_wheelchair_accessible">This stop is not wheelchair accessible</string>
-    <string name="no_accessibility_info">No accessibility info is available for this stop</string>
+    <string name="wheelchair_accessible">Wheelchair Accessible</string>
+    <string name="not_wheelchair_accessible">Not Wheelchair Accessible</string>
+    <string name="no_accessibility_info">No Accessibility Info Available</string>
 
     <!-- Error Messages -->
     <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>

@@ -91,8 +91,8 @@ import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.views.NoPredictionsView;
-import jackwtat.simplembta.views.ServiceAlertsListView;
-import jackwtat.simplembta.views.StopAlertsTitleView;
+import jackwtat.simplembta.views.StopInfoBodyView;
+import jackwtat.simplembta.views.StopInfoTitleView;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
@@ -325,18 +325,22 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
                 Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
 
-                List<ServiceAlert> serviceAlerts = stop.getServiceAlerts();
-                Collections.sort(serviceAlerts);
+                List<ServiceAlert> alerts = stop.getServiceAlerts();
+                Collections.sort(alerts);
 
                 AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
 
-                StopAlertsTitleView titleView = new StopAlertsTitleView(getContext());
+                StopInfoTitleView titleView = new StopInfoTitleView(getContext());
                 titleView.setText(stop.getName());
                 titleView.setTextColor(Color.parseColor(route.getTextColor()));
                 titleView.setBackgroundColor(Color.parseColor(route.getPrimaryColor()));
 
+                StopInfoBodyView bodyView = new StopInfoBodyView(getContext());
+                bodyView.setAccessibility(stop.getAccessibility());
+                bodyView.setAlerts(alerts);
+
                 dialog.setCustomTitle(titleView);
-                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
+                dialog.setView(bodyView);
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE,
                         getResources().getString(R.string.dialog_close_button),
                         new DialogInterface.OnClickListener() {

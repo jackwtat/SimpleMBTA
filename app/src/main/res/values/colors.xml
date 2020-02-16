@@ -36,6 +36,8 @@
     <color name="tomorrowPrediction">#0078A0</color>
     <color name="dropOffPrediction">#da291c</color>
     <color name="cancelledPrediction">#da291c</color>
+    <color name="accessible">#165c96</color>
+    <color name="not_accessible">#da291c</color>
     <color name="map_artifact">#4182FF</color>
     <color name="Transparent">#00FFFFFF</color>
     <color name="selected_spinner_item">#EDEDED</color>
