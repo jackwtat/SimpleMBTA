@@ -214,8 +214,8 @@ public class TripsJsonParser {
                                     location.setLongitude(jStopAttr.getDouble("longitude"));
                                     stop.setLocation(location);
 
-                                    stop.setWheelchairAccessible(
-                                            jStopAttr.getInt("wheelchair_boarding") == 1);
+                                    // Get wheelchair accessibility
+                                    stop.setAccessibility(jStopAttr.getInt("wheelchair_boarding"));
                                 }
 
                                 stops[j] = stop;

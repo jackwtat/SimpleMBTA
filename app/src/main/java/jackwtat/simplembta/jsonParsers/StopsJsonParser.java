@@ -75,8 +75,7 @@ public class StopsJsonParser {
                         stop.setLocation(location);
 
                         // Get handicap accessibility
-                        stop.setWheelchairAccessible(
-                                jAttributes.getInt("wheelchair_boarding") == 1);
+                        stop.setAccessibility(jAttributes.getInt("wheelchair_boarding"));
 
                         stops.add(stop);
                     }

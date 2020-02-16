@@ -28,6 +28,11 @@
     <string name="advisories">Advisories</string>
     <string name="no_service_alerts">No Service Alerts</string>
 
+    <!-- Accessibility -->
+    <string name="stop_is_wheelchair_accessible">This stop is wheelchair accessible</string>
+    <string name="stop_not_wheelchair_accessible">This stop is not wheelchair accessible</string>
+    <string name="no_accessibility_info">No accessibility info is available for this stop</string>
+
     <!-- Error Messages -->
     <string name="location_permission_denied_text">Tap here to allow Simple MBTA to access your location</string>
     <string name="location_error_text">Unable to get your current location</string>

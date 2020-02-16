@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.HashMap;
 
 import jackwtat.simplembta.model.Direction;
@@ -117,8 +116,8 @@ public class PredictionsJsonParser {
                             location.setLongitude(jStopAttr.getDouble("longitude"));
                             stop.setLocation(location);
 
-                            stop.setWheelchairAccessible(
-                                    jStopAttr.getInt("wheelchair_boarding") == 1);
+                            // Get stop accessibility
+                            stop.setAccessibility(jStopAttr.getInt("wheelchair_boarding"));
 
                             // Get the parent stop id
                             try {

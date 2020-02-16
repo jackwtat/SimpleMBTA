@@ -7,6 +7,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Stop implements Comparable<Stop>, Serializable {
+
+    public enum Accessibility {
+        NO_DATA(0),
+        ACCESSIBLE(1),
+        NOT_ACCESSIBLE(2);
+
+        private int status;
+
+        Accessibility(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+    }
+
     private String id;
     private String name = "null";
     private String parentId = "";
@@ -15,7 +32,7 @@ public class Stop implements Comparable<Stop>, Serializable {
     private double longitude = 0.0;
     private ArrayList<Route> routes = new ArrayList<>();
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
-    private boolean wheelchairAccessible = false;
+    private Accessibility accessibility = Accessibility.NO_DATA;
 
     public Stop(String id) {
         if (id.equals("3") || id.equals("61"))
@@ -73,6 +90,10 @@ public class Stop implements Comparable<Stop>, Serializable {
         return childIds;
     }
 
+    public Accessibility getAccessibility() {
+        return accessibility;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -90,8 +111,17 @@ public class Stop implements Comparable<Stop>, Serializable {
         longitude = location.getLongitude();
     }
 
-    public void setWheelchairAccessible(boolean wheelchairAccessible) {
-        this.wheelchairAccessible = wheelchairAccessible;
+    public void setAccessibility(int accessibility) {
+        switch (accessibility) {
+            case 1:
+                this.accessibility = Accessibility.ACCESSIBLE;
+                break;
+            case 2:
+                this.accessibility = Accessibility.NOT_ACCESSIBLE;
+                break;
+            default:
+                this.accessibility = Accessibility.NO_DATA;
+        }
     }
 
     public void addRoute(Route route) {
@@ -135,7 +165,7 @@ public class Stop implements Comparable<Stop>, Serializable {
     }
 
     public boolean isWheelchairAccessible() {
-        return wheelchairAccessible;
+        return accessibility == Accessibility.ACCESSIBLE;
     }
 
     @Override

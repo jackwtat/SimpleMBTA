@@ -4,16 +4,12 @@ import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.PolyUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
@@ -110,8 +106,7 @@ public class ShapesJsonParser {
                 stop.setLocation(location);
 
                 // Get wheelchair accessibility
-                stop.setWheelchairAccessible(
-                        jAttributes.getInt("wheelchair_boarding") == 1);
+                stop.setAccessibility(jAttributes.getInt("wheelchair_boarding"));
 
                 // Get the parent stop id
                 try {
