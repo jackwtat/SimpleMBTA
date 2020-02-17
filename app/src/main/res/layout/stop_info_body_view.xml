@@ -26,9 +26,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_accessible"
                 android:paddingLeft="6dp"
-                android:paddingTop="4dp"
+                android:paddingTop="5dp"
                 android:paddingRight="6dp"
-                android:paddingBottom="4dp"
+                android:paddingBottom="5dp"
                 android:src="@drawable/ic_accessible_large" />
 
             <TextView
