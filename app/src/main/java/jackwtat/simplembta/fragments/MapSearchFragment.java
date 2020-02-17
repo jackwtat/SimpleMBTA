@@ -1032,7 +1032,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         ArrayList<String> routeIds = new ArrayList<>();
 
         for (Route route : targetRoutes.values()) {
-            if (route.getPredictions(Direction.INBOUND).size() == 0 ||
+            if (route.getPredictions(Direction.INBOUND).size() == 0 &&
                     route.getPredictions(Direction.OUTBOUND).size() == 0) {
                 routeIds.add(route.getId());
             }
