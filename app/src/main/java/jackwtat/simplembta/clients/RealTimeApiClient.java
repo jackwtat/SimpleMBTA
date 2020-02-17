@@ -48,6 +48,7 @@ public class RealTimeApiClient {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request");
+            Log.e(LOG_TAG, requestUrl.toString());
         }
 
         long endTime = new Date().getTime();
@@ -70,6 +71,7 @@ public class RealTimeApiClient {
             url = new URL(stringUrl);
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Problem building the URL ", e);
+            Log.e(LOG_TAG, stringUrl);
         }
         return url;
     }
@@ -104,6 +106,7 @@ public class RealTimeApiClient {
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making HTTP request");
+            Log.e(LOG_TAG, url.toString());
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
