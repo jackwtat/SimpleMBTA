@@ -29,15 +29,16 @@
     <color name="ferry">#008eaa</color>
 
     <!-- Other Colors -->
-    <color name="ServiceAlert_Urgent">#da291c</color>
-    <color name="ServiceAlert_Advisory">#da291c</color>
+    <color name="ServiceAlert_Urgent">#ff0000</color>
+    <color name="ServiceAlert_Advisory">#aaaaaa</color>
     <color name="livePrediction">#3F51B5</color>
     <color name="trackNumber">#145a06</color>
     <color name="tomorrowPrediction">#0078A0</color>
     <color name="dropOffPrediction">#da291c</color>
     <color name="cancelledPrediction">#da291c</color>
     <color name="accessible">#165c96</color>
-    <color name="not_accessible">#da291c</color>
+    <color name="not_accessible">#ff0000</color>
+    <color name="no_stop_data">#606060</color>
     <color name="map_artifact">#4182FF</color>
     <color name="Transparent">#00FFFFFF</color>
     <color name="selected_spinner_item">#EDEDED</color>

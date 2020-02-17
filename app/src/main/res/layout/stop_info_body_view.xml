@@ -35,36 +35,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
-                android:paddingRight="8dp"
                 android:text="@string/wheelchair_accessible"
                 android:textColor="@color/accessible"
                 android:textSize="@dimen/small_header_text_size"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/not_accessible_view"
+        <LinearLayout
+            android:id="@+id/no_accessibility_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_not_accessible"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/not_wheelchair_accessible"
-            android:textColor="@color/not_accessible"
-            android:textSize="@dimen/small_header_text_size"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_stop_alert" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/no_wheelchair_accessibility"
+                android:textColor="@color/not_accessible"
+                android:textSize="@dimen/small_header_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/no_accessibility_data_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_not_accessible"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/no_accessibility_info"
-            android:textColor="@color/not_accessible"
-            android:textSize="@dimen/small_header_text_size"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_stop_no_data" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/no_accessibility_info"
+                android:textColor="@color/no_stop_data"
+                android:textSize="@dimen/small_header_text_size"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
     <View

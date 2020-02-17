@@ -30,7 +30,7 @@
 
     <!-- Accessibility -->
     <string name="wheelchair_accessible">Wheelchair Accessible</string>
-    <string name="not_wheelchair_accessible">Not Wheelchair Accessible</string>
+    <string name="no_wheelchair_accessibility">No Wheelchair Accessibility</string>
     <string name="no_accessibility_info">No Accessibility Info Available</string>
 
     <!-- Error Messages -->

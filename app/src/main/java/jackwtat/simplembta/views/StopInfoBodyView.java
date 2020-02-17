@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class StopInfoBodyView extends RelativeLayout {
     View rootView;
     View middleBorder;
     View accessibleView;
-    View notAccessibleView;
+    View noAccessibleView;
     View noAccessibilityDataView;
     RecyclerView alertsRecyclerView;
     ServiceAlertsRecyclerViewAdapter alertsRecyclerViewAdapter;
@@ -56,17 +55,17 @@ public class StopInfoBodyView extends RelativeLayout {
         switch (accessibility) {
             case ACCESSIBLE:
                 accessibleView.setVisibility(VISIBLE);
-                notAccessibleView.setVisibility(GONE);
+                noAccessibleView.setVisibility(GONE);
                 noAccessibilityDataView.setVisibility(GONE);
                 break;
             case NOT_ACCESSIBLE:
                 accessibleView.setVisibility(GONE);
-                notAccessibleView.setVisibility(VISIBLE);
+                noAccessibleView.setVisibility(VISIBLE);
                 noAccessibilityDataView.setVisibility(GONE);
                 break;
             default:
                 accessibleView.setVisibility(GONE);
-                notAccessibleView.setVisibility(GONE);
+                noAccessibleView.setVisibility(GONE);
                 noAccessibilityDataView.setVisibility(VISIBLE);
         }
     }
@@ -75,7 +74,7 @@ public class StopInfoBodyView extends RelativeLayout {
         rootView = inflate(context, R.layout.stop_info_body_view, this);
         middleBorder = rootView.findViewById(R.id.middle_border);
         accessibleView = rootView.findViewById(R.id.accessible_view);
-        notAccessibleView = rootView.findViewById(R.id.not_accessible_view);
+        noAccessibleView = rootView.findViewById(R.id.no_accessibility_view);
         noAccessibilityDataView = rootView.findViewById(R.id.no_accessibility_data_view);
         alertsRecyclerView = rootView.findViewById(R.id.alerts_recycler_view);
 
