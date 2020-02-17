@@ -323,10 +323,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
                 Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
-                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+                Collections.sort(stop.getRoutes());
+                Route route = stop.getRoutes().get(0);
 
-                List<ServiceAlert> alerts = stop.getServiceAlerts();
-                Collections.sort(alerts);
+                Collections.sort(stop.getServiceAlerts());
 
                 AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
 
@@ -337,7 +337,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 StopInfoBodyView bodyView = new StopInfoBodyView(getContext());
                 bodyView.setAccessibility(stop.getAccessibility());
-                bodyView.setAlerts(alerts);
+                bodyView.setAlerts(stop.getServiceAlerts());
 
                 dialog.setCustomTitle(titleView);
                 dialog.setView(bodyView);
