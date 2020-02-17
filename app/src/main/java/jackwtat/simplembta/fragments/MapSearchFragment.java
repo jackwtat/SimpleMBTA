@@ -1456,7 +1456,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 targetRoutes.put(route.getId(), route);
             }
 
-            //getShapes();
             getVehicles();
 
             searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
@@ -1467,7 +1466,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         public void onError() {
             if (targetRoutes.size() > 0) {
                 // If we have routes from a previous update, then proceed with current update
-                //getShapes();
                 getVehicles();
 
                 searchDistance = SEARCH_DISTANCE_QUARTER_MILE;
