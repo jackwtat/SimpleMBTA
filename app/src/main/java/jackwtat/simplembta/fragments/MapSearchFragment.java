@@ -995,11 +995,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             serviceAlertsAsyncTask.cancel(true);
         }
 
-        serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
-                targetRoutes.keySet().toArray(new String[0]),
-                new ServiceAlertsPostExecuteListener());
+        if (targetRoutes.size() > 0) {
+            serviceAlertsAsyncTask = new ServiceAlertsAsyncTask(realTimeApiKey,
+                    targetRoutes.keySet().toArray(new String[0]),
+                    new ServiceAlertsPostExecuteListener());
 
-        serviceAlertsAsyncTask.execute();
+            serviceAlertsAsyncTask.execute();
+        }
     }
 
     private void getStopAlerts() {
@@ -1038,10 +1040,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
         }
 
-        shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
-                routeIds.toArray(new String[0]), new ShapesPostExecuteListener());
+        if (routeIds.size() > 0) {
+            shapesAsyncTask = new ShapesAsyncTask(realTimeApiKey,
+                    routeIds.toArray(new String[0]), new ShapesPostExecuteListener());
 
-        shapesAsyncTask.execute();
+            shapesAsyncTask.execute();
+        } else {
+            queriesComplete();
+        }
     }
 
     private void getVehicles() {
@@ -1055,10 +1061,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             routeIds.add(route.getId());
         }
 
-        vehiclesAsyncTask = new VehiclesByRouteAsyncTask(realTimeApiKey,
-                routeIds.toArray(new String[0]), new VehiclesPostExecuteListener());
+        if (routeIds.size() > 0) {
+            vehiclesAsyncTask = new VehiclesByRouteAsyncTask(realTimeApiKey,
+                    routeIds.toArray(new String[0]), new VehiclesPostExecuteListener());
 
-        vehiclesAsyncTask.execute();
+            vehiclesAsyncTask.execute();
+        }
     }
 
     private void queriesComplete() {
