@@ -1007,11 +1007,21 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             stopAlertsAsyncTask.cancel(true);
         }
 
-        stopAlertsAsyncTask = new StopAlertsAsyncTask(realTimeApiKey,
-                targetStops.keySet().toArray(new String[0]),
-                new StopAlertsPostExecuteListener());
+        HashMap<String, Void> stopIds = new HashMap<>();
+        for (Route route : targetRoutes.values()) {
+            for (int i = 0; i < 2; i++) {
+                if (route.getNearestStop(i) != null) {
+                    stopIds.put(route.getNearestStop(i).getId(), null);
+                }
+            }
+        }
 
-        stopAlertsAsyncTask.execute();
+        if (stopIds.size() > 0) {
+            stopAlertsAsyncTask = new StopAlertsAsyncTask(realTimeApiKey,
+                    stopIds.keySet().toArray(new String[0]), new StopAlertsPostExecuteListener());
+
+            stopAlertsAsyncTask.execute();
+        }
     }
 
     private void getShapes() {
