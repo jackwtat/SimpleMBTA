@@ -103,7 +103,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="@string/live"
-                    android:textColor="@color/livePrediction"
+                    android:textColor="@color/live_prediction"
                     android:textSize="@dimen/body_text_size"
                     android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                     android:background="@drawable/border_in_progress"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:textColor="@color/trackNumber"
+                    android:textColor="@color/track_number"
                     android:textSize="@dimen/body_text_size"
                     android:textStyle="bold"
                     tools:text="TRACK 4" />
@@ -129,7 +129,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="@string/en_route"
-                    android:textColor="@color/trackNumber"
+                    android:textColor="@color/track_number"
                     android:textSize="@dimen/body_text_size"
                     android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="@string/tomorrow"
-                    android:textColor="@color/tomorrowPrediction"
+                    android:textColor="@color/tomorrow_prediction"
                     android:textSize="@dimen/body_text_size"
                     android:textStyle="bold" />
 
@@ -154,7 +154,7 @@
                     android:background="@drawable/border_tomorrow"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:textColor="@color/tomorrowPrediction"
+                    android:textColor="@color/tomorrow_prediction"
                     android:textSize="@dimen/body_text_size"
                     android:textStyle="bold" />
 

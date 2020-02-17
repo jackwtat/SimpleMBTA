@@ -161,7 +161,7 @@
                         android:background="@drawable/border_in_progress"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
-                        android:textColor="@color/trackNumber"
+                        android:textColor="@color/track_number"
                         android:textSize="@dimen/body_text_size"
                         android:textStyle="bold"
                         tools:text="Track 4" />
