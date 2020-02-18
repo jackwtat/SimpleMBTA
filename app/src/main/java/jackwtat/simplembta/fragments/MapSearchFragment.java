@@ -138,6 +138,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     private boolean cameraIsMoving = false;
     private boolean userIsScrolling = false;
     private boolean staleLocation = true;
+    private boolean predictionsReady = false;
+    private boolean serviceAlertsReady = false;
+    private boolean stopAlertsReady = false;
+    private boolean shapesReady = false;
     private int mapState = USER_HAS_NOT_MOVED_MAP;
     private int cameraMoveReason = GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION;
     private long refreshTime = 0;
@@ -866,6 +870,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         predictionsCount = 0;
         cancelledPredictions.clear();
 
+        predictionsReady = false;
+        serviceAlertsReady = false;
+        stopAlertsReady = false;
+        shapesReady = false;
+
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
             dataRefreshing = true;
@@ -1001,6 +1010,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     new ServiceAlertsPostExecuteListener());
 
             serviceAlertsAsyncTask.execute();
+        } else {
+            serviceAlertsReady = true;
+            queriesComplete();
         }
     }
 
@@ -1023,6 +1035,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     stopIds.keySet().toArray(new String[0]), new StopAlertsPostExecuteListener());
 
             stopAlertsAsyncTask.execute();
+        } else {
+            stopAlertsReady = true;
+            queriesComplete();
         }
     }
 
@@ -1046,6 +1061,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
             shapesAsyncTask.execute();
         } else {
+            shapesReady = true;
             queriesComplete();
         }
     }
@@ -1070,6 +1086,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void queriesComplete() {
+        if (!predictionsReady || !serviceAlertsReady || !stopAlertsReady || !shapesReady) {
+            return;
+        }
+
         // Lock the views to prevent UI changes while loading new data to views
         viewsRefreshing = true;
 
@@ -1641,6 +1661,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
 
             } else {
+                predictionsReady = true;
+
                 getServiceAlerts();
                 getStopAlerts();
                 getShapes();
@@ -1671,10 +1693,15 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
                 }
             }
+
+            serviceAlertsReady = true;
+            queriesComplete();
         }
 
         @Override
         public void onError() {
+            serviceAlertsReady = true;
+            queriesComplete();
         }
     }
 
@@ -1690,10 +1717,15 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
                 }
             }
+
+            stopAlertsReady = true;
+            queriesComplete();
         }
 
         @Override
         public void onError() {
+            stopAlertsReady = true;
+            queriesComplete();
         }
     }
 
@@ -1708,11 +1740,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
 
+            shapesReady = true;
             queriesComplete();
         }
 
         @Override
         public void onError() {
+            shapesReady = true;
             queriesComplete();
         }
     }
