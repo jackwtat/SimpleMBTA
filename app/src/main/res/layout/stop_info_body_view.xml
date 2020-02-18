@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
                 android:text="@string/no_wheelchair_accessibility"
-                android:textColor="@color/not_accessible"
+                android:textColor="@color/no_stop_data"
                 android:textSize="@dimen/small_header_text_size"
                 android:textStyle="bold" />
         </LinearLayout>
