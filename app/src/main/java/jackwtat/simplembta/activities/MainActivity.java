@@ -15,6 +15,7 @@ import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
+import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.utilities.PastDataHolder;
 
 
@@ -101,8 +102,19 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
         viewPager.setCurrentItem(1);
     }
 
+    @Override
+    public void onClick(Route route, int directionId, Stop stop) {
+        if (outsideQueryListener != null) {
+            outsideQueryListener.outsideQuery(route, directionId, stop);
+        }
+
+        viewPager.setCurrentItem(1);
+    }
+
     public interface OutsideQueryListener {
         void outsideQuery(Route route, int directionId, Location location);
+
+        void outsideQuery(Route route, int directionId, Stop stop);
     }
 
     public static void registerOutsideQueryListener(OutsideQueryListener listener) {

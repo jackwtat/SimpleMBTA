@@ -21,6 +21,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -363,14 +364,13 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 Route route = new Route(recyclerViewAdapter.getAdapterItem(position).getRoute());
                 int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
+                Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
 
                 if (predictionClickListener != null) {
-                    Stop stop = route.getNearestStop(direction);
-
                     if (stop == null) {
                         predictionClickListener.onClick(route, direction, targetLocation);
                     } else {
-                        predictionClickListener.onClick(route, direction, stop.getLocation());
+                        predictionClickListener.onClick(route, direction, stop);
                     }
 
                 } else {
@@ -1750,6 +1750,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
     public interface PredictionClickListener {
         void onClick(Route route, int directionId, Location location);
+
+        void onClick(Route route, int directionId, Stop stop);
     }
 
     public static void registerPredictionClickListener(PredictionClickListener listener) {

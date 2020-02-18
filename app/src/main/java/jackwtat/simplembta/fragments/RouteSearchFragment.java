@@ -671,6 +671,16 @@ public class RouteSearchFragment extends Fragment implements
         executeQuery();
     }
 
+    @Override
+    public void outsideQuery(Route route, int directionId, Stop stop) {
+        queryRoute = route;
+        queryDirectionId = directionId;
+        queryStop = stop;
+        queryLocation = null;
+
+        executeQuery();
+    }
+
     private void executeQuery() {
         queryInProgress = true;
 
