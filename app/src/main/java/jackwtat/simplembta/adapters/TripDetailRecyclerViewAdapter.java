@@ -2,6 +2,7 @@ package jackwtat.simplembta.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class TripDetailRecyclerViewAdapter
     private Stop selectedStop = null;
     private int selectedStopSequence = -1;
     private Vehicle vehicle;
+    private OnClickListener onClickListener;
+    private OnLongClickListener onLongClickListener;
 
     public TripDetailRecyclerViewAdapter() {
     }
@@ -62,11 +65,38 @@ public class TripDetailRecyclerViewAdapter
                 selectedStop.isParentOf(prediction.getStopId())) {
             holder.predictionView.emphasize();
         }
+
+        if (onClickListener != null) {
+            holder.predictionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onClickListener != null) {
+                        onClickListener.onItemClick(position);
+                    }
+                }
+            });
+        }
+
+        if (onLongClickListener != null) {
+            holder.predictionView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onLongClickListener != null) {
+                        onLongClickListener.onItemLongClick(position);
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
         return predictions.size();
+    }
+
+    public Prediction getPrediction(int position) {
+        return predictions.get(position);
     }
 
     public void setPredictions(List<Prediction> predictions) {
@@ -101,6 +131,22 @@ public class TripDetailRecyclerViewAdapter
         this.predictions.clear();
 
         notifyDataSetChanged();
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
+    }
+
+    public interface OnClickListener {
+        void onItemClick(int i);
+    }
+
+    public interface OnLongClickListener {
+        void onItemLongClick(int i);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

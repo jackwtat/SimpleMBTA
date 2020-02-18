@@ -2,7 +2,6 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -11,17 +10,20 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.Route;
 
-public class TripDetailPredictionItem extends LinearLayout {
+public class TripDetailPredictionItem extends RelativeLayout {
 
     public static final int FIRST_STOP = 0;
     public static final int INTERMEDIATE_STOP = 1;
@@ -36,8 +38,8 @@ public class TripDetailPredictionItem extends LinearLayout {
     ImageView stopIconFill;
     ImageView stopIconCancelled;
     ImageView wheelchairAccessibleIcon;
-    ImageView serviceAdvisoryIcon;
-    ImageView serviceAlertIcon;
+    ImageView stopAdvisoryIcon;
+    ImageView stopAlertIcon;
     TextView stopName;
     TextView timeTextView;
     TextView minuteTextView;
@@ -291,6 +293,23 @@ public class TripDetailPredictionItem extends LinearLayout {
         } else {
             wheelchairAccessibleIcon.setVisibility(INVISIBLE);
         }
+
+        // Set stop alert icon
+        List<ServiceAlert> stopAlerts = prediction.getStop().getServiceAlerts();
+        if (stopAlerts.size() > 0) {
+            for (ServiceAlert alert : stopAlerts) {
+                if (alert.isUrgent()) {
+                    stopAlertIcon.setVisibility(VISIBLE);
+                    break;
+                }
+            }
+            if (stopAlertIcon.getVisibility() != VISIBLE) {
+                stopAdvisoryIcon.setVisibility(VISIBLE);
+            }
+        } else {
+            stopAdvisoryIcon.setVisibility(GONE);
+            stopAlertIcon.setVisibility(GONE);
+        }
     }
 
     public void emphasize() {
@@ -305,8 +324,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopName.setTypeface(Typeface.DEFAULT);
         stopIconCancelled.setVisibility(GONE);
         wheelchairAccessibleIcon.setVisibility(GONE);
-        serviceAdvisoryIcon.setVisibility(GONE);
-        serviceAlertIcon.setVisibility(GONE);
+        stopAdvisoryIcon.setVisibility(GONE);
+        stopAlertIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
         statusTextView.setText("");
@@ -326,8 +345,8 @@ public class TripDetailPredictionItem extends LinearLayout {
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
         stopName = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
-        serviceAdvisoryIcon = rootView.findViewById(R.id.service_advisory_icon);
-        serviceAlertIcon = rootView.findViewById(R.id.service_alert_icon);
+        stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
+        stopAlertIcon = rootView.findViewById(R.id.stop_alert_icon);
         timeTextView = rootView.findViewById(R.id.time_text_view);
         minuteTextView = rootView.findViewById(R.id.minute_text_view);
         statusTextView = rootView.findViewById(R.id.status_text_view);

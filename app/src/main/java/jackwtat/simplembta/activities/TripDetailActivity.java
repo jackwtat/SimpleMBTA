@@ -1,6 +1,7 @@
 package jackwtat.simplembta.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +46,7 @@ import com.google.maps.android.PolyUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,12 +56,14 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.TripDetailRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.PredictionsTripDetailAsyncTask;
+import jackwtat.simplembta.asyncTasks.StopAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByIdAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByIdAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Prediction;
+import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Trip;
@@ -76,6 +81,8 @@ import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.NoPredictionsView;
+import jackwtat.simplembta.views.StopInfoBodyView;
+import jackwtat.simplembta.views.StopInfoTitleView;
 
 public class TripDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
@@ -100,6 +107,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private TripsAsyncTask tripsAsyncTask;
     private VehiclesByIdAsyncTask vehiclesAsyncTask;
     private StopsByIdAsyncTask stopsAsyncTask;
+    private StopAlertsAsyncTask stopAlertsAsyncTask;
 
     private boolean refreshing = false;
     private boolean loaded = false;
@@ -262,6 +270,41 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         recyclerViewAdapter = new TripDetailRecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.setSelectedStop(selectedStop);
+
+        // Add OnItemClickListener
+        recyclerViewAdapter.setOnClickListener(new TripDetailRecyclerViewAdapter.OnClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Stop stop = recyclerViewAdapter.getPrediction(position).getStop();
+                Collections.sort(stop.getRoutes());
+                Route route = stop.getRoutes().get(0);
+
+                Collections.sort(stop.getServiceAlerts());
+
+                AlertDialog dialog = new AlertDialog.Builder(TripDetailActivity.this).create();
+
+                StopInfoTitleView titleView = new StopInfoTitleView(TripDetailActivity.this);
+                titleView.setText(stop.getName());
+                titleView.setTextColor(Color.parseColor(route.getTextColor()));
+                titleView.setBackgroundColor(Color.parseColor(route.getPrimaryColor()));
+
+                StopInfoBodyView bodyView = new StopInfoBodyView(TripDetailActivity.this);
+                bodyView.setAccessibility(stop.getAccessibility());
+                bodyView.setAlerts(stop.getServiceAlerts());
+
+                dialog.setCustomTitle(titleView);
+                dialog.setView(bodyView);
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                        getResources().getString(R.string.dialog_close_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                dialog.show();
+            }
+        });
     }
 
     @Override
@@ -502,6 +545,26 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         } else {
             errorManager.setNetworkError(true);
+        }
+    }
+
+    private void getStopAlerts() {
+        if (stopAlertsAsyncTask != null) {
+            stopAlertsAsyncTask.cancel(true);
+        }
+
+        ArrayList<String> stopIds = new ArrayList<>();
+        for (Prediction prediction : predictions) {
+            stopIds.add(prediction.getStopId());
+        }
+
+        if (stopIds.size() > 0) {
+            stopAlertsAsyncTask = new StopAlertsAsyncTask(realTimeApiKey,
+                    stopIds.toArray(new String[0]), new StopAlertsPostExecuteListener());
+
+            stopAlertsAsyncTask.execute();
+        } else {
+
         }
     }
 
@@ -935,6 +998,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     parentStopIds.add(parentStopId);
                 }
 
+                // Add this route to prediction
+                prediction.getStop().addRoute(selectedRoute);
+
                 // Put this prediction into list of prior predictions
                 pastData.add(prediction);
             }
@@ -945,7 +1011,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             if (parentStopIds.size() > 0) {
                 getParentStops(parentStopIds.toArray(new String[0]));
             } else {
-                refreshPredictions();
+                getStopAlerts();
             }
         }
 
@@ -998,6 +1064,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             HashMap<String, Stop> stops = new HashMap<>();
 
             for (Stop s : stopsArray) {
+                s.addRoute(selectedRoute);
                 stops.put(s.getId(), s);
             }
 
@@ -1008,6 +1075,28 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     p.setStop(stops.get(parentId));
                 }
             }
+            getStopAlerts();
+        }
+
+        @Override
+        public void onError() {
+            getStopAlerts();
+        }
+    }
+
+    private class StopAlertsPostExecuteListener implements StopAlertsAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] alerts) {
+            for (ServiceAlert alert : alerts) {
+                if (alert.getAffectedRoutes().size() == 0) {
+                    for (Prediction prediction : predictions) {
+                        if (alert.affectsStop(prediction.getStopId())) {
+                            prediction.getStop().addServiceAlert(alert);
+                        }
+                    }
+                }
+            }
+
             refreshPredictions();
         }
 
