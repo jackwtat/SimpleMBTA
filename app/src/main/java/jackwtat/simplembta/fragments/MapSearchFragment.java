@@ -303,8 +303,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
-                            !noPredictionsView.isError()) {
+                    if (!viewsRefreshing && !noPredictionsView.isError()) {
                         refreshPredictionViews();
                     }
 
@@ -1169,10 +1168,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
 
-            if (!userIsScrolling) {
-                recyclerViewAdapter.setData(targetLocation,
-                        displayedRoutes.values().toArray(new Route[0]), selectedStop);
-            }
+            recyclerViewAdapter.setData(targetLocation,
+                    displayedRoutes.values().toArray(new Route[0]), selectedStop);
 
             viewsTime = new Date().getTime();
             swipeRefreshLayout.setRefreshing(false);
