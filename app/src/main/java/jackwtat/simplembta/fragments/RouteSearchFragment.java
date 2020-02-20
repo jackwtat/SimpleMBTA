@@ -587,6 +587,25 @@ public class RouteSearchFragment extends Fragment implements
             }
             queryInProgress = false;
 
+        } else if (selectedRoute.equals(queryRoute)) {
+            if (selectedRoute.getNearestStop(selectedDirectionId) == null) {
+                if (queryStop != null) {
+                    Stop stop = getStopFromLocation(selectedRoute, selectedDirectionId, queryStop.getLocation());
+                    if (stop != null) {
+                        searchSpinners.selectStop(stop.getId());
+
+                    }
+                } else if (queryLocation != null) {
+                    Stop stop = getStopFromLocation(selectedRoute, selectedDirectionId, queryLocation);
+                    if (stop != null) {
+                        searchSpinners.selectStop(stop.getId());
+
+                    }
+                }
+            } else {
+                searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
+            }
+
         } else {
             if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
                 searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
@@ -673,6 +692,8 @@ public class RouteSearchFragment extends Fragment implements
         for (Route r : allRoutes) {
             if (r.getId().equals(queryRoute.getId())) {
                 routeExists = true;
+                r.setNearestStop(0, null);
+                r.setNearestStop(1, null);
             }
         }
 
