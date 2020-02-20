@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -636,23 +637,7 @@ public class RouteSearchFragment extends Fragment implements
 
     @Override
     public void onStopSelected(Stop stop) {
-        Stop selectedStop = stop;
         selectedRoute.setNearestStop(selectedDirectionId, stop);
-
-        // Find the nearest stop in the opposite direction
-        Stop nearestOppositeStop = null;
-        float oppositeStopDistance = 0;
-        int oppositeDirectionId = (selectedDirectionId + 1) % 2;
-
-        for (Stop s : selectedRoute.getStops(oppositeDirectionId)) {
-            float dist = s.getLocation().distanceTo(selectedStop.getLocation());
-            if (nearestOppositeStop == null || dist < oppositeStopDistance) {
-                nearestOppositeStop = s;
-                oppositeStopDistance = dist;
-            }
-        }
-
-        selectedRoute.setNearestStop(oppositeDirectionId, nearestOppositeStop);
 
         // Clear the current predictions and get the predictions for the selected stop
         clearPredictions();
