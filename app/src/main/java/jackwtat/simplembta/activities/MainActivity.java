@@ -16,6 +16,7 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.FragmentsPagerAdapter;
 import jackwtat.simplembta.fragments.MapSearchFragment;
 import jackwtat.simplembta.model.Stop;
+import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastDataHolder;
 
 
@@ -54,6 +55,13 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        ErrorManager.getErrorManager().setTimeZoneMismatch(false);
     }
 
     @Override
