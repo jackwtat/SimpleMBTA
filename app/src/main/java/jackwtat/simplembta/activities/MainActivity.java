@@ -58,13 +58,6 @@ public class MainActivity extends AppCompatActivity implements MapSearchFragment
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        ErrorManager.getErrorManager().setTimeZoneMismatch(false);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 

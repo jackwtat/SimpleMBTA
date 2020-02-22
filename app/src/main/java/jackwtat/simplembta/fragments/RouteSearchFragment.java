@@ -886,6 +886,8 @@ public class RouteSearchFragment extends Fragment implements
 
                 if (p.getTimeZoneOffset() != DateUtil.getTimeZoneOffset()) {
                     errorManager.setTimeZoneMismatch(true);
+                } else {
+                    errorManager.setTimeZoneMismatch(false);
                 }
             }
 

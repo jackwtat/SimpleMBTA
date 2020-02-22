@@ -1638,6 +1638,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     if (p.getTimeZoneOffset() != DateUtil.getTimeZoneOffset()) {
                         errorManager.setTimeZoneMismatch(true);
+                    } else {
+                        errorManager.setTimeZoneMismatch(false);
                     }
 
                     predictionsCount++;
