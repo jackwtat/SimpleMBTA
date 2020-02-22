@@ -91,7 +91,7 @@ public class PredictionHeaderView extends LinearLayout {
         secondaryColors[1] = rootView.findViewById(R.id.secondary_color_1);
         secondaryColors[2] = rootView.findViewById(R.id.secondary_color_2);
         headerTextView = rootView.findViewById(R.id.header_text_view);
-        defaultPrimaryColor = ContextCompat.getColor(context, R.color.error_message_background);
+        defaultPrimaryColor = ContextCompat.getColor(context, R.color.header_background);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         stopAlertIcon = rootView.findViewById(R.id.stop_alert_icon);
         stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
