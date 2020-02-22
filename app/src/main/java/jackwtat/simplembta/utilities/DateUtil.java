@@ -66,7 +66,7 @@ public class DateUtil {
         int minute;
 
         Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(new Date());
+        calendar.setTime(getTimeZoneAdjustedDate(-5 * 60));
 
         hour = calendar.get(Calendar.HOUR_OF_DAY) + hourOffset;
         minute = calendar.get(Calendar.MINUTE);
