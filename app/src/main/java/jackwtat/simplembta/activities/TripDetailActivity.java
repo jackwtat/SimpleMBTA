@@ -463,6 +463,10 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     clearPredictions();
                     enableOnErrorView(getResources().getString(R.string.network_error_text));
 
+                } else if (errorManager.hasTimeZoneMismatch()) {
+                    errorTextView.setText(R.string.time_zone_warning);
+                    errorTextView.setVisibility(View.VISIBLE);
+
                 } else if (!errorManager.hasNetworkError()) {
                     errorTextView.setVisibility(View.GONE);
                     clearOnErrorView();

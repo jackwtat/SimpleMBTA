@@ -45,6 +45,7 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.Constants;
+import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.views.NoPredictionsView;
@@ -309,6 +310,10 @@ public class RouteSearchFragment extends Fragment implements
                             clearPredictions();
                             enableOnErrorView(getResources().getString(R.string.network_error_text));
                         }
+                    } else if (errorManager.hasTimeZoneMismatch()) {
+                        errorTextView.setText(R.string.time_zone_warning);
+                        errorTextView.setVisibility(View.VISIBLE);
+
                     } else {
                         errorTextView.setVisibility(View.GONE);
 
@@ -877,6 +882,10 @@ public class RouteSearchFragment extends Fragment implements
                     if (p.getCountdownTime() > -60000) {
                         selectedRoute.addPrediction(p);
                     }
+                }
+
+                if (p.getTimeZoneOffset() != DateUtil.getTimeZoneOffset()) {
+                    errorManager.setTimeZoneMismatch(true);
                 }
             }
 

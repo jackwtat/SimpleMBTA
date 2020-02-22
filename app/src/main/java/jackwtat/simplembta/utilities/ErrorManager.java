@@ -9,6 +9,7 @@ public class ErrorManager {
     private static boolean networkError = false;
     private static boolean locationError = false;
     private static boolean locationPermissionDenied = false;
+    private static boolean timeZoneMismatch = false;
 
     private ErrorManager() {
     }
@@ -41,6 +42,13 @@ public class ErrorManager {
         }
     }
 
+    public void setTimeZoneMismatch(boolean mismatch) {
+        if (mismatch != timeZoneMismatch) {
+            timeZoneMismatch = mismatch;
+            notifyErrorChanged();
+        }
+    }
+
     public boolean hasNetworkError() {
         return networkError;
     }
@@ -53,6 +61,10 @@ public class ErrorManager {
         return locationPermissionDenied;
     }
 
+    public boolean hasTimeZoneMismatch() {
+        return timeZoneMismatch;
+    }
+
     public void registerOnErrorChangeListener(OnErrorChangedListener listener) {
         onErrorChangedListeners.add(listener);
         listener.onErrorChanged();
@@ -62,8 +74,8 @@ public class ErrorManager {
         for (OnErrorChangedListener listener : onErrorChangedListeners) {
             try {
                 listener.onErrorChanged();
-            } catch(NullPointerException e){
-                
+            } catch (NullPointerException e) {
+
             }
         }
     }

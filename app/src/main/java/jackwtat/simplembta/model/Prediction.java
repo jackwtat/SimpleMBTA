@@ -111,6 +111,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         }
     }
 
+    public int getTimeZoneOffset(){
+        return timeZoneOffset;
+    }
+
     public int getPredictionDay() {
         return DateUtil.getDayOfMonth(getPredictionTime());
     }

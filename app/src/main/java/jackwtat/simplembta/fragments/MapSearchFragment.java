@@ -85,6 +85,7 @@ import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.SilverLineCombined;
 import jackwtat.simplembta.utilities.Constants;
+import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.PastDataHolder;
@@ -814,6 +815,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                     } else if (errorManager.hasLocationError()) {
                         errorTextView.setText(R.string.location_error_text);
+                        errorTextView.setVisibility(View.VISIBLE);
+
+                    } else if (errorManager.hasTimeZoneMismatch()) {
+                        errorTextView.setText(R.string.time_zone_warning);
                         errorTextView.setVisibility(View.VISIBLE);
 
                     } else {
@@ -1629,8 +1634,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                             route.setFocusStop(direction, stop);
                             route.addPrediction(p);
                         }
+                    }
 
-
+                    if (p.getTimeZoneOffset() != DateUtil.getTimeZoneOffset()) {
+                        errorManager.setTimeZoneMismatch(true);
                     }
 
                     predictionsCount++;

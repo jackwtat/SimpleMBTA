@@ -176,4 +176,5 @@
     <string name="arriving">Arriving</string>
     <string name="departing">Departing</string>
     <string name="view_all">View All</string>
+    <string name="time_zone_warning">Arrival and departure times are in Boston local time</string>
 </resources>

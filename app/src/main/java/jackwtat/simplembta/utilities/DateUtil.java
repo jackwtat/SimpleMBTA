@@ -97,4 +97,9 @@ public class DateUtil {
 
         return time.getTime();
     }
+
+    public static int getTimeZoneOffset() {
+        Calendar time = Calendar.getInstance();
+        return time.getTimeZone().getOffset(time.getTimeInMillis()) / 60000;
+    }
 }
