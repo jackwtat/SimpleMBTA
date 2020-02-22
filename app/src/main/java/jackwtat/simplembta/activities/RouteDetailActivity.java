@@ -107,7 +107,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private VehiclesByRouteAsyncTask vehiclesAsyncTask;
     private ServiceAlertsAsyncTask serviceAlertsAsyncTask;
 
-    private boolean refreshing = false;
+    private boolean dataRefreshing = false;
     private boolean loaded = false;
     private boolean mapReady = false;
     private boolean shapesLoaded = false;
@@ -256,7 +256,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
 
-                    if (!swipeRefreshLayout.isRefreshing() &&
+                    if (!dataRefreshing &&
                             !noPredictionsView.isError()) {
                         refreshPredictions(false);
                     }
@@ -425,7 +425,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         super.onPause();
         mapView.onPause();
 
-        refreshing = false;
+        dataRefreshing = false;
 
         swipeRefreshLayout.setRefreshing(false);
 
@@ -496,7 +496,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             if (networkConnectivityClient.isConnected()) {
                 errorManager.setNetworkError(false);
 
-                refreshing = true;
+                dataRefreshing = true;
 
                 if (predictionsAsyncTask != null) {
                     predictionsAsyncTask.cancel(true);
@@ -509,7 +509,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             } else {
                 errorManager.setNetworkError(true);
                 enableOnErrorView(getResources().getString(R.string.error_network));
-                refreshing = false;
+                dataRefreshing = false;
                 swipeRefreshLayout.setRefreshing(false);
             }
         } else {
@@ -993,7 +993,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void backgroundUpdate() {
-        if (!refreshing) {
+        if (!dataRefreshing) {
             getPredictions();
         }
     }
@@ -1023,7 +1023,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     private class PredictionsPostExecuteListener implements PredictionsRouteSearchAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(List<Prediction> predictions) {
-            refreshing = false;
+            dataRefreshing = false;
             refreshTime = new Date().getTime();
             loaded = true;
 
@@ -1071,7 +1071,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
         @Override
         public void onError() {
-            refreshing = false;
+            dataRefreshing = false;
             refreshTime = new Date().getTime();
             enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
 

@@ -161,7 +161,7 @@ public class RouteSearchFragment extends Fragment implements
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    if (!viewsRefreshing) {
+                    if (!dataRefreshing && !viewsRefreshing && !noPredictionsView.isError()) {
                         refreshPredictions(false);
                     }
 
@@ -487,7 +487,7 @@ public class RouteSearchFragment extends Fragment implements
                         recyclerView.scrollToPosition(0);
                     }
 
-                } else {
+                } else if (!dataRefreshing) {
                     // Show no stops text if there are no stops for the selected direction
                     enableNoPredictionsView(getResources().getString(R.string.no_stops));
                 }

@@ -109,7 +109,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private StopsByIdAsyncTask stopsAsyncTask;
     private StopAlertsAsyncTask stopAlertsAsyncTask;
 
-    private boolean refreshing = false;
+    private boolean dataRefreshing = false;
     private boolean loaded = false;
     private boolean userIsScrolling = false;
     private long refreshTime = 0;
@@ -258,7 +258,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     userIsScrolling = false;
-                    refreshPredictions();
+                    if (!dataRefreshing && !noPredictionsView.isError()) {
+                        refreshPredictions();
+                    }
 
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     userIsScrolling = true;
@@ -406,7 +408,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         super.onPause();
         mapView.onPause();
 
-        refreshing = false;
+        dataRefreshing = false;
 
         swipeRefreshLayout.setRefreshing(false);
 
@@ -475,7 +477,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         if (networkConnectivityClient.isConnected()) {
             errorManager.setNetworkError(false);
 
-            refreshing = true;
+            dataRefreshing = true;
 
             if (predictionsAsyncTask != null) {
                 predictionsAsyncTask.cancel(true);
@@ -492,7 +494,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         } else {
             errorManager.setNetworkError(true);
             enableOnErrorView(getResources().getString(R.string.error_network));
-            refreshing = false;
+            dataRefreshing = false;
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -951,7 +953,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void backgroundUpdate() {
-        if (!refreshing) {
+        if (!dataRefreshing) {
             getPredictions();
         }
     }
@@ -982,7 +984,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private class PredictionsPostExecuteListener implements PredictionsTripDetailAsyncTask.OnPostExecuteListener {
         @Override
         public void onSuccess(Prediction[] p, boolean live) {
-            refreshing = false;
+            dataRefreshing = false;
             refreshTime = new Date().getTime();
 
             ArrayList<String> parentStopIds = new ArrayList<>();
@@ -1017,7 +1019,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         @Override
         public void onError() {
-            refreshing = false;
+            dataRefreshing = false;
             refreshTime = new Date().getTime();
             enableOnErrorView(getResources().getString(R.string.error_upcoming_predictions));
 
