@@ -33,6 +33,10 @@ public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnI
     private Direction[] directions = {};
     private Stop[] stops = {};
 
+    private boolean routesLoaded = false;
+    private boolean directionsLoaded = false;
+    private boolean stopsLoaded = false;
+
     private OnRouteSelectedListener onRouteSelectedListener;
     private OnDirectionSelectedListener onDirectionSelectedListener;
     private OnStopSelectedListener onStopSelectedListener;
@@ -93,18 +97,21 @@ public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnI
         this.routes = routes;
         routesAdapter = new RoutesSpinnerAdapter(getContext(), routes);
         routeSpinner.setAdapter(routesAdapter);
+        routesLoaded = true;
     }
 
     public void populateDirectionSpinner(Direction[] directions) {
         this.directions = directions;
         directionsAdapter = new DirectionsSpinnerAdapter(getContext(), directions);
         directionSpinner.setAdapter(directionsAdapter);
+        directionsLoaded = true;
     }
 
     public void populateStopSpinner(Stop[] stops) {
         this.stops = stops;
         stopsAdapter = new StopsSpinnerAdapter(getContext(), stops);
         stopSpinner.setAdapter(stopsAdapter);
+        stopsLoaded = true;
     }
 
     public void clearRoutes() {
@@ -141,6 +148,33 @@ public class RouteSearchSpinners extends LinearLayout implements AdapterView.OnI
                 stopSpinner.setSelection(i);
                 break;
             }
+        }
+    }
+
+    public Route getSelectedRoute() {
+        int position = routeSpinner.getSelectedItemPosition();
+        if (routes.length > 0 && position < routes.length) {
+            return routes[position];
+        } else {
+            return null;
+        }
+    }
+
+    public Direction getSelectedDirection() {
+        int position = directionSpinner.getSelectedItemPosition();
+        if (directions.length > 0 && position < directions.length) {
+            return directions[position];
+        } else {
+            return null;
+        }
+    }
+
+    public Stop getSelectedStop() {
+        int position = stopSpinner.getSelectedItemPosition();
+        if (stops.length > 0 && position < stops.length) {
+            return stops[position];
+        } else {
+            return null;
         }
     }
 

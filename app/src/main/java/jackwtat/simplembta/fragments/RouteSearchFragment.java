@@ -391,6 +391,14 @@ public class RouteSearchFragment extends Fragment implements
     }
 
     private void getPredictions() {
+        if (selectedRoute == null) {
+            selectedRoute = searchSpinners.getSelectedRoute();
+        }
+
+        if (selectedRoute != null && selectedRoute.getFocusStop(selectedDirectionId) == null) {
+            selectedRoute.setFocusStop(selectedDirectionId, searchSpinners.getSelectedStop());
+        }
+
         if (selectedRoute != null) {
             if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
                 if (networkConnectivityClient.isConnected()) {
