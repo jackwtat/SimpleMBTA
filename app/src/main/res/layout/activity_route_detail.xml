@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <jackwtat.simplembta.views.RouteDetailSpinners
-        android:id="@+id/route_detail_spinners"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC" />
-
     <TextView
         android:id="@+id/error_message_text_view"
         android:layout_width="match_parent"
@@ -28,6 +18,16 @@
         android:textSize="@dimen/body_text_size"
         android:textStyle="bold"
         android:visibility="gone" />
+
+    <jackwtat.simplembta.views.RouteDetailSpinners
+        android:id="@+id/route_detail_spinners"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC" />
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
