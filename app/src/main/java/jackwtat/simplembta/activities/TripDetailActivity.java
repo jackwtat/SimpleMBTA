@@ -570,7 +570,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
             stopAlertsAsyncTask.execute();
         } else {
-
+            refreshPredictions();
         }
     }
 
