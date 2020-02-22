@@ -23,13 +23,13 @@ public class GreenLine extends RailRoute {
                 isValidDestination(prediction.getDirection(), prediction.getStopId(), prediction.getDestination())) {
             super.addPrediction(prediction);
         } else {
-            if (getNearestStop(0) != null &&
-                    getNearestStop(0).equals(prediction.getStop())) {
-                setNearestStop(0, null);
+            if (getFocusStop(0) != null &&
+                    getFocusStop(0).equals(prediction.getStop())) {
+                setFocusStop(0, null);
             }
-            if (getNearestStop(1) != null &&
-                    getNearestStop(1).equals(prediction.getStop())) {
-                setNearestStop(1, null);
+            if (getFocusStop(1) != null &&
+                    getFocusStop(1).equals(prediction.getStop())) {
+                setFocusStop(1, null);
             }
         }
     }

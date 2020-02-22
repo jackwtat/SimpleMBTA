@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -271,8 +270,8 @@ public class RouteSearchFragment extends Fragment implements
             editor.putInt("directionId", selectedDirectionId);
 
             for (int i = 0; i < 2; i++) {
-                if (selectedRoute.getNearestStop(i) != null) {
-                    editor.putString("stopId_" + i, selectedRoute.getNearestStop(i).getId());
+                if (selectedRoute.getFocusStop(i) != null) {
+                    editor.putString("stopId_" + i, selectedRoute.getFocusStop(i).getId());
                 }
             }
 
@@ -393,7 +392,7 @@ public class RouteSearchFragment extends Fragment implements
 
     private void getPredictions() {
         if (selectedRoute != null) {
-            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+            if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
                 if (networkConnectivityClient.isConnected()) {
                     errorManager.setNetworkError(false);
 
@@ -471,7 +470,7 @@ public class RouteSearchFragment extends Fragment implements
     private void refreshPredictions(boolean returnToTop) {
         if (!userIsScrolling) {
             if (selectedRoute != null) {
-                if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+                if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
                     ArrayList<Prediction> predictions =
                             selectedRoute.getPredictions(selectedDirectionId);
 
@@ -588,7 +587,7 @@ public class RouteSearchFragment extends Fragment implements
             queryInProgress = false;
 
         } else if (selectedRoute.equals(queryRoute)) {
-            if (selectedRoute.getNearestStop(selectedDirectionId) == null) {
+            if (selectedRoute.getFocusStop(selectedDirectionId) == null) {
                 if (queryStop != null) {
                     Stop stop = getStopFromLocation(selectedRoute, selectedDirectionId, queryStop.getLocation());
                     if (stop != null) {
@@ -603,12 +602,12 @@ public class RouteSearchFragment extends Fragment implements
                     }
                 }
             } else {
-                searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
+                searchSpinners.selectStop(selectedRoute.getFocusStop(selectedDirectionId).getId());
             }
 
         } else {
-            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-                searchSpinners.selectStop(selectedRoute.getNearestStop(selectedDirectionId).getId());
+            if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
+                searchSpinners.selectStop(selectedRoute.getFocusStop(selectedDirectionId).getId());
             } else if (savedStopIds != null) {
                 searchSpinners.selectStop(savedStopIds[selectedDirectionId]);
             }
@@ -656,7 +655,7 @@ public class RouteSearchFragment extends Fragment implements
 
     @Override
     public void onStopSelected(Stop stop) {
-        selectedRoute.setNearestStop(selectedDirectionId, stop);
+        selectedRoute.setFocusStop(selectedDirectionId, stop);
 
         // Clear the current predictions and get the predictions for the selected stop
         clearPredictions();
@@ -692,8 +691,8 @@ public class RouteSearchFragment extends Fragment implements
         for (Route r : allRoutes) {
             if (r.getId().equals(queryRoute.getId())) {
                 routeExists = true;
-                r.setNearestStop(0, null);
-                r.setNearestStop(1, null);
+                r.setFocusStop(0, null);
+                r.setFocusStop(1, null);
             }
         }
 

@@ -223,8 +223,8 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         populateDirectionSpinner(selectedRoute.getAllDirections());
 
         // Populate the stops spinner with the nearest stop until we query the shapes
-        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
-            Stop[] selectedStopArray = {selectedRoute.getNearestStop(selectedDirectionId)};
+        if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
+            Stop[] selectedStopArray = {selectedRoute.getFocusStop(selectedDirectionId)};
             populateStopSpinner(selectedStopArray);
         }
 
@@ -305,7 +305,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         mapReady = true;
 
         // Move the map camera to the selected stop
-        Stop stop = selectedRoute.getNearestStop(selectedDirectionId);
+        Stop stop = selectedRoute.getFocusStop(selectedDirectionId);
         LatLng latLng = (stop == null)
                 ? new LatLng(userLocation.getLatitude(), userLocation.getLongitude())
                 : new LatLng(stop.getLocation().getLatitude(), stop.getLocation().getLongitude());
@@ -492,7 +492,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void getPredictions() {
-        if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+        if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
             if (networkConnectivityClient.isConnected()) {
                 errorManager.setNetworkError(false);
 
@@ -614,7 +614,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void refreshPredictions(boolean returnToTop) {
         if (!userIsScrolling) {
-            if (selectedRoute.getNearestStop(selectedDirectionId) != null) {
+            if (selectedRoute.getFocusStop(selectedDirectionId) != null) {
                 recyclerViewAdapter.setPredictions(selectedRoute.getPredictions(selectedDirectionId));
                 swipeRefreshLayout.setRefreshing(false);
                 clearOnErrorView();
@@ -639,7 +639,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
         if (!userIsScrolling) {
             clearShapes();
 
-            Stop selectedStop = selectedRoute.getNearestStop(selectedDirectionId);
+            Stop selectedStop = selectedRoute.getFocusStop(selectedDirectionId);
 
             for (Shape shape : selectedRoute.getShapes(selectedDirectionId)) {
                 if (shape.getPriority() >= 0 && shape.getStops().length > 0) {
@@ -899,7 +899,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void populateStopSpinner(Stop[] stops) {
         ArrayList<Stop> stopsList = new ArrayList<>(Arrays.asList(stops));
-        Stop selectedStop = selectedRoute.getNearestStop(selectedDirectionId);
+        Stop selectedStop = selectedRoute.getFocusStop(selectedDirectionId);
 
         if (selectedStop != null && !stopsList.contains(selectedStop)) {
             stopsList.add(selectedStop);
@@ -946,7 +946,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onStopSelected(Stop selectedStop) {
         // Otherwise set the nearest stop to the selected stop
-        selectedRoute.setNearestStop(selectedDirectionId, selectedStop);
+        selectedRoute.setFocusStop(selectedDirectionId, selectedStop);
 
         // Find the nearest stop in the opposite direction
         Stop nearestOppositeStop = null;
@@ -961,7 +961,7 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
             }
         }
 
-        selectedRoute.setNearestStop(oppositeDirectionId, nearestOppositeStop);
+        selectedRoute.setFocusStop(oppositeDirectionId, nearestOppositeStop);
 
         // Get the predictions for the selected stop
         clearPredictions();

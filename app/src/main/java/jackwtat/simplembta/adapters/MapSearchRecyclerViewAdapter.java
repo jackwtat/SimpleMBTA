@@ -60,7 +60,7 @@ public class MapSearchRecyclerViewAdapter
             Route previousRoute = adapterItems.get(i - 1).route;
             int previousDirection = adapterItems.get(i - 1).direction;
 
-            previousStop = previousRoute.getNearestStop(previousDirection);
+            previousStop = previousRoute.getFocusStop(previousDirection);
         }
 
         if (i + 1 < adapterItems.size()) {
@@ -205,8 +205,8 @@ public class MapSearchRecyclerViewAdapter
 
             // No predictions for either direction
             if (!route.hasPickUps(Direction.INBOUND) && !route.hasPickUps(Direction.OUTBOUND)) {
-                Stop inboundStop = route.getNearestStop(Direction.INBOUND);
-                Stop outboundStop = route.getNearestStop(Direction.OUTBOUND);
+                Stop inboundStop = route.getFocusStop(Direction.INBOUND);
+                Stop outboundStop = route.getFocusStop(Direction.OUTBOUND);
 
                 if (inboundStop != null && outboundStop != null) {
                     if (inboundStop.getLocation().distanceTo(targetLocation) <
@@ -282,7 +282,7 @@ public class MapSearchRecyclerViewAdapter
 
         AdapterItem(Route route, int direction) {
             this.route = route;
-            this.stop = route.getNearestStop(direction);
+            this.stop = route.getFocusStop(direction);
             this.direction = direction;
         }
 
@@ -301,8 +301,8 @@ public class MapSearchRecyclerViewAdapter
 
         @Override
         public int compareTo(@NonNull AdapterItem otherAdapterItem) {
-            Stop thisStop = route.getNearestStop(direction);
-            Stop otherStop = otherAdapterItem.route.getNearestStop(otherAdapterItem.direction);
+            Stop thisStop = route.getFocusStop(direction);
+            Stop otherStop = otherAdapterItem.route.getFocusStop(otherAdapterItem.direction);
 
             if (thisStop == null && otherStop == null) {
                 return route.compareTo(otherAdapterItem.route);

@@ -21,7 +21,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -1023,8 +1022,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         HashMap<String, Void> stopIds = new HashMap<>();
         for (Route route : targetRoutes.values()) {
             for (int i = 0; i < 2; i++) {
-                if (route.getNearestStop(i) != null) {
-                    stopIds.put(route.getNearestStop(i).getId(), null);
+                if (route.getFocusStop(i) != null) {
+                    stopIds.put(route.getFocusStop(i).getId(), null);
                 }
             }
         }
@@ -1146,7 +1145,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         if (!userIsScrolling && displayedRoutes != null) {
             for (Route route : displayedRoutes.values()) {
                 for (int direction = 0; direction <= 1; direction++) {
-                    if (route.getNearestStop(direction) == null) {
+                    if (route.getFocusStop(direction) == null) {
                         Stop[] inboundStops = route.getStops(direction);
 
                         for (Stop stop : inboundStops) {
@@ -1157,11 +1156,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                                 targetStop = stop;
                             }
 
-                            Stop nearestStop = route.getNearestStop(direction);
+                            Stop nearestStop = route.getFocusStop(direction);
                             if (nearestStop == null
                                     || targetStop.getLocation().distanceTo(targetLocation) <
                                     nearestStop.getLocation().distanceTo(targetLocation)) {
-                                route.setNearestStop(direction, targetStop);
+                                route.setFocusStop(direction, targetStop);
                             }
                         }
                     }
@@ -1607,27 +1606,27 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                         int direction = p.getDirection();
 
                         // If this prediction's stop is the route's nearest stop
-                        if (stop.equals(route.getNearestStop(direction))) {
+                        if (stop.equals(route.getFocusStop(direction))) {
                             route.addPrediction(p);
 
                             // If route does not have predictions in this prediction's direction
                         } else if (!route.hasPredictions(direction)) {
-                            route.setNearestStop(direction, stop);
+                            route.setFocusStop(direction, stop);
                             route.addPrediction(p);
 
                             // If this prediction is live and closer than route's current nearest stop
                         } else if (live && p.willPickUpPassengers() &&
-                                route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                route.getFocusStop(direction).getLocation().distanceTo(targetLocation) >
                                         stop.getLocation().distanceTo(targetLocation)) {
-                            route.setNearestStop(direction, stop);
+                            route.setFocusStop(direction, stop);
                             route.addPrediction(p);
 
                             // If this prediction is not live and closer than the current nearest stop
                         } else if (!live && !route.hasLivePredictions(direction) &&
                                 p.willPickUpPassengers() &&
-                                route.getNearestStop(direction).getLocation().distanceTo(targetLocation) >
+                                route.getFocusStop(direction).getLocation().distanceTo(targetLocation) >
                                         stop.getLocation().distanceTo(targetLocation)) {
-                            route.setNearestStop(direction, stop);
+                            route.setFocusStop(direction, stop);
                             route.addPrediction(p);
                         }
 

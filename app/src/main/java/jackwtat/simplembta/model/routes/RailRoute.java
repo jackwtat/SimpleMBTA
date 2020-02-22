@@ -9,10 +9,10 @@ public class RailRoute extends Route {
     }
 
     @Override
-    public Stop getNearestStop(int directionId) {
-        if (super.getNearestStop(directionId) == null)
-            setNearestStop(directionId, super.getNearestStop((directionId + 1) % 2));
+    public Stop getFocusStop(int directionId) {
+        if (super.getFocusStop(directionId) == null)
+            setFocusStop(directionId, super.getFocusStop((directionId + 1) % 2));
 
-        return super.getNearestStop(directionId);
+        return super.getFocusStop(directionId);
     }
 }

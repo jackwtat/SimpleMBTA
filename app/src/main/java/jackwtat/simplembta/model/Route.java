@@ -36,14 +36,14 @@ public class Route implements Comparable<Route>, Serializable {
     private StopMarkerFactory markerFactory = new StopMarkerFactory();
     private ArrayList<ServiceAlert> serviceAlerts = new ArrayList<>();
 
-    private Stop[] nearestStops = new Stop[2];
-    private ArrayList<ArrayList<Prediction>> predictions = new ArrayList<>();
+    private Stop[] focusStops = new Stop[2];
+    private ArrayList<ArrayList<Prediction>> focusPredictions = new ArrayList<>();
 
     public Route(String id) {
         this.id = id;
 
         for (int i = 0; i < 2; i++) {
-            predictions.add(new ArrayList<Prediction>());
+            focusPredictions.add(new ArrayList<Prediction>());
         }
     }
 
@@ -61,7 +61,7 @@ public class Route implements Comparable<Route>, Serializable {
         this.markerFactory = route.markerFactory;
 
         for (int i = 0; i < 2; i++) {
-            predictions.add(new ArrayList<Prediction>());
+            focusPredictions.add(new ArrayList<Prediction>());
         }
     }
 
@@ -183,9 +183,9 @@ public class Route implements Comparable<Route>, Serializable {
         return sortedStops.toArray(new Stop[0]);
     }
 
-    public Stop getNearestStop(int directionId) {
+    public Stop getFocusStop(int directionId) {
         if (directionId == 0 || directionId == 1) {
-            return nearestStops[directionId];
+            return focusStops[directionId];
         } else {
             return null;
         }
@@ -193,7 +193,7 @@ public class Route implements Comparable<Route>, Serializable {
 
     public ArrayList<Prediction> getPredictions(int directionId) {
         if (directionId == 0 || directionId == 1) {
-            return predictions.get(directionId);
+            return focusPredictions.get(directionId);
         } else {
             return null;
         }
@@ -282,10 +282,10 @@ public class Route implements Comparable<Route>, Serializable {
         serviceAlerts.clear();
     }
 
-    public void setNearestStop(int direction, Stop stop) {
+    public void setFocusStop(int direction, Stop stop) {
         if (direction == 0 || direction == 1) {
-            predictions.get(direction).clear();
-            nearestStops[direction] = stop;
+            focusPredictions.get(direction).clear();
+            focusStops[direction] = stop;
         }
     }
 
@@ -293,7 +293,7 @@ public class Route implements Comparable<Route>, Serializable {
         int directionId = prediction.getDirection();
 
         if (directionId == 0 || directionId == 1) {
-            predictions.get(directionId).add(prediction);
+            focusPredictions.get(directionId).add(prediction);
         }
     }
 
@@ -305,13 +305,13 @@ public class Route implements Comparable<Route>, Serializable {
 
     public void clearPredictions(int directionId) {
         if (directionId == 0 || directionId == 1) {
-            predictions.get(directionId).clear();
+            focusPredictions.get(directionId).clear();
         }
     }
 
     public boolean hasPredictions(int directionId) {
         if (directionId == 0 || directionId == 1) {
-            return predictions.get(directionId).size() > 0;
+            return focusPredictions.get(directionId).size() > 0;
         } else {
             return false;
         }
@@ -319,7 +319,7 @@ public class Route implements Comparable<Route>, Serializable {
 
     public boolean hasPickUps(int directionId) {
         if (directionId == 0 || directionId == 1) {
-            for (Prediction p : predictions.get(directionId)) {
+            for (Prediction p : focusPredictions.get(directionId)) {
                 if (p.willPickUpPassengers()) {
                     return true;
                 }
@@ -330,12 +330,8 @@ public class Route implements Comparable<Route>, Serializable {
         }
     }
 
-    public boolean hasNearbyStops() {
-        return nearestStops[0] != null || nearestStops[1] != null;
-    }
-
     public boolean hasLivePredictions(int direction) {
-        for (Prediction p : predictions.get(direction)) {
+        for (Prediction p : focusPredictions.get(direction)) {
             if (p.isLive()) {
                 return true;
             }

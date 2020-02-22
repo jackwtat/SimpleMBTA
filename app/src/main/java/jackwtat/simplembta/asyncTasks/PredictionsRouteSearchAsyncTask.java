@@ -46,7 +46,7 @@ public class PredictionsRouteSearchAsyncTask extends AsyncTask<Void, Void, List<
                 "fields[stop]=name,latitude,longitude,wheelchair_boarding,platform_code",
                 "filter[route]=" + route.getId(),
                 "filter[direction_id]=" + directionId,
-                "filter[stop]=" + route.getNearestStop(directionId).getId(),
+                "filter[stop]=" + route.getFocusStop(directionId).getId(),
                 "include=route,trip,stop,schedule,vehicle"
         };
 
@@ -72,7 +72,7 @@ public class PredictionsRouteSearchAsyncTask extends AsyncTask<Void, Void, List<
                     "fields[prediction]=stop_sequence",
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
-                    "filter[stop]=" + route.getNearestStop(directionId).getId(),
+                    "filter[stop]=" + route.getFocusStop(directionId).getId(),
                     "filter[date]=" + DateUtil.getCurrentMbtaDate(),
                     "filter[min_time]=" + DateUtil.getMbtaTime(0),
                     "include=route,trip,stop,prediction"
@@ -105,7 +105,7 @@ public class PredictionsRouteSearchAsyncTask extends AsyncTask<Void, Void, List<
                     "fields[prediction]=stop_sequence",
                     "filter[route]=" + route.getId(),
                     "filter[direction_id]=" + directionId,
-                    "filter[stop]=" + route.getNearestStop(directionId).getId(),
+                    "filter[stop]=" + route.getFocusStop(directionId).getId(),
                     "filter[date]=" + DateUtil.getMbtaDate(1),
                     "filter[min_time]=" + "03:00",
                     "include=route,trip,stop,prediction"
