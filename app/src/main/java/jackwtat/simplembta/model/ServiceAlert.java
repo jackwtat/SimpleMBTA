@@ -4,8 +4,11 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import jackwtat.simplembta.utilities.DateUtil;
 
 /**
  * Created by jackw on 12/21/2017.
@@ -162,14 +165,14 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
         }
     }
 
-    public void addActivePeriod(Date startTime, Date endTime) {
-        activePeriods.add(new ActivePeriod(startTime, endTime));
+    public void addActivePeriod(Date startTime, Date endTime, int timeZoneOffset) {
+        activePeriods.add(new ActivePeriod(startTime, endTime, timeZoneOffset));
     }
 
     public boolean isActive() {
-        Date currentTime = new Date();
-
         for (ActivePeriod ap : activePeriods) {
+            Date currentTime = DateUtil.getTimeZoneAdjustedDate(ap.timeZoneOffset);
+
             if (currentTime.compareTo(ap.startTime) >= 0 &&
                     (ap.endTime == null || currentTime.compareTo(ap.endTime) <= 0)) {
                 return true;
@@ -220,10 +223,12 @@ public class ServiceAlert implements Comparable<ServiceAlert>, Serializable {
     private class ActivePeriod implements Serializable {
         private Date startTime;
         private Date endTime;
+        private int timeZoneOffset;
 
-        ActivePeriod(Date startTime, Date endTime) {
+        ActivePeriod(Date startTime, Date endTime, int timeZoneOffset) {
             this.startTime = startTime;
             this.endTime = endTime;
+            this.timeZoneOffset = timeZoneOffset;
         }
     }
 }

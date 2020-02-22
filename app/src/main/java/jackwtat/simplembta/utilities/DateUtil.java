@@ -1,5 +1,7 @@
 package jackwtat.simplembta.utilities;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +12,7 @@ public class DateUtil {
      * Convert Date/Time from MBTA's string format to Java's Data object
      */
 
-    public static Date parse(String mbtaDate) {
+    public static Date parseTime(String mbtaDate) {
         try {
             int year = Integer.parseInt(mbtaDate.substring(0, 4));
             int month = Integer.parseInt(mbtaDate.substring(5, 7)) - 1;
@@ -23,6 +25,12 @@ public class DateUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // Gets the time zone offset from MBTA date, in minutes
+    public static int parseTimeZoneOffset(String mbtaDate) {
+        return Integer.parseInt(mbtaDate.substring(19, 22)) * 60 +
+                Integer.parseInt(mbtaDate.substring(23, 25));
     }
 
     public static String getCurrentMbtaDate() {
@@ -80,5 +88,13 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static Date getTimeZoneAdjustedDate(int timeZoneOffset) {
+        Calendar time = Calendar.getInstance();
+        time.add(Calendar.MILLISECOND, -time.getTimeZone().getOffset(time.getTimeInMillis()));
+        time.add(Calendar.MINUTE, timeZoneOffset);
+
+        return time.getTime();
     }
 }

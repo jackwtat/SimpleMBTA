@@ -3,7 +3,10 @@ package jackwtat.simplembta.model;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import jackwtat.simplembta.utilities.DateUtil;
 
@@ -39,6 +42,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     private String trackNumber = "null";
     private Date arrivalTime = null;
     private Date departureTime = null;
+    private int timeZoneOffset = -4;
     private boolean isLive = false;
     private int pickUpType = UNKNOWN_PICK_UP;
     private int status = UNKNOWN_STATUS;
@@ -96,10 +100,12 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     }
 
     public long getCountdownTime() {
+        Date currentTime = DateUtil.getTimeZoneAdjustedDate(timeZoneOffset);
+
         if (arrivalTime != null) {
-            return arrivalTime.getTime() - new Date().getTime();
+            return arrivalTime.getTime() - currentTime.getTime();
         } else if (departureTime != null) {
-            return departureTime.getTime() - new Date().getTime();
+            return departureTime.getTime() - currentTime.getTime();
         } else {
             return -1;
         }
@@ -205,6 +211,10 @@ public class Prediction implements Comparable<Prediction>, Serializable {
 
     public void setDepartureTime(Date departureTime) {
         this.departureTime = departureTime;
+    }
+
+    public void setTimeZoneOffset(int timeZoneOffset) {
+        this.timeZoneOffset = timeZoneOffset;
     }
 
     public void setRoute(Route route) {

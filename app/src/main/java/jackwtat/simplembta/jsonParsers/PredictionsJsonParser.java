@@ -66,9 +66,18 @@ public class PredictionsJsonParser {
 
                         prediction.setStopSequence(jAttributes.getInt("stop_sequence"));
                         prediction.setArrivalTime(
-                                DateUtil.parse(jAttributes.getString("arrival_time")));
+                                DateUtil.parseTime(jAttributes.getString("arrival_time")));
                         prediction.setDepartureTime(
-                                DateUtil.parse(jAttributes.getString("departure_time")));
+                                DateUtil.parseTime(jAttributes.getString("departure_time")));
+
+                        if (!jAttributes.getString("arrival_time").equalsIgnoreCase("null")) {
+                            prediction.setTimeZoneOffset(DateUtil.parseTimeZoneOffset(
+                                    jAttributes.getString("arrival_time")));
+
+                        } else if (!jAttributes.getString("departure_time").equalsIgnoreCase("null")) {
+                            prediction.setTimeZoneOffset(DateUtil.parseTimeZoneOffset(
+                                    jAttributes.getString("departure_time")));
+                        }
 
                         prediction.setIsLive(true);
 
@@ -151,10 +160,19 @@ public class PredictionsJsonParser {
                                 prediction.setPickUpType(jScheduleAttr.getInt("pickup_type"));
 
                                 if (prediction.getPredictionTime() == null) {
-                                    prediction.setArrivalTime(DateUtil.parse(
+                                    prediction.setArrivalTime(DateUtil.parseTime(
                                             jScheduleAttr.getString("arrival_time")));
-                                    prediction.setDepartureTime(DateUtil.parse(
+                                    prediction.setDepartureTime(DateUtil.parseTime(
                                             jScheduleAttr.getString("departure_time")));
+
+                                    if (!jScheduleAttr.getString("arrival_time").equalsIgnoreCase("null")) {
+                                        prediction.setTimeZoneOffset(DateUtil.parseTimeZoneOffset(
+                                                jScheduleAttr.getString("arrival_time")));
+
+                                    } else if (!jScheduleAttr.getString("departure_time").equalsIgnoreCase("null")) {
+                                        prediction.setTimeZoneOffset(DateUtil.parseTimeZoneOffset(
+                                                jScheduleAttr.getString("departure_time")));
+                                    }
 
                                     prediction.setIsLive(false);
                                 }

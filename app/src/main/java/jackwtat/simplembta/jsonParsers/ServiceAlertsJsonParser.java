@@ -80,7 +80,9 @@ public class ServiceAlertsJsonParser {
                         String startTime = jActiveTimes.getString("start");
                         String endTime = jActiveTimes.getString("end");
 
-                        alert.addActivePeriod(DateUtil.parse(startTime), DateUtil.parse(endTime));
+                        alert.addActivePeriod(DateUtil.parseTime(startTime),
+                                DateUtil.parseTime(endTime),
+                                DateUtil.parseTimeZoneOffset(startTime));
                     }
 
                     alerts.add(alert);

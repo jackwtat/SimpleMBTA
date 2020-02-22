@@ -62,8 +62,20 @@ public class SchedulesJsonParser {
                     JSONObject jAttributes = jSchedule.getJSONObject("attributes");
 
                     schedule.setStopSequence(jAttributes.getInt("stop_sequence"));
-                    schedule.setArrivalTime(DateUtil.parse(jAttributes.getString("arrival_time")));
-                    schedule.setDepartureTime(DateUtil.parse(jAttributes.getString("departure_time")));
+                    schedule.setArrivalTime(DateUtil.parseTime(
+                            jAttributes.getString("arrival_time")));
+                    schedule.setDepartureTime(DateUtil.parseTime(
+                            jAttributes.getString("departure_time")));
+
+                    if (!jAttributes.getString("arrival_time").equalsIgnoreCase("null")) {
+                        schedule.setTimeZoneOffset(DateUtil.parseTimeZoneOffset(
+                                jAttributes.getString("arrival_time")));
+
+                    } else if (!jAttributes.getString("departure_time").equalsIgnoreCase("null")) {
+                        schedule.setTimeZoneOffset(DateUtil.parseTimeZoneOffset(
+                                jAttributes.getString("departure_time")));
+                    }
+
                     schedule.setIsLive(false);
                     schedule.setPickUpType(jAttributes.getInt("pickup_type"));
 

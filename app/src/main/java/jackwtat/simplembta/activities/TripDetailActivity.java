@@ -913,8 +913,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 prediction.getStatus() == Prediction.SKIPPED;
 
         if (predictionTime != null && !predictionCancelled) {
-            if (predictionTime.getTime() - new Date().getTime() > 0) {
-                long countdownTime = prediction.getCountdownTime() + 15000;
+            if (prediction.getCountdownTime() > 0) {
+                long countdownTime = prediction.getCountdownTime();
 
                 if (prediction.willPickUpPassengers()) {
                     snippet = getResources().getString(R.string.map_departs) + " ";
