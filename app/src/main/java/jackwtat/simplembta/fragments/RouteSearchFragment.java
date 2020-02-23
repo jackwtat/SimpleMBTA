@@ -883,12 +883,6 @@ public class RouteSearchFragment extends Fragment implements
                         selectedRoute.addPrediction(p);
                     }
                 }
-
-                if (p.getTimeZoneOffset() != DateUtil.getTimeZoneOffset()) {
-                    errorManager.setTimeZoneMismatch(true);
-                } else {
-                    errorManager.setTimeZoneMismatch(false);
-                }
             }
 
             // Unlock views
