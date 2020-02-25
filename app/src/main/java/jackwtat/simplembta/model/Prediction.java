@@ -107,11 +107,11 @@ public class Prediction implements Comparable<Prediction>, Serializable {
         } else if (departureTime != null) {
             return departureTime.getTime() - currentTime.getTime();
         } else {
-            return -1;
+            return -99999999;
         }
     }
 
-    public int getTimeZoneOffset(){
+    public int getTimeZoneOffset() {
         return timeZoneOffset;
     }
 
@@ -288,7 +288,7 @@ public class Prediction implements Comparable<Prediction>, Serializable {
             } else if (otherTime == null) {
                 return -1;
             } else {
-                return getPredictionTime().compareTo(otherTime);
+                return (int) (getCountdownTime() - otherPred.getCountdownTime());
             }
         }
     }
