@@ -1471,7 +1471,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 // If we have no stops, then show error message
                 dataRefreshing = false;
                 enableOnErrorView(getContext().getResources().getString(R.string.error_nearby_stops));
-                forceUpdate();
             }
         }
     }
@@ -1504,7 +1503,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 // If we have no routes, then show error message
                 dataRefreshing = false;
                 enableOnErrorView(getContext().getResources().getString(R.string.error_nearby_routes));
-                forceUpdate();
             }
         }
     }
@@ -1672,7 +1670,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         public void onError() {
             dataRefreshing = false;
             enableOnErrorView(getContext().getResources().getString(R.string.error_upcoming_predictions));
-            forceUpdate();
         }
     }
 
