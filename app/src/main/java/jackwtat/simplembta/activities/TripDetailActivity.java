@@ -1060,7 +1060,6 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         @Override
         public void onError() {
             vehicle = null;
-            refreshVehicles();
         }
     }
 

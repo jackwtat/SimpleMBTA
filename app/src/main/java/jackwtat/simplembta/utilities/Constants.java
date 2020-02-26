@@ -47,6 +47,12 @@ public interface Constants {
     // One mile search distance
     double SEARCH_DISTANCE_ONE_MILE = 0.02;
 
+    // MBTA service boundary coordinates
+    double NORTH_LATITUDE_BOUNDARY = 42.9;
+    double SOUTH_LATITUDE_BOUNDARY = 41.3;
+    double WEST_LONGITUDE_BOUNDARY = -71.9;
+    double EAST_LONGITUDE_BOUNDARY = -69.9;
+
 
     /***************
      ***** MAP *****

@@ -878,11 +878,25 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         stopAlertsReady = false;
         shapesReady = false;
 
-        if (networkConnectivityClient.isConnected()) {
+        if (networkConnectivityClient.isConnected() && LocationClient.isInsideMbtaServiceArea(targetLocation)) {
             errorManager.setNetworkError(false);
             dataRefreshing = true;
             refreshTime = new Date().getTime();
             getStops();
+
+        } else if (!LocationClient.isInsideMbtaServiceArea(targetLocation)) {
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        enableOnErrorView(getResources().getString(R.string.no_nearby_services));
+                    }
+                });
+            }
+            dataRefreshing = false;
+            swipeRefreshLayout.setRefreshing(false);
+            targetStops.clear();
+            targetRoutes.clear();
 
         } else {
             if (getActivity() != null) {
@@ -895,6 +909,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
             errorManager.setNetworkError(true);
             dataRefreshing = false;
+            swipeRefreshLayout.setRefreshing(false);
             targetStops.clear();
             targetRoutes.clear();
         }

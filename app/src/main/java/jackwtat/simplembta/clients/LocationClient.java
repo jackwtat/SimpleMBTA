@@ -20,6 +20,8 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import jackwtat.simplembta.utilities.Constants;
+
 /**
  * Created by jackw on 12/4/2017.
  */
@@ -39,6 +41,13 @@ public class LocationClient {
         ActivityCompat.requestPermissions(activity,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 REQUEST_ACCESS_FINE_LOCATION);
+    }
+
+    public static boolean isInsideMbtaServiceArea(Location location) {
+        return location.getLatitude() < Constants.NORTH_LATITUDE_BOUNDARY &&
+                location.getLatitude() > Constants.SOUTH_LATITUDE_BOUNDARY &&
+                location.getLongitude() < Constants.EAST_LONGITUDE_BOUNDARY &&
+                location.getLongitude() > Constants.WEST_LONGITUDE_BOUNDARY;
     }
 
     @SuppressLint("RestrictedApi")
