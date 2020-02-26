@@ -37,6 +37,7 @@ import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -45,7 +46,6 @@ import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.utilities.Constants;
-import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.views.NoPredictionsView;
@@ -107,10 +107,6 @@ public class RouteSearchFragment extends Fragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Get MBTA realTime API key
-        realTimeApiKey = getContext().getString(R.string.v3_mbta_realtime_api_key);
-
         // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
@@ -214,6 +210,9 @@ public class RouteSearchFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+
+        // Get MBTA realTime API key
+        realTimeApiKey = RealTimeApiClient.generateApiKey(getContext());
 
         if (allRoutes == null || allRoutes.size() == 0) {
             getRoutes();

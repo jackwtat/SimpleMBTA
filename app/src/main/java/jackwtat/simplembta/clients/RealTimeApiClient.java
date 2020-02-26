@@ -1,5 +1,6 @@
 package jackwtat.simplembta.clients;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -11,6 +12,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.Random;
+
+import jackwtat.simplembta.R;
 
 /**
  * Created by jackw on 1/16/2018.
@@ -24,6 +28,17 @@ public class RealTimeApiClient {
 
     // The API key
     protected String apiKey;
+
+    public static String generateApiKey(Context context) {
+        int n = new Random(new Date().getTime()).nextInt(2);
+
+        switch (n) {
+            case 0:
+                return context.getResources().getString(R.string.v3_mbta_realtime_api_key_1);
+            default:
+                return context.getResources().getString(R.string.v3_mbta_realtime_api_key_2);
+        }
+    }
 
     public RealTimeApiClient(String apiKey) {
         this.apiKey = apiKey;
@@ -54,7 +69,7 @@ public class RealTimeApiClient {
         long endTime = new Date().getTime();
         long duration = endTime - startTime;
 
-        if(duration > 200) {
+        if (duration > 200) {
             Log.i(LOG_TAG, requestUrl.toString());
             Log.i(LOG_TAG, "Duration - " + duration + " m/s");
         }

@@ -64,6 +64,7 @@ import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.map.StopMarkerFactory;
 import jackwtat.simplembta.map.TransferStopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
@@ -85,7 +86,6 @@ import jackwtat.simplembta.model.Shape;
 import jackwtat.simplembta.model.Stop;
 import jackwtat.simplembta.model.routes.SilverLineCombined;
 import jackwtat.simplembta.utilities.Constants;
-import jackwtat.simplembta.utilities.DateUtil;
 import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.utilities.PastDataHolder;
@@ -198,9 +198,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Get MBTA realTime API key
-        realTimeApiKey = getContext().getString(R.string.v3_mbta_realtime_api_key);
 
         // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
@@ -692,6 +689,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onResume() {
         mapView.onResume();
         super.onResume();
+
+        // Get MBTA realTime API key
+        realTimeApiKey = RealTimeApiClient.generateApiKey(getContext());
 
         // Get the time
         long onResumeTime = new Date().getTime();

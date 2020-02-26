@@ -57,6 +57,7 @@ import jackwtat.simplembta.asyncTasks.ServiceAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.ShapesAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
@@ -131,9 +132,6 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_detail);
-
-        // Get MBTA realTime API key
-        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
         // Get data saved from previous session
         if (savedInstanceState != null) {
@@ -387,6 +385,9 @@ public class RouteDetailActivity extends AppCompatActivity implements OnMapReady
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+
+        // Get MBTA realTime API key
+        realTimeApiKey = RealTimeApiClient.generateApiKey(this);
 
         // Refresh the activity to update UI so that the predictions are accurate
         // as of the last update

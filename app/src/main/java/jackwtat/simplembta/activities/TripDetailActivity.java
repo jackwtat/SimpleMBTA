@@ -61,6 +61,7 @@ import jackwtat.simplembta.asyncTasks.StopsByIdAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByIdAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
+import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -138,9 +139,6 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_detail);
-
-        // Get MBTA realTime API key
-        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key);
 
         // Get network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(this);
@@ -377,6 +375,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+
+        // Get MBTA realTime API key
+        realTimeApiKey = RealTimeApiClient.generateApiKey(this);
 
         // Refresh the activity to update UI so that the predictions are accurate
         // as of the last update
