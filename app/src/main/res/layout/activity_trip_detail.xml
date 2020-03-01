@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/list_view_background"
     android:orientation="vertical">
 
     <TextView
@@ -77,7 +76,8 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/predictions_recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@color/list_view_background" />
 
                     <jackwtat.simplembta.views.NoPredictionsView
                         android:id="@+id/no_predictions_view"
