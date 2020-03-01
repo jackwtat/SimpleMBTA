@@ -51,6 +51,9 @@ public class TripDetailPredictionItem extends RelativeLayout {
     TextView trackNumberTextView;
     TextView cancelledIndicator;
     TextView dropOffIndicator;
+    View bottomDivider;
+    View bottomEdge;
+    View bottomBorder;
 
     String min;
 
@@ -281,6 +284,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
         } else if (stopSequenceType == LAST_STOP) {
             topLineView.setVisibility(VISIBLE);
             bottomLineView.setVisibility(INVISIBLE);
+            setBottomBorderVisible();
 
         } else if (stopSequenceType == ONLY_STOP) {
             topLineView.setVisibility(INVISIBLE);
@@ -345,6 +349,12 @@ public class TripDetailPredictionItem extends RelativeLayout {
         stopIconFillCurrent.setVisibility(VISIBLE);
     }
 
+    public void setBottomBorderVisible() {
+        bottomDivider.setVisibility(GONE);
+        bottomEdge.setVisibility(VISIBLE);
+        bottomBorder.setVisibility(VISIBLE);
+    }
+
     public void clear() {
         topLineView.setVisibility(INVISIBLE);
         bottomLineView.setVisibility(INVISIBLE);
@@ -366,6 +376,9 @@ public class TripDetailPredictionItem extends RelativeLayout {
         trackNumberTextView.setVisibility(GONE);
         cancelledIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
+        bottomDivider.setVisibility(VISIBLE);
+        bottomEdge.setVisibility(GONE);
+        bottomBorder.setVisibility(GONE);
     }
 
     private void init(Context context) {
@@ -390,6 +403,9 @@ public class TripDetailPredictionItem extends RelativeLayout {
         trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
         cancelledIndicator = rootView.findViewById(R.id.cancelled_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
+        bottomDivider = rootView.findViewById(R.id.bottom_divider);
+        bottomEdge = rootView.findViewById(R.id.bottom_edge);
+        bottomBorder = rootView.findViewById(R.id.bottom_border);
 
         min = context.getResources().getString(R.string.min);
     }

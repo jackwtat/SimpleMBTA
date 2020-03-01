@@ -177,7 +177,8 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:id="@+id/prediction_info_layout"
@@ -265,8 +266,23 @@
                 android:id="@+id/bottom_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
                 android:background="#CCCCCC" />
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_edge"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/clickable_background"
+        android:background="#CCCCCC"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/bottom_border"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_below="@id/bottom_edge"
+        android:background="@color/list_view_background"
+        android:visibility="gone" />
 </RelativeLayout>
