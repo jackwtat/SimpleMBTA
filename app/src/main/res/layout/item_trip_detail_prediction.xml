@@ -40,6 +40,7 @@
                     android:visibility="invisible" />
             </LinearLayout>
 
+            <!-- Stop Icons -->
             <ImageView
                 android:id="@+id/stop_icon"
                 android:layout_width="20dp"
@@ -62,6 +63,56 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_line_stop_closed"
                 android:visibility="gone" />
+            <!-- End Stop Icons -->
+
+            <!-- Vehicle Status Icons -->
+            <RelativeLayout
+                android:id="@+id/vehicle_approaching_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/background_vehicle"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_vehicle_bus" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/vehicle_stopped_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/background_vehicle"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_vehicle_bus" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/vehicle_departing_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/background_vehicle"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_vehicle_bus" />
+            </RelativeLayout>
+            <!-- End Vehicle Status Icons -->
         </RelativeLayout>
 
         <LinearLayout

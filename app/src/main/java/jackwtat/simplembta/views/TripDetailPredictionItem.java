@@ -37,6 +37,9 @@ public class TripDetailPredictionItem extends RelativeLayout {
     ImageView stopIcon;
     ImageView stopIconFill;
     ImageView stopIconCancelled;
+    View vehicleApproachingIcon;
+    View vehicleStoppedIcon;
+    View vehicleDepartingIcon;
     ImageView wheelchairAccessibleIcon;
     ImageView stopAdvisoryIcon;
     ImageView stopAlertIcon;
@@ -310,6 +313,30 @@ public class TripDetailPredictionItem extends RelativeLayout {
             stopAdvisoryIcon.setVisibility(GONE);
             stopAlertIcon.setVisibility(GONE);
         }
+
+        // Set vehicle icon
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
+            int currentStopSequence = prediction.getStopSequence();
+            int nextStopSequence = (nextPrediction != null) ? nextPrediction.getStopSequence() : -1;
+            int vehicleStopSequence = vehicle.getCurrentStopSequence();
+
+            if (vehicleStopSequence == currentStopSequence &&
+                    prediction.getCountdownTime() <= 60000) {
+                if (prediction.getCountdownTime() > 30000) {
+                    vehicleApproachingIcon.setVisibility(VISIBLE);
+                } else {
+                    vehicleStoppedIcon.setVisibility(VISIBLE);
+                }
+            } else if (vehicleStopSequence > currentStopSequence &&
+                    vehicleStopSequence < nextStopSequence) {
+                vehicleDepartingIcon.setVisibility(VISIBLE);
+
+            } else if (vehicleStopSequence == nextStopSequence &&
+                    nextPrediction != null &&
+                    nextPrediction.getCountdownTime() > 60000) {
+                vehicleDepartingIcon.setVisibility(VISIBLE);
+            }
+        }
     }
 
     public void emphasize() {
@@ -326,6 +353,9 @@ public class TripDetailPredictionItem extends RelativeLayout {
         wheelchairAccessibleIcon.setVisibility(GONE);
         stopAdvisoryIcon.setVisibility(GONE);
         stopAlertIcon.setVisibility(GONE);
+        vehicleApproachingIcon.setVisibility(GONE);
+        vehicleStoppedIcon.setVisibility(GONE);
+        vehicleDepartingIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
         statusTextView.setText("");
@@ -343,6 +373,9 @@ public class TripDetailPredictionItem extends RelativeLayout {
         stopIcon = rootView.findViewById(R.id.stop_icon);
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
+        vehicleApproachingIcon = rootView.findViewById(R.id.vehicle_approaching_icon);
+        vehicleStoppedIcon = rootView.findViewById(R.id.vehicle_stopped_icon);
+        vehicleDepartingIcon = rootView.findViewById(R.id.vehicle_departing_icon);
         stopName = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
