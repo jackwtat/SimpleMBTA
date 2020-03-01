@@ -57,6 +57,14 @@
                 android:visibility="visible" />
 
             <ImageView
+                android:id="@+id/stop_icon_fill_current"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/background_stop_fill"
+                android:visibility="gone" />
+
+            <ImageView
                 android:id="@+id/stop_icon_cancelled"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

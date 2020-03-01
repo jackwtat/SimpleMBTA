@@ -36,6 +36,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
     LinearLayout predictionInfoLayout;
     ImageView stopIcon;
     ImageView stopIconFill;
+    ImageView stopIconFillCurrent;
     ImageView stopIconCancelled;
     View vehicleApproachingIcon;
     View vehicleStoppedIcon;
@@ -341,6 +342,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
 
     public void emphasize() {
         stopName.setTypeface(stopName.getTypeface(), Typeface.BOLD_ITALIC);
+        stopIconFillCurrent.setVisibility(VISIBLE);
     }
 
     public void clear() {
@@ -349,6 +351,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
         predictionInfoLayout.setVisibility(VISIBLE);
         stopName.setText("");
         stopName.setTypeface(Typeface.DEFAULT);
+        stopIconFillCurrent.setVisibility(GONE);
         stopIconCancelled.setVisibility(GONE);
         wheelchairAccessibleIcon.setVisibility(GONE);
         stopAdvisoryIcon.setVisibility(GONE);
@@ -372,6 +375,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
         predictionInfoLayout = rootView.findViewById(R.id.prediction_info_layout);
         stopIcon = rootView.findViewById(R.id.stop_icon);
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
+        stopIconFillCurrent = rootView.findViewById(R.id.stop_icon_fill_current);
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
         vehicleApproachingIcon = rootView.findViewById(R.id.vehicle_approaching_icon);
         vehicleStoppedIcon = rootView.findViewById(R.id.vehicle_stopped_icon);
