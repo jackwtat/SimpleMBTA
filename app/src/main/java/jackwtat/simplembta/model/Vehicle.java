@@ -5,10 +5,6 @@ import android.location.Location;
 import java.io.Serializable;
 
 public class Vehicle implements Serializable {
-    public static final int INCOMING_AT = 0;
-    public static final int STOPPED_AT = 1;
-    public static final int IN_TRANSIT_TO = 2;
-
     public enum Status {
         UNKNOWN(""),
         INCOMING("Approaching"),
