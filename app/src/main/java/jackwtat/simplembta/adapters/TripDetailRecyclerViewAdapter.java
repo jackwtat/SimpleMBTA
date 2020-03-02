@@ -103,9 +103,8 @@ public class TripDetailRecyclerViewAdapter
         this.predictions.clear();
 
         for (Prediction prediction : predictions) {
-            if (prediction.getPredictionTime() != null &&
-                    (prediction.getStopSequence() >= selectedStopSequence ||
-                            prediction.getStopSequence() == 1)) {
+            if (prediction.getStopSequence() >= selectedStopSequence ||
+                            prediction.getStopSequence() == 1) {
                 prediction.setSortMethod(Prediction.STOP_SEQUENCE);
                 this.predictions.add(prediction);
             }
