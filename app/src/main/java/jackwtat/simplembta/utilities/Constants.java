@@ -28,6 +28,12 @@ public interface Constants {
     // Time since last onStop() before restarting the location
     long LOCATION_UPDATE_RESTART_TIME = 180000;
 
+    // Cutoff countdown time to display 'Arriving' message
+    long COUNTDOWN_ARRIVING_CUTOFF = 60000;
+
+    // Cutoff countdown time to display 'Arriving' message
+    long COUNTDOWN_DEPARTING_CUTOFF = 0;
+
 
     /*******************************
      ***** DISTANCE / LOCATION *****

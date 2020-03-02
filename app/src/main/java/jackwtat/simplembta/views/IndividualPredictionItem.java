@@ -14,8 +14,9 @@ import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.utilities.Constants;
 
-public class IndividualPredictionItem extends LinearLayout {
+public class IndividualPredictionItem extends LinearLayout implements Constants {
     View rootView;
     TextView destinationTextView;
     TextView trainNumberTextView;
@@ -71,7 +72,7 @@ public class IndividualPredictionItem extends LinearLayout {
                     countdownTime < 30000) {
 
                 // Vehicle is more than one minute away
-                if (countdownTime > 60000) {
+                if (countdownTime > COUNTDOWN_ARRIVING_CUTOFF) {
                     String timeText;
                     String minuteText;
 
@@ -95,7 +96,7 @@ public class IndividualPredictionItem extends LinearLayout {
                     if (prediction.getStopSequence() == 1 ||
                             (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
                                     prediction.getPredictionType() == Prediction.DEPARTURE &&
-                                    countdownTime < 10000)) {
+                                    countdownTime < COUNTDOWN_DEPARTING_CUTOFF)) {
                         statusText = getContext().getResources().getString(R.string.map_departing);
                     } else {
                         statusText = getContext().getResources().getString(R.string.map_arriving);

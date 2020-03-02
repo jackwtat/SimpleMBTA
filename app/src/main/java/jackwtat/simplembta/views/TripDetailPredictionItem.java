@@ -22,8 +22,9 @@ import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
 import jackwtat.simplembta.model.Vehicle;
 import jackwtat.simplembta.model.Route;
+import jackwtat.simplembta.utilities.Constants;
 
-public class TripDetailPredictionItem extends RelativeLayout {
+public class TripDetailPredictionItem extends RelativeLayout implements Constants {
 
     public static final int FIRST_STOP = 0;
     public static final int INTERMEDIATE_STOP = 1;
@@ -100,7 +101,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
             } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence()) {
 
                 // Vehicle is more than one minute away
-                if (countdownTime > 60000) {
+                if (countdownTime > COUNTDOWN_ARRIVING_CUTOFF) {
                     String timeText;
                     String minuteText;
 
@@ -127,7 +128,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
                     if (prediction.getStopSequence() == 1 ||
                             (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
                                     prediction.getPredictionType() == Prediction.DEPARTURE &&
-                                    countdownTime < 10000)) {
+                                    countdownTime <= COUNTDOWN_DEPARTING_CUTOFF)) {
                         statusText = getContext().getResources().getString(R.string.trip_departing);
                     } else {
                         statusText = getContext().getResources().getString(R.string.trip_arriving);
@@ -324,7 +325,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
             int vehicleStopSequence = vehicle.getCurrentStopSequence();
 
             if (vehicleStopSequence == currentStopSequence &&
-                    prediction.getCountdownTime() <= 45000) {
+                    prediction.getCountdownTime() <= COUNTDOWN_ARRIVING_CUTOFF) {
                 if (prediction.getCountdownTime() > 20000) {
                     vehicleIcons.getChildAt(0).setVisibility(VISIBLE);
                 } else {
@@ -336,7 +337,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
 
             } else if (vehicleStopSequence == nextStopSequence &&
                     nextPrediction != null &&
-                    nextPrediction.getCountdownTime() > 45000) {
+                    nextPrediction.getCountdownTime() > COUNTDOWN_ARRIVING_CUTOFF) {
                 vehicleIcons.getChildAt(2).setVisibility(VISIBLE);
             }
         }
