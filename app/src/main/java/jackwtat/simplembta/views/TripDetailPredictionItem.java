@@ -324,8 +324,8 @@ public class TripDetailPredictionItem extends RelativeLayout {
             int vehicleStopSequence = vehicle.getCurrentStopSequence();
 
             if (vehicleStopSequence == currentStopSequence &&
-                    prediction.getCountdownTime() <= 60000) {
-                if (prediction.getCountdownTime() > 30000) {
+                    prediction.getCountdownTime() <= 45000) {
+                if (prediction.getCountdownTime() > 20000) {
                     vehicleIcons.getChildAt(0).setVisibility(VISIBLE);
                 } else {
                     vehicleIcons.getChildAt(1).setVisibility(VISIBLE);
@@ -336,7 +336,7 @@ public class TripDetailPredictionItem extends RelativeLayout {
 
             } else if (vehicleStopSequence == nextStopSequence &&
                     nextPrediction != null &&
-                    nextPrediction.getCountdownTime() > 60000) {
+                    nextPrediction.getCountdownTime() > 45000) {
                 vehicleIcons.getChildAt(2).setVisibility(VISIBLE);
             }
         }
