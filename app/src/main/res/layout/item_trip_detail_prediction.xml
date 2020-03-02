@@ -74,53 +74,31 @@
             <!-- End Stop Icons -->
 
             <!-- Vehicle Status Icons -->
-            <RelativeLayout
-                android:id="@+id/vehicle_approaching_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentTop="true"
+            <LinearLayout
+                android:id="@+id/vehicle_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/background_vehicle"
-                android:visibility="gone">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_vehicle_bus" />
-            </RelativeLayout>
+                <jackwtat.simplembta.views.VehicleIconView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" />
 
-            <RelativeLayout
-                android:id="@+id/vehicle_stopped_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/background_vehicle"
-                android:visibility="gone">
+                <jackwtat.simplembta.views.VehicleIconView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" />
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_vehicle_bus" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/vehicle_departing_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/background_vehicle"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_vehicle_bus" />
-            </RelativeLayout>
-            <!-- End Vehicle Status Icons -->
+                <jackwtat.simplembta.views.VehicleIconView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout

@@ -34,13 +34,11 @@ public class TripDetailPredictionItem extends RelativeLayout {
     View topLineView;
     View bottomLineView;
     LinearLayout predictionInfoLayout;
+    LinearLayout vehicleIcons;
     ImageView stopIcon;
     ImageView stopIconFill;
     ImageView stopIconFillCurrent;
     ImageView stopIconCancelled;
-    View vehicleApproachingIcon;
-    View vehicleStoppedIcon;
-    View vehicleDepartingIcon;
     ImageView wheelchairAccessibleIcon;
     ImageView stopAdvisoryIcon;
     ImageView stopAlertIcon;
@@ -328,18 +326,18 @@ public class TripDetailPredictionItem extends RelativeLayout {
             if (vehicleStopSequence == currentStopSequence &&
                     prediction.getCountdownTime() <= 60000) {
                 if (prediction.getCountdownTime() > 30000) {
-                    vehicleApproachingIcon.setVisibility(VISIBLE);
+                    vehicleIcons.getChildAt(0).setVisibility(VISIBLE);
                 } else {
-                    vehicleStoppedIcon.setVisibility(VISIBLE);
+                    vehicleIcons.getChildAt(1).setVisibility(VISIBLE);
                 }
             } else if (vehicleStopSequence > currentStopSequence &&
                     vehicleStopSequence < nextStopSequence) {
-                vehicleDepartingIcon.setVisibility(VISIBLE);
+                vehicleIcons.getChildAt(2).setVisibility(VISIBLE);
 
             } else if (vehicleStopSequence == nextStopSequence &&
                     nextPrediction != null &&
                     nextPrediction.getCountdownTime() > 60000) {
-                vehicleDepartingIcon.setVisibility(VISIBLE);
+                vehicleIcons.getChildAt(2).setVisibility(VISIBLE);
             }
         }
     }
@@ -366,9 +364,6 @@ public class TripDetailPredictionItem extends RelativeLayout {
         wheelchairAccessibleIcon.setVisibility(GONE);
         stopAdvisoryIcon.setVisibility(GONE);
         stopAlertIcon.setVisibility(GONE);
-        vehicleApproachingIcon.setVisibility(GONE);
-        vehicleStoppedIcon.setVisibility(GONE);
-        vehicleDepartingIcon.setVisibility(GONE);
         timeTextView.setText("");
         minuteTextView.setText("");
         statusTextView.setText("");
@@ -379,6 +374,10 @@ public class TripDetailPredictionItem extends RelativeLayout {
         bottomDivider.setVisibility(VISIBLE);
         bottomEdge.setVisibility(GONE);
         bottomBorder.setVisibility(GONE);
+
+        for(int i = 0; i < vehicleIcons.getChildCount(); i++){
+            vehicleIcons.getChildAt(i).setVisibility(INVISIBLE);
+        }
     }
 
     private void init(Context context) {
@@ -386,13 +385,11 @@ public class TripDetailPredictionItem extends RelativeLayout {
         topLineView = rootView.findViewById(R.id.top_line_view);
         bottomLineView = rootView.findViewById(R.id.bottom_line_view);
         predictionInfoLayout = rootView.findViewById(R.id.prediction_info_layout);
+        vehicleIcons = rootView.findViewById(R.id.vehicle_icons);
         stopIcon = rootView.findViewById(R.id.stop_icon);
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
         stopIconFillCurrent = rootView.findViewById(R.id.stop_icon_fill_current);
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
-        vehicleApproachingIcon = rootView.findViewById(R.id.vehicle_approaching_icon);
-        vehicleStoppedIcon = rootView.findViewById(R.id.vehicle_stopped_icon);
-        vehicleDepartingIcon = rootView.findViewById(R.id.vehicle_departing_icon);
         stopName = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
