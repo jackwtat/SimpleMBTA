@@ -1744,10 +1744,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onSuccess(Shape[] shapes) {
             for (Shape shape : shapes) {
-                Route route = targetRoutes.get(shape.getRouteId());
+                if (shape.getPriority() >= 0) {
+                    Route route = targetRoutes.get(shape.getRouteId());
 
-                if (route != null) {
-                    route.addShape(shape);
+                    if (route != null) {
+                        route.addShape(shape);
+                    }
                 }
             }
 
