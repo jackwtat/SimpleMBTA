@@ -96,6 +96,13 @@
     <string name="trip_already_departed">Already departed</string>
     <string name="trip_already_arrived">Already arrived</string>
 
+    <!-- Trip Vehicle Statuses -->
+    <string name="trip_not_yet_started">Trip has not yet started</string>
+    <string name="trip_no_vehicle_assigned">No vehicle is currently assigned to this trip</string>
+    <string name="trip_live_tracking_not_available">Live tracking is not available for this trip</string>
+    <string name="trip_stop_away">stop away</string>
+    <string name="trip_stops_away">stops away</string>
+
     <!-- Route Names -->
     <string name="red_line_long_name">Red Line</string>
     <string name="orange_line_long_name">Orange Line</string>

@@ -84,6 +84,7 @@ import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.NoPredictionsView;
 import jackwtat.simplembta.views.StopInfoBodyView;
 import jackwtat.simplembta.views.StopInfoTitleView;
+import jackwtat.simplembta.views.VehicleStatusView;
 
 public class TripDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
@@ -93,6 +94,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private MapView mapView;
     private GoogleMap gMap;
     private ProgressBar mapProgressBar;
+    private VehicleStatusView vehicleStatusView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private NoPredictionsView noPredictionsView;
@@ -129,6 +131,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     private Route selectedRoute;
     private Stop selectedStop;
+    private int selectedStopSequence = -1;
     private String selectedTripId;
     private String selectedTripName;
     private String selectedTripDestination;
@@ -147,6 +150,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         if (savedInstanceState != null) {
             selectedRoute = (Route) savedInstanceState.getSerializable("route");
             selectedStop = (Stop) savedInstanceState.getSerializable("stop");
+            selectedStopSequence = savedInstanceState.getInt("stopSequence");
             selectedTripId = savedInstanceState.getString("trip");
             selectedTripName = savedInstanceState.getString("name");
             selectedTripDestination = savedInstanceState.getString("destination");
@@ -163,6 +167,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             Intent intent = getIntent();
             selectedRoute = (Route) intent.getSerializableExtra("route");
             selectedStop = (Stop) intent.getSerializableExtra("stop");
+            selectedStopSequence = intent.getIntExtra("stopSequence", -1);
             selectedTripId = intent.getStringExtra("trip");
             selectedTripName = intent.getStringExtra("name");
             selectedTripDestination = intent.getStringExtra("destination");
@@ -236,6 +241,22 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         // Set the no predictions indicator
         noPredictionsView = findViewById(R.id.no_predictions_view);
+
+        // Get vehicle status view
+        vehicleStatusView = findViewById(R.id.vehicle_status_view);
+        vehicleStatusView.setVehicleIcon(
+                (selectedRoute == null)
+                        ? Route.UNKNOWN_MODE
+                        : selectedRoute.getMode());
+        vehicleStatusView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (vehicleMarker != null && mapReady) {
+                    vehicleMarker.showInfoWindow();
+                    gMap.animateCamera(CameraUpdateFactory.newLatLng(vehicleMarker.getPosition()));
+                }
+            }
+        });
 
         // Get and initialize swipe refresh layout
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
@@ -436,6 +457,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable("route", selectedRoute);
         outState.putSerializable("stop", selectedStop);
+        outState.putInt("stopSequence", selectedStopSequence);
         outState.putString("trip", selectedTripId);
         outState.putString("name", selectedTripName);
         outState.putString("destination", selectedTripDestination);
@@ -601,7 +623,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                 if (p.getStop().equals(selectedStop) ||
                         p.getStop().isParentOf(selectedStop.getId()) ||
                         selectedStop.isParentOf(p.getStopId())) {
-                    recyclerViewAdapter.setSelectedStopSequence(p.getStopSequence());
+                    selectedStopSequence = p.getStopSequence();
+                    recyclerViewAdapter.setSelectedStopSequence(selectedStopSequence);
                 }
             }
 
@@ -705,6 +728,38 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     private void refreshVehicles() {
         recyclerViewAdapter.setVehicle(vehicle);
+        vehicleStatusView.clear();
+
+        if (vehicle != null) {
+            String message = "";
+            if (vehicle.getTripId().equalsIgnoreCase(selectedTripId)) {
+                int vehicleStopSequence = vehicle.getCurrentStopSequence();
+                int stopsAway = selectedStopSequence - vehicleStopSequence;
+
+                if (vehicleStopSequence == 0) {
+                    message += getResources().getString(R.string.trip_not_yet_started);
+                } else if (stopsAway >= 2) {
+                    message += stopsAway + " " + getResources().getString(R.string.trip_stops_away);
+                } else if (stopsAway == 1) {
+                    message += stopsAway + " " + getResources().getString(R.string.trip_stop_away);
+                } else if (stopsAway == 0) {
+                    message += "Approaching " + selectedStop.getName();
+                } else {
+                    message += "En route to " + selectedTripDestination;
+                }
+                vehicleStatusView.setVehicleStatusText(message);
+            } else {
+                message += getResources().getString(R.string.trip_not_yet_started);
+                vehicleStatusView.setVehicleStatusText(message);
+            }
+        } else if (selectedRoute.getMode() == Route.FERRY) {
+            vehicleStatusView.setVehicleStatusText(
+                    getResources().getString(R.string.trip_live_tracking_not_available));
+
+        } else {
+            vehicleStatusView.setVehicleStatusText(
+                    getResources().getString(R.string.trip_no_vehicle_assigned));
+        }
 
         if (mapReady) {
             if (vehicle != null) {
@@ -1124,6 +1179,13 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         public void run() {
             if (selectedVehicleId != null && !selectedVehicleId.equalsIgnoreCase("")) {
                 getVehicles();
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshVehicles();
+                    }
+                });
             }
         }
     }

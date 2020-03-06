@@ -182,6 +182,7 @@ public class RouteSearchFragment extends Fragment implements
                     Intent intent = new Intent(getActivity(), TripDetailActivity.class);
                     intent.putExtra("route", prediction.getRoute());
                     intent.putExtra("stop", prediction.getStop());
+                    intent.putExtra("stopSequence", prediction.getStopSequence());
                     intent.putExtra("trip", prediction.getTripId());
                     intent.putExtra("name", prediction.getTripName());
                     intent.putExtra("destination", prediction.getDestination());

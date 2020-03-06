@@ -67,8 +67,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="aaaaaa" />
-                            <entry key="outputName" value="ic_vehicle_bus" />
-                            <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\ic_vehicle_bus.svg" />
+                            <entry key="outputName" value="ic_vehicle_ferry" />
+                            <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\ic_vehicle_ferry.svg" />
                           </map>
                         </option>
                       </PersistentState>

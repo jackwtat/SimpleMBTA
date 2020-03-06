@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/service_alerts_background"
+    android:elevation="2dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <RelativeLayout
+        android:layout_width="48dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/vehicle_light_rail_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_vehicle_light_rail"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/vehicle_heavy_rail_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_vehicle_heavy_rail"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/vehicle_commuter_rail_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_vehicle_commuter_rail"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/vehicle_bus_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_vehicle_bus"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/vehicle_ferry_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_vehicle_ferry"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/vehicle_status_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingRight="16dp"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/small_header_text_size"
+        android:textStyle="bold" />
+</LinearLayout>
