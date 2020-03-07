@@ -65,6 +65,7 @@
     <!-- Map Search Prediction Statuses -->
     <string name="map_departing">Departing</string>
     <string name="map_arriving">Arriving</string>
+    <string name="map_approaching">Approaching</string>
     <string name="map_departed">Departed</string>
     <string name="map_arrived">Arrived</string>
 
@@ -87,12 +88,14 @@
     <!-- Route Search Prediction Statuses -->
     <string name="route_departing">Departing</string>
     <string name="route_arriving">Arriving</string>
+    <string name="route_approaching">Approaching</string>
     <string name="route_departed">Departed</string>
     <string name="route_arrived">Arrived</string>
 
     <!-- Trip Prediction Statuses -->
     <string name="trip_departing">Departing</string>
     <string name="trip_arriving">Arriving</string>
+    <string name="trip_approaching">Approaching</string>
     <string name="trip_already_departed">Already departed</string>
     <string name="trip_already_arrived">Already arrived</string>
 
@@ -100,6 +103,7 @@
     <string name="trip_not_yet_started">Trip has not yet started</string>
     <string name="trip_no_vehicle_assigned">No vehicle is currently assigned to this trip</string>
     <string name="trip_live_tracking_not_available">Live tracking is not available for this trip</string>
+    <string name="trip_en_route">En route to</string>
     <string name="trip_stop_away">stop away</string>
     <string name="trip_stops_away">stops away</string>
 

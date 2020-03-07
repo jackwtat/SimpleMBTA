@@ -90,14 +90,14 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
 
                 // Vehicle is at or approaching this stop
             } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() ||
-                    countdownTime < 30000) {
+                    countdownTime < COUNTDOWN_APPROACHING_CUTOFF) {
 
                 // Vehicle is more than one minute away
-                if (countdownTime > COUNTDOWN_ARRIVING_CUTOFF) {
+                if (countdownTime > COUNTDOWN_APPROACHING_CUTOFF) {
                     String timeText;
                     String minuteText;
 
-                    if (countdownTime < 3600000) {
+                    if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
                         timeText = (countdownTime / 60000) + "";
                         minuteText = min;
 
@@ -114,13 +114,15 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
                     // Vehicle is less than one minute away
                 } else {
                     String statusText;
-                    if (prediction.getStopSequence() == 1 ||
-                            (vehicle.getCurrentStopSequence() == prediction.getStopSequence() &&
-                                    prediction.getPredictionType() == Prediction.DEPARTURE &&
-                                    countdownTime < COUNTDOWN_DEPARTING_CUTOFF)) {
-                        statusText = getContext().getResources().getString(R.string.route_departing);
+                    if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
+                        if (prediction.getPredictionType() == Prediction.DEPARTURE ||
+                                vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
+                            statusText = getContext().getResources().getString(R.string.route_departing);
+                        } else {
+                            statusText = getContext().getResources().getString(R.string.route_arriving);
+                        }
                     } else {
-                        statusText = getContext().getResources().getString(R.string.route_arriving);
+                        statusText = getContext().getResources().getString(R.string.route_approaching);
                     }
 
                     timeTextView.setText(statusText);
@@ -132,7 +134,7 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
                 String timeText;
                 String minuteText;
 
-                if (countdownTime < 3600000) {
+                if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
                     timeText = (countdownTime / 60000) + "";
                     minuteText = min;
 
@@ -152,7 +154,7 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
             String timeText;
             String minuteText;
 
-            if (countdownTime < 3600000 &&
+            if (countdownTime < COUNTDOWN_HOUR_CUTOFF &&
                     prediction.getStatus() != Prediction.SKIPPED &&
                     prediction.getStatus() != Prediction.CANCELLED) {
                 if (countdownTime > 0) {
