@@ -125,15 +125,19 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
                     // Vehicle is less than one minute away
                 } else {
                     String statusText;
-                    if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                        if (prediction.getPredictionType() == Prediction.DEPARTURE ||
-                                vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                            statusText = getContext().getResources().getString(R.string.trip_departing);
+
+                    if (prediction.getPredictionType() == Prediction.ARRIVAL) {
+                        if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
+                            if (vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
+                                statusText = getContext().getResources().getString(R.string.trip_departing);
+                            } else {
+                                statusText = getContext().getResources().getString(R.string.trip_arriving);
+                            }
                         } else {
-                            statusText = getContext().getResources().getString(R.string.trip_arriving);
+                            statusText = getContext().getResources().getString(R.string.trip_approaching);
                         }
                     } else {
-                        statusText = getContext().getResources().getString(R.string.trip_approaching);
+                        statusText = getContext().getResources().getString(R.string.trip_departing);
                     }
 
                     statusTextView.setText(statusText);

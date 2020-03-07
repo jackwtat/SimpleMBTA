@@ -93,15 +93,19 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
                     // Vehicle is less than one minute away
                 } else {
                     String statusText;
-                    if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                        if (prediction.getPredictionType() == Prediction.DEPARTURE ||
-                                vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                            statusText = getContext().getResources().getString(R.string.map_departing);
+
+                    if (prediction.getPredictionType() == Prediction.ARRIVAL) {
+                        if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
+                            if (vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
+                                statusText = getContext().getResources().getString(R.string.map_departing);
+                            } else {
+                                statusText = getContext().getResources().getString(R.string.map_arriving);
+                            }
                         } else {
-                            statusText = getContext().getResources().getString(R.string.map_arriving);
+                            statusText = getContext().getResources().getString(R.string.map_approaching);
                         }
                     } else {
-                        statusText = getContext().getResources().getString(R.string.map_approaching);
+                        statusText = getContext().getResources().getString(R.string.map_departing);
                     }
 
                     timeTextView.setText(statusText);
