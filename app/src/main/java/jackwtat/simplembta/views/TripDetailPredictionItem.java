@@ -126,18 +126,15 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
                 } else {
                     String statusText;
 
-                    if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                        if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                            if (vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                                statusText = getContext().getResources().getString(R.string.trip_departing);
-                            } else {
-                                statusText = getContext().getResources().getString(R.string.trip_arriving);
-                            }
-                        } else {
-                            statusText = getContext().getResources().getString(R.string.trip_approaching);
-                        }
-                    } else {
+                    if (prediction.getPredictionType() == Prediction.DEPARTURE &&
+                            vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
                         statusText = getContext().getResources().getString(R.string.trip_departing);
+
+                    } else if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
+                        statusText = getContext().getResources().getString(R.string.trip_arriving);
+
+                    } else {
+                        statusText = getContext().getResources().getString(R.string.trip_approaching);
                     }
 
                     statusTextView.setText(statusText);

@@ -94,18 +94,15 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
                 } else {
                     String statusText;
 
-                    if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                        if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                            if (vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                                statusText = getContext().getResources().getString(R.string.map_departing);
-                            } else {
-                                statusText = getContext().getResources().getString(R.string.map_arriving);
-                            }
-                        } else {
-                            statusText = getContext().getResources().getString(R.string.map_approaching);
-                        }
-                    } else {
+                    if (prediction.getPredictionType() == Prediction.DEPARTURE &&
+                            vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
                         statusText = getContext().getResources().getString(R.string.map_departing);
+
+                    } else if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
+                        statusText = getContext().getResources().getString(R.string.map_arriving);
+
+                    } else {
+                        statusText = getContext().getResources().getString(R.string.map_approaching);
                     }
 
                     timeTextView.setText(statusText);
