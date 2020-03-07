@@ -94,7 +94,7 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
                 } else {
                     String statusText;
 
-                    if (prediction.getPredictionType() == Prediction.ARRIVAL) {
+                    if (prediction.getPredictionType() == Prediction.DEPARTURE) {
                         if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
                             if (vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
                                 statusText = getContext().getResources().getString(R.string.map_departing);
