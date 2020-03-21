@@ -1,13 +1,12 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import androidx.annotation.Nullable;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 
@@ -15,7 +14,8 @@ public class VehicleStatusView extends LinearLayout {
     public static final String LOG_TAG = "VehicleStatusView";
 
     private View rootView;
-    private TextView vehicleStatusTextView;
+    private TextView topTextView;
+    private TextView bottomTextView;
     private ImageView vehicleLightRailIcon;
     private ImageView vehicleHeavyRailIcon;
     private ImageView vehicleCommuterRailIcon;
@@ -37,8 +37,14 @@ public class VehicleStatusView extends LinearLayout {
         init(context);
     }
 
-    public void setVehicleStatusText(String status) {
-        vehicleStatusTextView.setText(status);
+    public void setTopText(String text) {
+        topTextView.setText(text);
+        topTextView.setVisibility(VISIBLE);
+    }
+
+    public void setBottomText(String text) {
+        bottomTextView.setText(text);
+        bottomTextView.setVisibility(VISIBLE);
     }
 
     public void setVehicleIcon(int mode) {
@@ -63,15 +69,19 @@ public class VehicleStatusView extends LinearLayout {
                 break;
         }
     }
-
     public void clear() {
-        vehicleStatusTextView.setText("");
+        topTextView.setText("");
+        bottomTextView.setText("");
+
+        topTextView.setVisibility(GONE);
+        bottomTextView.setVisibility(GONE);
     }
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.vehicle_status_view, this);
 
-        vehicleStatusTextView = rootView.findViewById(R.id.vehicle_status_text_view);
+        topTextView = rootView.findViewById(R.id.top_text_view);
+        bottomTextView = rootView.findViewById(R.id.bottom_text_view);
 
         vehicleLightRailIcon = rootView.findViewById(R.id.vehicle_light_rail_icon);
         vehicleHeavyRailIcon = rootView.findViewById(R.id.vehicle_heavy_rail_icon);

@@ -29,17 +29,17 @@
         android:layout_height="1dp"
         android:background="#CCCCCC" />
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="jackwtat.simplembta.activities.RouteDetailActivity">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.CollapsingToolbarLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_map_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -65,10 +65,10 @@
                         android:indeterminateTint="@color/map_artifact"
                         android:indeterminateTintMode="src_atop" />
                 </RelativeLayout>
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:id="@+id/nested_scroll_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,9 +90,9 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/predictions_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -113,6 +113,6 @@
                     android:visibility="visible" />
 
             </RelativeLayout>
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </android.support.design.widget.CoordinatorLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

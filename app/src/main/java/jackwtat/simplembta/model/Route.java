@@ -1,6 +1,6 @@
 package jackwtat.simplembta.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.MarkerOptions;

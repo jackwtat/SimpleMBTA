@@ -3,13 +3,14 @@ package jackwtat.simplembta.views;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.List;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.Route;
 import jackwtat.simplembta.model.ServiceAlert;
-import jackwtat.simplembta.model.routes.SilverLine;
 
 public class ServiceAlertsIndicatorView extends LinearLayout {
     private View rootView;

@@ -9,23 +9,23 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.maps.android.PolyUtil;
 
 import java.text.SimpleDateFormat;
@@ -730,52 +731,129 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         recyclerViewAdapter.setVehicle(vehicle);
         vehicleStatusView.clear();
 
+        int vehicleStopSequence = -1;
+        int stopsAway = -1;
+
+        Prediction currentPrediction = null;
+        String vehicleLabelText = "";
+        String vehicleStatusText = "";
+
         if (vehicle != null) {
-            String message = "";
+            vehicleStopSequence = vehicle.getCurrentStopSequence();
+
+            // Current prediction
             if (vehicle.getTripId().equalsIgnoreCase(selectedTripId)) {
-                int vehicleStopSequence = vehicle.getCurrentStopSequence();
-                int stopsAway = selectedStopSequence - vehicleStopSequence;
+                for (Prediction p : predictions) {
+                    if (vehicleStopSequence == p.getStopSequence()) {
+                        currentPrediction = p;
 
-                if (vehicleStopSequence == 0) {
-                    message += getResources().getString(R.string.trip_not_yet_started);
-                } else if (stopsAway >= 2) {
-                    message += stopsAway + " " + getResources().getString(R.string.trip_stops_away);
-                } else if (stopsAway == 1) {
-                    message += stopsAway + " " + getResources().getString(R.string.trip_stop_away);
-                } else if (stopsAway == 0) {
-                    message += "Approaching " + selectedStop.getName();
-                } else {
-                    message += "En route to " + selectedTripDestination;
+                        // Initiate stops away counter
+                        if (vehicleStopSequence <= selectedStopSequence) {
+                            stopsAway = 0;
+                        }
+                    }
+
+                    // Increment stops away counter
+                    if (vehicleStopSequence < selectedStopSequence &&
+                            p.getStopSequence() < selectedStopSequence) {
+                        stopsAway++;
+                    }
                 }
-                vehicleStatusView.setVehicleStatusText(message);
-            } else {
-                message += getResources().getString(R.string.trip_not_yet_started);
-                vehicleStatusView.setVehicleStatusText(message);
             }
-        } else if (selectedRoute.getMode() == Route.FERRY) {
-            vehicleStatusView.setVehicleStatusText(
-                    getResources().getString(R.string.trip_live_tracking_not_available));
 
+            // Vehicle label text
+            int mode = selectedRoute.getMode();
+            if (mode == Route.COMMUTER_RAIL) {
+                vehicleLabelText = getResources().getString(R.string.map_train) + " " +
+                        vehicle.getTripName();
+            } else if (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL) {
+                vehicleLabelText = getResources().getString(R.string.map_train) + " " +
+                        vehicle.getLabel();
+            } else {
+                vehicleLabelText = getResources().getString(R.string.map_vehicle) + " " +
+                        vehicle.getLabel();
+            }
+
+            // Vehicle status text
+            if (currentPrediction != null) {
+                vehicleStatusText += vehicle.getCurrentStatus().getText() + " " +
+                        currentPrediction.getStop().getName();
+            } else {
+                // 'Currently on '
+                vehicleStatusText += getResources().getString(R.string.map_currently_on) + " ";
+
+                // 'route '
+                if (selectedRoute.getMode() == Route.BUS) {
+                    vehicleStatusText += getResources().getString(R.string.map_route) + " ";
+                }
+
+                // route_id + ' to ' + destination
+                vehicleStatusText += vehicle.getRoute() + " "
+                        + getResources().getString(R.string.map_to) + " "
+                        + vehicle.getDestination();
+            }
+
+
+        }
+
+        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(selectedTripId)) {
+            String stopsAwayText = "";
+
+            if (stopsAway >= 2) {
+                stopsAwayText += stopsAway + " " +
+                        getResources().getString(R.string.trip_stops_away);
+
+            } else if (stopsAway == 1) {
+                stopsAwayText += stopsAway + " " +
+                        getResources().getString(R.string.trip_stop_away);
+
+            } else if (stopsAway == 0) {
+                if (currentPrediction != null) {
+                    if (currentPrediction.getPredictionType() == Prediction.DEPARTURE &&
+                            vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
+
+                        if (currentPrediction.getCountdownTime() < COUNTDOWN_APPROACHING_CUTOFF) {
+                            stopsAwayText += getResources().getString(R.string.trip_departing);
+                        } else {
+                            stopsAwayText += getResources().getString(R.string.trip_boarding);
+                        }
+
+                    } else if (currentPrediction.getCountdownTime() < COUNTDOWN_ARRIVING_CUTOFF) {
+                        stopsAwayText += getResources().getString(R.string.trip_arriving);
+
+                    } else {
+                        stopsAwayText += getResources().getString(R.string.trip_approaching);
+                    }
+                } else {
+                    stopsAwayText += getResources().getString(R.string.trip_approaching);
+                }
+
+            } else {
+                stopsAwayText += getResources().getString(R.string.trip_en_route) + " " +
+                        selectedTripDestination;
+            }
+            vehicleStatusView.setTopText(stopsAwayText);
+            vehicleStatusView.setBottomText(vehicleStatusText);
+
+        /*} else if (predictions.get(0) != null && predictions.get(0).getCountdownTime() <= 0) {
+            if (!predictions.get(0).isLive()) {
+                vehicleStatusView.setBottomText(
+                        getResources().getString(R.string.trip_live_tracking_not_available));
+            } else {
+                vehicleStatusView.setBottomText(
+                        getResources().getString(R.string.trip_en_route) + " " +
+                                selectedTripDestination);
+            }*/
         } else {
-            vehicleStatusView.setVehicleStatusText(
-                    getResources().getString(R.string.trip_no_vehicle_assigned));
+            vehicleStatusView.setBottomText(
+                    getResources().getString(R.string.trip_not_yet_started));
         }
 
         if (mapReady) {
             if (vehicle != null) {
                 // Draw vehicle marker
                 if (vehicleMarker == null) {
-                    int mode = selectedRoute.getMode();
-                    if (mode == Route.COMMUTER_RAIL) {
-                        vehicleMarker = drawVehicleMarker(vehicle,
-                                getResources().getString(R.string.map_train) + " " + vehicle.getTripName());
-                    } else if (mode == Route.LIGHT_RAIL || mode == Route.HEAVY_RAIL) {
-                        vehicleMarker = drawVehicleMarker(vehicle,
-                                getResources().getString(R.string.map_train) + " " + vehicle.getLabel());
-                    } else {
-                        vehicleMarker = drawVehicleMarker(vehicle,
-                                getResources().getString(R.string.map_vehicle) + " " + vehicle.getLabel());
-                    }
+                    vehicleMarker = drawVehicleMarker(vehicle, vehicleLabelText);
                 } else {
                     vehicleMarker.setPosition(new LatLng(
                             vehicle.getLocation().getLatitude(),
@@ -783,35 +861,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     vehicleMarker.setRotation(vehicle.getLocation().getBearing());
                 }
 
-                // Set snippet
-                vehicleMarker.setSnippet("");
-                if (vehicle.getTripId().equalsIgnoreCase(selectedTripId)) {
-                    for (Prediction p : predictions) {
-                        if (p.getStopSequence() == vehicle.getCurrentStopSequence()) {
-                            vehicleMarker.setSnippet(vehicle.getCurrentStatus().getText() + " " +
-                                    p.getStop().getName());
-                            break;
-                        }
-                    }
-                } else {
-                    // 'Currently on '
-                    String snippet = getResources().getString(R.string.map_currently_on) + " ";
-
-                    // 'route ' (Optional)
-                    if (selectedRoute.getMode() == Route.BUS) {
-                        snippet += getResources().getString(R.string.map_route) + " ";
-                    }
-
-                    // route_id + ' to ' + destination
-                    snippet += vehicle.getRoute()
-                            + " "
-                            + getResources().getString(R.string.map_to)
-                            + " "
-                            + vehicle.getDestination();
-
-                    // Set snippet text
-                    vehicleMarker.setSnippet(snippet);
-                }
+                vehicleMarker.setSnippet(vehicleStatusText);
 
                 // Refresh info window
                 if (vehicleMarker.isInfoWindowShown()) {
@@ -1069,6 +1119,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
             predictions.clear();
             predictions.addAll(Arrays.asList(p));
+            Collections.sort(predictions);
 
             if (parentStopIds.size() > 0) {
                 getParentStops(parentStopIds.toArray(new String[0]));

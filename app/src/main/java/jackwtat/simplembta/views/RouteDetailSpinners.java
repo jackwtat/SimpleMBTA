@@ -1,12 +1,13 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
 
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.spinners.DirectionsSpinnerAdapter;

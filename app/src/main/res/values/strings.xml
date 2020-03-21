@@ -100,9 +100,10 @@
     <string name="trip_already_arrived">Already arrived</string>
 
     <!-- Trip Vehicle Statuses -->
-    <string name="trip_not_yet_started">Trip has not yet started</string>
+    <string name="trip_not_yet_started">This trip has not yet started</string>
     <string name="trip_no_vehicle_assigned">No vehicle is currently assigned to this trip</string>
     <string name="trip_live_tracking_not_available">Live tracking is not available for this trip</string>
+    <string name="trip_boarding">Boarding</string>
     <string name="trip_en_route">En route to</string>
     <string name="trip_stop_away">stop away</string>
     <string name="trip_stops_away">stops away</string>

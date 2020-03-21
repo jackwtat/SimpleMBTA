@@ -1,12 +1,9 @@
 package jackwtat.simplembta.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import jackwtat.simplembta.utilities.DateUtil;
 
