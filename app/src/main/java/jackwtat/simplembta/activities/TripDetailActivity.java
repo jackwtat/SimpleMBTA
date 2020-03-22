@@ -144,6 +144,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_detail);
 
+        // Get MBTA realTime API key
+        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key_general);
+
         // Get network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(this);
 
@@ -397,9 +400,6 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-
-        // Get MBTA realTime API key
-        realTimeApiKey = RealTimeApiClient.generateApiKey(this);
 
         // Refresh the activity to update UI so that the predictions are accurate
         // as of the last update

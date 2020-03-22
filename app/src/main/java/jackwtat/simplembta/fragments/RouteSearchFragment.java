@@ -109,6 +109,10 @@ public class RouteSearchFragment extends Fragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get MBTA realTime API key
+        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key_general);
+
         // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
@@ -213,9 +217,6 @@ public class RouteSearchFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-
-        // Get MBTA realTime API key
-        realTimeApiKey = RealTimeApiClient.generateApiKey(getContext());
 
         if (allRoutes == null || allRoutes.size() == 0) {
             getRoutes();

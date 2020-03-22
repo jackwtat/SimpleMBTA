@@ -29,17 +29,6 @@ public class RealTimeApiClient {
     // The API key
     protected String apiKey;
 
-    public static String generateApiKey(Context context) {
-        int n = new Random(new Date().getTime()).nextInt(2);
-
-        switch (n) {
-            case 0:
-                return context.getResources().getString(R.string.v3_mbta_realtime_api_key_1);
-            default:
-                return context.getResources().getString(R.string.v3_mbta_realtime_api_key_2);
-        }
-    }
-
     public RealTimeApiClient(String apiKey) {
         this.apiKey = apiKey;
     }

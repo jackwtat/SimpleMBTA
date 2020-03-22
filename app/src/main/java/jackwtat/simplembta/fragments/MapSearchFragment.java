@@ -200,6 +200,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Get MBTA realTime API key
+        realTimeApiKey = getResources().getString(R.string.v3_mbta_realtime_api_key_map_search);
+
         // Initialize network connectivity client
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
@@ -690,9 +693,6 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
     public void onResume() {
         mapView.onResume();
         super.onResume();
-
-        // Get MBTA realTime API key
-        realTimeApiKey = RealTimeApiClient.generateApiKey(getContext());
 
         // Get the time
         long onResumeTime = new Date().getTime();
