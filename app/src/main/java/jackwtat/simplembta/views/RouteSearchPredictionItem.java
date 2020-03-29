@@ -24,8 +24,7 @@ import jackwtat.simplembta.utilities.Constants;
 public class RouteSearchPredictionItem extends LinearLayout implements Constants {
     View rootView;
     View mainContent;
-    TextView timeTextView;
-    TextView minuteTextView;
+    PredictionTimeView predictionTimeView;
     TextView liveIndicator;
     TextView trackNumberIndicator;
     TextView enRouteIndicator;
@@ -68,127 +67,7 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     }
 
     public void setTime(Prediction prediction) {
-        // Departure time
-        long countdownTime = prediction.getCountdownTime();
-        Vehicle vehicle = prediction.getVehicle();
-
-        // There is a vehicle currently on this trip and trip is not skipped or cancelled
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId()) &&
-                prediction.getStatus() != Prediction.SKIPPED &&
-                prediction.getStatus() != Prediction.CANCELLED) {
-
-            // Vehicle has already passed this stop
-            if (vehicle.getCurrentStopSequence() > prediction.getStopSequence()) {
-                String statusText;
-                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                    statusText = getContext().getResources().getString(R.string.route_departed);
-                } else {
-                    statusText = getContext().getResources().getString(R.string.route_arrived);
-                }
-
-                timeTextView.setText(statusText);
-                minuteTextView.setVisibility(GONE);
-
-                // Vehicle is at or approaching this stop
-            } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() ||
-                    countdownTime < COUNTDOWN_APPROACHING_CUTOFF) {
-
-                // Vehicle is more than one minute away
-                if (countdownTime > COUNTDOWN_APPROACHING_CUTOFF) {
-                    String timeText;
-                    String minuteText;
-
-                    if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                        timeText = (countdownTime / 60000) + "";
-                        minuteText = min;
-
-                    } else {
-                        Date predictionTime = prediction.getPredictionTime();
-                        timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                        minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                    }
-
-                    timeTextView.setText(timeText);
-                    minuteTextView.setText(minuteText);
-                    minuteTextView.setVisibility(VISIBLE);
-
-                    // Vehicle is less than one minute away
-                } else {
-                    String statusText;
-
-                    if (prediction.getPredictionType() == Prediction.DEPARTURE &&
-                            vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                        statusText = getContext().getResources().getString(R.string.route_departing);
-
-                    } else if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                        statusText = getContext().getResources().getString(R.string.route_arriving);
-
-                    } else {
-                        statusText = getContext().getResources().getString(R.string.route_approaching);
-                    }
-
-                    timeTextView.setText(statusText);
-                    minuteTextView.setVisibility(GONE);
-                }
-
-                // Vehicle is not yet approaching this stop
-            } else {
-                String timeText;
-                String minuteText;
-
-                if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                    timeText = (countdownTime / 60000) + "";
-                    minuteText = min;
-
-                } else {
-                    Date predictionTime = prediction.getPredictionTime();
-                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(minuteText);
-                minuteTextView.setVisibility(VISIBLE);
-            }
-
-            // No vehicle is on this trip or trip is skipped or cancelled
-        } else {
-            String timeText;
-            String minuteText;
-
-            if (countdownTime < COUNTDOWN_HOUR_CUTOFF &&
-                    prediction.getStatus() != Prediction.SKIPPED &&
-                    prediction.getStatus() != Prediction.CANCELLED) {
-                if (countdownTime > 0) {
-                    timeText = (countdownTime / 60000) + "";
-                } else {
-                    timeText = "0";
-                }
-                minuteText = min;
-
-            } else {
-                Date predictionTime = prediction.getPredictionTime();
-                timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-            }
-
-            if (!prediction.isLive()) {
-                minuteText += "*";
-            }
-
-            if (prediction.getStatus() == Prediction.SKIPPED ||
-                    prediction.getStatus() == Prediction.CANCELLED) {
-                timeTextView.setPaintFlags(timeTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else {
-                timeTextView.setPaintFlags(timeTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                minuteTextView.setPaintFlags(minuteTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            }
-
-            timeTextView.setText(timeText);
-            minuteTextView.setText(minuteText);
-            minuteTextView.setVisibility(VISIBLE);
-        }
+        predictionTimeView.setPrediction(prediction);
     }
 
     public void setFutureIndicator(Prediction prediction) {
@@ -295,8 +174,7 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     }
 
     public void clear() {
-        timeTextView.setText("");
-        minuteTextView.setText("");
+        predictionTimeView.clear();
         liveIndicator.setVisibility(GONE);
         trackNumberIndicator.setVisibility(GONE);
         enRouteIndicator.setVisibility(GONE);
@@ -312,8 +190,7 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_route_search_prediction, this);
         mainContent = rootView.findViewById(R.id.predictions_card_body);
-        timeTextView = rootView.findViewById(R.id.time_text_view);
-        minuteTextView = rootView.findViewById(R.id.minute_text_view);
+        predictionTimeView = rootView.findViewById(R.id.prediction_time_view);
         liveIndicator = rootView.findViewById(R.id.live_text_view);
         trackNumberIndicator = rootView.findViewById(R.id.track_number_text_view);
         enRouteIndicator = rootView.findViewById(R.id.en_route_text_view);

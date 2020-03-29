@@ -19,11 +19,10 @@ import jackwtat.simplembta.utilities.Constants;
 
 public class IndividualPredictionItem extends LinearLayout implements Constants {
     View rootView;
+    PredictionTimeView predictionTimeView;
     TextView destinationTextView;
     TextView trainNumberTextView;
     TextView trackNumberTextView;
-    TextView timeTextView;
-    TextView minuteTextView;
 
     String min;
 
@@ -49,118 +48,12 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
     }
 
     public void setPrediction(Prediction prediction) {
-        // Departure time
-        long countdownTime = prediction.getCountdownTime();
-        Vehicle vehicle = prediction.getVehicle();
-
-        // There is a vehicle currently on this trip
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
-
-            // Vehicle has already passed this stop
-            if (vehicle.getCurrentStopSequence() > prediction.getStopSequence()) {
-                String statusText;
-                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                    statusText = getContext().getResources().getString(R.string.map_departed);
-                } else {
-                    statusText = getContext().getResources().getString(R.string.map_arrived);
-                }
-
-                timeTextView.setText(statusText);
-                minuteTextView.setVisibility(GONE);
-
-                // Vehicle is at or approaching this stop
-            } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence() ||
-                    countdownTime < COUNTDOWN_APPROACHING_CUTOFF) {
-
-                // Vehicle is more than one minute away
-                if (countdownTime > COUNTDOWN_APPROACHING_CUTOFF) {
-                    String timeText;
-                    String minuteText;
-
-                    if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                        timeText = (countdownTime / 60000) + "";
-                        minuteText = min;
-
-                    } else {
-                        Date predictionTime = prediction.getPredictionTime();
-                        timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                        minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                    }
-
-                    timeTextView.setText(timeText);
-                    minuteTextView.setText(minuteText);
-                    minuteTextView.setVisibility(VISIBLE);
-
-                    // Vehicle is less than one minute away
-                } else {
-                    String statusText;
-
-                    if (prediction.getPredictionType() == Prediction.DEPARTURE &&
-                            vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                        statusText = getContext().getResources().getString(R.string.map_departing);
-
-                    } else if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                        statusText = getContext().getResources().getString(R.string.map_arriving);
-
-                    } else {
-                        statusText = getContext().getResources().getString(R.string.map_approaching);
-                    }
-
-                    timeTextView.setText(statusText);
-                    minuteTextView.setVisibility(GONE);
-                }
-
-                // Vehicle is not yet approaching this stop
-            } else {
-                String timeText;
-                String minuteText;
-
-                if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                    timeText = (countdownTime / 60000) + "";
-                    minuteText = min;
-
-                } else {
-                    Date predictionTime = prediction.getPredictionTime();
-                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(minuteText);
-                minuteTextView.setVisibility(VISIBLE);
-            }
-
-            // No vehicle is on this trip
-        } else {
-            String timeText;
-            String minuteText;
-
-            if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                if (countdownTime > 0) {
-                    timeText = (countdownTime / 60000) + "";
-                } else {
-                    timeText = "0";
-                }
-                minuteText = min;
-
-            } else {
-                Date predictionTime = prediction.getPredictionTime();
-                timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-            }
-
-            if (!prediction.isLive()) {
-                minuteText += "*";
-            }
-
-            timeTextView.setText(timeText);
-            minuteTextView.setText(minuteText);
-            minuteTextView.setVisibility(VISIBLE);
-        }
-
         int mode = prediction.getRoute().getMode();
         String tripName = prediction.getTripName();
         String trackNumber = prediction.getTrackNumber();
+
+        // Prediction time
+        predictionTimeView.setPrediction(prediction);
 
         // Destination
         destinationTextView.setText(prediction.getDestination());
@@ -189,11 +82,10 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_individual_prediction, this);
+        predictionTimeView = rootView.findViewById(R.id.prediction_time_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         trainNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
         trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
-        timeTextView = rootView.findViewById(R.id.time_text_view);
-        minuteTextView = rootView.findViewById(R.id.minute_text_view);
 
         min = context.getResources().getString(R.string.min);
     }
