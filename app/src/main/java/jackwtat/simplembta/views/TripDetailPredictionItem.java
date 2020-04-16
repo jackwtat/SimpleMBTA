@@ -44,7 +44,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
     ImageView wheelchairAccessibleIcon;
     ImageView stopAdvisoryIcon;
     ImageView stopAlertIcon;
-    TextView stopName;
+    TextView stopNameTextView;
     TextView timeTextView;
     TextView minuteTextView;
     TextView statusTextView;
@@ -262,7 +262,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         }
 
         // Show stop name
-        stopName.setText(prediction.getStop().getName());
+        stopNameTextView.setText(prediction.getStop().getName());
 
         // Set line colors
         Drawable background = topLineView.getBackground();
@@ -348,7 +348,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
     }
 
     public void emphasize() {
-        stopName.setTypeface(stopName.getTypeface(), Typeface.BOLD_ITALIC);
+        stopNameTextView.setTypeface(stopNameTextView.getTypeface(), Typeface.BOLD_ITALIC);
         stopIconFillCurrent.setVisibility(VISIBLE);
     }
 
@@ -362,8 +362,8 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         topLineView.setVisibility(INVISIBLE);
         bottomLineView.setVisibility(INVISIBLE);
         predictionInfoLayout.setVisibility(VISIBLE);
-        stopName.setText("");
-        stopName.setTypeface(Typeface.DEFAULT);
+        stopNameTextView.setText("");
+        stopNameTextView.setTypeface(Typeface.DEFAULT);
         stopIconFillCurrent.setVisibility(GONE);
         stopIconCancelled.setVisibility(GONE);
         wheelchairAccessibleIcon.setVisibility(GONE);
@@ -395,7 +395,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
         stopIconFillCurrent = rootView.findViewById(R.id.stop_icon_fill_current);
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
-        stopName = rootView.findViewById(R.id.stop_name_text_view);
+        stopNameTextView = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
         stopAlertIcon = rootView.findViewById(R.id.stop_alert_icon);
