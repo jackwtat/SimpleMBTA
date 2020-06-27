@@ -159,6 +159,7 @@ public class TripsJsonParser {
                             location.setLongitude(longitude);
                             location.setBearing(bearing);
                             vehicle.setLocation(location);
+                            vehicle.setPassengerLoad(jVehicleAttr.getString("occupancy_status"));
                         }
 
                         trip.setVehicle(vehicle);

@@ -29,6 +29,11 @@
     <color name="commuter_rail">#80276c</color>
     <color name="ferry">#008eaa</color>
 
+    <!-- Passenger Load Colors -->
+    <color name="not_crowded">#00843d</color>
+    <color name="some_crowding">#ed8b00</color>
+    <color name="very_crowded">#da291c</color>
+
     <!-- Other Colors -->
     <color name="service_alert_urgent">#ff0000</color>
     <color name="service_alert_advisory">#aaaaaa</color>

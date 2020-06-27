@@ -36,7 +36,7 @@ public class VehiclesByRouteAsyncTask extends AsyncTask<Void, Void, Vehicle[]> {
         RealTimeApiClient realTimeApiClient = new RealTimeApiClient(realTimeApiKey);
 
         String[] routeArgs = {
-                "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
+                "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status,occupancy_status",
                 "include=trip&fields[trip]=name,headsign",
                 "filter[route]=" + routeId
         };

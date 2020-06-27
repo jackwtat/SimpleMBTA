@@ -5,6 +5,39 @@ import android.location.Location;
 import java.io.Serializable;
 
 public class Vehicle implements Serializable {
+    public enum PassengerLoad {
+        UNKNOWN(""),
+        MANY_SEATS_AVAILABLE("Not Crowded"),
+        FEW_SEATS_AVAILABLE("Some Crowding"),
+        FULL("Very Crowded");
+
+        private String text;
+
+        PassengerLoad(String text) {
+            this.text = text;
+        }
+
+        public static PassengerLoad getPassengerLoad(String load) {
+            if (load.equalsIgnoreCase("MANY_SEATS_AVAILABLE")) {
+                return MANY_SEATS_AVAILABLE;
+            } else if (load.equalsIgnoreCase("FEW_SEATS_AVAILABLE")) {
+                return FEW_SEATS_AVAILABLE;
+            } else if (load.equalsIgnoreCase("FULL")) {
+                return FULL;
+            } else {
+                return UNKNOWN;
+            }
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+    }
+
     public enum Status {
         UNKNOWN(""),
         INCOMING("Approaching"),
@@ -37,6 +70,7 @@ public class Vehicle implements Serializable {
     private double longitude;
     private float bearing;
     private int currentStopSequence = -1;
+    private PassengerLoad passengerLoad;
     private Status currentStatus;
 
     public Vehicle(String id) {
@@ -83,6 +117,10 @@ public class Vehicle implements Serializable {
         return currentStopSequence;
     }
 
+    public PassengerLoad getPassengerLoad() {
+        return passengerLoad;
+    }
+
     public Status getCurrentStatus() {
         return currentStatus;
     }
@@ -119,6 +157,14 @@ public class Vehicle implements Serializable {
 
     public void setCurrentStopSequence(int currentStopSequence) {
         this.currentStopSequence = currentStopSequence;
+    }
+
+    public void setPassengerLoad(String load) {
+        this.passengerLoad = PassengerLoad.getPassengerLoad(load);
+
+        if (this.passengerLoad == PassengerLoad.UNKNOWN) {
+            this.passengerLoad.setText(load);
+        }
     }
 
     public void setCurrentStatus(String status) {

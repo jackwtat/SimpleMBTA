@@ -62,6 +62,7 @@ public class VehiclesJsonParser {
                 vehicle.setDirection(jAttributes.getInt("direction_id"));
                 vehicle.setCurrentStopSequence(jAttributes.getInt("current_stop_sequence"));
                 vehicle.setCurrentStatus(jAttributes.getString("current_status"));
+                vehicle.setPassengerLoad(jAttributes.getString("occupancy_status"));
 
                 // Get vehicle location and bearing
                 Location location = new Location("");

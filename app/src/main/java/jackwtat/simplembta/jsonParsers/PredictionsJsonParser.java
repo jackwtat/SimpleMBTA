@@ -277,6 +277,7 @@ public class PredictionsJsonParser {
                                 vehicle.setDirection(jVehicleAttr.getInt("direction_id"));
                                 vehicle.setCurrentStopSequence(jVehicleAttr.getInt("current_stop_sequence"));
                                 vehicle.setCurrentStatus(jVehicleAttr.getString("current_status"));
+                                vehicle.setPassengerLoad(jVehicleAttr.getString("occupancy_status"));
 
                                 // Get vehicle location and bearing
                                 Location location = new Location("");

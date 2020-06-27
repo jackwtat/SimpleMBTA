@@ -28,6 +28,9 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     TextView liveIndicator;
     TextView trackNumberIndicator;
     TextView enRouteIndicator;
+    TextView notCrowdedIndicator;
+    TextView someCrowdingIndicator;
+    TextView veryCrowdedIndicator;
     TextView tomorrowIndicator;
     TextView weekDayIndicator;
     TextView cancelledIndicator;
@@ -126,6 +129,10 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
                     prediction.getTripId().equalsIgnoreCase(prediction.getVehicle().getTripId())) {
                 enRouteIndicator.setVisibility(VISIBLE);
                 liveIndicator.setVisibility(GONE);
+                if(prediction.getVehicle().getPassengerLoad()!=null){
+                    setPassengerLoadIndicator(prediction.getVehicle().getPassengerLoad()
+                    );
+                }
 
             } else {
                 trackNumberIndicator.setVisibility(GONE);
@@ -142,6 +149,21 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
                 tomorrowIndicator.getVisibility() == GONE &&
                 weekDayIndicator.getVisibility() == GONE) {
             liveIndicator.setVisibility(INVISIBLE);
+        }
+    }
+
+    public void setPassengerLoadIndicator(Vehicle.PassengerLoad load){
+        switch(load){
+            case FULL:
+                veryCrowdedIndicator.setVisibility(VISIBLE);
+                break;
+            case FEW_SEATS_AVAILABLE:
+                someCrowdingIndicator.setVisibility(VISIBLE);
+                break;
+            case MANY_SEATS_AVAILABLE:
+                notCrowdedIndicator.setVisibility(VISIBLE);
+                break;
+            default:
         }
     }
 
@@ -178,6 +200,9 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
         liveIndicator.setVisibility(GONE);
         trackNumberIndicator.setVisibility(GONE);
         enRouteIndicator.setVisibility(GONE);
+        notCrowdedIndicator.setVisibility(GONE);
+        someCrowdingIndicator.setVisibility(GONE);
+        veryCrowdedIndicator.setVisibility(GONE);
         tomorrowIndicator.setVisibility(GONE);
         weekDayIndicator.setVisibility(GONE);
         cancelledIndicator.setVisibility(GONE);
@@ -194,6 +219,9 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
         liveIndicator = rootView.findViewById(R.id.live_text_view);
         trackNumberIndicator = rootView.findViewById(R.id.track_number_text_view);
         enRouteIndicator = rootView.findViewById(R.id.en_route_text_view);
+        notCrowdedIndicator = rootView.findViewById(R.id.not_crowded_text_view);
+        someCrowdingIndicator = rootView.findViewById(R.id.some_crowding_text_view);
+        veryCrowdedIndicator = rootView.findViewById(R.id.very_crowded_text_view);
         tomorrowIndicator = rootView.findViewById(R.id.tomorrow_text_view);
         weekDayIndicator = rootView.findViewById(R.id.week_day_text_view);
         cancelledIndicator = rootView.findViewById(R.id.cancelled_text_view);

@@ -41,7 +41,7 @@ public class PredictionsRouteSearchAsyncTask extends AsyncTask<Void, Void, List<
                 "fields[prediction]=stop_sequence,arrival_time,departure_time,schedule_relationship",
                 "fields[route]=type,sort_order,short_name,long_name,color,text_color,direction_names",
                 "fields[trip]=direction_id,headsign,name",
-                "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status",
+                "fields[vehicle]=label,direction_id,latitude,longitude,bearing,current_stop_sequence,current_status,occupancy_status",
                 "fields[schedule]=pickup_type,arrival_time,departure_time",
                 "fields[stop]=name,latitude,longitude,wheelchair_boarding,platform_code",
                 "filter[route]=" + route.getId(),

@@ -108,6 +108,11 @@
     <string name="trip_stop_away">stop away</string>
     <string name="trip_stops_away">stops away</string>
 
+    <!-- Passenger Load Statuses -->
+    <string name="load_not_crowded">NOT CROWDED</string>
+    <string name="load_some_crowding">SOME CROWDING</string>
+    <string name="load_very_crowded">VERY CROWDED</string>
+
     <!-- Route Names -->
     <string name="red_line_long_name">Red Line</string>
     <string name="orange_line_long_name">Orange Line</string>

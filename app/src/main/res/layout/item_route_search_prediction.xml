@@ -115,6 +115,45 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/not_crowded_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/border_not_crowded"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/load_not_crowded"
+                    android:textColor="@color/not_crowded"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/some_crowding_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/border_some_crowding"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/load_some_crowding"
+                    android:textColor="@color/some_crowding"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/very_crowded_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/border_very_crowded"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/load_very_crowded"
+                    android:textColor="@color/very_crowded"
+                    android:textSize="@dimen/body_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:id="@+id/tomorrow_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
