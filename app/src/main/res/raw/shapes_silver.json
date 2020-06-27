@@ -76,7 +76,7 @@
     {
       "attributes": {
         "direction_id": 0,
-        "name": "Dudley Station",
+        "name": "Nubian",
         "polyline": "sooaGhjvpLaAzBXXb@`@d@\\NJz@`@|CnArBp@\\J??b@LjCf@`C^zBd@VoGHgB",
         "priority": 3
       },
@@ -149,7 +149,7 @@
     {
       "attributes": {
         "direction_id": 0,
-        "name": "Dudley Station",
+        "name": "Nubian",
         "polyline": "_znaGvbupLDS{Ao@UKm@a@c@xBSp@HPLf@v@pENr@L^L^Xp@Vb@\\d@b@b@j@`@f@Vd@NbEnA_@fBe@~Bc@bCUxAGb@AJG^O|B",
         "priority": 3
       },
@@ -579,7 +579,7 @@
         "latitude": 42.329848,
         "location_type": 0,
         "longitude": -71.083866,
-        "name": "Dudley Station",
+        "name": "Nubian",
         "platform_code": null,
         "platform_name": null,
         "wheelchair_boarding": 1
