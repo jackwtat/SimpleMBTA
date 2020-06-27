@@ -50,6 +50,18 @@ public class Vehicle implements Serializable {
             this.text = text;
         }
 
+        public static Status getStatus(String status){
+            if (status.equalsIgnoreCase("INCOMING_AT")) {
+                return INCOMING;
+            } else if (status.equalsIgnoreCase("STOPPED_AT")) {
+                return STOPPED;
+            } else if (status.equalsIgnoreCase("IN_TRANSIT_TO")) {
+                return IN_TRANSIT;
+            } else {
+                return UNKNOWN;
+            }
+        }
+
         public String getText() {
             return text;
         }
@@ -168,14 +180,9 @@ public class Vehicle implements Serializable {
     }
 
     public void setCurrentStatus(String status) {
-        if (status.equalsIgnoreCase("INCOMING_AT")) {
-            this.currentStatus = Status.INCOMING;
-        } else if (status.equalsIgnoreCase("STOPPED_AT")) {
-            this.currentStatus = Status.STOPPED;
-        } else if (status.equalsIgnoreCase("IN_TRANSIT_TO")) {
-            this.currentStatus = Status.IN_TRANSIT;
-        } else {
-            this.currentStatus = Status.UNKNOWN;
+        this.currentStatus = Status.getStatus(status);
+
+        if(this.currentStatus == Status.UNKNOWN){
             this.currentStatus.setText(status);
         }
     }
