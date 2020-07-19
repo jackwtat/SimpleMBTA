@@ -118,59 +118,6 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
                 tomorrowIndicator.getVisibility() == GONE) {
             spacer.setVisibility(VISIBLE);
         }
-
-
-        /*if (prediction.getStatus() == Prediction.CANCELLED ||
-                prediction.getStatus() == Prediction.SKIPPED) {
-
-            if (prediction.getStatus() == Prediction.CANCELLED) {
-                cancelledIndicator.setText(R.string.cancelled);
-            } else {
-                cancelledIndicator.setText(R.string.skipped);
-            }
-
-            cancelledIndicator.setVisibility(VISIBLE);
-            spacer.setVisibility(GONE);
-
-        } else if (!prediction.willPickUpPassengers()) {
-            dropOffIndicator.setVisibility(VISIBLE);
-            spacer.setVisibility(GONE);
-
-        } else if (prediction.isLive()) {
-            int mode = prediction.getRoute().getMode();
-            String trackNumber = prediction.getTrackNumber();
-
-            if (mode == Route.COMMUTER_RAIL &&
-                    trackNumber != null && !trackNumber.equals("") && !trackNumber.equals("null")) {
-                trackNumber = getContext().getResources().getString(R.string.track) + " " + trackNumber;
-                trackNumberIndicator.setText(trackNumber);
-                trackNumberIndicator.setVisibility(VISIBLE);
-                spacer.setVisibility(GONE);
-
-            } else if (prediction.getVehicle() != null &&
-                    prediction.getVehicle().getCurrentStopSequence() > 1 &&
-                    prediction.getTripId().equalsIgnoreCase(prediction.getVehicle().getTripId())) {
-                enRouteIndicator.setVisibility(VISIBLE);
-                spacer.setVisibility(GONE);
-                if (prediction.getVehicle().getPassengerLoad() != null) {
-                    setPassengerLoadIndicator(prediction.getVehicle().getPassengerLoad());
-                }
-
-            } else {
-                trackNumberIndicator.setVisibility(GONE);
-                enRouteIndicator.setVisibility(GONE);
-            }
-        }
-
-        if (spacer.getVisibility() == GONE &&
-                trackNumberIndicator.getVisibility() == GONE &&
-                enRouteIndicator.getVisibility() == GONE &&
-                cancelledIndicator.getVisibility() == GONE &&
-                dropOffIndicator.getVisibility() == GONE &&
-                tomorrowIndicator.getVisibility() == GONE &&
-                weekDayIndicator.getVisibility() == GONE) {
-            spacer.setVisibility(INVISIBLE);
-        }*/
     }
 
     public void setFutureIndicator(Prediction prediction) {
