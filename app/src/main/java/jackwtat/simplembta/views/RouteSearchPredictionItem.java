@@ -1,7 +1,6 @@
 package jackwtat.simplembta.views;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -25,7 +24,14 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     View rootView;
     View mainContent;
     PredictionTimeView predictionTimeView;
-    TextView liveIndicator;
+    TextView destinationTextView;
+    TextView vehicleNumberTextView;
+    ImageView enRouteIcon;
+    View bottomEdge;
+    View bottomBorder;
+
+    ArrayList<View> indicators = new ArrayList<>();
+    TextView spacer;
     TextView trackNumberIndicator;
     TextView enRouteIndicator;
     TextView notCrowdedIndicator;
@@ -35,11 +41,6 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     TextView weekDayIndicator;
     TextView cancelledIndicator;
     TextView dropOffIndicator;
-    TextView destinationTextView;
-    TextView vehicleNumberTextView;
-    ImageView enRouteIcon;
-    View bottomEdge;
-    View bottomBorder;
 
     String min;
 
@@ -61,8 +62,7 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
     public void setPrediction(Prediction prediction) {
         setTime(prediction);
         setDestination(prediction.getDestination());
-        setFutureIndicator(prediction);
-        setLiveIndicator(prediction);
+        setIndicators(prediction);
 
         mainContent.setVisibility(VISIBLE);
         bottomEdge.setVisibility(VISIBLE);
@@ -71,6 +71,106 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
 
     public void setTime(Prediction prediction) {
         predictionTimeView.setPrediction(prediction);
+    }
+
+    public void setIndicators(Prediction prediction) {
+        // Show indicators if prediction is for a future date
+        setFutureIndicator(prediction);
+
+        /*  1. If trip is cancelled, display cancelled indicator
+            2. if stop is skipped, display skipped indicator
+            3. If stop is drop-off only, display drop-off only indicator
+            4. If route type is Commuter Rail and track number is available, display track number
+            5. If vehicle is en route:
+                a. If crowding data is available, display crowding indicator
+                b. Otherwise, display en route indicator
+            6. Otherwise, if future indicator is not displayed, display empty spacer */
+        if (prediction.getStatus() == Prediction.CANCELLED) {
+            cancelledIndicator.setText(R.string.cancelled);
+            cancelledIndicator.setVisibility(VISIBLE);
+
+        } else if (prediction.getStatus() == Prediction.SKIPPED) {
+            cancelledIndicator.setText(R.string.skipped);
+            cancelledIndicator.setVisibility(VISIBLE);
+
+        } else if (!prediction.willPickUpPassengers()) {
+            dropOffIndicator.setVisibility(VISIBLE);
+
+        } else if (prediction.getRoute().getMode() == Route.COMMUTER_RAIL &&
+                prediction.getTrackNumber() != null &&
+                !prediction.getTrackNumber().equals("") &&
+                !prediction.getTrackNumber().equals("null")) {
+            String trackNumberText = getContext().getResources().getString(R.string.track) + " " +
+                    prediction.getTrackNumber();
+            trackNumberIndicator.setText(trackNumberText);
+            trackNumberIndicator.setVisibility(VISIBLE);
+
+        } else if (prediction.getVehicle() != null &&
+                prediction.getVehicle().getTripId().equalsIgnoreCase(prediction.getTripId()) &&
+                prediction.getVehicle().getCurrentStopSequence() > 1) {
+            if (prediction.getVehicle().getPassengerLoad() != null &&
+                prediction.getVehicle().getPassengerLoad() != Vehicle.PassengerLoad.UNKNOWN) {
+                setPassengerLoadIndicator(prediction.getVehicle().getPassengerLoad());
+            } else {
+                enRouteIndicator.setVisibility(VISIBLE);
+            }
+        } else if (weekDayIndicator.getVisibility() == GONE &&
+                tomorrowIndicator.getVisibility() == GONE) {
+            spacer.setVisibility(VISIBLE);
+        }
+
+
+        /*if (prediction.getStatus() == Prediction.CANCELLED ||
+                prediction.getStatus() == Prediction.SKIPPED) {
+
+            if (prediction.getStatus() == Prediction.CANCELLED) {
+                cancelledIndicator.setText(R.string.cancelled);
+            } else {
+                cancelledIndicator.setText(R.string.skipped);
+            }
+
+            cancelledIndicator.setVisibility(VISIBLE);
+            spacer.setVisibility(GONE);
+
+        } else if (!prediction.willPickUpPassengers()) {
+            dropOffIndicator.setVisibility(VISIBLE);
+            spacer.setVisibility(GONE);
+
+        } else if (prediction.isLive()) {
+            int mode = prediction.getRoute().getMode();
+            String trackNumber = prediction.getTrackNumber();
+
+            if (mode == Route.COMMUTER_RAIL &&
+                    trackNumber != null && !trackNumber.equals("") && !trackNumber.equals("null")) {
+                trackNumber = getContext().getResources().getString(R.string.track) + " " + trackNumber;
+                trackNumberIndicator.setText(trackNumber);
+                trackNumberIndicator.setVisibility(VISIBLE);
+                spacer.setVisibility(GONE);
+
+            } else if (prediction.getVehicle() != null &&
+                    prediction.getVehicle().getCurrentStopSequence() > 1 &&
+                    prediction.getTripId().equalsIgnoreCase(prediction.getVehicle().getTripId())) {
+                enRouteIndicator.setVisibility(VISIBLE);
+                spacer.setVisibility(GONE);
+                if (prediction.getVehicle().getPassengerLoad() != null) {
+                    setPassengerLoadIndicator(prediction.getVehicle().getPassengerLoad());
+                }
+
+            } else {
+                trackNumberIndicator.setVisibility(GONE);
+                enRouteIndicator.setVisibility(GONE);
+            }
+        }
+
+        if (spacer.getVisibility() == GONE &&
+                trackNumberIndicator.getVisibility() == GONE &&
+                enRouteIndicator.getVisibility() == GONE &&
+                cancelledIndicator.getVisibility() == GONE &&
+                dropOffIndicator.getVisibility() == GONE &&
+                tomorrowIndicator.getVisibility() == GONE &&
+                weekDayIndicator.getVisibility() == GONE) {
+            spacer.setVisibility(INVISIBLE);
+        }*/
     }
 
     public void setFutureIndicator(Prediction prediction) {
@@ -95,65 +195,8 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
         }
     }
 
-    public void setLiveIndicator(Prediction prediction) {
-        // Show the appropriate status indicators
-        if (prediction.getStatus() == Prediction.CANCELLED ||
-                prediction.getStatus() == Prediction.SKIPPED) {
-
-            if (prediction.getStatus() == Prediction.CANCELLED) {
-                cancelledIndicator.setText(R.string.cancelled);
-            } else {
-                cancelledIndicator.setText(R.string.skipped);
-            }
-
-            cancelledIndicator.setVisibility(VISIBLE);
-            liveIndicator.setVisibility(GONE);
-
-        } else if (!prediction.willPickUpPassengers()) {
-            dropOffIndicator.setVisibility(VISIBLE);
-            liveIndicator.setVisibility(GONE);
-
-        } else if (prediction.isLive()) {
-            int mode = prediction.getRoute().getMode();
-            String trackNumber = prediction.getTrackNumber();
-
-            if (mode == Route.COMMUTER_RAIL &&
-                    trackNumber != null && !trackNumber.equals("") && !trackNumber.equals("null")) {
-                trackNumber = getContext().getResources().getString(R.string.track) + " " + trackNumber;
-                trackNumberIndicator.setText(trackNumber);
-                trackNumberIndicator.setVisibility(VISIBLE);
-                liveIndicator.setVisibility(GONE);
-
-            } else if (prediction.getVehicle() != null &&
-                    prediction.getVehicle().getCurrentStopSequence() > 1 &&
-                    prediction.getTripId().equalsIgnoreCase(prediction.getVehicle().getTripId())) {
-                enRouteIndicator.setVisibility(VISIBLE);
-                liveIndicator.setVisibility(GONE);
-                if(prediction.getVehicle().getPassengerLoad()!=null){
-                    setPassengerLoadIndicator(prediction.getVehicle().getPassengerLoad()
-                    );
-                }
-
-            } else {
-                trackNumberIndicator.setVisibility(GONE);
-                enRouteIndicator.setVisibility(GONE);
-                liveIndicator.setVisibility(VISIBLE);
-            }
-        }
-
-        if (liveIndicator.getVisibility() == GONE &&
-                trackNumberIndicator.getVisibility() == GONE &&
-                enRouteIndicator.getVisibility() == GONE &&
-                cancelledIndicator.getVisibility() == GONE &&
-                dropOffIndicator.getVisibility() == GONE &&
-                tomorrowIndicator.getVisibility() == GONE &&
-                weekDayIndicator.getVisibility() == GONE) {
-            liveIndicator.setVisibility(INVISIBLE);
-        }
-    }
-
-    public void setPassengerLoadIndicator(Vehicle.PassengerLoad load){
-        switch(load){
+    public void setPassengerLoadIndicator(Vehicle.PassengerLoad load) {
+        switch (load) {
             case FULL:
                 veryCrowdedIndicator.setVisibility(VISIBLE);
                 break;
@@ -197,26 +240,26 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
 
     public void clear() {
         predictionTimeView.clear();
-        liveIndicator.setVisibility(GONE);
-        trackNumberIndicator.setVisibility(GONE);
-        enRouteIndicator.setVisibility(GONE);
-        notCrowdedIndicator.setVisibility(GONE);
-        someCrowdingIndicator.setVisibility(GONE);
-        veryCrowdedIndicator.setVisibility(GONE);
-        tomorrowIndicator.setVisibility(GONE);
-        weekDayIndicator.setVisibility(GONE);
-        cancelledIndicator.setVisibility(GONE);
-        dropOffIndicator.setVisibility(GONE);
         destinationTextView.setText("");
         vehicleNumberTextView.setText("");
         vehicleNumberTextView.setVisibility(GONE);
+
+        for (View v : indicators) {
+            v.setVisibility(GONE);
+        }
     }
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_route_search_prediction, this);
         mainContent = rootView.findViewById(R.id.predictions_card_body);
         predictionTimeView = rootView.findViewById(R.id.prediction_time_view);
-        liveIndicator = rootView.findViewById(R.id.live_text_view);
+        destinationTextView = rootView.findViewById(R.id.destination_text_view);
+        vehicleNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
+        enRouteIcon = rootView.findViewById(R.id.enroute_icon);
+        bottomEdge = rootView.findViewById(R.id.bottom_edge);
+        bottomBorder = rootView.findViewById(R.id.bottom_border);
+
+        spacer = rootView.findViewById(R.id.spacer_view);
         trackNumberIndicator = rootView.findViewById(R.id.track_number_text_view);
         enRouteIndicator = rootView.findViewById(R.id.en_route_text_view);
         notCrowdedIndicator = rootView.findViewById(R.id.not_crowded_text_view);
@@ -226,11 +269,17 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
         weekDayIndicator = rootView.findViewById(R.id.week_day_text_view);
         cancelledIndicator = rootView.findViewById(R.id.cancelled_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
-        destinationTextView = rootView.findViewById(R.id.destination_text_view);
-        vehicleNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
-        enRouteIcon = rootView.findViewById(R.id.enroute_icon);
-        bottomEdge = rootView.findViewById(R.id.bottom_edge);
-        bottomBorder = rootView.findViewById(R.id.bottom_border);
+
+        indicators.add(spacer);
+        indicators.add(trackNumberIndicator);
+        indicators.add(enRouteIndicator);
+        indicators.add(notCrowdedIndicator);
+        indicators.add(someCrowdingIndicator);
+        indicators.add(veryCrowdedIndicator);
+        indicators.add(tomorrowIndicator);
+        indicators.add(weekDayIndicator);
+        indicators.add(cancelledIndicator);
+        indicators.add(dropOffIndicator);
 
         min = context.getResources().getString(R.string.min);
     }

@@ -73,20 +73,16 @@
                 <jackwtat.simplembta.views.PredictionTimeView
                     android:id="@+id/prediction_time_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/live_text_view"
+                    android:id="@+id/spacer_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/border_live"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:text="@string/live"
-                    android:textColor="@color/live_prediction"
-                    android:textSize="@dimen/body_text_size"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/body_text_size" />
 
                 <TextView
                     android:id="@+id/track_number_text_view"
