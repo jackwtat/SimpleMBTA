@@ -1,13 +1,18 @@
 package jackwtat.simplembta.model;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import jackwtat.simplembta.R;
+import jackwtat.simplembta.utilities.Constants;
 import jackwtat.simplembta.utilities.DateUtil;
 
-public class Prediction implements Comparable<Prediction>, Serializable {
+public class Prediction implements Comparable<Prediction>, Serializable, Constants {
 
     // Pick up types
     public static final int UNKNOWN_PICK_UP = -1;
@@ -268,6 +273,104 @@ public class Prediction implements Comparable<Prediction>, Serializable {
     // Meta data setters
     public void setSortMethod(int sortMethod) {
         this.sortMethod = sortMethod;
+    }
+
+    // Custom toStrings
+    public String[] toStrings(Context context) {
+        String[] strings = new String[3];
+
+        // There is a vehicle currently on this trip and trip is not skipped or cancelled
+        if (vehicle != null &&
+                vehicle.getTripId().equalsIgnoreCase(tripId) &&
+                status != Prediction.SKIPPED &&
+                status != Prediction.CANCELLED) {
+
+            // Vehicle has already passed this stop
+            if (vehicle.getCurrentStopSequence() > stopSequence ||
+                getCountdownTime() < -1 * COUNTDOWN_APPROACHING_CUTOFF) {
+                if (getPredictionType() == Prediction.DEPARTURE) {
+                    strings[2] = context.getResources().getString(R.string.route_departed);
+                } else {
+                    strings[2] = context.getResources().getString(R.string.route_arrived);
+                }
+
+                // Vehicle is at or approaching this stop
+            } else if (vehicle.getCurrentStopSequence() == stopSequence) {
+                
+                // Vehicle is more than one minute away
+                if (getCountdownTime() > COUNTDOWN_APPROACHING_CUTOFF) {
+
+                    if (getCountdownTime() < COUNTDOWN_HOUR_CUTOFF) {
+                        strings[0] = (getCountdownTime() / 60000) + "";
+                        strings[1] = context.getResources().getString(R.string.min);
+
+                    } else {
+                        strings[0] = new SimpleDateFormat("h:mm")
+                                .format(getPredictionTime());
+                        strings[1] = new SimpleDateFormat("a")
+                                .format(getPredictionTime()).toLowerCase();
+                    }
+
+                    // Vehicle is less than one minute away
+                } else {
+                    // First stop
+                    if (stopSequence == 1) {
+                        strings[0] = context.getResources().getString(R.string.route_departing);
+
+                        // Less than 20 seconds away
+                    } else if (getCountdownTime() < COUNTDOWN_ARRIVING_CUTOFF) {
+                        strings[0] = context.getResources().getString(R.string.route_arriving);
+
+                        // At least 20 seconds, less than 60 seconds
+                    } else {
+                        strings[0] = context.getResources().getString(R.string.route_approaching);
+                    }
+                }
+
+                // Vehicle is not yet approaching this stop
+            } else {
+                if (getCountdownTime() < COUNTDOWN_HOUR_CUTOFF) {
+                    strings[0] = (getCountdownTime() / 60000) + "";
+                    strings[1] = context.getResources().getString(R.string.min);
+
+                } else {
+                    strings[0] = new SimpleDateFormat("h:mm").format(getPredictionTime());
+                    strings[1] = new SimpleDateFormat("a").format(getPredictionTime())
+                            .toLowerCase();
+                }
+            }
+
+            // No vehicle is on this trip or trip is skipped or cancelled
+        } else {
+            if (getCountdownTime() < COUNTDOWN_HOUR_CUTOFF &&
+                    status != Prediction.SKIPPED &&
+                    status != Prediction.CANCELLED) {
+                if (getCountdownTime() > 0) {
+                    strings[0] = (getCountdownTime() / 60000) + "";
+                    strings[1] = context.getResources().getString(R.string.min);
+
+                    if (!isLive()) {
+                        strings[1] += "*";
+                    }
+                } else {
+                    if (getPredictionType() == Prediction.DEPARTURE) {
+                        strings[2] = context.getResources().getString(R.string.route_departed);
+                    } else {
+                        strings[2] = context.getResources().getString(R.string.route_arrived);
+                    }
+                }
+            } else {
+                strings[0] = new SimpleDateFormat("h:mm").format(getPredictionTime());
+                strings[1] = new SimpleDateFormat("a").format(getPredictionTime())
+                        .toLowerCase();
+
+                if (!isLive()) {
+                    strings[1] += "*";
+                }
+            }
+        }
+
+        return strings;
     }
 
     @Override

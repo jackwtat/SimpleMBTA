@@ -164,29 +164,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/time_text_view"
+                    <jackwtat.simplembta.views.PredictionTimeView
+                        android:id="@+id/prediction_time_view"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/small_header_text_size"
-                        android:textStyle="bold"
-                        tools:text="99:99" />
-
-                    <TextView
-                        android:id="@+id/minute_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="4dp"
-                        android:textSize="@dimen/body_text_size"
-                        tools:text="pm" />
-
-                    <TextView
-                        android:id="@+id/status_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/small_header_text_size"
-                        android:textStyle="italic"
-                        tools:text="@string/trip_already_departed" />
+                        android:layout_height="wrap_content"/>
 
                     <View
                         android:id="@+id/spacer"

@@ -44,10 +44,8 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
     ImageView wheelchairAccessibleIcon;
     ImageView stopAdvisoryIcon;
     ImageView stopAlertIcon;
+    PredictionTimeView predictionTimeView;
     TextView stopNameTextView;
-    TextView timeTextView;
-    TextView minuteTextView;
-    TextView statusTextView;
     TextView trackNumberTextView;
     TextView cancelledIndicator;
     TextView dropOffIndicator;
@@ -75,148 +73,8 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
     public void setPrediction(
             Prediction prediction, @Nullable Prediction nextPrediction, int stopSequenceType,
             Vehicle vehicle) {
-        // Departure time
-        long countdownTime = prediction.getCountdownTime();
 
-        // There is a vehicle currently on this trip and trip is not skipped or cancelled
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
-
-            // Vehicle has already passed this stop
-            if (vehicle.getCurrentStopSequence() > prediction.getStopSequence() ||
-                    (nextPrediction != null && nextPrediction.isLive() &&
-                            prediction.getCountdownTime() > nextPrediction.getCountdownTime())) {
-                String statusText;
-                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                    statusText = getContext().getResources().getString(R.string.trip_already_departed);
-                } else {
-                    statusText = getContext().getResources().getString(R.string.trip_already_arrived);
-                }
-
-                statusTextView.setText(statusText);
-
-                timeTextView.setVisibility(GONE);
-                minuteTextView.setVisibility(GONE);
-                statusTextView.setVisibility(VISIBLE);
-
-                // Vehicle is at or approaching this stop
-            } else if (vehicle.getCurrentStopSequence() == prediction.getStopSequence()) {
-
-                // Vehicle is more than one minute away
-                if (countdownTime > COUNTDOWN_APPROACHING_CUTOFF) {
-                    String timeText;
-                    String minuteText;
-
-                    if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                        timeText = (countdownTime / 60000) + "";
-                        minuteText = min;
-
-                    } else {
-                        Date predictionTime = prediction.getPredictionTime();
-                        timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                        minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                    }
-
-                    timeTextView.setText(timeText);
-                    minuteTextView.setText(minuteText);
-
-                    timeTextView.setVisibility(VISIBLE);
-                    minuteTextView.setVisibility(VISIBLE);
-                    statusTextView.setVisibility(GONE);
-
-                    // Vehicle is less than one minute away
-                } else {
-                    String statusText;
-
-                    if (prediction.getPredictionType() == Prediction.DEPARTURE &&
-                            vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-                        statusText = getContext().getResources().getString(R.string.trip_departing);
-
-                    } else if (countdownTime < COUNTDOWN_ARRIVING_CUTOFF) {
-                        statusText = getContext().getResources().getString(R.string.trip_arriving);
-
-                    } else {
-                        statusText = getContext().getResources().getString(R.string.trip_approaching);
-                    }
-
-                    statusTextView.setText(statusText);
-
-                    timeTextView.setVisibility(GONE);
-                    minuteTextView.setVisibility(GONE);
-                    statusTextView.setVisibility(VISIBLE);
-                }
-
-                // Vehicle is not yet approaching this stop
-            } else {
-                String timeText;
-                String minuteText;
-
-                if (countdownTime < COUNTDOWN_HOUR_CUTOFF) {
-                    if (countdownTime > 0) {
-                        timeText = (countdownTime / 60000) + "";
-                    } else {
-                        timeText = "0";
-                    }
-                    minuteText = min;
-
-                } else {
-                    Date predictionTime = prediction.getPredictionTime();
-                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(minuteText);
-
-                timeTextView.setVisibility(VISIBLE);
-                minuteTextView.setVisibility(VISIBLE);
-                statusTextView.setVisibility(GONE);
-            }
-
-            // No vehicle is on this trip or trip is skipped or cancelled
-        } else {
-            if (countdownTime > 0) {
-                String timeText;
-                String minuteText;
-
-                if (countdownTime < 3600000) {
-                    timeText = (countdownTime / 60000) + "";
-                    minuteText = min;
-
-                } else {
-                    Date predictionTime = prediction.getPredictionTime();
-                    timeText = new SimpleDateFormat("h:mm").format(predictionTime);
-                    minuteText = new SimpleDateFormat("a").format(predictionTime).toLowerCase();
-                }
-
-                if (!prediction.isLive()) {
-                    minuteText += "*";
-                }
-
-                timeTextView.setText(timeText);
-                minuteTextView.setText(minuteText);
-
-                timeTextView.setVisibility(VISIBLE);
-                minuteTextView.setVisibility(VISIBLE);
-                statusTextView.setVisibility(GONE);
-            } else {
-                String statusText;
-
-                if (prediction.getPredictionType() == Prediction.DEPARTURE) {
-                    statusText = getContext().getResources()
-                            .getString(R.string.trip_already_departed);
-                } else {
-
-                    statusText = getContext().getResources()
-                            .getString(R.string.trip_already_arrived);
-                }
-
-                statusTextView.setText(statusText);
-
-                timeTextView.setVisibility(GONE);
-                minuteTextView.setVisibility(GONE);
-                statusTextView.setVisibility(VISIBLE);
-            }
-        }
+        predictionTimeView.setPrediction(prediction);
 
         // Show track number
         String trackNumber = prediction.getTrackNumber();
@@ -369,10 +227,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         wheelchairAccessibleIcon.setVisibility(GONE);
         stopAdvisoryIcon.setVisibility(GONE);
         stopAlertIcon.setVisibility(GONE);
-        timeTextView.setText("");
-        minuteTextView.setText("");
-        statusTextView.setText("");
-        statusTextView.setVisibility(GONE);
+        predictionTimeView.clear();
         trackNumberTextView.setVisibility(GONE);
         cancelledIndicator.setVisibility(GONE);
         dropOffIndicator.setVisibility(GONE);
@@ -399,9 +254,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);
         stopAlertIcon = rootView.findViewById(R.id.stop_alert_icon);
-        timeTextView = rootView.findViewById(R.id.time_text_view);
-        minuteTextView = rootView.findViewById(R.id.minute_text_view);
-        statusTextView = rootView.findViewById(R.id.status_text_view);
+        predictionTimeView = rootView.findViewById(R.id.prediction_time_view);
         trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);
         cancelledIndicator = rootView.findViewById(R.id.cancelled_text_view);
         dropOffIndicator = rootView.findViewById(R.id.drop_off_text_view);
