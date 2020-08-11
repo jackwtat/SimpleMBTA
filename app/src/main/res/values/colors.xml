@@ -30,7 +30,7 @@
     <color name="ferry">#008eaa</color>
 
     <!-- Passenger Load Colors -->
-    <color name="not_crowded">#00843d</color>
+    <color name="not_crowded">#145a06</color>
     <color name="some_crowding">#ed8b00</color>
     <color name="very_crowded">#da291c</color>
 
