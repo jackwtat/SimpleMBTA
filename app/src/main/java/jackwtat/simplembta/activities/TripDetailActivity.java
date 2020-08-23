@@ -87,6 +87,8 @@ import jackwtat.simplembta.views.StopInfoBodyView;
 import jackwtat.simplembta.views.StopInfoTitleView;
 import jackwtat.simplembta.views.VehicleStatusView;
 
+import static jackwtat.simplembta.R.string.trip_live_tracking_not_available;
+
 public class TripDetailActivity extends AppCompatActivity implements OnMapReadyCallback,
         ErrorManager.OnErrorChangedListener, Constants {
     public static final String LOG_TAG = "TripDetailActivity";
@@ -792,10 +794,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                         + getResources().getString(R.string.map_to) + " "
                         + vehicle.getDestination();
             }
-
-
         }
 
+        // Vehicle status view
         if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(selectedTripId)) {
             String stopsAwayText = "";
 
@@ -809,10 +810,9 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
             } else if (stopsAway == 0) {
                 if (currentPrediction != null) {
-                    if (currentPrediction.getPredictionType() == Prediction.DEPARTURE &&
+                    if (currentPrediction.getStopSequence() == 1 &&
                             vehicle.getCurrentStatus() == Vehicle.Status.STOPPED) {
-
-                        if (currentPrediction.getCountdownTime() < COUNTDOWN_APPROACHING_CUTOFF) {
+                        if (currentPrediction.getCountdownTime() < COUNTDOWN_ARRIVING_CUTOFF) {
                             stopsAwayText += getResources().getString(R.string.trip_departing);
                         } else {
                             stopsAwayText += getResources().getString(R.string.trip_boarding);
@@ -834,19 +834,18 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             }
             vehicleStatusView.setTopText(stopsAwayText);
             vehicleStatusView.setBottomText(vehicleStatusText);
+            vehicleStatusView.setVisibility(View.VISIBLE);
 
-        /*} else if (predictions.get(0) != null && predictions.get(0).getCountdownTime() <= 0) {
-            if (!predictions.get(0).isLive()) {
-                vehicleStatusView.setBottomText(
-                        getResources().getString(R.string.trip_live_tracking_not_available));
-            } else {
-                vehicleStatusView.setBottomText(
-                        getResources().getString(R.string.trip_en_route) + " " +
-                                selectedTripDestination);
-            }*/
-        } else {
+        } else if (predictions != null &&
+                predictions.size() > 0 &&
+                predictions.get(0) != null &&
+                predictions.get(0).getCountdownTime() <= 0 &&
+                predictions.get(predictions.size() - 1).getCountdownTime() > 0) {
             vehicleStatusView.setBottomText(
-                    getResources().getString(R.string.trip_not_yet_started));
+                    getResources().getString(trip_live_tracking_not_available));
+            vehicleStatusView.setVisibility(View.VISIBLE);
+        } else {
+            vehicleStatusView.setVisibility(View.GONE);
         }
 
         if (mapReady) {
