@@ -36,7 +36,6 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
     View topLineView;
     View bottomLineView;
     LinearLayout predictionInfoLayout;
-    LinearLayout vehicleIcons;
     ImageView stopIcon;
     ImageView stopIconFill;
     ImageView stopIconFillCurrent;
@@ -179,30 +178,6 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
             stopAdvisoryIcon.setVisibility(GONE);
             stopAlertIcon.setVisibility(GONE);
         }
-
-        // Set vehicle icon
-        if (vehicle != null && vehicle.getTripId().equalsIgnoreCase(prediction.getTripId())) {
-            int currentStopSequence = prediction.getStopSequence();
-            int nextStopSequence = (nextPrediction != null) ? nextPrediction.getStopSequence() : -1;
-            int vehicleStopSequence = vehicle.getCurrentStopSequence();
-
-            if (vehicleStopSequence == currentStopSequence &&
-                    prediction.getCountdownTime() <= COUNTDOWN_ARRIVING_CUTOFF) {
-                if (prediction.getCountdownTime() > 20000) {
-                    vehicleIcons.getChildAt(0).setVisibility(VISIBLE);
-                } else {
-                    vehicleIcons.getChildAt(1).setVisibility(VISIBLE);
-                }
-            } else if (vehicleStopSequence > currentStopSequence &&
-                    vehicleStopSequence < nextStopSequence) {
-                vehicleIcons.getChildAt(2).setVisibility(VISIBLE);
-
-            } else if (vehicleStopSequence == nextStopSequence &&
-                    nextPrediction != null &&
-                    nextPrediction.getCountdownTime() > COUNTDOWN_ARRIVING_CUTOFF) {
-                vehicleIcons.getChildAt(2).setVisibility(VISIBLE);
-            }
-        }
     }
 
     public void emphasize() {
@@ -234,10 +209,6 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         bottomDivider.setVisibility(VISIBLE);
         bottomEdge.setVisibility(GONE);
         bottomBorder.setVisibility(GONE);
-
-        for (int i = 0; i < vehicleIcons.getChildCount(); i++) {
-            vehicleIcons.getChildAt(i).setVisibility(INVISIBLE);
-        }
     }
 
     private void init(Context context) {
@@ -245,7 +216,6 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         topLineView = rootView.findViewById(R.id.top_line_view);
         bottomLineView = rootView.findViewById(R.id.bottom_line_view);
         predictionInfoLayout = rootView.findViewById(R.id.prediction_info_layout);
-        vehicleIcons = rootView.findViewById(R.id.vehicle_icons);
         stopIcon = rootView.findViewById(R.id.stop_icon);
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
         stopIconFillCurrent = rootView.findViewById(R.id.stop_icon_fill_current);

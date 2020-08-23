@@ -72,33 +72,6 @@
                 android:src="@drawable/ic_line_stop_closed"
                 android:visibility="gone" />
             <!-- End Stop Icons -->
-
-            <!-- Vehicle Status Icons -->
-            <LinearLayout
-                android:id="@+id/vehicle_icons"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:orientation="vertical">
-
-                <jackwtat.simplembta.views.VehicleIconView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" />
-
-                <jackwtat.simplembta.views.VehicleIconView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" />
-
-                <jackwtat.simplembta.views.VehicleIconView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" />
-            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
