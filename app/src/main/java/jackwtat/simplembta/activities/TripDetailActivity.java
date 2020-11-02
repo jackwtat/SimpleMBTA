@@ -778,8 +778,25 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
             // Vehicle status text
             if (currentPrediction != null) {
-                vehicleStatusText += vehicle.getCurrentStatus().getText() + " " +
-                        currentPrediction.getStop().getName();
+                switch (vehicle.getCurrentStatus()){
+                    case INCOMING:
+                        vehicleStatusText +=
+                                getResources().getString(R.string.vehicle_approaching)
+                                + " ";
+                        break;
+                    case STOPPED:
+                        vehicleStatusText +=
+                                getResources().getString(R.string.vehicle_stopped_at)
+                                + " ";
+                        break;
+                    case IN_TRANSIT:
+                        vehicleStatusText +=
+                                getResources().getString(R.string.vehicle_next_stop_is)
+                                + " ";
+                        break;
+                }
+                vehicleStatusText += currentPrediction.getStop().getName();
+
             } else {
                 // 'Currently on '
                 vehicleStatusText += getResources().getString(R.string.map_currently_on) + " ";

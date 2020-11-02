@@ -50,24 +50,8 @@
     <string name="no_predictions">No predictions</string>
     <string name="no_nearby_predictions">No predictions near this location</string>
     <string name="no_predictions_this_stop">No predictions at this stop</string>
-    <string name="no_predictions_this_stop_p1">No</string>
-    <string name="no_predictions_this_stop_p2">predictions at this stop</string>
-    <string name="no_further_predictions">No more predictions</string>
-    <string name="select_stop">Select a stop to see predictions</string>
     <string name="no_stops">No stops in this direction</string>
     <string name="no_departures">No upcoming departures</string>
-
-    <!-- Prediction Header Texts -->
-    <string name="nearby">Nearby</string>
-    <string name="other_nearby_services">Other Nearby Services</string>
-    <string name="near_this_stop">Near This Stop</string>
-
-    <!-- Map Search Prediction Statuses -->
-    <string name="map_departing">Departing</string>
-    <string name="map_arriving">Arriving</string>
-    <string name="map_approaching">Approaching</string>
-    <string name="map_departed">Departed</string>
-    <string name="map_arrived">Arrived</string>
 
     <!-- Map Info Window Strings -->
     <string name="map_train">Train</string>
@@ -107,6 +91,9 @@
     <string name="trip_en_route">En route to</string>
     <string name="trip_stop_away">stop away</string>
     <string name="trip_stops_away">stops away</string>
+    <string name="vehicle_approaching">Approaching</string>
+    <string name="vehicle_stopped_at">Stopped at</string>
+    <string name="vehicle_next_stop_is">Next stop is</string>
 
     <!-- Passenger Load Statuses -->
     <string name="load_not_crowded">NOT CROWDED</string>
@@ -133,6 +120,14 @@
     <string name="commuter_rail_short_name">CR</string>
     <string name="cape_flyer_short_name">CapeFlyer</string>
     <string name="ferry_short_name">Ferry</string>
+
+    <!-- Directions -->
+    <string name="north">North</string>
+    <string name="south">South</string>
+    <string name="east">East</string>
+    <string name="west">West</string>
+    <string name="inbound">Inbound</string>
+    <string name="outbound">Outbound</string>
 
     <!-- Service Alert Headers -->
     <string name="UPCOMING">Upcoming</string>

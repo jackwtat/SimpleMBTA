@@ -1,0 +1,192 @@
+<resources>
+    <string name="app_name">Simple MBTA App</string>
+    <string name="database_name">simpleMbtaDatabase</string>
+
+    <!-- Activity Titles -->
+    <string name="main_activity_title">Simple MBTA</string>
+    <string name="route_detail_activity_title">Detalle de Ruta</string>
+    <string name="trip_detail_to_title">a</string>
+
+    <!-- Tab Titles -->
+    <string name="map_search_title">Mapa</string>
+    <string name="route_search_title">Rutas</string>
+
+    <!-- Spinner Titles -->
+    <string name="route">Ruta</string>
+    <string name="direction">Dirección</string>
+    <string name="from">Parada</string>
+    <string name="map">Mapa</string>
+
+    <!-- Service Alerts -->
+    <string name="service_advisory">Aviso de Servicio</string>
+    <string name="service_advisories">Avisos de Servicio</string>
+    <string name="service_alert">Alerta de Servicio</string>
+    <string name="service_alerts">Alertas de Servicio</string>
+    <string name="alert">Alerta</string>
+    <string name="alerts">Alertas</string>
+    <string name="advisory">Aviso</string>
+    <string name="advisories">Avisos</string>
+    <string name="no_service_alerts">No Hay Alertas de Servicio</string>
+
+    <!-- Accessibility -->
+    <string name="wheelchair_accessible">Accesible en Silla de Ruedas</string>
+    <string name="no_wheelchair_accessibility">No Accesible en Silla de Ruedas</string>
+    <string name="no_accessibility_info">No Hay Información de la Accesibilidad</string>
+
+    <!-- Error Messages -->
+    <string name="location_permission_denied_text">Pulse aquí para permitir que Simple MBTA acceda a su ubicación</string>
+    <string name="location_error_text">No se pudo obtener su ubicación actual</string>
+    <string name="network_error_text">No se pudo conectar al internet</string>
+    <string name="error_network">No se pudo conectar al internet</string>
+    <string name="error_location">No se pudo obtener su ubicación actual</string>
+    <string name="error_stops">No se pudo obtener las paradas</string>
+    <string name="error_routes">No se pudo obtener las rutas</string>
+    <string name="error_nearby_stops">No se pudo obtener paradas cercanas de MBTA</string>
+    <string name="error_nearby_routes">No se pudo obtener rutas cercanas de MBTA</string>
+    <string name="error_upcoming_predictions">No se pudo obtener las próximas salidas</string>
+
+    <!-- No Predictions Messages -->
+    <string name="no_nearby_services">No hay servicios de MBTA cerca de esta ubicación</string>
+    <string name="no_predictions">No hay predicciones</string>
+    <string name="no_nearby_predictions">No hay predicciones cerca de esta ubicación</string>
+    <string name="no_predictions_this_stop">No hay predicciones en esta parada</string>
+    <string name="no_stops">No hay paradas en esta dirección</string>
+    <string name="no_departures">No hay próximas salidas</string>
+
+    <!-- Map Info Window Strings -->
+    <string name="map_train">Tren</string>
+    <string name="map_vehicle">Vehículo</string>
+    <string name="map_currently_on">Actualmente en</string>
+    <string name="map_route">Ruta</string>
+    <string name="map_to">a</string>
+    <string name="map_cancelled">Cancelado</string>
+    <string name="map_skipped">Salteada</string>
+    <string name="map_departs">Sale</string>
+    <string name="map_arrives">Llega</string>
+    <string name="map_in">en</string>
+    <string name="map_at">a las</string>
+    <string name="map_min">min</string>
+    <string name="map_already_departed_at">Y salió a las</string>
+    <string name="map_already_arrived_at">Ya llegó a</string>
+
+    <!-- Route Search Prediction Statuses -->
+    <string name="route_departing">Saliendo</string>
+    <string name="route_arriving">Llegando</string>
+    <string name="route_approaching">Se Acerca</string>
+    <string name="route_departed">Salió</string>
+    <string name="route_arrived">Llegó</string>
+
+    <!-- Trip Prediction Statuses -->
+    <string name="trip_departing">Saliendo</string>
+    <string name="trip_arriving">Llegando</string>
+    <string name="trip_approaching">Se Acerca</string>
+    <string name="trip_already_departed">Ya salió</string>
+    <string name="trip_already_arrived">Ya llegó</string>
+
+    <!-- Trip Vehicle Statuses -->
+    <string name="trip_not_yet_started">Este viaje aún no ha comenzado</string>
+    <string name="trip_no_vehicle_assigned">Actualmente no hay ningún vehículo asignado a este viaje</string>
+    <string name="trip_live_tracking_not_available">El seguimiento en vivo no está disponible para este viaje</string>
+    <string name="trip_boarding">Boarding</string>
+    <string name="trip_en_route">En camino a</string>
+    <string name="trip_stop_away">parada falta</string>
+    <string name="trip_stops_away">paradas faltan</string>
+    <string name="vehicle_approaching">es-Approaching</string>
+    <string name="vehicle_stopped_at">es-Stopped at</string>
+    <string name="vehicle_next_stop_is">es-Next stop is</string>
+
+    <!-- Passenger Load Statuses -->
+    <string name="load_not_crowded">NO ESTÁ LLENO</string>
+    <string name="load_some_crowding">UN POCO LLENO</string>
+    <string name="load_very_crowded">MUY LLENO</string>
+
+    <!-- Route Names -->
+    <string name="red_line_long_name">Red Line</string>
+    <string name="orange_line_long_name">Orange Line</string>
+    <string name="blue_line_long_name">Blue Line</string>
+    <string name="green_line_long_name">Green Line</string>
+    <string name="silver_line_long_name">Silver Line</string>
+
+    <!-- Route Abbreviations -->
+    <string name="red_line_short_name">RL</string>
+    <string name="red_line_mattapan_short_name">RL&#8226;M</string>
+    <string name="orange_line_short_name">OL</string>
+    <string name="blue_line_short_name">BL</string>
+    <string name="green_line_b_short_name">GL&#8226;B</string>
+    <string name="green_line_c_short_name">GL&#8226;C</string>
+    <string name="green_line_d_short_name">GL&#8226;D</string>
+    <string name="green_line_e_short_name">GL&#8226;E</string>
+    <string name="silver_line_waterfront_short_name">SL</string>
+    <string name="commuter_rail_short_name">CR</string>
+    <string name="cape_flyer_short_name">CapeFlyer</string>
+    <string name="ferry_short_name">Ferry</string>
+
+    <!-- Directions -->
+    <string name="north">Norte</string>
+    <string name="south">Sur</string>
+    <string name="east">Este</string>
+    <string name="west">Oeste</string>
+    <string name="inbound">Inbound</string>
+    <string name="outbound">Outbound</string>
+
+    <!-- Service Alert Headers -->
+    <string name="UPCOMING">Futuro &#8226; </string>
+    <string name="ACCESS_ISSUE">Problema de Acceso</string>
+    <string name="ADDITIONAL_SERVICE">Servicio Adicional</string>
+    <string name="AMBER_ALERT">Alerta Ámbar</string>
+    <string name="BIKE_ISSUE">Problema de Bicicleta</string>
+    <string name="CANCELLATION">Cancelación</string>
+    <string name="DELAY">Retraso</string>
+    <string name="DETOUR">Desvío</string>
+    <string name="DOCK_CLOSURE">Cierre de Muelle</string>
+    <string name="DOCK_ISSUE">Problema de Muelle</string>
+    <string name="ELEVATOR_CLOSURE">Cierre de Ascensor</string>
+    <string name="ESCALATOR_CLOSURE">Cierre de Escalera Mecánica</string>
+    <string name="EXTRA_SERVICE">Servicio Extra</string>
+    <string name="FACILITY_ISSUE">Problema de la Instalación</string>
+    <string name="MODIFIED_SERVICE">Servicio Modificado</string>
+    <string name="NO_SERVICE">Sin Servicio</string>
+    <string name="OTHER_EFFECT">Otro Efecto</string>
+    <string name="PARKING_CLOSURE">Cierre de Estacionamiento</string>
+    <string name="PARKING_ISSUE">Problema de Estacionamiento</string>
+    <string name="POLICY_CHANGE">Cambio de Póliza</string>
+    <string name="SCHEDULE_CHANGE">Cambio de Horario</string>
+    <string name="SERVICE_CHANGE">Cambio de Servicio</string>
+    <string name="SHUTTLE">Autobús de Enlace</string>
+    <string name="SNOW_ROUTE">Ruta de Nieve</string>
+    <string name="STATION_CLOSURE">Cierre de la Estación</string>
+    <string name="STATION_ISSUE">Problema de la Estación</string>
+    <string name="STOP_CLOSURE">Cierre de Parada</string>
+    <string name="STOP_MOVE">Parada se Moverá</string>
+    <string name="STOP_MOVED">Parada Movida</string>
+    <string name="SUMMARY">Resumen</string>
+    <string name="SUSPENSION">Suspensión</string>
+    <string name="TRACK_CHANGE">Cambio de Vía</string>
+    <string name="UNKNOWN_EFFECT">Efecto desconocido</string>
+
+    <!-- Dialog Box Strings -->
+    <string name="dialog_close_button">Cerrar</string>
+    <string name="dialog_go_to_route_button">Ir a la ruta</string>
+    <string name="route_prefix">Ruta</string>
+
+    <!-- SharedPreferences Keys -->
+    <string name="saved_map_search_latlon">savedMapSearchLatLon</string>
+    <string name="saved_route_search_route">savedRouteSearchRoute</string>
+
+    <!-- Miscellaneous -->
+    <string name="vehicle">Vehículo</string>
+    <string name="train">Tren</string>
+    <string name="track">VÍA</string>
+    <string name="min">min</string>
+    <string name="live">EN VIVO</string>
+    <string name="en_route">EN CAMINO</string>
+    <string name="tomorrow">MAÑANA</string>
+    <string name="drop_off">SOLO PARA BAJARSE</string>
+    <string name="cancelled">CANCELADO</string>
+    <string name="skipped">SALTADA</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="arriving">Llegando</string>
+    <string name="departing">Saliendo</string>
+    <string name="view_all">Ver Todo</string>
+    <string name="time_zone_warning">Los horarios de llegada y salida corresponden a la hora local de Boston.</string>
+</resources>

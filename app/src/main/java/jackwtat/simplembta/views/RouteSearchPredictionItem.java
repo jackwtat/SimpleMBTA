@@ -125,8 +125,9 @@ public class RouteSearchPredictionItem extends LinearLayout implements Constants
         calendar.setTime(prediction.getPredictionTime());
         int predictionDay = calendar.get(Calendar.DAY_OF_MONTH);
         int predictionWeekday = calendar.get(Calendar.DAY_OF_WEEK);
-        String predictionDayName = calendar.getDisplayName(
-                Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+        String predictionDayName= calendar.getDisplayName(
+                Calendar.DAY_OF_WEEK, Calendar.LONG,
+                getResources().getConfiguration().getLocales().get(0));
 
         calendar.setTime(new Date());
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
