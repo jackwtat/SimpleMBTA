@@ -91,9 +91,9 @@
     <string name="trip_en_route">En camino a</string>
     <string name="trip_stop_away">parada falta</string>
     <string name="trip_stops_away">paradas faltan</string>
-    <string name="vehicle_approaching">es-Approaching</string>
-    <string name="vehicle_stopped_at">es-Stopped at</string>
-    <string name="vehicle_next_stop_is">es-Next stop is</string>
+    <string name="vehicle_approaching">Se acerca</string>
+    <string name="vehicle_stopped_at">Parado en</string>
+    <string name="vehicle_next_stop_is">Próximo parada es</string>
 
     <!-- Passenger Load Statuses -->
     <string name="load_not_crowded">NO ESTÁ LLENO</string>
