@@ -1704,7 +1704,7 @@
         "latitude": 42.458769,
         "location_type": 0,
         "longitude": -71.069778,
-        "name": "Melrose Cedar Park",
+        "name": "Melrose/Cedar Park",
         "platform_code": null,
         "platform_name": null,
         "wheelchair_boarding": 2
@@ -2516,7 +2516,7 @@
         "latitude": 42.520010,
         "location_type": 0,
         "longitude": -71.502834,
-        "name": "Littleton/Rte 495",
+        "name": "Littleton/Route 495",
         "platform_code": null,
         "platform_name": null,
         "wheelchair_boarding": 1
