@@ -65,10 +65,6 @@
               "type": "stop"
             },
             {
-              "id": "place-plsgr",
-              "type": "stop"
-            },
-            {
               "id": "place-babck",
               "type": "stop"
             },
@@ -187,10 +183,6 @@
             },
             {
               "id": "place-babck",
-              "type": "stop"
-            },
-            {
-              "id": "place-plsgr",
               "type": "stop"
             },
             {
@@ -1396,35 +1388,6 @@
         "facilities": {
           "links": {
             "related": "/facilities/?filter[stop]=place-bvmnl"
-          }
-        },
-        "parent_station": {
-          "data": null
-        }
-      },
-      "type": "stop"
-    },
-    {
-      "attributes": {
-        "address": "Commonwealth Ave and Pleasant St, Boston, MA 02215",
-        "description": null,
-        "latitude": 42.351439,
-        "location_type": 1,
-        "longitude": -71.118799,
-        "name": "Pleasant Street",
-        "platform_code": null,
-        "platform_name": null,
-        "wheelchair_boarding": 2
-      },
-      "id": "place-plsgr",
-      "links": {
-        "self": "/stops/place-plsgr"
-      },
-      "relationships": {
-        "child_stops": {},
-        "facilities": {
-          "links": {
-            "related": "/facilities/?filter[stop]=place-plsgr"
           }
         },
         "parent_station": {

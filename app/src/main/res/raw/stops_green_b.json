@@ -482,46 +482,6 @@
     },
     {
       "attributes": {
-        "address": "Commonwealth Ave and Pleasant St, Boston, MA 02215",
-        "description": null,
-        "latitude": 42.351521,
-        "location_type": 1,
-        "longitude": -71.118889,
-        "name": "Pleasant Street",
-        "platform_code": null,
-        "platform_name": null,
-        "wheelchair_boarding": 2
-      },
-      "id": "place-plsgr",
-      "links": {
-        "self": "/stops/place-plsgr"
-      },
-      "relationships": {
-        "child_stops": {
-          "data": [
-            {
-              "id": "70138",
-              "type": "stop"
-            },
-            {
-              "id": "70139",
-              "type": "stop"
-            }
-          ]
-        },
-        "facilities": {
-          "links": {
-            "related": "/facilities/?filter[stop]=place-plsgr"
-          }
-        },
-        "parent_station": {
-          "data": null
-        }
-      },
-      "type": "stop"
-    },
-    {
-      "attributes": {
         "address": "Commonwealth Ave and Saint Paul St, Boston, MA 02215",
         "description": null,
         "latitude": 42.3512,
