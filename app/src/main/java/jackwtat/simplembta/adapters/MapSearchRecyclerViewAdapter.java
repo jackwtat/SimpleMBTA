@@ -132,7 +132,7 @@ public class MapSearchRecyclerViewAdapter
             header.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(onHeaderClickListener!=null){
+                    if (onHeaderClickListener != null) {
                         onHeaderClickListener.onItemClick(i);
                     }
                 }
@@ -194,14 +194,24 @@ public class MapSearchRecyclerViewAdapter
         this.selectedStop = selectedStop;
 
         for (Route route : routes) {
-            // Display the inbound predictions
-            if (route.hasPickUps(Direction.INBOUND)) {
-                adapterItems.add(new AdapterItem(route, Direction.INBOUND));
-            }
 
-            // Display the outbound predictions
-            if (route.hasPickUps(Direction.OUTBOUND)) {
-                adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+            // Route has same stop for both directions
+            if (route.hasPickUps(Direction.INBOUND) &&
+                    route.hasPickUps(Direction.OUTBOUND) &&
+                    route.getPredictions(Direction.INBOUND).get(0).getStop()
+                            .equals(route.getPredictions(Direction.OUTBOUND).get(0).getStop())) {
+                adapterItems.add(new AdapterItem(route, Direction.ALL_DIRECTIONS));
+
+            } else {
+                // Inbound predictions
+                if (route.hasPickUps(Direction.INBOUND)) {
+                    adapterItems.add(new AdapterItem(route, Direction.INBOUND));
+                }
+
+                // Outbound predictions
+                if (route.hasPickUps(Direction.OUTBOUND)) {
+                    adapterItems.add(new AdapterItem(route, Direction.OUTBOUND));
+                }
             }
 
             // No predictions for either direction
@@ -326,12 +336,14 @@ public class MapSearchRecyclerViewAdapter
                             otherStop.getLocation().distanceTo(targetLocation));
                 }
 
-            } else if (route.hasPickUps(direction) &&
-                    !otherAdapterItem.route.hasPickUps(otherAdapterItem.direction)) {
+            } else if ((route.hasPickUps(direction) || direction == Direction.ALL_DIRECTIONS) &&
+                    !otherAdapterItem.route.hasPickUps(otherAdapterItem.direction) &&
+                    otherAdapterItem.direction != Direction.ALL_DIRECTIONS) {
                 return -1;
 
-            } else if (!route.hasPickUps(direction) &&
-                    otherAdapterItem.route.hasPickUps(otherAdapterItem.direction)) {
+            } else if (!route.hasPickUps(direction) && direction != Direction.ALL_DIRECTIONS &&
+                    (otherAdapterItem.route.hasPickUps(otherAdapterItem.direction) ||
+                            otherAdapterItem.direction == Direction.ALL_DIRECTIONS)) {
                 return 1;
 
             } else if (!route.equals(otherAdapterItem.route)) {

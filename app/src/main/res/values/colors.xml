@@ -16,6 +16,7 @@
     <color name="HighlightedText">#ffffff</color>
     <color name="TabText">#b0bec5</color>
     <color name="TabSelectedText">#ffffff</color>
+    <color name="DirectionText">#606060</color>
 
     <!-- Line Colors -->
     <color name="red_line">#da291c</color>

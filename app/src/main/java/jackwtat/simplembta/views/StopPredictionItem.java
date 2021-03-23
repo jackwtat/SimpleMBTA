@@ -83,7 +83,7 @@ public class StopPredictionItem extends LinearLayout {
                 for (Prediction p : pickUps) {
                     if (!destinations.contains(p.getDestination())) {
                         predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), p));
+                                new IndividualPredictionItem(getContext(), p, false));
                         destinations.add(p.getDestination());
                     }
                 }
@@ -101,12 +101,12 @@ public class StopPredictionItem extends LinearLayout {
                 }
 
                 predictionsListLayout.addView(
-                        new IndividualPredictionItem(getContext(), pickUps.get(i)));
+                        new IndividualPredictionItem(getContext(), pickUps.get(i), false));
 
                 if (i + 1 < pickUps.size()) {
                     if (!pickUps.get(i).getDestination().equals(pickUps.get(i + 1).getDestination())) {
                         predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), pickUps.get(i + 1)));
+                                new IndividualPredictionItem(getContext(), pickUps.get(i + 1), false));
                     }
                 }
 
@@ -114,12 +114,12 @@ public class StopPredictionItem extends LinearLayout {
                 // prediction
             } else {
                 predictionsListLayout.addView(
-                        new IndividualPredictionItem(getContext(), pickUps.get(0)));
+                        new IndividualPredictionItem(getContext(), pickUps.get(0), false));
 
                 if (pickUps.size() > 1)
                     if (!pickUps.get(0).getDestination().equals(pickUps.get(1).getDestination()))
                         predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), pickUps.get(1)));
+                                new IndividualPredictionItem(getContext(), pickUps.get(1), false));
             }
 
             // Display appropriate message if there are no predictions

@@ -17,10 +17,12 @@
         android:layout_below="@id/prediction_header"
         android:background="?android:attr/selectableItemBackground">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/route_header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingLeft="16dp"
             android:paddingTop="8dp"
             android:paddingRight="16dp"
@@ -30,7 +32,6 @@
                 android:id="@+id/route_name_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="4dp"
                 android:gravity="center_vertical"
                 android:paddingTop="8dp" />
@@ -39,8 +40,6 @@
                 android:id="@+id/service_advisory_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/route_name_view"
                 android:contentDescription="@string/service_advisory"
                 android:paddingTop="8dp"
                 android:src="@drawable/ic_service_advisory"
@@ -50,14 +49,12 @@
                 android:id="@+id/service_alert_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/route_name_view"
                 android:contentDescription="@string/service_alert"
                 android:paddingTop="8dp"
                 android:src="@drawable/ic_service_alert"
                 android:visibility="gone" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/predictions_layout"

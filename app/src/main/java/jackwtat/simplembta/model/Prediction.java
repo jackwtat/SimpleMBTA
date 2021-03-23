@@ -287,7 +287,7 @@ public class Prediction implements Comparable<Prediction>, Serializable, Constan
 
             // Vehicle has already passed this stop
             if (vehicle.getCurrentStopSequence() > stopSequence ||
-                getCountdownTime() < -1 * COUNTDOWN_APPROACHING_CUTOFF) {
+                    getCountdownTime() < -1 * COUNTDOWN_APPROACHING_CUTOFF) {
                 if (getPredictionType() == Prediction.DEPARTURE) {
                     strings[2] = context.getResources().getString(R.string.route_departed);
                 } else {
@@ -296,7 +296,7 @@ public class Prediction implements Comparable<Prediction>, Serializable, Constan
 
                 // Vehicle is at or approaching this stop
             } else if (vehicle.getCurrentStopSequence() == stopSequence) {
-                
+
                 // Vehicle is more than one minute away
                 if (getCountdownTime() > COUNTDOWN_APPROACHING_CUTOFF) {
 
@@ -381,7 +381,9 @@ public class Prediction implements Comparable<Prediction>, Serializable, Constan
         } else {
             Date otherTime = otherPred.getPredictionTime();
 
-            if (getPredictionTime() == null && otherTime == null) {
+            if (getDirection() != otherPred.getDirection()) {
+                return otherPred.getDirection() - getDirection();
+            } else if (getPredictionTime() == null && otherTime == null) {
                 return 0;
             } else if (getPredictionTime() == null) {
                 return 1;

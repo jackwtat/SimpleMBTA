@@ -186,6 +186,8 @@ public class Route implements Comparable<Route>, Serializable {
     public Stop getFocusStop(int directionId) {
         if (directionId == 0 || directionId == 1) {
             return focusStops[directionId];
+        } else if (directionId == Direction.ALL_DIRECTIONS) {
+            return focusStops[0];
         } else {
             return null;
         }

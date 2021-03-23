@@ -20,6 +20,7 @@ import jackwtat.simplembta.utilities.Constants;
 public class IndividualPredictionItem extends LinearLayout implements Constants {
     View rootView;
     PredictionTimeView predictionTimeView;
+    TextView directionTextView;
     TextView destinationTextView;
     TextView trainNumberTextView;
     TextView trackNumberTextView;
@@ -41,13 +42,13 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
         init(context);
     }
 
-    public IndividualPredictionItem(Context context, Prediction prediction) {
+    public IndividualPredictionItem(Context context, Prediction prediction, boolean showDirection) {
         super(context);
         init(context);
-        setPrediction(prediction);
+        setPrediction(prediction, showDirection);
     }
 
-    public void setPrediction(Prediction prediction) {
+    public void setPrediction(Prediction prediction, boolean showDirection) {
         int mode = prediction.getRoute().getMode();
         String tripName = prediction.getTripName();
         String trackNumber = prediction.getTrackNumber();
@@ -78,11 +79,19 @@ public class IndividualPredictionItem extends LinearLayout implements Constants 
         } else {
             trackNumberTextView.setVisibility(GONE);
         }
+
+        if (showDirection) {
+            directionTextView.setText(prediction.getRoute().getDirection(prediction.getDirection()).getName());
+            directionTextView.setVisibility(VISIBLE);
+        } else {
+            directionTextView.setVisibility(GONE);
+        }
     }
 
     private void init(Context context) {
         rootView = inflate(context, R.layout.item_individual_prediction, this);
         predictionTimeView = rootView.findViewById(R.id.prediction_time_view);
+        directionTextView = rootView.findViewById(R.id.direction_text_view);
         destinationTextView = rootView.findViewById(R.id.destination_text_view);
         trainNumberTextView = rootView.findViewById(R.id.vehicle_number_text_view);
         trackNumberTextView = rootView.findViewById(R.id.track_number_text_view);

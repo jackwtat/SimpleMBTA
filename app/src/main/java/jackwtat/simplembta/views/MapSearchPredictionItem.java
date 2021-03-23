@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import jackwtat.simplembta.R;
+import jackwtat.simplembta.model.Direction;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.Route;
 
 public class MapSearchPredictionItem extends LinearLayout {
     View rootView;
-    RelativeLayout headerLayout;
+    LinearLayout headerLayout;
     RelativeLayout bodyLayout;
     RouteNameView routeNameView;
     LinearLayout predictionsListLayout;
@@ -44,7 +45,14 @@ public class MapSearchPredictionItem extends LinearLayout {
     }
 
     public void setPredictions(Route route, int direction) {
-        ArrayList<Prediction> predictions = route.getPredictions(direction);
+        ArrayList<Prediction> predictions = new ArrayList<>();
+        if (direction == Direction.ALL_DIRECTIONS) {
+            predictions.addAll(route.getPredictions(0));
+            predictions.addAll(route.getPredictions(1));
+            direction = 0;
+        } else {
+            predictions.addAll(route.getPredictions(direction));
+        }
 
         ArrayList<Prediction> pickUps = new ArrayList<>();
 
@@ -77,49 +85,45 @@ public class MapSearchPredictionItem extends LinearLayout {
         // Add predictions
         if (pickUps.size() > 0) {
 
-            // For light rail and heavy rail, add first prediction for each destination
-            if (route.getMode() == Route.LIGHT_RAIL || route.getMode() == Route.HEAVY_RAIL) {
+            // For non-bus, add first prediction for each destination
+            if (route.getMode() != Route.BUS) {
                 ArrayList<String> destinations = new ArrayList<>();
-                for (Prediction p : pickUps) {
+                for (int i = 0; i < pickUps.size(); i++) {
+                    Prediction p = pickUps.get(i);
+
                     if (!destinations.contains(p.getDestination())) {
                         predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), p));
+                                new IndividualPredictionItem(
+                                        getContext(), p,
+                                        i == 0 ||
+                                                (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
                         destinations.add(p.getDestination());
                     }
                 }
 
-                // For buses, add the first live prediction
-                // If there are no live predictions, then add the first non-live prediction
-            } else if (route.getMode() == Route.BUS) {
-                int i = 0;
-                while (i < pickUps.size() && !pickUps.get(i).isLive()) {
-                    i++;
-                }
-
-                if (i >= pickUps.size()) {
-                    i = 0;
-                }
-
-                predictionsListLayout.addView(
-                        new IndividualPredictionItem(getContext(), pickUps.get(i)));
-
-                if (i + 1 < pickUps.size()) {
-                    if (!pickUps.get(i).getDestination().equals(pickUps.get(i + 1).getDestination())) {
-                        predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), pickUps.get(i + 1)));
+                // For buses, if there is at least one live prediction, only add live predictions
+            } else {
+                boolean hasLive = false;
+                for (Prediction p : pickUps) {
+                    if (p.isLive()) {
+                        hasLive = true;
+                        break;
                     }
                 }
+                ArrayList<String> destinations = new ArrayList<>();
+                for (int i = 0; i < pickUps.size(); i++) {
+                    Prediction p = pickUps.get(i);
 
-                // For all other routes, add first prediction and second if it has a different
-                // prediction
-            } else {
-                predictionsListLayout.addView(
-                        new IndividualPredictionItem(getContext(), pickUps.get(0)));
-
-                if (pickUps.size() > 1)
-                    if (!pickUps.get(0).getDestination().equals(pickUps.get(1).getDestination()))
+                    if ((p.isLive() || !hasLive) &&
+                            !destinations.contains(p.getDestination())) {
                         predictionsListLayout.addView(
-                                new IndividualPredictionItem(getContext(), pickUps.get(1)));
+                                new IndividualPredictionItem(
+                                        getContext(), p,
+                                        i == 0 ||
+                                                (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        destinations.add(p.getDestination());
+                    }
+                }
             }
 
             // Display appropriate message if there are no predictions

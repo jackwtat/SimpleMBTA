@@ -10,6 +10,7 @@ public class Direction implements Serializable {
     public static final int SOUTHBOUND = 0;
     public static final int NORTHBOUND = 1;
     public static final int NULL_DIRECTION = 0;
+    public static final int ALL_DIRECTIONS = -1;
 
     int id;
     String name;
