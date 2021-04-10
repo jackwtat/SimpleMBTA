@@ -93,6 +93,8 @@ import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.views.NoPredictionsView;
+import jackwtat.simplembta.views.ServiceAlertsListView;
+import jackwtat.simplembta.views.ServiceAlertsTitleView;
 import jackwtat.simplembta.views.StopInfoBodyView;
 import jackwtat.simplembta.views.StopInfoTitleView;
 
@@ -358,7 +360,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+        recyclerViewAdapter.setOnRouteClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
@@ -366,37 +368,68 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     refreshPredictionViews();
                 }
 
-                Route route = new Route(recyclerViewAdapter.getAdapterItem(position).getRoute());
-                int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
-                Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
 
-                if (predictionClickListener != null) {
-                    if (stop == null) {
-                        predictionClickListener.onClick(route, direction, targetLocation);
+                List<ServiceAlert> serviceAlerts = route.getServiceAlerts();
+                Collections.sort(serviceAlerts);
+
+                int alertsCount = 0;
+                int advisoriesCount = 0;
+
+                for (ServiceAlert alert : route.getServiceAlerts()) {
+                    if (alert.isUrgent()) {
+                        alertsCount++;
                     } else {
-                        predictionClickListener.onClick(route, direction, stop);
+                        advisoriesCount++;
                     }
-
-                } else {
-                    Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
-                    intent.putExtra("route", route);
-                    intent.putExtra("direction", direction);
-                    intent.putExtra("refreshTime", refreshTime);
-                    intent.putExtra("userLat", targetLocation.getLatitude());
-                    intent.putExtra("userLon", targetLocation.getLongitude());
-                    startActivity(intent);
                 }
+
+                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+
+                dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
+                    (alertsCount > 0)
+                            ? (alertsCount + advisoriesCount > 1)
+                            ? getContext().getString(R.string.service_alerts)
+                            : getContext().getString(R.string.service_alert)
+                            : (advisoriesCount > 1)
+                            ? getContext().getString(R.string.service_advisories)
+                            : getContext().getString(R.string.service_advisory),
+                    Color.parseColor(route.getTextColor()),
+                    Color.parseColor(route.getPrimaryColor())));
+
+                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
+
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                        getResources().getString(R.string.dialog_close_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                dialog.show();
+            }
+        });
+
+        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+                int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
+
+                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                intent.putExtra("route", route);
+                intent.putExtra("direction", direction);
+                intent.putExtra("refreshTime", refreshTime);
+                intent.putExtra("userLat", targetLocation.getLatitude());
+                intent.putExtra("userLon", targetLocation.getLongitude());
+                startActivity(intent);
             }
         });
 
         recyclerViewAdapter.setOnItemLongClickListener(new MapSearchRecyclerViewAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(int position) {
-                if (!viewsRefreshing && !swipeRefreshLayout.isRefreshing() &&
-                        !noPredictionsView.isError()) {
-                    refreshPredictionViews();
-                }
-
                 Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
                 int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
 

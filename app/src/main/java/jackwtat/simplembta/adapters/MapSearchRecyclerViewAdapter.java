@@ -29,6 +29,7 @@ public class MapSearchRecyclerViewAdapter
     private Stop selectedStop;
     private Location targetLocation;
     private OnItemClickListener onHeaderClickListener;
+    private OnItemClickListener onRouteClickListener;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
 
@@ -47,8 +48,9 @@ public class MapSearchRecyclerViewAdapter
         final int i = position;
 
         MapSearchPredictionItem predictionItem = holder.predictionView;
-        PredictionHeaderView header = predictionItem.findViewById(R.id.prediction_header);
-        View body = predictionItem.findViewById(R.id.predictions_card_body);
+        PredictionHeaderView stopHeader = predictionItem.findViewById(R.id.prediction_header);
+        View routeHeader = predictionItem.findViewById(R.id.route_header_layout);
+        View body = predictionItem.findViewById(R.id.predictions_layout);
         View bottomBorder = predictionItem.findViewById(R.id.bottom_border);
 
         Route thisRoute = adapterItems.get(i).route;
@@ -71,22 +73,22 @@ public class MapSearchRecyclerViewAdapter
         predictionItem.clear();
         predictionItem.setPredictions(thisRoute, thisDirection);
 
-        header.reset();
+        stopHeader.reset();
 
         // Set prediction group header
         if ((thisStop != null && i == 0) ||
                 (thisStop != null && previousStop != null && !thisStop.equals(previousStop))) {
             // Set the header text as the stop name
-            header.setText(thisStop.getName());
+            stopHeader.setText(thisStop.getName());
 
             // Prevent most occurrences of scroll bug
-            header.setOnClickListener(new View.OnClickListener() {
+            stopHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                 }
             });
 
-            header.setOnLongClickListener(new View.OnLongClickListener() {
+            stopHeader.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     return true;
@@ -104,17 +106,17 @@ public class MapSearchRecyclerViewAdapter
                 if (!colors.containsKey(color) &&
                         (mode == Route.LIGHT_RAIL ||
                                 mode == Route.HEAVY_RAIL)) {
-                    header.addSecondaryColor(Color.parseColor(color));
+                    stopHeader.addSecondaryColor(Color.parseColor(color));
                     colors.put(color, null);
                 }
             }
 
             if (colors.size() == 0) {
-                header.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
+                stopHeader.addSecondaryColor(Color.parseColor(thisRoute.getPrimaryColor()));
             }
 
             // Enable wheelchair accessibility icon
-            header.setWheelchairAccessible(thisStop.isWheelchairAccessible());
+            stopHeader.setWheelchairAccessible(thisStop.isWheelchairAccessible());
 
             // Enable stop alert icon
             if (thisStop.getServiceAlerts().size() > 0) {
@@ -125,11 +127,11 @@ public class MapSearchRecyclerViewAdapter
                         break;
                     }
                 }
-                header.enableStopAlertIcon(hasUrgentAlert);
+                stopHeader.enableStopAlertIcon(hasUrgentAlert);
             }
 
             // Set header OnClickListener
-            header.setOnClickListener(new View.OnClickListener() {
+            stopHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onHeaderClickListener != null) {
@@ -138,15 +140,15 @@ public class MapSearchRecyclerViewAdapter
                 }
             });
 
-            header.setVisibility(View.VISIBLE);
+            stopHeader.setVisibility(View.VISIBLE);
 
         } else if (thisStop == null && (i == 0 || previousStop != null)) {
-            header.setText(header.getContext().getResources().getString(R.string.no_predictions));
-            header.setVisibility(View.VISIBLE);
+            stopHeader.setText(stopHeader.getContext().getResources().getString(R.string.no_predictions));
+            stopHeader.setVisibility(View.VISIBLE);
 
             // Otherwise, hide the header
         } else {
-            header.setVisibility(View.GONE);
+            stopHeader.setVisibility(View.GONE);
         }
 
         if (i == adapterItems.size() - 1 ||
@@ -156,6 +158,15 @@ public class MapSearchRecyclerViewAdapter
         } else {
             bottomBorder.setVisibility(View.GONE);
         }
+
+        routeHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onRouteClickListener != null) {
+                    onRouteClickListener.onItemClick(i);
+                }
+            }
+        });
 
         body.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +265,12 @@ public class MapSearchRecyclerViewAdapter
     public void setOnHeaderClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
         if (listener != null) {
             this.onHeaderClickListener = listener;
+        }
+    }
+
+    public void setOnRouteClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
+        if (listener != null) {
+            this.onRouteClickListener = listener;
         }
     }
 
