@@ -27,6 +27,7 @@
     <string name="advisory">Aviso</string>
     <string name="advisories">Avisos</string>
     <string name="no_service_alerts">No Hay Alertas de Servicio</string>
+    <string name="good_service">¡Buen servicio!</string>
 
     <!-- Accessibility -->
     <string name="wheelchair_accessible">Accesible en Silla de Ruedas</string>

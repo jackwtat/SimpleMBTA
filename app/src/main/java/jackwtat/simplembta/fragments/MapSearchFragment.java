@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -384,30 +385,38 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
                 }
 
-                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+                if (alertsCount + advisoriesCount > 0) {
+                    AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
 
-                dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
-                    (alertsCount > 0)
-                            ? (alertsCount + advisoriesCount > 1)
-                            ? getContext().getString(R.string.service_alerts)
-                            : getContext().getString(R.string.service_alert)
-                            : (advisoriesCount > 1)
-                            ? getContext().getString(R.string.service_advisories)
-                            : getContext().getString(R.string.service_advisory),
-                    Color.parseColor(route.getTextColor()),
-                    Color.parseColor(route.getPrimaryColor())));
+                    dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
+                            (alertsCount > 0)
+                                    ? (alertsCount + advisoriesCount > 1)
+                                    ? getContext().getString(R.string.service_alerts)
+                                    : getContext().getString(R.string.service_alert)
+                                    : (advisoriesCount > 1)
+                                    ? getContext().getString(R.string.service_advisories)
+                                    : getContext().getString(R.string.service_advisory),
+                            Color.parseColor(route.getTextColor()),
+                            Color.parseColor(route.getPrimaryColor())));
 
-                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
+                    dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
 
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                        getResources().getString(R.string.dialog_close_button),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                dialog.show();
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                            getResources().getString(R.string.dialog_close_button),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    dialog.show();
+                }else{
+                    Toast toast = Toast.makeText(
+                            getContext(),
+                            getContext().getString(R.string.good_service),
+                            Toast.LENGTH_LONG);
+                    toast.show();
+                }
             }
         });
 
