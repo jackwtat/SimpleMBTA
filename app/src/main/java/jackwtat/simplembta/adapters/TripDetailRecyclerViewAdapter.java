@@ -47,11 +47,14 @@ public class TripDetailRecyclerViewAdapter
             stopSequenceType = TripDetailPredictionItem.ONLY_STOP;
         } else if (position == 0) {
             stopSequenceType = TripDetailPredictionItem.FIRST_STOP;
+            holder.predictionView.bold();
         } else if (position == predictions.size() - 1) {
             stopSequenceType = TripDetailPredictionItem.LAST_STOP;
         } else {
             stopSequenceType = TripDetailPredictionItem.INTERMEDIATE_STOP;
         }
+
+        holder.predictionView.enableNextStopIndicator(position == 0);
 
         if (position + 1 < predictions.size()) {
             holder.predictionView.setPrediction(prediction, predictions.get(position + 1),
@@ -59,12 +62,6 @@ public class TripDetailRecyclerViewAdapter
         } else {
             holder.predictionView.setPrediction(prediction, null, stopSequenceType,
                     vehicle);
-        }
-
-        if (prediction.getStop().equals(selectedStop) ||
-                prediction.getStop().isParentOf(selectedStop.getId()) ||
-                selectedStop.isParentOf(prediction.getStopId())) {
-            holder.predictionView.emphasize();
         }
 
         if (onClickListener != null) {
@@ -104,8 +101,7 @@ public class TripDetailRecyclerViewAdapter
         this.predictions.clear();
 
         for (Prediction prediction : predictions) {
-            if (prediction.getStopSequence() >= selectedStopSequence ||
-                            prediction.getStopSequence() == 1) {
+            if (prediction.getCountdownTime() >= 0) {
                 prediction.setSortMethod(Prediction.STOP_SEQUENCE);
                 this.predictions.add(prediction);
             }

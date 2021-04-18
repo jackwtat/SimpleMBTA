@@ -44,6 +44,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
     ImageView stopAdvisoryIcon;
     ImageView stopAlertIcon;
     PredictionTimeView predictionTimeView;
+    TextView nextStopTextView;
     TextView stopNameTextView;
     TextView trackNumberTextView;
     TextView cancelledIndicator;
@@ -180,8 +181,18 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         }
     }
 
+    public void enableNextStopIndicator(boolean enabled) {
+        if (enabled)
+            nextStopTextView.setVisibility(VISIBLE);
+    }
+
     public void emphasize() {
-        stopNameTextView.setTypeface(stopNameTextView.getTypeface(), Typeface.BOLD_ITALIC);
+        stopNameTextView.setTypeface(stopNameTextView.getTypeface(), Typeface.ITALIC);
+        stopIconFillCurrent.setVisibility(VISIBLE);
+    }
+
+    public void bold() {
+        stopNameTextView.setTypeface(stopNameTextView.getTypeface(), Typeface.BOLD);
         stopIconFillCurrent.setVisibility(VISIBLE);
     }
 
@@ -202,6 +213,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         wheelchairAccessibleIcon.setVisibility(GONE);
         stopAdvisoryIcon.setVisibility(GONE);
         stopAlertIcon.setVisibility(GONE);
+        nextStopTextView.setVisibility(GONE);
         predictionTimeView.clear();
         trackNumberTextView.setVisibility(GONE);
         cancelledIndicator.setVisibility(GONE);
@@ -220,6 +232,7 @@ public class TripDetailPredictionItem extends RelativeLayout implements Constant
         stopIconFill = rootView.findViewById(R.id.stop_icon_fill);
         stopIconFillCurrent = rootView.findViewById(R.id.stop_icon_fill_current);
         stopIconCancelled = rootView.findViewById(R.id.stop_icon_cancelled);
+        nextStopTextView = rootView.findViewById(R.id.next_stop_text_view);
         stopNameTextView = rootView.findViewById(R.id.stop_name_text_view);
         wheelchairAccessibleIcon = rootView.findViewById(R.id.wheelchair_accessible_icon);
         stopAdvisoryIcon = rootView.findViewById(R.id.stop_advisory_icon);

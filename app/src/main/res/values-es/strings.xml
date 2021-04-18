@@ -83,6 +83,7 @@
     <string name="trip_approaching">Se Acerca</string>
     <string name="trip_already_departed">Ya salió</string>
     <string name="trip_already_arrived">Ya llegó</string>
+    <string name="next_stop">Próxima Parada</string>
 
     <!-- Trip Vehicle Statuses -->
     <string name="trip_not_yet_started">Este viaje aún no ha comenzado</string>
