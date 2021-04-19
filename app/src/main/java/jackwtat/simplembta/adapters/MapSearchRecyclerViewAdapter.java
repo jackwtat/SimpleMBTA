@@ -30,7 +30,8 @@ public class MapSearchRecyclerViewAdapter
     private Location targetLocation;
     private OnItemClickListener onHeaderClickListener;
     private OnItemClickListener onRouteClickListener;
-    private OnItemClickListener onItemClickListener;
+    private OnItemClickListener onInboundClickListener;
+    private OnItemClickListener onOutboundClickListener;
     private OnItemLongClickListener onItemLongClickListener;
 
 
@@ -50,10 +51,12 @@ public class MapSearchRecyclerViewAdapter
         MapSearchPredictionItem predictionItem = holder.predictionView;
         PredictionHeaderView stopHeader = predictionItem.findViewById(R.id.prediction_header);
         View routeHeader = predictionItem.findViewById(R.id.route_header_layout);
-        View body = predictionItem.findViewById(R.id.predictions_layout);
+        View inboundList = predictionItem.findViewById(R.id.inbound_list_layout);
+        View outboundList = predictionItem.findViewById(R.id.outbound_list_layout);
+        View noPredictionsTextView = predictionItem.findViewById(R.id.no_predictions_text_view);
         View bottomBorder = predictionItem.findViewById(R.id.bottom_border);
 
-        Route thisRoute = adapterItems.get(i).route;
+        final Route thisRoute = adapterItems.get(i).route;
         Stop thisStop = adapterItems.get(i).stop;
         int thisDirection = adapterItems.get(i).direction;
         Stop previousStop = null;
@@ -159,31 +162,44 @@ public class MapSearchRecyclerViewAdapter
             bottomBorder.setVisibility(View.GONE);
         }
 
-        routeHeader.setOnClickListener(new View.OnClickListener() {
+        if (thisRoute.getServiceAlerts().size() > 0) {
+            routeHeader.setClickable(true);
+            routeHeader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onRouteClickListener != null) {
+                        onRouteClickListener.onItemClick(i);
+                    }
+                }
+            });
+        } else {
+            routeHeader.setClickable(false);
+        }
+
+        inboundList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onRouteClickListener != null) {
-                    onRouteClickListener.onItemClick(i);
+                if (onInboundClickListener != null) {
+                    onInboundClickListener.onItemClick(i);
                 }
             }
         });
 
-        body.setOnClickListener(new View.OnClickListener() {
+        outboundList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(i);
+                if (onOutboundClickListener != null) {
+                    onOutboundClickListener.onItemClick(i);
                 }
             }
         });
 
-        body.setOnLongClickListener(new View.OnLongClickListener() {
+        noPredictionsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                if (onItemLongClickListener != null) {
-                    onItemLongClickListener.onItemLongClick(i);
+            public void onClick(View view) {
+                if (onInboundClickListener != null) {
+                    onInboundClickListener.onItemClick(i);
                 }
-                return true;
             }
         });
     }
@@ -274,9 +290,15 @@ public class MapSearchRecyclerViewAdapter
         }
     }
 
-    public void setOnItemClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
+    public void setOnInboundClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
         if (listener != null) {
-            this.onItemClickListener = listener;
+            this.onInboundClickListener = listener;
+        }
+    }
+
+    public void setOnOutboundClickListener(MapSearchRecyclerViewAdapter.OnItemClickListener listener) {
+        if (listener != null) {
+            this.onOutboundClickListener = listener;
         }
     }
 

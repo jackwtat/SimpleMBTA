@@ -141,7 +141,7 @@ public class StopPredictionItem extends LinearLayout {
         headerLayout = rootView.findViewById(R.id.route_header_layout);
         bodyLayout = rootView.findViewById(R.id.predictions_layout);
         routeNameView = rootView.findViewById(R.id.route_name_view);
-        predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
+        predictionsListLayout = rootView.findViewById(R.id.inbound_list_layout);
         noPredictionsView = rootView.findViewById(R.id.no_predictions_text_view);
         serviceAlertIndicatorView = rootView.findViewById(R.id.service_alert_image_view);
         serviceAdvisoryIndicatorView = rootView.findViewById(R.id.service_advisory_image_view);

@@ -66,7 +66,6 @@ import jackwtat.simplembta.asyncTasks.StopsByLocationAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByRouteAsyncTask;
 import jackwtat.simplembta.clients.LocationClient;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
-import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.map.StopMarkerFactory;
 import jackwtat.simplembta.map.TransferStopMarkerFactory;
 import jackwtat.simplembta.model.Direction;
@@ -385,50 +384,57 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     }
                 }
 
-                if (alertsCount + advisoriesCount > 0) {
-                    AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+                AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
 
-                    dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
-                            (alertsCount > 0)
-                                    ? (alertsCount + advisoriesCount > 1)
-                                    ? getContext().getString(R.string.service_alerts)
-                                    : getContext().getString(R.string.service_alert)
-                                    : (advisoriesCount > 1)
-                                    ? getContext().getString(R.string.service_advisories)
-                                    : getContext().getString(R.string.service_advisory),
-                            Color.parseColor(route.getTextColor()),
-                            Color.parseColor(route.getPrimaryColor())));
+                dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
+                        (alertsCount > 0)
+                                ? (alertsCount + advisoriesCount > 1)
+                                ? getContext().getString(R.string.service_alerts)
+                                : getContext().getString(R.string.service_alert)
+                                : (advisoriesCount > 1)
+                                ? getContext().getString(R.string.service_advisories)
+                                : getContext().getString(R.string.service_advisory),
+                        Color.parseColor(route.getTextColor()),
+                        Color.parseColor(route.getPrimaryColor())));
 
-                    dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
+                dialog.setView(new ServiceAlertsListView(getContext(), serviceAlerts));
 
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                            getResources().getString(R.string.dialog_close_button),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                    dialog.show();
-                }else{
-                    Toast toast = Toast.makeText(
-                            getContext(),
-                            getContext().getString(R.string.good_service),
-                            Toast.LENGTH_LONG);
-                    toast.show();
-                }
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                        getResources().getString(R.string.dialog_close_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                dialog.show();
+
             }
         });
 
-        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+        recyclerViewAdapter.setOnInboundClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
-                int direction = recyclerViewAdapter.getAdapterItem(position).getDirection();
 
                 Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
                 intent.putExtra("route", route);
-                intent.putExtra("direction", direction);
+                intent.putExtra("direction", Direction.INBOUND);
+                intent.putExtra("refreshTime", refreshTime);
+                intent.putExtra("userLat", targetLocation.getLatitude());
+                intent.putExtra("userLon", targetLocation.getLongitude());
+                startActivity(intent);
+            }
+        });
+
+        recyclerViewAdapter.setOnOutboundClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Route route = recyclerViewAdapter.getAdapterItem(position).getRoute();
+
+                Intent intent = new Intent(getActivity(), RouteDetailActivity.class);
+                intent.putExtra("route", route);
+                intent.putExtra("direction", Direction.OUTBOUND);
                 intent.putExtra("refreshTime", refreshTime);
                 intent.putExtra("userLat", targetLocation.getLatitude());
                 intent.putExtra("userLon", targetLocation.getLongitude());

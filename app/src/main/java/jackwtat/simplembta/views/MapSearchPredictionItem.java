@@ -24,7 +24,8 @@ public class MapSearchPredictionItem extends LinearLayout {
     LinearLayout headerLayout;
     RelativeLayout bodyLayout;
     RouteNameView routeNameView;
-    LinearLayout predictionsListLayout;
+    LinearLayout inboundListLayout;
+    LinearLayout outboundListLayout;
     TextView noPredictionsView;
     ImageView serviceAlertIndicatorView;
     ImageView serviceAdvisoryIndicatorView;
@@ -92,11 +93,20 @@ public class MapSearchPredictionItem extends LinearLayout {
                     Prediction p = pickUps.get(i);
 
                     if (!destinations.contains(p.getDestination())) {
-                        predictionsListLayout.addView(
-                                new IndividualPredictionItem(
-                                        getContext(), p,
-                                        i == 0 ||
-                                                (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        if(p.getDirection() == Direction.INBOUND){
+                            inboundListLayout.addView(
+                                    new IndividualPredictionItem(
+                                            getContext(), p,
+                                            i == 0 ||
+                                                    (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        } else {
+                            outboundListLayout.addView(
+                                    new IndividualPredictionItem(
+                                            getContext(), p,
+                                            i == 0 ||
+                                                    (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        }
+
                         destinations.add(p.getDestination());
                     }
                 }
@@ -116,11 +126,19 @@ public class MapSearchPredictionItem extends LinearLayout {
 
                     if ((p.isLive() || !hasLive) &&
                             !destinations.contains(p.getDestination())) {
-                        predictionsListLayout.addView(
-                                new IndividualPredictionItem(
-                                        getContext(), p,
-                                        i == 0 ||
-                                                (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        if(p.getDirection()==Direction.INBOUND) {
+                            inboundListLayout.addView(
+                                    new IndividualPredictionItem(
+                                            getContext(), p,
+                                            i == 0 ||
+                                                    (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        }else{
+                            outboundListLayout.addView(
+                                    new IndividualPredictionItem(
+                                            getContext(), p,
+                                            i == 0 ||
+                                                    (i > 0 && p.getDirection() != pickUps.get(i - 1).getDirection())));
+                        }
                         destinations.add(p.getDestination());
                     }
                 }
@@ -134,7 +152,8 @@ public class MapSearchPredictionItem extends LinearLayout {
     }
 
     public void clear() {
-        predictionsListLayout.removeAllViews();
+        inboundListLayout.removeAllViews();
+        outboundListLayout.removeAllViews();
         noPredictionsView.setVisibility(GONE);
         serviceAlertIndicatorView.setVisibility(GONE);
         serviceAdvisoryIndicatorView.setVisibility(GONE);
@@ -145,7 +164,8 @@ public class MapSearchPredictionItem extends LinearLayout {
         headerLayout = rootView.findViewById(R.id.route_header_layout);
         bodyLayout = rootView.findViewById(R.id.predictions_layout);
         routeNameView = rootView.findViewById(R.id.route_name_view);
-        predictionsListLayout = rootView.findViewById(R.id.predictions_list_layout);
+        inboundListLayout = rootView.findViewById(R.id.inbound_list_layout);
+        outboundListLayout = rootView.findViewById(R.id.outbound_list_layout);
         noPredictionsView = rootView.findViewById(R.id.no_predictions_text_view);
         serviceAlertIndicatorView = rootView.findViewById(R.id.service_alert_image_view);
         serviceAdvisoryIndicatorView = rootView.findViewById(R.id.service_advisory_image_view);
