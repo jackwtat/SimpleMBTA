@@ -2,6 +2,7 @@ package jackwtat.simplembta.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -90,9 +91,7 @@ public class StopInfoBodyView extends RelativeLayout {
                         alert.getUrl() != null &&
                         !alert.getUrl().equalsIgnoreCase("") &&
                         !alert.getUrl().equalsIgnoreCase("null")) {
-                    Intent intent = new Intent(getContext(), WebViewActivity.class);
-                    intent.putExtra("url", alert.getUrl());
-                    getContext().startActivity(intent);
+                    getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(alert.getUrl())));
                 }
             }
         });
