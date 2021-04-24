@@ -328,7 +328,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/alert/ic_error_outline_black_24dp.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/search/baseline_search_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -338,9 +338,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="aaaaaa" />
-                            <entry key="outputName" value="ic_vehicle_ferry" />
+                            <entry key="outputName" value="ic_route_search" />
                             <entry key="sourceFile" value="C:\Users\jackw\AndroidStudioProjects\SimpleMBTA\app\src\main\res\zzz-backups\ic_vehicle_ferry.svg" />
                           </map>
                         </option>

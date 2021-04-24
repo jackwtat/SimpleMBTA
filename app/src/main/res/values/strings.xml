@@ -9,7 +9,7 @@
 
     <!-- Tab Titles -->
     <string name="map_search_title">Map</string>
-    <string name="route_search_title">Routes</string>
+    <string name="route_search_title">Search</string>
 
     <!-- Spinner Titles -->
     <string name="route">Route</string>
