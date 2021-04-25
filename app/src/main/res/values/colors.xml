@@ -17,6 +17,7 @@
     <color name="TabText">#b0bec5</color>
     <color name="TabSelectedText">#ffffff</color>
     <color name="DirectionText">#606060</color>
+    <color name="BlackText">#000000</color>
 
     <!-- Line Colors -->
     <color name="red_line">#da291c</color>
