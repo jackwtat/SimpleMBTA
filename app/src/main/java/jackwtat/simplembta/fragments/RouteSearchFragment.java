@@ -117,7 +117,7 @@ public class RouteSearchFragment extends Fragment implements
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
         // Get the route and stop the user last viewed
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
                 getResources().getString(R.string.saved_route_search_route), Context.MODE_PRIVATE);
         savedRouteId = sharedPreferences.getString("routeId", null);
         savedStopIds[0] = sharedPreferences.getString("stopId_0", null);
@@ -267,7 +267,7 @@ public class RouteSearchFragment extends Fragment implements
 
         // Save the location the user last viewed
         if (selectedRoute != null) {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
                     getResources().getString(R.string.saved_route_search_route), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("routeId", selectedRoute.getId());
@@ -804,7 +804,7 @@ public class RouteSearchFragment extends Fragment implements
 
         @Override
         public void onError() {
-            enableOnErrorView(getContext().getResources().getString(R.string.error_routes));
+            enableOnErrorView(getActivity().getResources().getString(R.string.error_routes));
             getRoutes();
         }
     }
@@ -819,7 +819,7 @@ public class RouteSearchFragment extends Fragment implements
 
         @Override
         public void onError() {
-            enableOnErrorView(getContext().getResources().getString(R.string.error_stops));
+            enableOnErrorView(getActivity().getResources().getString(R.string.error_stops));
             getShapes();
         }
     }
@@ -898,7 +898,7 @@ public class RouteSearchFragment extends Fragment implements
         public void onError() {
             dataRefreshing = false;
             refreshTime = new Date().getTime();
-            enableOnErrorView(getContext().getResources().getString(R.string.error_upcoming_predictions));
+            enableOnErrorView(getActivity().getResources().getString(R.string.error_upcoming_predictions));
 
             selectedRoute.clearPredictions(0);
             selectedRoute.clearPredictions(1);

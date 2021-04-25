@@ -209,7 +209,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         networkConnectivityClient = new NetworkConnectivityClient(getContext());
 
         // Get the location the user last viewed
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
                 getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
         targetLocation.setLatitude(sharedPreferences.getFloat("latitude", (float) 42.3604));
         targetLocation.setLongitude(sharedPreferences.getFloat("longitude", (float) -71.0580));
@@ -341,8 +341,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     backgroundColor = Color.parseColor(route.getPrimaryColor());
 
                 } catch (Exception e) {
-                    textColor = getContext().getColor(R.color.HighlightedText);
-                    backgroundColor = getContext().getColor(R.color.header_background);
+                    textColor = getActivity().getColor(R.color.HighlightedText);
+                    backgroundColor = getActivity().getColor(R.color.header_background);
                 }
 
                 Collections.sort(stop.getServiceAlerts());
@@ -401,11 +401,11 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                 dialog.setCustomTitle(new ServiceAlertsTitleView(getContext(),
                         (alertsCount > 0)
                                 ? (alertsCount + advisoriesCount > 1)
-                                ? getContext().getString(R.string.service_alerts)
-                                : getContext().getString(R.string.service_alert)
+                                ? getActivity().getString(R.string.service_alerts)
+                                : getActivity().getString(R.string.service_alert)
                                 : (advisoriesCount > 1)
-                                ? getContext().getString(R.string.service_advisories)
-                                : getContext().getString(R.string.service_advisory),
+                                ? getActivity().getString(R.string.service_advisories)
+                                : getActivity().getString(R.string.service_advisory),
                         Color.parseColor(route.getTextColor()),
                         Color.parseColor(route.getPrimaryColor())));
 
@@ -825,7 +825,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         swipeRefreshLayout.setRefreshing(false);
 
         // Save the location the user last viewed
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
                 getResources().getString(R.string.saved_map_search_latlon), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("latitude", (float) targetLocation.getLatitude());
@@ -1546,7 +1546,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             } else {
                 // If we have no stops, then show error message
                 dataRefreshing = false;
-                enableOnErrorView(getContext().getResources().getString(R.string.error_nearby_stops));
+                enableOnErrorView(getActivity().getResources().getString(R.string.error_nearby_stops));
             }
         }
     }
@@ -1578,7 +1578,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
             } else {
                 // If we have no routes, then show error message
                 dataRefreshing = false;
-                enableOnErrorView(getContext().getResources().getString(R.string.error_nearby_routes));
+                enableOnErrorView(getActivity().getResources().getString(R.string.error_nearby_routes));
             }
         }
     }
@@ -1745,7 +1745,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onError() {
             dataRefreshing = false;
-            enableOnErrorView(getContext().getResources().getString(R.string.error_upcoming_predictions));
+            enableOnErrorView(getActivity().getResources().getString(R.string.error_upcoming_predictions));
         }
     }
 
