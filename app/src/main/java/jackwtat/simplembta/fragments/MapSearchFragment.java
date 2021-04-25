@@ -331,7 +331,19 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 Stop stop = recyclerViewAdapter.getAdapterItem(position).getStop();
                 Collections.sort(stop.getRoutes());
-                Route route = stop.getRoutes().get(0);
+
+                int textColor;
+                int backgroundColor;
+
+                try {
+                    Route route = stop.getRoutes().get(0);
+                    textColor = Color.parseColor(route.getTextColor());
+                    backgroundColor = Color.parseColor(route.getPrimaryColor());
+
+                } catch (Exception e) {
+                    textColor = getContext().getColor(R.color.HighlightedText);
+                    backgroundColor = getContext().getColor(R.color.header_background);
+                }
 
                 Collections.sort(stop.getServiceAlerts());
 
@@ -339,8 +351,8 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
 
                 StopInfoTitleView titleView = new StopInfoTitleView(getContext());
                 titleView.setText(stop.getName());
-                titleView.setTextColor(Color.parseColor(route.getTextColor()));
-                titleView.setBackgroundColor(Color.parseColor(route.getPrimaryColor()));
+                titleView.setTextColor(textColor);
+                titleView.setBackgroundColor(backgroundColor);
 
                 StopInfoBodyView bodyView = new StopInfoBodyView(getContext());
                 bodyView.setAccessibility(stop.getAccessibility());
