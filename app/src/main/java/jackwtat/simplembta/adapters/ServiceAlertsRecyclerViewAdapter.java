@@ -44,14 +44,14 @@ public class ServiceAlertsRecyclerViewAdapter
             holder.serviceAlertView.enableBorder(false);
         }
 
-        if (onItemClickListener != null) {
+        /*if (onItemClickListener != null) {
             holder.serviceAlertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onItemClickListener.onItemClick(position);
                 }
             });
-        }
+        }*/
     }
 
     @Override

@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import com.ms.square.android.expandabletextview.ExpandableTextView;
+
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.model.ServiceAlert;
 
@@ -19,9 +21,9 @@ public class ServiceAlertItem extends RelativeLayout {
     private View rootView;
     private RelativeLayout clickableBackground;
     private LinearLayout headerLayout;
+    private ExpandableTextView expandableTextView;
     private TextView headerTextView;
     private TextView shortBodyTextView;
-    private TextView longBodyTextView;
     private ImageView alertIcon;
     private ImageView advisoryIcon;
     private ImageView externalLinkIcon;
@@ -63,14 +65,10 @@ public class ServiceAlertItem extends RelativeLayout {
         shortBodyTextView.setText(alertShortBody);
 
         if (alertLongBody.length() > 0 && !alertLongBody.equalsIgnoreCase("null")) {
-            longBodyTextView.setText(alertLongBody);
-            longBodyTextView.setVisibility(View.VISIBLE);
-
-            shortBodyTextView.setTypeface(null, Typeface.BOLD);
+            expandableTextView.setText(alertLongBody);
+            expandableTextView.setVisibility(VISIBLE);
         } else {
-            longBodyTextView.setVisibility(View.GONE);
-
-            shortBodyTextView.setTypeface(null, Typeface.NORMAL);
+            expandableTextView.setVisibility(View.GONE);
         }
 
         if (alert.isUrgent()) {
@@ -81,7 +79,7 @@ public class ServiceAlertItem extends RelativeLayout {
             advisoryIcon.setVisibility(View.VISIBLE);
         }
 
-        if (alert.getUrl() != null && !alert.getUrl().equals("") &&
+        /*if (alert.getUrl() != null && !alert.getUrl().equals("") &&
                 !alert.getUrl().equalsIgnoreCase("null")) {
             externalLinkIcon.setVisibility(View.VISIBLE);
 
@@ -100,7 +98,7 @@ public class ServiceAlertItem extends RelativeLayout {
 
             clickableBackground.setBackgroundColor(
                     ContextCompat.getColor(getContext(), R.color.card_view_background));
-        }
+        }*/
     }
 
     public void enableBorder(boolean enable) {
@@ -115,9 +113,9 @@ public class ServiceAlertItem extends RelativeLayout {
         rootView = inflate(context, R.layout.item_service_alert, this);
         clickableBackground = rootView.findViewById(R.id.clickable_background);
         headerLayout = rootView.findViewById(R.id.alert_header);
+        expandableTextView = rootView.findViewById(R.id.expand_text_view);
         headerTextView = rootView.findViewById(R.id.alert_header_text_view);
         shortBodyTextView = rootView.findViewById(R.id.alert_short_body_text_view);
-        longBodyTextView = rootView.findViewById(R.id.alert_long_body_text_view);
         alertIcon = rootView.findViewById(R.id.service_alert_icon);
         advisoryIcon = rootView.findViewById(R.id.service_advisory_icon);
         externalLinkIcon = rootView.findViewById(R.id.external_link_icon);
