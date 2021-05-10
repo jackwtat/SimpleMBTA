@@ -57,12 +57,12 @@ import java.util.TimerTask;
 import jackwtat.simplembta.R;
 import jackwtat.simplembta.adapters.TripDetailRecyclerViewAdapter;
 import jackwtat.simplembta.asyncTasks.PredictionsTripDetailAsyncTask;
+import jackwtat.simplembta.asyncTasks.ServiceAlertsByTripAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopAlertsAsyncTask;
 import jackwtat.simplembta.asyncTasks.StopsByIdAsyncTask;
 import jackwtat.simplembta.asyncTasks.TripsAsyncTask;
 import jackwtat.simplembta.asyncTasks.VehiclesByIdAsyncTask;
 import jackwtat.simplembta.clients.NetworkConnectivityClient;
-import jackwtat.simplembta.clients.RealTimeApiClient;
 import jackwtat.simplembta.jsonParsers.ShapesJsonParser;
 import jackwtat.simplembta.model.Prediction;
 import jackwtat.simplembta.model.ServiceAlert;
@@ -83,6 +83,7 @@ import jackwtat.simplembta.utilities.ErrorManager;
 import jackwtat.simplembta.utilities.PastDataHolder;
 import jackwtat.simplembta.utilities.RawResourceReader;
 import jackwtat.simplembta.views.NoPredictionsView;
+import jackwtat.simplembta.views.ServiceAlertsIndicatorView;
 import jackwtat.simplembta.views.StopInfoBodyView;
 import jackwtat.simplembta.views.StopInfoTitleView;
 import jackwtat.simplembta.views.VehicleStatusView;
@@ -97,11 +98,13 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private MapView mapView;
     private GoogleMap gMap;
     private ProgressBar mapProgressBar;
+    private ServiceAlertsIndicatorView serviceAlertsIndicatorView;
     private VehicleStatusView vehicleStatusView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private NoPredictionsView noPredictionsView;
     private TextView errorTextView;
+    private View headersDivider;
 
     private String realTimeApiKey;
     private NetworkConnectivityClient networkConnectivityClient;
@@ -114,6 +117,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
     private VehiclesByIdAsyncTask vehiclesAsyncTask;
     private StopsByIdAsyncTask stopsAsyncTask;
     private StopAlertsAsyncTask stopAlertsAsyncTask;
+    private ServiceAlertsByTripAsyncTask serviceAlertsAsyncTask;
 
     private boolean dataRefreshing = false;
     private boolean loaded = false;
@@ -247,6 +251,12 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         // Set the no predictions indicator
         noPredictionsView = findViewById(R.id.no_predictions_view);
+
+        // Get headers divier
+        headersDivider = findViewById(R.id.headers_divider);
+
+        // Get service alerts view
+        serviceAlertsIndicatorView = findViewById(R.id.service_alerts_indicator_view);
 
         // Get vehicle status view
         vehicleStatusView = findViewById(R.id.vehicle_status_view);
@@ -426,6 +436,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         timer = new Timer();
         timer.schedule(new PredictionsUpdateTimerTask(), 0, PREDICTIONS_UPDATE_RATE);
         timer.schedule(new VehiclesUpdateTimerTask(), 0, VEHICLES_UPDATE_RATE);
+        timer.schedule(new ServiceAlertsUpdateTimerTask(), 0, SERVICE_ALERTS_UPDATE_RATE);
     }
 
     @Override
@@ -597,6 +608,25 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             stopAlertsAsyncTask.execute();
         } else {
             refreshPredictions();
+        }
+    }
+
+    private void getServiceAlerts() {
+        if (selectedRoute != null) {
+            if (networkConnectivityClient.isConnected()) {
+                errorManager.setNetworkError(false);
+
+                if (serviceAlertsAsyncTask != null) {
+                    serviceAlertsAsyncTask.cancel(true);
+                }
+
+                serviceAlertsAsyncTask = new ServiceAlertsByTripAsyncTask(
+                        realTimeApiKey, selectedTripId, new ServiceAlertsPostExecuteListener());
+                serviceAlertsAsyncTask.execute();
+
+            } else {
+                errorManager.setNetworkError(true);
+            }
         }
     }
 
@@ -778,21 +808,21 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
             // Vehicle status text
             if (currentPrediction != null) {
-                switch (vehicle.getCurrentStatus()){
+                switch (vehicle.getCurrentStatus()) {
                     case INCOMING:
                         vehicleStatusText +=
                                 getResources().getString(R.string.vehicle_approaching)
-                                + " ";
+                                        + " ";
                         break;
                     case STOPPED:
                         vehicleStatusText +=
                                 getResources().getString(R.string.vehicle_stopped_at)
-                                + " ";
+                                        + " ";
                         break;
                     case IN_TRANSIT:
                         vehicleStatusText +=
                                 getResources().getString(R.string.vehicle_next_stop_is)
-                                + " ";
+                                        + " ";
                         break;
                 }
                 vehicleStatusText += currentPrediction.getStop().getName();
@@ -865,6 +895,8 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
             vehicleStatusView.setVisibility(View.GONE);
         }
 
+        enableHeadersDivider();
+
         if (mapReady) {
             if (vehicle != null) {
                 // Draw vehicle marker
@@ -894,6 +926,31 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
 
         if (!userIsScrolling) {
             recyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void refreshServiceAlerts() {
+        if (selectedRoute != null) {
+            if (!userIsScrolling) {
+                if (selectedRoute.getServiceAlerts().size() > 0) {
+                    serviceAlertsIndicatorView.setServiceAlerts(selectedRoute);
+                    serviceAlertsIndicatorView.setVisibility(View.VISIBLE);
+
+                } else {
+                    serviceAlertsIndicatorView.setVisibility(View.GONE);
+                }
+            }
+        }
+
+        enableHeadersDivider();
+    }
+
+    private void enableHeadersDivider() {
+        if (serviceAlertsIndicatorView.getVisibility() == View.VISIBLE &&
+                vehicleStatusView.getVisibility() == View.VISIBLE) {
+            headersDivider.setVisibility(View.VISIBLE);
+        } else {
+            headersDivider.setVisibility(View.GONE);
         }
     }
 
@@ -1234,6 +1291,21 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    private class ServiceAlertsPostExecuteListener implements ServiceAlertsByTripAsyncTask.OnPostExecuteListener {
+        @Override
+        public void onSuccess(ServiceAlert[] serviceAlerts) {
+            selectedRoute.clearServiceAlerts();
+            selectedRoute.addAllServiceAlerts(serviceAlerts);
+
+            refreshServiceAlerts();
+        }
+
+        @Override
+        public void onError() {
+            getServiceAlerts();
+        }
+    }
+
     private class PredictionsUpdateTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -1254,6 +1326,13 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 });
             }
+        }
+    }
+
+    private class ServiceAlertsUpdateTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            getServiceAlerts();
         }
     }
 }
