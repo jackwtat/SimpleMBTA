@@ -444,13 +444,13 @@
       "attributes": {
         "address": "Commonwealth Ave and Babcock St, Boston, MA 02215",
         "description": null,
-        "latitude": 42.35182,
+        "latitude": 42.351564,
         "location_type": 1,
-        "longitude": -71.12165,
+        "longitude": -71.119868,
         "name": "Babcock Street",
         "platform_code": null,
         "platform_name": null,
-        "wheelchair_boarding": 2
+        "wheelchair_boarding": 1
       },
       "id": "place-babck",
       "links": {
@@ -482,76 +482,36 @@
     },
     {
       "attributes": {
-        "address": "Commonwealth Ave and Saint Paul St, Boston, MA 02215",
-        "description": null,
-        "latitude": 42.3512,
-        "location_type": 1,
-        "longitude": -71.116104,
-        "name": "Saint Paul Street",
-        "platform_code": null,
-        "platform_name": null,
-        "wheelchair_boarding": 2
-      },
-      "id": "place-stplb",
-      "links": {
-        "self": "/stops/place-stplb"
-      },
-      "relationships": {
-        "child_stops": {
-          "data": [
-            {
-              "id": "70140",
-              "type": "stop"
-            },
-            {
-              "id": "70141",
-              "type": "stop"
-            }
-          ]
-        },
-        "facilities": {
-          "links": {
-            "related": "/facilities/?filter[stop]=place-stplb"
-          }
-        },
-        "parent_station": {
-          "data": null
-        }
-      },
-      "type": "stop"
-    },
-    {
-      "attributes": {
         "address": "Commonwealth Ave and Amory St, Boston, MA 02215",
         "description": null,
-        "latitude": 42.350941,
+        "latitude": 42.350963,
         "location_type": 1,
-        "longitude": -71.113876,
-        "name": "Boston University West",
+        "longitude": -71.114754,
+        "name": "Amory Street",
         "platform_code": null,
         "platform_name": null,
-        "wheelchair_boarding": 2
+        "wheelchair_boarding": 1
       },
-      "id": "place-buwst",
+      "id": "place-amory",
       "links": {
-        "self": "/stops/place-buwst"
+        "self": "/stops/place-amory"
       },
       "relationships": {
         "child_stops": {
           "data": [
             {
-              "id": "70142",
+              "id": "170140",
               "type": "stop"
             },
             {
-              "id": "70143",
+              "id": "170141",
               "type": "stop"
             }
           ]
         },
         "facilities": {
           "links": {
-            "related": "/facilities/?filter[stop]=place-buwst"
+            "related": "/facilities/?filter[stop]=place-amory"
           }
         },
         "parent_station": {

@@ -102,11 +102,7 @@
               "type": "stop"
             },
             {
-              "id": "place-buwst",
-              "type": "stop"
-            },
-            {
-              "id": "place-stplb",
+              "id": "place-amory",
               "type": "stop"
             },
             {
@@ -454,11 +450,7 @@
               "type": "stop"
             },
             {
-              "id": "place-stplb",
-              "type": "stop"
-            },
-            {
-              "id": "place-buwst",
+              "id": "place-amory",
               "type": "stop"
             },
             {
@@ -1093,35 +1085,6 @@
     },
     {
       "attributes": {
-        "address": "Commonwealth Ave and Saint Paul St, Boston, MA 02215",
-        "description": null,
-        "latitude": 42.351106,
-        "location_type": 1,
-        "longitude": -71.115943,
-        "name": "Saint Paul Street",
-        "platform_code": null,
-        "platform_name": null,
-        "wheelchair_boarding": 2
-      },
-      "id": "place-stplb",
-      "links": {
-        "self": "/stops/place-stplb"
-      },
-      "relationships": {
-        "child_stops": {},
-        "facilities": {
-          "links": {
-            "related": "/facilities/?filter[stop]=place-stplb"
-          }
-        },
-        "parent_station": {
-          "data": null
-        }
-      },
-      "type": "stop"
-    },
-    {
-      "attributes": {
         "address": "Huntington Ave and Mission Park Dr, Boston, MA 02115",
         "description": null,
         "latitude": 42.333153,
@@ -1733,13 +1696,13 @@
       "attributes": {
         "address": "Commonwealth Ave and Babcock St, Boston, MA 02215",
         "description": null,
-        "latitude": 42.351780,
+        "latitude": 42.351564,
         "location_type": 1,
-        "longitude": -71.121573,
+        "longitude": -71.119868,
         "name": "Babcock Street",
         "platform_code": null,
         "platform_name": null,
-        "wheelchair_boarding": 2
+        "wheelchair_boarding": 1
       },
       "id": "place-babck",
       "links": {
@@ -2632,23 +2595,23 @@
       "attributes": {
         "address": "Commonwealth Ave and Amory St, Boston, MA 02215",
         "description": null,
-        "latitude": 42.350831,
+        "latitude": 42.350963,
         "location_type": 1,
-        "longitude": -71.113697,
-        "name": "Boston University West",
+        "longitude": -71.114754,
+        "name": "Amory Street",
         "platform_code": null,
         "platform_name": null,
-        "wheelchair_boarding": 2
+        "wheelchair_boarding": 1
       },
-      "id": "place-buwst",
+      "id": "place-amory",
       "links": {
-        "self": "/stops/place-buwst"
+        "self": "/stops/place-amory"
       },
       "relationships": {
         "child_stops": {},
         "facilities": {
           "links": {
-            "related": "/facilities/?filter[stop]=place-buwst"
+            "related": "/facilities/?filter[stop]=place-amory"
           }
         },
         "parent_station": {
