@@ -61,10 +61,6 @@
               "type": "stop"
             },
             {
-              "id": "Plimptonville",
-              "type": "stop"
-            },
-            {
               "id": "Windsor Gardens",
               "type": "stop"
             },
@@ -220,6 +216,10 @@
             },
             {
               "id": "South Attleboro",
+              "type": "stop"
+            },
+            {
+              "id": "place-NEC-1891",
               "type": "stop"
             },
             {
@@ -2687,9 +2687,9 @@
       "attributes": {
         "address": "Gillette Stadium near Lots 3 and 4, Foxborough, MA 02035",
         "description": null,
-        "latitude": 42.0951,
+        "latitude": 42.095379,
         "location_type": 1,
-        "longitude": -71.26151,
+        "longitude": -71.261619,
         "name": "Foxboro",
         "platform_code": null,
         "platform_name": null,
@@ -2713,6 +2713,44 @@
         "zone": {
           "data": {
             "id": "CR-zone-special",
+            "type": "zone"
+          }
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "300 Pine St, Pawtucket, RI 02860",
+        "at_street": null,
+        "description": null,
+        "latitude": 41.878809,
+        "location_type": 1,
+        "longitude": -71.392055,
+        "municipality": "Pawtucket",
+        "name": "Pawtucket/Central Falls",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-NEC-1891",
+      "links": {
+        "self": "/stops/place-NEC-1891"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-NEC-1891"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": {
+            "id": "CR-zone-8",
             "type": "zone"
           }
         }
