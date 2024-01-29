@@ -426,10 +426,6 @@
               "type": "stop"
             },
             {
-              "id": "Prides Crossing",
-              "type": "stop"
-            },
-            {
               "id": "Montserrat",
               "type": "stop"
             },
@@ -593,14 +589,6 @@
             },
             {
               "id": "Kendal Green",
-              "type": "stop"
-            },
-            {
-              "id": "Hastings",
-              "type": "stop"
-            },
-            {
-              "id": "Silver Hill",
               "type": "stop"
             },
             {
