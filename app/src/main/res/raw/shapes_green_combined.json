@@ -21,6 +21,30 @@
         "stops": {
           "data": [
             {
+              "id": "place-mdftf",
+              "type": "stop"
+            },
+            {
+              "id": "place-balsq",
+              "type": "stop"
+            },
+            {
+              "id": "place-gilmn",
+              "type": "stop"
+            },
+            {
+              "id": "place-mgngl",
+              "type": "stop"
+            },
+            {
+              "id": "place-esomr",
+              "type": "stop"
+            },
+            {
+              "id": "place-unsqu",
+              "type": "stop"
+            },
+            {
               "id": "place-lech",
               "type": "stop"
             },
@@ -239,7 +263,7 @@
       "attributes": {
         "direction_id": 0,
         "name": "D - Riverside",
-        "polyline": "c_laGhn{qLJa@d@yAL[lAuCh@kAPe@z@{BxAsDvBqF~BcGr@iBv@kBJUJYFWp@cB??t@kBh@qAlA{Cb@eATk@To@lC{G~@{B`AiCd@eA~C_IbAmCzEqLr@uA~@cBjAkBhBqCfBsCHOHKr@iA????tAwBr@sAb@_A`@aAZ_Az@wB~@iCXu@p@kBj@yAjCkHpAgDvBaGx@wBfDcJ`AqCtBuFhCcHHQ??j@aBhAqCL]Vq@^iARy@TgAPiAJeABk@DwB?o@E{AG{@Iq@SmAYsAY{@Um@Yo@]q@e@o@a@i@aAeAMQQSCCOQ{AyAwBwBiEqEWSGE??IIo@q@cAcAaAaA{@eAs@_Aa@q@CEEGe@{@{@{BoBeFEIEIgBgEmCsGy@oBq@aBo@}Aa@eAWq@Qi@}@yB[s@[s@wCuHEMIQy@iBk@wAIUKYm@gBY}@??CIUw@o@eCQy@I[EQYqB[gCW}CMyCCcB?eA@oAF{CLgC^mDdAyIPuAd@cEb@kDXuCb@iDVeCFg@Da@hBgPV{Bl@mFt@kG\\aD`@gD|@eIf@gERqBHaBBmA@_C?O?KA[??KaCAGUeCO}@UoAYkA_@wA[_A_AyB_@w@aB}CeC_FoHqNq@kAISGKw@aBqCmFu@}AgFaKwAkCi@aAg@eAa@_Ai@qA_@mAKg@G[Ms@??OeAMeAGu@Eu@E{@?o@G_AG_Ao@_HIw@OsAG_@K]Ms@Iq@Gs@CcAAuA?mBBkA@W?SDmAHy@??@CV}ADQf@uB\\eAfAgCbEsItAiCf@iA~@oBbBqDf@sA\\kANq@Lq@ZoBHeARaDBW@MNuDTaEPyEVyF??D{@B]LuB@U@Y?k@?o@EuAIiAK{@KcBEeAA{@CoBIuE?QGaFAw@Cc@Gm@OaAQaAKi@YaAKUEOIUk@cBu@_CWu@]}@??Wo@c@aAg@_A_@u@e@y@c@q@iAqAmAkAm@g@g@a@UOm@[MIKGiAi@mBaAkBw@_Ag@]OmCcAmA_@gAUmB[iA[e@Ow@USIMEa@Oo@[o@c@??KGm@i@m@m@s@y@g@q@a@m@c@u@wCqFuByDgAqBgCwE_@u@]w@OWEMOYEI??wAeD}@qB_BmDOUSKUGm@My@IQGIIMM",
+        "polyline": "_xsaGpr|pLFM|AeFf@aC|@oHJiALuBzAmUz@mQFq@Fq@Dm@Hy@F{@Fm@F[FOJ[JQNSLOLMJI`@Gd@SXSx@w@r@w@n@_BlEkLTgAVkAPk@Zi@T[NOVQ\\Y??@?n@a@tAkBr@oBN_@rBgFv@kBpA_DjBoEdBmEn@{A@C??z@iCvAgDDMd@kAPe@Ti@To@Rq@Ru@TuAJcAJs@^aC\\_ABO@OCc@Ea@Mm@g@}AcB_FK[CWCi@?SBOFQtCsCNO??lIkHxAcBLQh@c@LIZQ??NGREZC`@I`GSf@AT@TNtE|Dp@n@PPRN??XVZTdElCt@p@tB~Bn@t@`@b@VPTXp@z@??T\\z@dAZ^^b@VZh@b@n@\\\\BXNp@TfBv@RH`@PPFNPh@R`@T\\LB@??tAZHJDJBLB^Y`LJbBRbCd@bDvArI??F^bJng@??Lr@^`CXbBzIfg@F`@@N?Rc@`JCl@Ez@??Cl@?jAPtRAPCPGVM^IN{AjBu@`AGPALAR?nC?D???BP|B?DBjBBtA@hEBN??@RfFzZLLHHPFx@Hl@LTFRJNT~AlD|@pBvAbD??DJNXDLNV\\v@^t@fCvEfApBtBxDvCpFb@t@`@l@f@p@r@x@l@l@l@h@LF??l@b@n@Z`@NLDRHv@Td@NhAZlBZfATlA^lCbA\\N~@f@jBv@lB`AhAh@JFLHl@ZTNf@`@l@f@lAjAhApAb@p@d@x@^t@f@~@b@`AVn@??\\|@Vt@t@~Bj@bBHTDNJTX`AJh@P`AN`AFl@Bb@@v@F`F?PHtEBnB@z@DdAJbBJz@HhADtA?n@?j@AXATMtBC\\Ez@??WxFQxEU`EOtDALCVS`DIdA[nBMp@Op@]jAg@rAcBpD_AnBg@hAuAhCcErIgAfC]dAg@tBEPW|AA@??Iz@ElA?RAVCjA?lB@tABbAFr@Hp@Lr@J\\F^NrAHv@n@~GF~@F~@?n@Dz@Dt@Ft@LdANdA??Lr@FZJf@^lAh@pA`@~@f@dAh@`AvAjCfF`Kt@|ApClFv@`BFJHRp@jAnHpNdC~E`B|C^v@~@xBZ~@^vAXjATnAN|@TdC@FJdC??@V?J?NA~BClAI`BSpBg@fE}@dIa@fD]`Du@jGm@lFWzBiBfPE`@Gf@WdCc@hDYtCc@jDe@bEQtAeAxI_@lDMfCGzCAnA?dABbBLxCV|CZfCXpBDPHZPx@n@dCTv@BH??X|@l@fBJXHTj@vAx@hBHPDLvCtHZr@Zr@|@xBPh@Vp@`@dAn@|Ap@`Bx@nBlCrGfBfEDHDHnBdFz@zBd@z@DFBD`@p@r@~@z@dA`A`AbAbAn@p@FD??HHVRhEpEvBvBzAxANPBBPRLP`AdA`@h@d@n@\\p@Xn@Tl@Xz@XrARlAHp@Fz@DzA?n@EvBCj@KdAQhAUfASx@_@hAWp@M\\iApCk@~A??IRiCbHuBtFaApCgDbJy@vBwB`GqAfDkCjHk@xAq@jBYt@_AhC{@vB[~@a@`Ac@~@s@rAsAtB??A@s@hAIJINgBrCiBpCkAjB_AbBs@tA{EpLcAlC_D~He@dAaAhC_AzBmCzGUn@Uj@c@dAmAzCi@pAu@jB??q@bBGVKXKTw@jBs@hB_CbGwBpFyArD{@zBQd@i@jAmAtCMZe@xAK`@",
         "priority": 2
       },
       "id": "852_00120",
@@ -316,7 +340,7 @@
       "attributes": {
         "direction_id": 0,
         "name": "E - Heath Street",
-        "polyline": "cgjaGbu_qLCCCAOBGDKLIJW`@QX_@d@e@TgA`@aBn@WF??_Cp@wDbA??SH[FEAEEQYQ[Q]Ua@[i@o@oAM]O_@Yu@Ia@GYAGCW??CUAm@?w@Aw@?w@C_AAuC?qA?[Ee@Mq@Oi@]}@OYKS??Yq@a@eAOi@Ss@??EMQi@k@oBEO}AuFSw@m@mCMk@k@mB]eAOi@IU??m@kBm@}B}B}HcB_Gg@iB??WeA_BaFYaAgAyDUaA_@oAq@}Bq@cCIW{AcFg@_BQi@??s@yBYcA]kAQm@Oe@e@aAWe@gA{A_D}Da@g@k@u@??{MiQSY??_@i@yE{GW]_@Yw@[iHiAOCmBf@QGISYaAYcB_@aCMs@??cJog@Ga@??wAqIe@cDScCKcBXaLC_@CMEKEE??CEyA]]Ma@Ui@SOQQGa@QSIgBw@q@UYO]Co@]i@c@W[_@c@[_@{@eAU]??q@{@UYWQa@c@o@u@uB_Cu@q@eEmC[Ua@]??KIQQq@o@uE}DUOUAg@@aGRa@H[BSDKD??_@RMHi@b@MPyAbBmIjH??ONuCrCGPCN?RBh@BVJZbB~Ef@|ALl@D`@Bb@ANCN]~@_@`CKr@KbAUtASt@Sp@Un@Uh@Qd@e@jAELwAfDw@~B??ELo@zAeBlEkBnEqA~Cw@jBsBfFYt@Qt@UbAG\\EREl@ADMzAEb@K\\MVCH",
+        "polyline": "cgjaGbu_qLCCCAOBGDKLIJW`@QX_@d@e@TgA`@aBn@WF??_Cp@wDbA??SH[FEAEEQYQ[Q]Ua@[i@o@oAM]O_@Yu@Ia@GYAGCW??CUAm@?w@Aw@?w@C_AAuC?qA?[Ee@Mq@Oi@]}@OYKS??Yq@a@eAOi@Ss@??EMQi@k@oBEO}AuFSw@m@mCMk@k@mB]eAOi@IU??m@kBm@}B}B}HcB_Gg@iB??WeA_BaFYaAgAyDUaA_@oAq@}Bq@cCIW{AcFg@_BQi@??s@yBYcA]kAQm@Oe@e@aAWe@gA{A_D}Da@g@k@u@??{MiQSY??_@i@yE{GW]_@Yw@[iHiAOCmBf@QGISYaAYcB_@aCMs@??cJog@Ga@??wAqIe@cDScCKcBXaLC_@CMEKEE??CEyA]]Ma@Ui@SOQQGa@QSIgBw@q@UYO]Co@]i@c@W[_@c@[_@{@eAU]??q@{@UYWQa@c@o@u@uB_Cu@q@eEmC[Ua@]??KIQQq@o@uE}DUOUAg@@aGRa@H[BSDKD??_@RMHi@b@MPyAbBmIjH??ONuCrCGPCN?RBh@BVJZbB~Ef@|ALl@D`@Bb@ANCN]~@_@`CKr@KbAUtASt@Sp@Un@Uh@Qd@e@jAELwAfDw@~B??ELo@zAeBlEkBnEqA~Cw@jBsBfFO^s@nBuAjBo@`@A@??]VWPONUZ[h@Qj@WjAUfAmEjLo@~As@v@y@v@YRe@Ra@FQD_A^YRW\\]h@e@`A[z@IZO^MX_@f@{@~@cAdA_A~@wKdKs@z@aArAe@n@wBvB??_DzC{H|HsDfDiAz@iBnAkApAk@p@u@p@qAvAs@~@k@v@eApBcAvBo@dBaBzEw@|Be@rA??IT{@xBk@xAY|@k@vAaA~Ce@rAiCrHyAvDOd@a@`A[l@m@dAo@dA[h@KPs@~@m@l@{@|@s@t@UPq@f@q@`@ED??UL{@l@cAr@{@j@q@d@a@Vg@\\e@Zg@\\KFQNy@h@i@\\a@XMJgBlAs@d@s@h@cAp@m@`@c@Zw@f@m@b@y@h@_@V_An@w@h@o@b@??IDe@Zk@b@o@b@cAn@_Aj@]VSLa@Xg@\\c@Ze@Xg@\\UNg@\\g@^cAr@{@j@_@T{AfAOJsA|@iD`CqCjBkCdBm@`@OLMJSN",
         "priority": 1
       },
       "id": "880_00120",
@@ -2421,9 +2445,9 @@
       "attributes": {
         "address": "Cambridge St and O'Brien Hwy, Cambridge, MA 02141",
         "description": null,
-        "latitude": 42.370930,
+        "latitude": 42.371654,
         "location_type": 1,
-        "longitude": -71.077030,
+        "longitude": -71.076466,
         "name": "Lechmere",
         "platform_code": null,
         "platform_name": null,
@@ -2615,6 +2639,216 @@
           }
         },
         "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "460 Boston Ave, Medford, MA 02155",
+        "at_street": null,
+        "description": null,
+        "latitude": 42.407650,
+        "location_type": 1,
+        "longitude": -71.116770,
+        "municipality": "Medford",
+        "name": "Medford/Tufts",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-mdftf",
+      "links": {
+        "self": "/stops/place-mdftf"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-mdftf"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "646 Boston Ave, Somerville, MA 02144",
+        "at_street": null,
+        "description": null,
+        "latitude": 42.399900,
+        "location_type": 1,
+        "longitude": -71.110973,
+        "municipality": "Medford",
+        "name": "Ball Square",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-balsq",
+      "links": {
+        "self": "/stops/place-balsq"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-balsq"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "270 Lowell St, Somerville, MA 02145",
+        "at_street": null,
+        "description": null,
+        "latitude": 42.393705,
+        "location_type": 1,
+        "longitude": -71.106330,
+        "municipality": "Somerville",
+        "name": "Magoun Square",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-mgngl",
+      "links": {
+        "self": "/stops/place-mgngl"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-mgngl"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "161 School St, Somerville, MA 02143",
+        "at_street": null,
+        "description": null,
+        "latitude": 42.387972,
+        "location_type": 1,
+        "longitude": -71.096734,
+        "municipality": "Somerville",
+        "name": "Gilman Square",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-gilmn",
+      "links": {
+        "self": "/stops/place-gilmn"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-gilmn"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "134 Washington St, Somerville, MA 02143",
+        "at_street": null,
+        "description": null,
+        "latitude": 42.379487,
+        "location_type": 1,
+        "longitude": -71.086591,
+        "municipality": "Somerville",
+        "name": "East Somerville",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-esomr",
+      "links": {
+        "self": "/stops/place-esomr"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-esomr"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "50 Prospect St, Somerville, MA 02143",
+        "at_street": null,
+        "description": null,
+        "latitude": 42.377120,
+        "location_type": 1,
+        "longitude": -71.094331,
+        "municipality": "Somerville",
+        "name": "Union Square",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-unsqu",
+      "links": {
+        "self": "/stops/place-unsqu"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-unsqu"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
           "data": null
         }
       },
