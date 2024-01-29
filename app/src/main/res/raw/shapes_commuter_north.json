@@ -442,7 +442,7 @@
               "type": "stop"
             },
             {
-              "id": "Chelsea",
+              "id": "place-chels",
               "type": "stop"
             },
             {
@@ -479,7 +479,7 @@
               "type": "stop"
             },
             {
-              "id": "Chelsea",
+              "id": "place-chels",
               "type": "stop"
             },
             {
@@ -685,7 +685,7 @@
               "type": "stop"
             },
             {
-              "id": "Chelsea",
+              "id": "place-chels",
               "type": "stop"
             },
             {
@@ -722,7 +722,7 @@
               "type": "stop"
             },
             {
-              "id": "Chelsea",
+              "id": "place-chels",
               "type": "stop"
             },
             {
@@ -1917,7 +1917,7 @@
         "platform_name": null,
         "wheelchair_boarding": 2
       },
-      "id": "Chelsea",
+      "id": "place-chels",
       "links": {
         "self": "/stops/Chelsea"
       },

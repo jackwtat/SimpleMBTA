@@ -534,6 +534,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[1].getId(), "place-mlmnl");
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[2].getId(), "place-portr");
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[4].getId(), "place-north");
+        drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[5].getId(), "place-chels");
         drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(), "place-bbsta");
         drawTransferLine(commuterRoutes[1].getId(), rapidRoutes[1].getId(),
                 "place-bbsta-worcester", "place-bbsta");

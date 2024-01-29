@@ -162,7 +162,8 @@ public class Stop implements Comparable<Stop>, Serializable {
                 id.equals("place-qnctr") || // Quincy Center
                 id.equals("place-brntn") || // Braintree
                 id.equals("place-asmnl") || // Ashmont
-                id.equals("place-aport"); // Airport
+                id.equals("place-aport") || // Airport
+                id.equals("place-chels");
     }
 
     public boolean isWheelchairAccessible() {
