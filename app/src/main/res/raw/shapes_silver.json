@@ -171,6 +171,10 @@
               "type": "stop"
             },
             {
+              "id": "6555",
+              "type": "stop"
+            },
+            {
               "id": "place-tumnl",
               "type": "stop"
             },
@@ -1612,6 +1616,44 @@
         },
         "parent_station": {
           "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": null,
+        "at_street": "Beach Street",
+        "description": null,
+        "latitude": 42.350642,
+        "location_type": 0,
+        "longitude": -71.059519,
+        "municipality": "Boston",
+        "name": "Chinatown Gate",
+        "on_street": "Surface Artery",
+        "platform_code": null,
+        "platform_name": null,
+        "vehicle_type": 3,
+        "wheelchair_boarding": 1
+      },
+      "id": "6555",
+      "links": {
+        "self": "/stops/6555"
+      },
+      "relationships": {
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=6555"
+          }
+        },
+        "parent_station": {
+          "data": null
+        },
+        "zone": {
+          "data": {
+            "id": "ExpressBus-Downtown",
+            "type": "zone"
+          }
         }
       },
       "type": "stop"
