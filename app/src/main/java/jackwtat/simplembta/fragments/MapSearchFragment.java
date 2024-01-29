@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.maps.android.PolyUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -531,6 +532,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
         drawTransferLine(rapidRoutes[1].getId(), rapidRoutes[4].getId(), "place-haecl");
         drawTransferLine(rapidRoutes[2].getId(), rapidRoutes[3].getId(), "place-asmnl");
         drawTransferLine(rapidRoutes[2].getId(), rapidRoutes[4].getId(), "place-pktrm");
+        drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[1].getId(), "place-ogmnl");
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[1].getId(), "place-mlmnl");
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[2].getId(), "place-portr");
         drawTransferLine(commuterRoutes[0].getId(), rapidRoutes[4].getId(), "place-north");
@@ -573,6 +575,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback,
                     displayedLocation.setLongitude(gMap.getCameraPosition().target.longitude);
 
                     // Display lat/lon coordinates in debug text view
+
                     /*
                     DecimalFormat df = new DecimalFormat("#.######");
                     String debugText = df.format(displayedLocation.getLatitude()) + "\n" +

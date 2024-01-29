@@ -29,6 +29,10 @@
               "type": "stop"
             },
             {
+              "id": "place-ogmnl",
+              "type": "stop"
+            },
+            {
               "id": "Wyoming Hill",
               "type": "stop"
             },
@@ -2564,6 +2568,35 @@
         "facilities": {
           "links": {
             "related": "/facilities/?filter[stop]=Montserrat"
+          }
+        },
+        "parent_station": {
+          "data": null
+        }
+      },
+      "type": "stop"
+    },
+    {
+      "attributes": {
+        "address": "Washington St at Winter St, Malden, MA 02148",
+        "description": null,
+        "latitude": 42.436735,
+        "location_type": 1,
+        "longitude": -71.070839,
+        "name": "Oak Grove",
+        "platform_code": null,
+        "platform_name": null,
+        "wheelchair_boarding": 1
+      },
+      "id": "place-ogmnl",
+      "links": {
+        "self": "/stops/place-ogmnl"
+      },
+      "relationships": {
+        "child_stops": {},
+        "facilities": {
+          "links": {
+            "related": "/facilities/?filter[stop]=place-ogmnl"
           }
         },
         "parent_station": {
